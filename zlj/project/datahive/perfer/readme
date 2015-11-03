@@ -1,0 +1,29 @@
+偏好数据处理
+
+
+
+
+select count(1)
+FROM wlbase_dev.t_base_ec_item_feed_dev
+where ds=20151026
+
+select
+ item_id
+ FROM wlbase_dev.t_base_ec_item_feed_dev
+where ds>20150501
+   and length(item_id)<3
+
+
+
+
+保存到hive
+hiveContext.sql('use wlbase_dev')
+
+
+result=sqlContext.sql('select  uid,ulevel,num, row_number()  OVER (PARTITION BY uid ORDER BY num desc) as rn '
+               'from (select uid,ulevel,count(1) as num from userlevel group by uid, ulevel) t ')
+
+
+# 保存
+hiveContext.registerDataFrameAsTable(result,'sals')
+hiveContext.sql('create table wlbase_dev.t_zlj_perfer_user_level as select * from sals')

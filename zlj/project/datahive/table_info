@@ -1,0 +1,15 @@
+t_base_ec_item_dev  5664505
+t_base_ec_item_feed_dev  ds>20150501 >407601825
+
+
+
+t_zlj_ec_userbuy_1  总购买记录  127741384
+
+
+t_base_ec_item_feed_dev where ds >20150701  238040195
+t_base_ec_item_dev       ds=20151026         5664505
+                         有brandid 的5663994
+
+
+
+共有用户50123894   去除空值<0  49914072
