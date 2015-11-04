@@ -38,7 +38,7 @@ if sys.argv[1] == '-h':
     print comment
     print 'argvs: \n argv[1]:brand info file or dir input\n'
 rdd = sc.textFile(sys.argv[1]).map(lambda x: f(x)).filter(lambda x: x != None)
-df = hiveContext.createDataFrame(rdd, schema)
+df = hiveContext.createDataFrame(rdd,schema)
 hiveContext.sql('use wlbase_dev')
 hiveContext.registerDataFrameAsTable(df,'data')
 ds2 = '20151103'
