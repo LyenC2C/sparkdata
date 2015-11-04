@@ -19,9 +19,9 @@ def valid_jsontxt(content):
 def f(line):
 	line_s = valid_jsontxt(line)
 	ob = json.loads(line_s)
-	popularity = str(ob.get("popularity",0))
+	popularity = ob.get("popularity",0)
 	brandName = ob.get("brandName","-")
-	brandId = ob.get("brandId",0)
+	brandId = str(ob.get("brandId",0))
 	brand_list = []
 	brand_list.append(brandId)
 	brand_list.append(brandName)
