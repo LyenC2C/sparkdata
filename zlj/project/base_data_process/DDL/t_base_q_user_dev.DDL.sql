@@ -1,7 +1,8 @@
 use wlbase_dev;
 
-CREATE EXTERNAL TABLE  if not exists t_base_q_user_dev (
+CREATE EXTERNAL TABLE  if not exists t_base_q_user_dev_zlj (
 birthday STRING COMMENT 'yyyy-mm-dd',
+age  INT  ,
 phone  STRING COMMENT '手机号，自己填写，内容可能失真' ,
 gender_id  BIGINT COMMENT '性别 1：男  2：女' ,
 college  STRING   COMMENT '学校' ,
@@ -27,8 +28,10 @@ ts STRING COMMENT '采集时间戳'
 )
 COMMENT 'qq用户信息'
 PARTITIONED BY  (ds STRING )
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
-stored as textfile location '/hive/external/wlbase_dev/t_base_q_user_dev/';
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
+
+
+-- stored as textfile location '/hive/external/wlbase_dev/t_base_q_user_dev/';
 
 
 -- select birthday,uin  from t_base_q_user_dev where constel='-' limit 100;
