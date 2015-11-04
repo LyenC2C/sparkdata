@@ -39,6 +39,7 @@ if sys.argv[1] == '-h':
     print 'argvs: \n argv[1]:brand info file or dir input\n'
 rdd = sc.textFile(sys.argv[1]).map(lambda x: f(x)).filter(lambda x: x != None)
 df = hiveContext.createDataFrame(rdd, schema)
+hiveContext.sql('use t_base_ec_brand')
 hiveContext.registerDataFrameAsTable(df, 'data')
 ds2 = '20151103'
 hiveContext.sql('insert overwrite table t_base_ec_brand  PARTITION(ds='+ds2+') select * from data')
