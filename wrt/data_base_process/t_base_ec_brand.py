@@ -30,7 +30,7 @@ def f(line):
 schema = StructType([
 	StructField("brandId",StringType(), True),
 	StructField("brandName",StringType(), True),
-	StructField("popularity",StringType(), True)
+	StructField("popularity",IntegerType(), True)
 	])
 
 if sys.argv[1] == '-h':
