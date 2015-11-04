@@ -49,7 +49,7 @@ def make_doc_data(lf, rf):
 
 if __name__ == '__main__':
 
-	print calc_similar_by_path("D:/test/38574619410_1.jpg","D:/test/38574619410_0.jpg")
+	print calc_similar_by_path("/home/zlj/pic/38574619410_1.jpg","/home/zlj/pic/38574619410_0.jpg")
 	# path = r'D:\test'
 	# for i in xrange(1, 7):
 	# 	print 'test_case_%d: %.3f%%'%(i, \
