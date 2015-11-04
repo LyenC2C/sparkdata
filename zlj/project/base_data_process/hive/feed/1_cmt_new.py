@@ -132,7 +132,7 @@ rdd=sc.textFile('/user/zlj/data/all_cmt/1').map(lambda x:x.split('\001')[:-1]).f
 
 hiveContext.sql('use wlbase_dev')
 hiveContext.sql("SET hive.exec.dynamic.partition=true")
-hiveContext.sql('show tables').collect()
+
 d1=datetime.datetime(2013, 1, 1)
 d2=datetime.datetime(2013, 12, 31)
 

@@ -1,6 +1,7 @@
 CREATE  TABLE  if not exists t_base_ec_brand (
 brand_id   String COMMENT '品牌id',
-brand_name  String
+brand_name  String ,
+stars  int
 )
 COMMENT '电商品牌数据'
 PARTITIONED BY  (ds STRING )
