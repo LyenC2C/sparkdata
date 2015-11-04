@@ -48,12 +48,16 @@ def make_doc_data(lf, rf):
 	li.save(lf + '_lines.png')
 	
 
+path='/home/zlj/pic/'
 if __name__ == '__main__':
-	f1='/home/zlj/pic/38574619410_0.jpg'
+	listfile1=os.listdir(path)
+
 	listfile=os.listdir('/home/zlj/pic')
-	for fw in  listfile:
-		if 'jpeg' in fw:
-			print f1,fw,calc_similar_by_path(f1,'/home/zlj/pic/'+fw)
+	for fw1 in  listfile:
+		if 'jpg' not in fw1:continue
+		for fw2 in  listfile1:
+			if 'jpg' not in fw1:continue
+			print fw1,fw2,calc_similar_by_path(path+fw1,path+fw2)
 	# print calc_similar_by_path("/home/zlj/pic/38574619410_1.jpg","/home/zlj/pic/38574619410_0.jpg")
 	# path = r'D:\test'
 	# for i in xrange(1, 7):
