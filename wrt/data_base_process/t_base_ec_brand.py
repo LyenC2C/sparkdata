@@ -22,14 +22,14 @@ def f(line):
 	brandName = ob.get("brandName","-")
 	brandId = str(ob.get("brandId",0))
 	brand_list = []
-	brand_list.append(brandName)
-	brand_list.append(popularity)
 	brand_list.append(brandId)
+	brand_list.append(popularity)
+	brand_list.append(brandName)
 	return brand_list
 schema = StructType([
-	StructField("popularity",StringType(), True),
+	StructField("brandId",StringType(), True),
 	StructField("brandName",StringType(), True),
-	StructField("brandId",StringType(), True)
+	StructField("popularity",IntegerType(), True)
 	])
 
 if sys.argv[1] == '-h':
