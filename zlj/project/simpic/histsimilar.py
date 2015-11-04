@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import Image
+import  os
 
+import Image
 def make_regalur_image(img, size = (256, 256)):
 	return img.resize(size).convert('RGB')
 
@@ -48,8 +49,11 @@ def make_doc_data(lf, rf):
 	
 
 if __name__ == '__main__':
-
-	print calc_similar_by_path("/home/zlj/pic/38574619410_1.jpg","/home/zlj/pic/38574619410_0.jpg")
+	f1='/home/zlj/pic/38574619410_0.jpg'
+	listfile=os.listdir('/home/zlj/pic')
+	for fw in  listfile:
+		print f1,fw,calc_similar_by_path(f1,fw)
+	# print calc_similar_by_path("/home/zlj/pic/38574619410_1.jpg","/home/zlj/pic/38574619410_0.jpg")
 	# path = r'D:\test'
 	# for i in xrange(1, 7):
 	# 	print 'test_case_%d: %.3f%%'%(i, \
