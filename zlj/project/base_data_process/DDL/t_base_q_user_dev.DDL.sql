@@ -2,7 +2,6 @@ use wlbase_dev;
 
 CREATE EXTERNAL TABLE  if not exists t_base_q_user_dev_zlj (
 birthday STRING COMMENT 'yyyy-mm-dd',
-age  INT  ,
 phone  STRING COMMENT '手机号，自己填写，内容可能失真' ,
 gender_id  BIGINT COMMENT '性别 1：男  2：女' ,
 college  STRING   COMMENT '学校' ,
@@ -24,7 +23,8 @@ nick  STRING COMMENT '昵称' ,
 email  STRING  COMMENT 'email' ,
 uin2  STRING   COMMENT '登陆邮箱账号' ,
 mobile  STRING COMMENT '有的话部分加密139********',
-ts STRING COMMENT '采集时间戳'
+ts STRING COMMENT '采集时间戳',
+age  INT
 )
 COMMENT 'qq用户信息'
 PARTITIONED BY  (ds STRING )
