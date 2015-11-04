@@ -174,6 +174,10 @@ for i in xrange((d2-d1).days):
     df=hiveContext.createDataFrame(data,schema)
     hiveContext.registerDataFrameAsTable(df,'data')
     hiveContext.sql('insert overwrite table t_base_ec_item_feed_dev_zlj  PARTITION(ds='+ds2+') select * from data')
+
+
+
+sc.textFile('/data/develop/ec/tb/cmt_res_tmp/res2015').repartition(250).saveAsTextFile('/user/zlj/data/res2014_re')
 #
 #
 # df=hiveContext.createDataFrame(rdd,schema)

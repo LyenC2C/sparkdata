@@ -1,1 +1,10 @@
- select weekofyear('2011-12-08 10:03:01') from lxw1234
+
+
+
+select  user_id ,week ,count(1) as times
+ from
+(
+select user_id, month()weekofyear(f_date)  as week
+from t_base_ec_item_feed_dev
+where ds>20150101
+)

@@ -9,6 +9,7 @@ use wlbase_dev;
 
 LOAD DATA  INPATH '/hive/external/wlbase_dev/t_base_ec_item_tag_dev/ds=20000103' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_test PARTITION (ds='20150000');
 
+
 -- -- 每日新增feed量统计
 -- INSERT INTO TABLE t_base_ec_feed_add_everyday PARTITION (ds )
 --
@@ -82,7 +83,7 @@ insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds)
     *
     from
     t_base_ec_feed_add_everyday
-       where ds=cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd') as STRING)
+    where ds=cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd') as STRING)
 
     UNION  ALL
      SELECT

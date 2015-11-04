@@ -7,7 +7,7 @@ set hive.exec.reducers.bytes.per.reducer=500000000;
 
 use wlbase_dev;
 
-LOAD DATA  INPATH '/hive/external/wlbase_dev/t_base_ec_item_tag_dev/ds=20000103' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_test PARTITION (ds='20150000');
+LOAD DATA  INPATH '/hive/external/wlbase_dev/t_base_ec_item_tag_dev/ds=20000103' OVERWRITE INTO TABLE default.t_base_ec_item_feed_dev_zlj PARTITION (ds='20150000');
 
 -- -- 每日新增feed量统计
 -- INSERT INTO TABLE t_base_ec_feed_add_everyday PARTITION (ds )
@@ -62,7 +62,7 @@ from
     annoy  ,
     ts ,
     regexp_replace(f_date,'-','') ds
-    FROM t_base_ec_item_feed_dev_test where ds=20150000
+    FROM default.t_base_ec_item_feed_dev_zlj where ds=20150000
 
   )t2 on t1.item_id=t2.item_id
 )t3 where rn=1 ;
@@ -89,7 +89,13 @@ insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds)
     max(CAST (feed_id as bigint)) feedid ,
     count(1) as feed_times
 
-    FROM t_base_ec_item_feed_dev where ds=20150000
+    FROM default.t_base_ec_item_feed_dev_zlj where ds=20150000
     group by item_id
 
 )t group by item_id  ;
+
+
+
+-- insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds='20151102')
+-- select item_id,max(CAST (feed_id as bigint))  maxfeed_id, count(1) as feed_times from t_base_ec_item_feed_dev
+-- group by item_id;
