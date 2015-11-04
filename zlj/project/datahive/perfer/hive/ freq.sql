@@ -1,0 +1,1 @@
+ select weekofyear('2011-12-08 10:03:01') from lxw1234
