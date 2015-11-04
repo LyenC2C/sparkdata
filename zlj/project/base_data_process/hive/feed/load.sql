@@ -4,7 +4,7 @@ SET hive.exec.max.dynamic.partitions.pernode = 1000;
 SET hive.exec.max.dynamic.partitions=2000;
 
 set hive.exec.reducers.bytes.per.reducer=500000000;
-
+set mapred.max.split.size=100000000;
 use wlbase_dev;
 
 -- LOAD DATA  INPATH '/user/zlj/data/res2015_re' OVERWRITE INTO TABLE t_base_ec_item_feed_dev PARTITION (ds='20100000');
@@ -14,7 +14,6 @@ LOAD DATA  INPATH '/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=2010
 
 
 INSERT overwrite  TABLE t_base_ec_item_feed_dev PARTITION (ds )
-
 select
 item_id,
 item_title,
@@ -28,7 +27,7 @@ regexp_replace(f_date,'-','') ds
 from
 t_base_ec_item_feed_dev_zlj
 where
-ds='20100005' and LENGTH(f_date)<12
+ds='20100005' and LENGTH(f_date)>0
 ;
 
 
