@@ -28,9 +28,9 @@ def f(line):
 	brand_list.append(popularity)
 	return brand_list
 schema = StructType([
-	StructField("brandId",StringType(), True),
-	StructField("brandName",StringType(), True),
-	StructField("popularity",IntegerType(), True)
+	StructField("brand_id",StringType(), True),
+	StructField("brand_name",StringType(), True),
+	StructField("stars",IntegerType(), True)
 	])
 
 if sys.argv[1] == '-h':
@@ -38,7 +38,7 @@ if sys.argv[1] == '-h':
     print comment
     print 'argvs: \n argv[1]:brand info file or dir input\n'
 rdd = sc.textFile(sys.argv[1]).map(lambda x: f(x)).filter(lambda x: x != None)
-df = hiveContext.createDataFrame(rdd,schema)
+df = hiveContext.createDataFrame(rdd , schema)
 hiveContext.sql('use wlbase_dev')
 hiveContext.registerDataFrameAsTable(df,'data')
 ds2 = '20151103'
