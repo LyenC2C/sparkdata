@@ -52,7 +52,7 @@ if __name__ == '__main__':
 	f1='/home/zlj/pic/38574619410_0.jpg'
 	listfile=os.listdir('/home/zlj/pic')
 	for fw in  listfile:
-		if fw.endswith('jpeg'):
+		if 'jpeg' in fw:
 			print f1,fw,calc_similar_by_path(f1,'/home/zlj/pic/'+fw)
 	# print calc_similar_by_path("/home/zlj/pic/38574619410_1.jpg","/home/zlj/pic/38574619410_0.jpg")
 	# path = r'D:\test'
