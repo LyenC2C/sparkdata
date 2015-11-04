@@ -1,7 +1,6 @@
 #coding:utf-8
 __author__ = 'zlj'
 # import json
-from pyspark.sql import *
 from pyspark import SparkContext
 import sys
 from pyspark.sql import *
