@@ -19,18 +19,24 @@ def valid_jsontxt(content):
 def pinpai(line):
     ss = line.split('\\001')
     return (valid_jsontxt(ss[1]),None)
+def pinpai_en(line):
+    ss = line.split('\\001')
+    return (valid_jsontxt(ss[0]),None)
 def f(x,p_dict):
     n = 0
-    if p_dict.has_key(valid_jsontxt(x[0])):
+    if p_dict.has_key(valid_jsontxt(x[0])) or pe_dict.has_key(valid_jsontxt(x[0])):
         return x[1] + "\t" + x[0]
 
 hiveContext.sql('use wlbase_dev')
 rdd = hiveContext.sql('select * from t_base_ec_brand')
 rdd2 = sc.textFile('/user/wrt/pinpai.info')
 p_dict = rdd2.map(lambda x: pinpai(x)).collectAsMap()
+pe_dict = rdd2.map(lambda x: pinpai_en(x)).collectAsMap()
 broadcastVar = sc.broadcast(p_dict)
+broadcastVar2 = sc.broadcast(pe_dict)
 place_dict = broadcastVar.value
-rdd.map(lambda x:[x.brand_name, x.brand_id]).map(lambda x:f(x,place_dict))\
+place_en_dict = broadcastVar2.value
+rdd.map(lambda x:[x.brand_name, x.brand_id]).map(lambda x:f(x,place_dict,place_en_dict))\
 		.filter(lambda x:x!=None)\
 			.saveAsTextFile(sys.argv[1])
 sc.stop()
