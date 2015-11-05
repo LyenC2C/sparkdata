@@ -24,8 +24,12 @@ def pinpai_en(line):
     return (valid_jsontxt(ss[0]),None)
 def f(x,p_dict,pe_dict):
     n = 0
-    if valid_jsontxt(x[0]) in p_dict.keys() or valid_jsontxt(x[0]) in pe_dict.keys():
-        return x[1] + "\t" + x[0]
+    for ky in p_dict():
+        if valid_jsontxt(x[0]) in p_dict[ky]:
+            return x[1] + "\t" + x[0]
+    for ky in pe_dict():
+        if valid_jsontxt(x[0]) in pe_dict[ky]:
+            return x[1] + "\t" + x[0]
 
 hiveContext.sql('use wlbase_dev')
 rdd = hiveContext.sql('select * from t_base_ec_brand')
