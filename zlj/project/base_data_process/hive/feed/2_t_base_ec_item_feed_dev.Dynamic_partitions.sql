@@ -49,7 +49,7 @@ from
     *
     from
     t_base_ec_feed_add_everyday
-    where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd')
+    where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd') as String)
 
   )t1
   RIGHT  OUTER  join
