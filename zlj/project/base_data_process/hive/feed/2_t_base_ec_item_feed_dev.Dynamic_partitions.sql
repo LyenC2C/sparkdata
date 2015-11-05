@@ -8,13 +8,8 @@ m_1=`expr $m + 1`
 d_1=$(date -d '-'$m' day' '+%Y%m%d')
 d_2=$(date -d '-'$m_1' day' '+%Y%m%d')
 
-
-
-
-lastmonth=$(date -d '-1 month' '+%Y-%m-%d')
+lastmonth=$(date -d '-1 month' '+%Y%m%d')
 path=$2
-
-
 
 ##hive  ²¿·Ö
 
