@@ -22,7 +22,7 @@ def pinpai(line):
 def pinpai_en(line):
     ss = line.split('\\001')
     return (valid_jsontxt(ss[0]),None)
-def f(x,p_dict):
+def f(x,p_dict,pe_dict):
     n = 0
     if p_dict.has_key(valid_jsontxt(x[0])) or pe_dict.has_key(valid_jsontxt(x[0])):
         return x[1] + "\t" + x[0]
