@@ -96,14 +96,14 @@ insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds)
     from
     t_base_ec_feed_add_everyday
 --        where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd') as STRING)
-     where ds='$d_2' and item_id rlike   '^\\d+$'
+     where ds='$d_2' and item_id rlike   '^\\\\d+$'
     UNION  ALL
      SELECT
     item_id,
     max(CAST (feed_id as bigint)) maxfeed_id ,
     count(1) as feed_times
 
-    FROM t_base_ec_item_feed_dev_zlj where ds=20101103 and item_id rlike   '^\\d+$'
+    FROM t_base_ec_item_feed_dev_zlj where ds=20101103 and item_id rlike   '^\\\\d+$'
     group by item_id
 
 )t group by item_id  ;

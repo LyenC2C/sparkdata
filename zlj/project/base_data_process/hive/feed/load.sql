@@ -12,7 +12,7 @@ use wlbase_dev;
 -- LOAD DATA  INPATH '/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=20100000' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds='20100005');
 LOAD DATA  INPATH '/data/develop/ec/tb/cmt_res_tmp/res2013' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds='20100003');
 
-
+/user/zlj/data/qq_age
 
 INSERT overwrite  TABLE t_base_ec_item_feed_dev PARTITION (ds )
 select
