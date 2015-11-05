@@ -140,8 +140,8 @@ if __name__ == "__main__":
             .saveAsTextFile(sys.argv[3])
         sc.stop()
 
-    elif sys.argv[1] == '-hiveforamtold':
-        sc = SparkContext(appName="hiveforamtold")  # /data/develop/ec/tb/cmt/*
+    elif sys.argv[1] == '-hiveformatold':
+        sc = SparkContext(appName="hiveformatold")  # /data/develop/ec/tb/cmt/*
         rdd1 = sc.textFile("/data/develop/ec/tb/cmt/*") \
             .filter(lambda x: 'SUCCESS' in x) \
             .map(lambda x: parse_cmt(x)) \
@@ -166,10 +166,10 @@ if __name__ == "__main__":
 
         sc.stop()
 
-    elif sys.argv[1] == '-hiveforamtnew':
-        sc = SparkContext(appName="hiveforamtnew")  # /data/develop/ec/tb/cmt/*
-        in_f = sys.argv[1]
-        out_dir = sys.argv[2]
+    elif sys.argv[1] == '-hiveformatnew':
+        sc = SparkContext(appName="hiveformatnew")  # /data/develop/ec/tb/cmt/*
+        in_f = sys.argv[2]
+        out_dir = sys.argv[3]
         rdd1 = sc.textFile(in_f) \
             .filter(lambda x: 'SUCCESS' in x) \
             .map(lambda x: parse_cmt_new(x)) \
