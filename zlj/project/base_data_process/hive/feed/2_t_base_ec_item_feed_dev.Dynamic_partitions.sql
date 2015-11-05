@@ -7,7 +7,7 @@ set hive.exec.reducers.bytes.per.reducer=500000000;
 
 use wlbase_dev;
 
-LOAD DATA  INPATH '/hive/external/wlbase_dev/t_base_ec_item_tag_dev/ds=20000103' OVERWRITE INTO TABLE t_base_ec_item_feed_dev PARTITION (ds='20100000');
+LOAD DATA  INPATH '/data/develop/ec/tb/cmt_tmp_p50' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds='20101103');
 
 -- -- 每日新增feed量统计
 -- INSERT INTO TABLE t_base_ec_feed_add_everyday PARTITION (ds )
@@ -27,6 +27,7 @@ LOAD DATA  INPATH '/hive/external/wlbase_dev/t_base_ec_item_tag_dev/ds=20000103'
 INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds )
 select
 t3.item_id,
+t3.item_title,
 t3.feedid as feed_id,
 user_id,
 content,
@@ -48,13 +49,14 @@ from
     *
     from
     t_base_ec_feed_add_everyday
-    where ds=cast(from_unixtime(unix_timestamp()-86400,'yyyyMMdd')
+    where ds=cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd')
 
   )t1
   RIGHT  OUTER  join
   (
     SELECT
     item_id,
+    item_title,
     CAST (feed_id as bigint) feedid,
     user_id,
     content,
@@ -62,7 +64,7 @@ from
     annoy  ,
     ts ,
     regexp_replace(f_date,'-','') ds
-    FROM t_base_ec_item_feed_dev where ds=20100000
+    FROM t_base_ec_item_feed_dev_zlj where ds=20101103
 
   )t2 on t1.item_id=t2.item_id
 )t3 where rn=1 ;
@@ -74,29 +76,28 @@ from
 insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds)
   select
   item_id,max(feedid) as feedid ,sum(feed_times)
-,cast(from_unixtime(unix_timestamp()-86400,'yyyyMMdd') as STRING) ds
+,cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd') as STRING) ds
   from
 (
    SELECT
     *
     from
     t_base_ec_feed_add_everyday
-       where ds=cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd') as STRING)
-
+       where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd') as STRING)
     UNION  ALL
      SELECT
     item_id,
     max(CAST (feed_id as bigint)) feedid ,
     count(1) as feed_times
 
-    FROM t_base_ec_item_feed_dev where ds=20150000
+    FROM t_base_ec_item_feed_dev_zlj where ds=20101103
     group by item_id
 
 )t group by item_id  ;
 
 
 
-insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds='20151102')
-select item_id,max(CAST (feed_id as bigint))  maxfeed_id, count(1) as feed_times from t_base_ec_item_feed_dev
-where item_id  rlike   '^\\d+$'
-group by item_id;
+-- insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds='20151102')
+-- select item_id,max(CAST (feed_id as bigint))  maxfeed_id, count(1) as feed_times from t_base_ec_item_feed_dev
+-- where item_id  rlike   '^\\d+$'
+-- group by item_id;
