@@ -29,11 +29,11 @@ SELECT
  t1.item_id,t1.feed_times- (case when  t2.feed_times is null then 0 else t2.feed_times end ) t
 from
 (
-select * from t_base_ec_feed_add_everyday where ds='$d_1' and item_id rlike   '^\\d+$'
+select * from t_base_ec_feed_add_everyday where ds=$d_1 and item_id rlike   '^\\d+$'
 )t1
 left join
 (
-select * from t_base_ec_feed_add_everyday where ds='$d_2' and item_id rlike   '^\\d+$'
+select * from t_base_ec_feed_add_everyday where ds=$d_2 and item_id rlike   '^\\d+$'
 )t2
 
 on t1.item_id=t2.item_id
