@@ -17,7 +17,7 @@ def valid_jsontxt(content):
     else :
         return content
 def pinpai(line):
-    ss = line.split('\001')
+    ss = line.split('\\001')
     return (valid_jsontxt(ss[1]),None)
 def f(x,p_dict):
     n = 0
