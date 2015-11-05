@@ -18,17 +18,17 @@ def valid_jsontxt(content):
         return content
 def pinpai(line):
     ss = line.split('\\001')
-    return (valid_jsontxt(ss[1]),0)
+    return (valid_jsontxt(ss[1]),None)
 def pinpai_en(line):
     ss = line.split('\\001')
-    return (valid_jsontxt(ss[0]),0)
+    return (valid_jsontxt(ss[0]),None)
 def f(x,p_dict,pe_dict):
     n = 0
     for ky in p_dict.keys():
-        if valid_jsontxt(x[0]) in p_dict[ky]:
+        if valid_jsontxt(x[0]) in ky:
             return x[1] + "\t" + x[0]
     for ky in pe_dict.keys():
-        if valid_jsontxt(x[0]) in pe_dict[ky]:
+        if valid_jsontxt(x[0]) in ky:
             return x[1] + "\t" + x[0]
 
 hiveContext.sql('use wlbase_dev')
