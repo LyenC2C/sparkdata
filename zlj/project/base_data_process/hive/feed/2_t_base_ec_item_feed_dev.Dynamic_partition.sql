@@ -96,6 +96,7 @@ insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds)
 
 
 
--- insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds='20151102')
--- select item_id,max(CAST (feed_id as bigint))  maxfeed_id, count(1) as feed_times from t_base_ec_item_feed_dev
--- group by item_id;
+insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds='20151102')
+select item_id,max(CAST (feed_id as bigint))  maxfeed_id, count(1) as feed_times from t_base_ec_item_feed_dev
+where item_id  rlike   '^\\d+$'
+group by item_id;
