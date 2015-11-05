@@ -19,6 +19,7 @@ schema = StructType([
 hiveContext.sql('use wlbase_dev')
 df=hiveContext.createDataFrame(rdd,schema)
 hiveContext.registerDataFrameAsTable(df,'qqage')
+hiveContext.sql('select qq ,count(1) from qqage group by qq HAVING  COUNT(1)>1 limit 10').collect()
 
 s=hiveContext.table('t_base_q_user_dev')
 s.printSchema
