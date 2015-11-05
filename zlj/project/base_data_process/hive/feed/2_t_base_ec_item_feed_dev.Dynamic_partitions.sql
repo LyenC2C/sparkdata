@@ -24,7 +24,7 @@ LOAD DATA  INPATH '/data/develop/ec/tb/cmt_tmp_p50' OVERWRITE INTO TABLE t_base_
 -- ¶¯Ì¬·ÖÇø
 -- INSERT overwrite TABLE t_base_ec_item_feed_dev PARTITION (ds )
 
-INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds )
+INSERT INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds )
 select
 t3.item_id,
 t3.item_title,
@@ -49,7 +49,7 @@ from
     *
     from
     t_base_ec_feed_add_everyday
-    where ds=cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd')
+    where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd')
 
   )t1
   RIGHT  OUTER  join
