@@ -5,8 +5,8 @@ source /etc/profile;
 
 m=1
 m_1=`expr $m + 1`
-d_1=$(date -d '-'$m' day' '+%Y-%m-%d')
-d_2=$(date -d '-'$m_1' day' '+%Y-%m-%d')
+d_1=$(date -d '-'$m' day' '+%Y%m%d')
+d_2=$(date -d '-'$m_1' day' '+%Y%m%d')
 
 
 -- d_1=$(date -d '-1 day' '+%Y-%m-%d')

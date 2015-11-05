@@ -7,14 +7,14 @@ source /etc/profile;
 
 m=2
 m_1=`expr $m + 1`
-d_1=$(date -d '-'$m' day' '+%Y-%m-%d')
-d_2=$(date -d '-'$m_1' day' '+%Y-%m-%d')
+d_1=$(date -d '-'$m' day' '+%Y%m%d')
+d_2=$(date -d '-'$m_1' day' '+%Y%m%d')
 
 
 -- d_1=$(date -d '-1 day' '+%Y-%m-%d')
 -- d_2=$(date -d '-2 day' '+%Y-%m-%d')
 
-lastmonth=$(date -d '-1 month' '+%Y-%m-%d')
+lastmonth=$(date -d '-1 month' '+%Y%m%d')
 path=$2
 
 
@@ -36,5 +36,7 @@ select * from t_base_ec_feed_add_everyday where ds='$d_2' and item_id rlike   '^
 )t2
 
 on t1.item_id=t2.item_id
+;
+
 
 EOF
