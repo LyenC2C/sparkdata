@@ -23,7 +23,7 @@ path=$2
 
 /home/zlj/hive/bin/hive<<EOF
 
-insert overwrite table t_base_ec_item_feed_inc ds='$d_1'
+insert overwrite table t_base_ec_item_feed_inc PARTITION(ds='$d_1')
 SELECT
  t1.item_id,t1.feed_times- (case when  t2.feed_times is null then 0 else t2.feed_times end ) t
 from

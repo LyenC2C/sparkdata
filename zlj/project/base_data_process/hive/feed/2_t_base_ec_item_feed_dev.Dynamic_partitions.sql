@@ -9,8 +9,7 @@ d_1=$(date -d '-'$m' day' '+%Y%m%d')
 d_2=$(date -d '-'$m_1' day' '+%Y%m%d')
 
 
--- d_1=$(date -d '-1 day' '+%Y-%m-%d')
--- d_2=$(date -d '-2 day' '+%Y-%m-%d')
+
 
 lastmonth=$(date -d '-1 month' '+%Y-%m-%d')
 path=$2
