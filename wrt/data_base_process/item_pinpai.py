@@ -24,7 +24,7 @@ def pinpai_en(line):
     return (valid_jsontxt(ss[0]),None)
 def f(x,p_dict,pe_dict):
     n = 0
-    if p_dict.has_key(valid_jsontxt(x[0])) or pe_dict.has_key(valid_jsontxt(x[0])):
+    if valid_jsontxt(x[1]) in p_dict.keys() or valid_jsontxt(x[0]) in pe_dict.keys():
         return x[1] + "\t" + x[0]
 
 hiveContext.sql('use wlbase_dev')
