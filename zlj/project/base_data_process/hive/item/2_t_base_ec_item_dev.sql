@@ -14,7 +14,7 @@ SET hive.exec.max.dynamic.partitions=2000;
 
 
 
-insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds='20151102')
+insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds='20151101')
 
   SELECT
 
