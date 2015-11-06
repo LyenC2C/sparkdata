@@ -26,4 +26,10 @@ FROM
     FROM t_base_ec_item_feed_dev
     WHERE ds > 20150101
   ) t
-group by user_id ,week, t_month
+group by user_id ,week, t_month;
+
+SELECT times,count(1)
+FROM(
+  SELECT cast(times as string )
+FROM t_zlj_userbuy_freq
+ )t GROUP BY  times;

@@ -19,3 +19,4 @@ where avg_price<1
 select count(1),bc_type from t_base_ec_item_dev where  ds=20151026 group by  bc_type
 select *  from t_base_ec_item_dev where ds=20151026 group by  bc_type='4.0'
 
+
