@@ -23,8 +23,10 @@ def pinpai_en(line):
     ss = line.split('\\001')
     return (valid_jsontxt(ss[0]), ss[3])
 def f(x,p_dict,pe_dict):
-    if p_dict.has_key(valid_jsontxt(x[0])) or pe_dict.has_key(valid_jsontxt(x[0])):
+    if p_dict.has_key(valid_jsontxt(x[0])):
         return x[1] + "\t" + x[0] + "\t" + str(x[2]) + "\t" + str(p_dict.get(x[0]))
+    if pe_dict.has_key(valid_jsontxt(x[0])):
+        return x[1] + "\t" + x[0] + "\t" + str(x[2]) + "\t" + str(pe_dict.get(x[0]))
     '''
     for ky in p_dict.keys():
         if valid_jsontxt(x[0]) in ky:
