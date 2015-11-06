@@ -17,20 +17,31 @@ def valid_jsontxt(content):
     else :
         return content
 def pinpai(line):
-    ss = line.split('\001')
+    ss = line.split('\\001')
     return (valid_jsontxt(ss[1]),None)
-def f(x,p_dict):
-    n = 0
-    if p_dict.has_key(valid_jsontxt(x[0])):
-        return x[1] + "\t" + x[0]
+def pinpai_en(line):
+    ss = line.split('\\001')
+    return (valid_jsontxt(ss[0]),None)
+def f(x,p_dict,pe_dict):
+    if p_dict.has_key(valid_jsontxt(x[0])) or pe_dict.has_key(valid_jsontxt(x[0])):
+        return x[1] + "\t" + x[0] + "\t" + x[0] + "\t" + str(x[2])
+    for ky in p_dict.keys():
+        if valid_jsontxt(x[0]) in ky:
+            return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8') + "\t" + str(x[2])
+    for ky in pe_dict.keys():
+        if valid_jsontxt(x[0]) in ky:
+            return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8') + "\t" + str(x[2])
 
 hiveContext.sql('use wlbase_dev')
 rdd = hiveContext.sql('select * from t_base_ec_brand')
 rdd2 = sc.textFile('/user/wrt/pinpai.info')
 p_dict = rdd2.map(lambda x: pinpai(x)).collectAsMap()
+pe_dict = rdd2.map(lambda x: pinpai_en(x)).collectAsMap()
 broadcastVar = sc.broadcast(p_dict)
+broadcastVar2 = sc.broadcast(pe_dict)
 place_dict = broadcastVar.value
-rdd.map(lambda x:[x.brand_name, x.brand_id]).map(lambda x:f(x,place_dict))\
+place_en_dict = broadcastVar2.value
+rdd.map(lambda x:[x.brand_name, x.brand_id, x.stars]).map(lambda x:f(x,place_dict,place_en_dict))\
 		.filter(lambda x:x!=None)\
 			.saveAsTextFile(sys.argv[1])
 sc.stop()
