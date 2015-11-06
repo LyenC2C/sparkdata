@@ -63,8 +63,8 @@ if __name__ == '__main__':
 		for line_s in open(path2):
 			if item_id in  line_s:continue
 			tf =calc_similar_by_path(path_prex+line.strip(),path_prex+line_s.strip())
-			if tf >0.8:
-				item_id_,end=path2.split('_')
+			if tf >0.5:
+				item_id_,end=line_s.split('_')
 				fw.write(item_id+'_'+item_id_+'_'+str(tf)+'\n')
 	# except: print  'error'
 
