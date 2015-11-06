@@ -26,10 +26,11 @@ def f(x,p_dict,pe_dict):
     n = 0
     for ky in p_dict.keys():
         if valid_jsontxt(x[0]) in ky:
-            return x[1] + "\t" + x[0]
+            return x[1] + "\t" + x[0] + "\t" + ky
+
     for ky in pe_dict.keys():
         if valid_jsontxt(x[0]) in ky:
-            return x[1] + "\t" + x[0]
+            return x[1] + "\t" + x[0] + "\t" + ky
 
 hiveContext.sql('use wlbase_dev')
 rdd = hiveContext.sql('select * from t_base_ec_brand')
