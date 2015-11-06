@@ -62,12 +62,16 @@ if __name__ == '__main__':
 		item_id,end=line.split('_')
 		for line_s in open(path2):
 			if item_id in  line_s:continue
-			tf =calc_similar_by_path(path_prex+line.strip(),path_prex+line_s.strip())
-			if tf >0.5:
-				item_id_,end=line_s.split('_')
-				fw.write(item_id+'_'+item_id_+'_'+str(tf)+'\n')
+			try:
+				tf =calc_similar_by_path(path_prex+line.strip(),path_prex+line_s.strip())
+				if tf >0.5:
+					item_id_,end=line_s.split('_')
+					fw.write(item_id+'_'+item_id_+'_'+str(tf)+'\n')
+			except: print line,line_s
 	# except: print  'error'
 
+
+# cat log_xa* |awk -F'_' '{print $1,$2,$3}' |sort -k3 -g -r |less
 	# listfile1=os.listdir(path)
     #
 	# listfile=os.listdir('/home/zlj/test')
