@@ -18,10 +18,10 @@ def valid_jsontxt(content):
         return content
 def pinpai(line):
     ss = line.strip().split('\\001')
-    return (ss[1], ss[3])
+    return (ss[1], ss[3] + "\t" + ss[4])
 def pinpai_en(line):
     ss = line.strip().split('\\001')
-    return (ss[0], ss[3])
+    return (ss[0], ss[3] + "\t" + ss[4])
 def f(x,p_dict,pe_dict):
     if p_dict.has_key(x[0]):
         return x[1] + "\t" + x[0] + "\t" + str(x[2]) + "\t" + p_dict.get(x[0])
