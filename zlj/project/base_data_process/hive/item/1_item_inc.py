@@ -12,8 +12,9 @@ import rapidjson as json
 
 from pyspark import SparkContext
 sc=SparkContext(appName="test")
-sqlContext = SQLContext(sc)
 
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -157,6 +158,9 @@ rdd=sc.textFile(path,100).map(lambda  x: parse(x)).groupByKey().map(lambda x:[i 
     .repartition(20)
 
 
+Row
+df=hiveContext.sql()
+df.
 
 # .saveAsTextFile('/hive/external/wlbase_dev/t_base_ec_item_dev/ds=20150101')
 

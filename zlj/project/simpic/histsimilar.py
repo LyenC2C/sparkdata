@@ -56,17 +56,17 @@ if __name__ == '__main__':
 	path1=sys.argv[1]
 	fw=open('./log_'+path1,'w')
 	path2=sys.argv[2]
-	try:
+	# try:
 
-		for  line in open(path1):
-			item_id,end=line.split('_')
-			for line_s in open(path2):
-				if item_id in  line_s:continue
-				tf =calc_similar_by_path(path_prex+line.strip(),path_prex+line_s.strip())
-				if tf >0.8:
-					item_id_,end=path2.split('_')
-					fw.write(item_id+'_'+item_id_+'_'+str(tf)+'\n')
-	except: print  'error'
+	for  line in open(path1):
+		item_id,end=line.split('_')
+		for line_s in open(path2):
+			if item_id in  line_s:continue
+			tf =calc_similar_by_path(path_prex+line.strip(),path_prex+line_s.strip())
+			if tf >0.8:
+				item_id_,end=path2.split('_')
+				fw.write(item_id+'_'+item_id_+'_'+str(tf)+'\n')
+	# except: print  'error'
 
 	# listfile1=os.listdir(path)
     #
