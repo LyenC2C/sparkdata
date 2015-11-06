@@ -26,11 +26,11 @@ def f(x,p_dict,pe_dict):
     n = 0
     for ky in p_dict.keys():
         if valid_jsontxt(x[0]) in ky:
-            return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8')
+            return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8') + "\t" + str(x[2])
 
     for ky in pe_dict.keys():
         if valid_jsontxt(x[0]) in ky:
-            return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8')
+            return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8') + "\t" + str(x[2])
 
 hiveContext.sql('use wlbase_dev')
 rdd = hiveContext.sql('select * from t_base_ec_brand')
@@ -41,7 +41,7 @@ broadcastVar = sc.broadcast(p_dict)
 broadcastVar2 = sc.broadcast(pe_dict)
 place_dict = broadcastVar.value
 place_en_dict = broadcastVar2.value
-rdd.map(lambda x:[x.brand_name, x.brand_id]).map(lambda x:f(x,place_dict,place_en_dict))\
-		.filter(lambda x:x!=None)\
+rdd.map(lambda x:[x.brand_name, x.brand_id, x.stars]).map(lambda x:f(x,place_dict,place_en_dict))\
+		.filter(lambda x:x[2] != 0)\
 			.saveAsTextFile(sys.argv[1])
 sc.stop()
