@@ -17,20 +17,24 @@ def valid_jsontxt(content):
     else :
         return content
 def pinpai(line):
-    ss = line.split('\\001')
-    return (valid_jsontxt(ss[1]),None)
+    ss = line.strip().split('\\001')
+    return (ss[1], ss[3] + "\t" + ss[4])
 def pinpai_en(line):
-    ss = line.split('\\001')
-    return (valid_jsontxt(ss[0]),None)
+    ss = line.strip().split('\\001')
+    return (ss[0], ss[3] + "\t" + ss[4])
 def f(x,p_dict,pe_dict):
-    if p_dict.has_key(valid_jsontxt(x[0])) or pe_dict.has_key(valid_jsontxt(x[0])):
-        return x[1] + "\t" + x[0] + "\t" + x[0] + "\t" + str(x[2])
+    if p_dict.has_key(x[0]):
+        return x[1] + "\t" + x[0] + "\t" + str(x[2]) + "\t" + p_dict.get(x[0])
+    if pe_dict.has_key(x[0]):
+        return x[1] + "\t" + x[0] + "\t" + str(x[2]) + "\t" + pe_dict.get(x[0])
+    '''
     for ky in p_dict.keys():
         if valid_jsontxt(x[0]) in ky:
             return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8') + "\t" + str(x[2])
     for ky in pe_dict.keys():
         if valid_jsontxt(x[0]) in ky:
             return x[1] + "\t" + x[0] + "\t" + ky.decode('utf-8') + "\t" + str(x[2])
+    '''
 
 hiveContext.sql('use wlbase_dev')
 rdd = hiveContext.sql('select * from t_base_ec_brand')
