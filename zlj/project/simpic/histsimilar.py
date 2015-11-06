@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import  os
+import sys
 
 import Image
+
+
 def make_regalur_image(img, size = (256, 256)):
 	return img.resize(size).convert('RGB')
 
@@ -48,16 +50,29 @@ def make_doc_data(lf, rf):
 	li.save(lf + '_lines.png')
 	
 
-path='/home/zlj/pic/'
-if __name__ == '__main__':
-	listfile1=os.listdir(path)
+path_prex='/mnt/zlj/taobaopic/'
 
-	listfile=os.listdir('/home/zlj/test')
-	for fw1 in  listfile:
-		if 'jpg' not in fw1:continue
-		for fw2 in  listfile1:
-			if 'jpg' not in fw1:continue
-			print fw1,fw2,calc_similar_by_path(path+fw1,path+fw2)
+if __name__ == '__main__':
+	path1=sys.argv[1]
+	fw=open('./log_'+path1,'w')
+	path2=sys.argv[2]
+	for  line in open(path1):
+		item_id,end=line.split('_')
+		for line_s in open(path2):
+			if item_id in  line_s:continue
+			tf =calc_similar_by_path(path_prex+line,path_prex+line_s)
+			if tf >0.8:
+				item_id_,end=path2.split('_')
+				fw.write(item_id+'_'+item_id_+'_'+str(tf)+'\n')
+
+	# listfile1=os.listdir(path)
+    #
+	# listfile=os.listdir('/home/zlj/test')
+	# for fw1 in  listfile:
+	# 	if 'jpg' not in fw1:continue
+	# 	for fw2 in  listfile1:
+	# 		if 'jpg' not in fw1:continue
+	# 		print fw1,fw2,calc_similar_by_path(path+fw1,path+fw2)
 	# print calc_similar_by_path("/home/zlj/pic/38574619410_1.jpg","/home/zlj/pic/38574619410_0.jpg")
 	# path = r'D:\test'
 	# for i in xrange(1, 7):
