@@ -41,7 +41,7 @@ broadcastVar = sc.broadcast(p_dict)
 broadcastVar2 = sc.broadcast(pe_dict)
 place_dict = broadcastVar.value
 place_en_dict = broadcastVar2.value
-rdd.map(lambda x:[x.brand_name, x.brand_id, x.stars]).map(lambda x:f(x,place_dict,place_en_dict))\
-		.filter(lambda x:x[2] != 0)\
+rdd.map(lambda x:[x.brand_name, x.brand_id, x.stars]).filter(lambda x:x[2] != 0)\
+        .map(lambda x:f(x,place_dict,place_en_dict))\
 			.saveAsTextFile(sys.argv[1])
 sc.stop()
