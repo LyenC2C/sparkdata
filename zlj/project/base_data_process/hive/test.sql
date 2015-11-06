@@ -11,3 +11,7 @@ select * from t_base_q_user_dev where uin='469330328' ;
 select *,   ROW_NUMBER() OVER(PARTITION BY item_id ORDER BY cast(ts AS BIGINT) DESC) AS rn
 
 from t_base_q_user_dev_zlj ;
+
+
+
+-- select * from t_base_ec_dim where cate_id=50015202;

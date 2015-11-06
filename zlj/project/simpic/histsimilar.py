@@ -52,7 +52,7 @@ path='/home/zlj/pic/'
 if __name__ == '__main__':
 	listfile1=os.listdir(path)
 
-	listfile=os.listdir('/home/zlj/pic')
+	listfile=os.listdir('/home/zlj/test')
 	for fw1 in  listfile:
 		if 'jpg' not in fw1:continue
 		for fw2 in  listfile1:
