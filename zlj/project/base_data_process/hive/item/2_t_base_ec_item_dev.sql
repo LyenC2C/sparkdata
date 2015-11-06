@@ -12,8 +12,6 @@ SET hive.exec.max.dynamic.partitions=2000;
 -- LOAD DATA  INPATH '/hive/external/wlbase_dev/t_base_ec_item_dev/ds=20150101' OVERWRITE INTO TABLE t_base_ec_item_dev PARTITION (ds='20150000') ;
 -- LOAD DATA  INPATH '/data/develop/ec/tb/iteminfo_tmp/1101.dir/' OVERWRITE INTO TABLE t_base_ec_item_dev PARTITION (ds='20150001') ;
 
-
-
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds='20151101')
 
   SELECT
@@ -50,7 +48,7 @@ t_base_ec_dim
 where  ds=20151023
 )t2 join
     (
-     select * from t_base_ec_item_dev where ds=20150001 ;
+     select * from t_base_ec_item_dev where ds=20150001
 )
 t1
 on t1.cat_id=t2.cate_id  ;
