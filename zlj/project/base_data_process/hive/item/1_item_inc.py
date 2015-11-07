@@ -9,6 +9,7 @@ from pyspark import SparkContext
 import rapidjson as json
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -102,56 +103,63 @@ def parse(line_s):
 
 
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
-rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/log',100)\
-    .map(lambda x:parse(x))
-
-hiveContext.sql('use wlbase_dev')
-df=hiveContext.sql('select * from t_base_ec_item_dev where ds=20151101 limit 1000')
-schema1=df.schema
-
-rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.ts]))\
-    .repartition(100)
-
-
 def fun(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
-
-
-rdd2=rdd1.union(rdd).groupByKey()
-rdd3=rdd2.map(lambda (x,y):fun(y)).coalesce(20)
-
-# rdd3.map(lambda x:"\001".join([str(valid_jsontxt(i)) for i in x])).saveAsTextFile("/data/develop/ec/tb/iteminfo_tmp/1101.dir")
-
-ds='20151104'
-
 def f(x):
     if type(x) == type(""):
         return x.decode("utf-8")
     else:
         return x
+
 def fun1(x,ds):
     x.append(ds)
     return [f(i) for i in x]
+
+if __name__ == "__main__":
+    if sys.argv[1] == '-h':
+        comment = '-新增商品 \n\
+				  '
+        print comment
+        print 'argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n argv[3] ds_1\n'
+    elif len(sys.argv)==4:
+        filepath=sys.argv[1]
+        ds=sys.argv[2]
+        ds_1=sys.argv[3]
+        rdd=sc.textFile('filepath',100)\
+            .map(lambda x:parse(x))
+        hiveContext.sql('use wlbase_dev')
+        df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
+        schema1=df.schema
+        rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
+                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.ts]))
+        rdd2=rdd1.union(rdd).groupByKey()
+        rdd3=rdd2.map(lambda (x,y):fun(y)).coalesce(40)
+        ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
+        hiveContext.registerDataFrameAsTable(ddf,'tmptable')
+        sql='''
+        insert overwrite table t_base_ec_item_dev partition(ds=%s)
+        select * from tmptable
+        '''
+        hiveContext.sql(sql%('20150104'))
+
+
+
+# hiveContext.sql('use wlbase_dev')
+# ds='20151104'
+# df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds)
+# schema1=df.schema
+#
+# rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.ts]))
+#
+#
+# rdd3.map(lambda x:"\001".join([str(valid_jsontxt(i)) for i in x])).saveAsTextFile("/data/develop/ec/tb/iteminfo_tmp/1101.dir")
+
     # return x
-ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
-hiveContext.registerDataFrameAsTable(ddf,'testtable')
 
 
-sql='''
-insert overwrite table t_base_ec_item_dev partition(ds=%s)
-select item_id,title,cat_id,cat_name,root_cat_id,root_cat_name,brand_id,brand_name,bc_type,price,price_zone,is_online,off_time,favor,seller_id,shop_id,ts from testtable
-'''
 
-sql='''
-insert overwrite table t_base_ec_item_dev partition(ds=%s)
-select * from testtable
-'''
-hiveContext.sql(sql%('20150104'))
+# sql='''
+# insert overwrite table t_base_ec_item_dev partition(ds=%s)
+# select item_id,title,cat_id,cat_name,root_cat_id,root_cat_name,brand_id,brand_name,bc_type,price,price_zone,is_online,off_time,favor,seller_id,shop_id,ts from testtable
+# '''
 
-#LOAD DATA  INPATH '/data/develop/ec/tb/iteminfo_tmp/1101.dir/' OVERWRITE INTO TABLE t_base_ec_item_dev PARTITION (ds='20150001') ;
-
-# .saveAsTextFile('/hive/external/wlbase_dev/t_base_ec_item_dev/ds=20150101')
-
-# sc.textFile(path,100).map(lambda  x: parse_shop(x)).saveAsTextFile('/hive/external/wlbase_dev/t_base_ec_shop_dev/ds=20150101')
-
-# sc.textFile('/hive/external/wlbase_dev/t_base_ec_shop_dev/ds=20150101').filter(lambda  x: '64661829' in x).take(10)
