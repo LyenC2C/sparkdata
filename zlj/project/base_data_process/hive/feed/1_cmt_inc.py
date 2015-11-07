@@ -71,7 +71,8 @@ def parse_cmt(line_s):
             l.append(ts)
             l.append(date.replace('-',''))
             # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
-            list.append("\001".join(l))
+            # list.append("\001".join(l))
+            list.append(l)
         return list
     # except:
     #     return None
@@ -109,8 +110,8 @@ def parse_cmt_test(line_s):
 rdd=sc.textFile(path,120).filter(lambda  x: 'SUCCESS' in x)\
     .map(lambda  x: parse_cmt(x))\
     .filter(lambda x:x is not None)\
-    .flatMap(lambda  x: x)\
-    .saveAsTextFile('/user/zlj/data/all_cmt/1')
+    .flatMap(lambda  x: (x[0],x))\
+    # .saveAsTextFile('/user/zlj/data/all_cmt/1')
 
 
 #
@@ -127,54 +128,51 @@ schema = StructType([
     StructField("ts",StringType(), True)]
 )
 
+feed_count_rdd=hiveContext.sql('select * from t_zlj_ec_item_feed_count ').map(lambda x: (x.item_id,x.feed_ids))
+
+def fun(x):
+    feedids=x[0]
+    itemfeed=x[1]
+    feed_id=itemfeed[2]
+    if feed_id in feedids: return None
+    else: return itemfeed
+
+filterrdd=rdd.union(feed_count_rdd).groupByKey().map(lambda (x ,y): fun(y)).filter(lambda  x: x !=None)
+
+
+df=hiveContext.createDataFrame(filterrdd,schema)
+hiveContext.registerDataFrameAsTable(df,'tmptable')
+
+hiveContext.sql('SET hive.exec.dynamic.partition=true')
+hiveContext.sql('SET hive.exec.dynamic.partition.mode=nonstrict')
+hiveContext.sql('SET hive.exec.max.dynamic.partitions.pernode = 1000')
+hiveContext.sql('SET hive.exec.max.dynamic.partitions=2000')
+hiveContext.sql('set hive.exec.reducers.bytes.per.reducer=500000000')
+
+sql='''
+INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds )
+select
+* from tmptable
+'''
+
+
+hiveContext.sql(sql)
+
+
+
+
+rdd=hiveContext.sql('select item_id,feed_id from t_base_ec_item_feed_dev where ds>20131002 and ds<20151103').map(lambda x:(x.item_id,x.feed_id))
+
+def fun():
+
+rdd.groupByKey().map(lambda x:x)
 # rdd=sc.textFile('/user/zlj/data/all_cmt/1/part-00000').map(lambda x:x.split('\001')[:-1]).filter(lambda  x:len(x)==8)
 
-rdd=sc.textFile('/user/zlj/data/all_cmt/1').map(lambda x:x.split('\001')[:-1]).filter(lambda x:len(x)==8)
-
-hiveContext.sql('use wlbase_dev')
-hiveContext.sql("SET hive.exec.dynamic.partition=true")
-
-d1=datetime.datetime(2013, 1, 1)
-d2=datetime.datetime(2013, 12, 31)
-
-rdd1=rdd.filter(lambda x: '2013' in x[-3])
-
-for i in xrange((d2-d1).days):
-    d0=d1 + datetime.timedelta(days =i)
-    ds1=d0.strftime("%Y-%m-%d")
-    ds2=d0.strftime("%Y%m%d")
-    data=rdd1.filter(lambda x: ds1 in x[-3]).repartition(10)
-    df=hiveContext.createDataFrame(data,schema)
-    hiveContext.registerDataFrameAsTable(df,'data')
-    hiveContext.sql('insert overwrite table t_base_ec_item_feed_dev_zlj  PARTITION(ds='+ds2+') select * from data')
+# rdd=sc.textFile('/user/zlj/data/all_cmt/1').map(lambda x:x.split('\001')[:-1]).filter(lambda x:len(x)==8)
 
 
-d1=datetime.datetime(2014, 1, 1)
-d2=datetime.datetime(2014, 12, 31)
-rdd1=rdd.filter(lambda x: '2014' in x[-3])
 
-for i in xrange((d2-d1).days):
-    d0=d1 + datetime.timedelta(days =i)
-    ds1=d0.strftime("%Y-%m-%d")
-    ds2=d0.strftime("%Y%m%d")
-    # print ds1,ds2
-    data=rdd1.filter(lambda x: ds1 in x[-3]).repartition(10)
-    df=hiveContext.createDataFrame(data,schema)
-    hiveContext.registerDataFrameAsTable(df,'data')
-    hiveContext.sql('insert overwrite table t_base_ec_item_feed_dev_zlj  PARTITION(ds='+ds2+') select * from data')
 
-d1=datetime.datetime(2015, 1, 1)
-d2=datetime.datetime(2015, 10, 31)
-rdd1=rdd.filter(lambda x: '2015' in x[-3])
-
-for i in xrange((d2-d1).days):
-    d0=d1 + datetime.timedelta(days =i)
-    ds1=d0.strftime("%Y-%m-%d")
-    ds2=d0.strftime("%Y%m%d")
-    data=rdd1.filter(lambda x: ds1 in x[-3]).repartition(10)
-    df=hiveContext.createDataFrame(data,schema)
-    hiveContext.registerDataFrameAsTable(df,'data')
-    hiveContext.sql('insert overwrite table t_base_ec_item_feed_dev_zlj  PARTITION(ds='+ds2+') select * from data')
 
 
 

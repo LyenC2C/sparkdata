@@ -15,3 +15,7 @@ from t_base_q_user_dev_zlj ;
 
 
 -- select * from t_base_ec_dim where cate_id=50015202;
+
+create table t_zlj_ec_item_feed_count as
+select item_id,count(1) as times, concat_ws('\001',collect_set(feed_id)) as feed_ids  from t_base_ec_item_feed_dev where ds>20131002 and ds<20151103
+ group by item_id;
