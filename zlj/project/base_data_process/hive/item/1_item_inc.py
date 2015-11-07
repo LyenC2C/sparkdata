@@ -11,6 +11,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -124,8 +125,8 @@ if __name__ == "__main__":
         print 'argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n argv[3] ds_1\n'
     elif len(sys.argv)==4:
         filepath=sys.argv[1]
-        ds=sys.argv[2]
-        ds_1=sys.argv[3]
+        ds_1=sys.argv[2]
+        ds=sys.argv[3]
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse(x))
         hiveContext.sql('use wlbase_dev')
@@ -141,7 +142,7 @@ if __name__ == "__main__":
         insert overwrite table t_base_ec_item_dev partition(ds=%s)
         select * from tmptable
         '''
-        hiveContext.sql(sql%('20150104'))
+        hiveContext.sql(sql%(ds))
 
 
 
