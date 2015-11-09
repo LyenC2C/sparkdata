@@ -32,7 +32,7 @@ FROM
 (
 SELECT /*+ mapjoin(t2)*/
  t1.user_id, concat_ws('_',t2.cate_id,cate_name,cast(f as String),cast(rn as String)) as v
-FROM t_zlj_ec_perfer_dim t1 join t_base_ec_dim t2 on t1.root_cat_id=t2.cate_id
+FROM t_base_ec_dim t2 join  t_zlj_ec_perfer_dim t1 on t1.root_cat_id=t2.cate_id
 where rn <5
 )
 t

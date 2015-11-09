@@ -71,7 +71,7 @@ if __name__ == '__main__':
 	# except: print  'error'
 
 
-# cat log_xa* |awk -F'_' '{print $1,$2,$3}' |sort -k3 -g -r |less
+	# cat log_xa* |awk -F'_' '{print $1,$2,$3}' |sort -k3 -g -r |less
 	# listfile1=os.listdir(path)
     #
 	# listfile=os.listdir('/home/zlj/test')
