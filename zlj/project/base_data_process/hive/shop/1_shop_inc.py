@@ -12,6 +12,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -124,7 +125,7 @@ if __name__ == "__main__":
        print comment
        print '-insert argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n'
        print '-inc      argvs:\n argv[1]:file or dir input\n argv[2]:ds_1  \n argv[3] ds\n '
-    elif sys.argv[1]=='insert':
+    elif sys.argv[1]=='-insert':
         filepath=sys.argv[2]
         ds=sys.argv[3]
         rdd=sc.textFile(filepath,100)\
@@ -138,7 +139,7 @@ if __name__ == "__main__":
         select * from tmptable
         '''
         hiveContext.sql(sql%(ds))
-    elif sys.argv[1]=='inc':
+    elif sys.argv[1]=='-inc':
         filepath=sys.argv[2]
         ds_1=sys.argv[3]
         ds=sys.argv[4]
