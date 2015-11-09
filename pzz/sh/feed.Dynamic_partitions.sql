@@ -1,4 +1,4 @@
-
+source /home/hadoop/.bashrc
 path=$1
 
 SET hive.exec.dynamic.partition=true;
