@@ -14,6 +14,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -136,8 +137,8 @@ if __name__ == "__main__":
         print '-insert argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n'
         print '-inc      argvs:\n argv[1]:file or dir input\n argv[2]:ds_1  \n argv[3] ds\n'
     elif sys.argv[1]=='-insert':
-        filepath=sys.argv[1]
-        ds=sys.argv[2]
+        filepath=sys.argv[2]
+        ds=sys.argv[3]
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse(x,'insert')).filter(lambda x: x is not None)
         df=hiveContext.sql('select * from t_base_ec_item_dev limit 1')
@@ -151,9 +152,9 @@ if __name__ == "__main__":
         hiveContext.sql(sql%(ds))
 
     elif sys.argv[1]=='-inc':
-        filepath=sys.argv[1]
-        ds_1=sys.argv[2]
-        ds=sys.argv[3]
+        filepath=sys.argv[2]
+        ds_1=sys.argv[3]
+        ds=sys.argv[4]
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
