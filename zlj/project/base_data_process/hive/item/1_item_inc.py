@@ -18,6 +18,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -133,11 +134,7 @@ def fun1(x,ds):
 
 sql_insert='''
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
-
-  SELECT
-
-    /*+ mapjoin(t2)*/
-
+  SELECT  /*+ mapjoin(t2)*/
 t1.item_id,
 t1.title,
 t1.cat_id,
@@ -154,10 +151,10 @@ t1.off_time,
 t1.favor,
 t1.seller_id,
 t1.shop_id,
+t1.location,
 t1.ts
   from
 (
-
 SELECT
 cate_id,
 cate_name,
@@ -166,10 +163,7 @@ cate_level1_name
 FROM
 t_base_ec_dim
 where  ds=20151023
-)t2 join
-    tmptable
-t1
-on t1.cat_id=t2.cate_id  ;
+)t2 join  tmptable  t1 on t1.cat_id=t2.cate_id  ;
 
 '''
 if __name__ == "__main__":
