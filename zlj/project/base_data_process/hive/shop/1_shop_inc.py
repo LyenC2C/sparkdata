@@ -24,6 +24,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -68,7 +69,11 @@ def  parse_shop(line,flag):
     if flag=='insert':
         txt=valid_jsontxt(line)
     else:
-        ts,id,txt=valid_jsontxt(line).split('\t')
+        lis=valid_jsontxt(line).split('\t')
+        if len(lis)!=3:
+            return
+        ts=lis[0]
+        txt=lis[2]
     ob=json.loads((txt))
     if type(ob)==type(0.0):
         return None
