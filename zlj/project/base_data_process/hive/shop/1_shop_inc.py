@@ -10,23 +10,6 @@ import  time
 import rapidjson as json
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -35,11 +18,11 @@ sc=SparkContext(appName="shop-inc")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-def valid_jsontxt(content):
-    if type(content) == type(u""):
-        return content.encode("utf-8")
-    else :
-        return content
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else :
+#         return content
 
 path=sys.argv[1]
 def parse_price(price_dic):
@@ -132,13 +115,6 @@ def  parse_shop(line,flag):
             list.append(str(int(time.time())))
         else:
             list.append(ts)
-        # if flag=='insert':
-        #     # for i in list:
-        #     #     if len(i)==0: strlist.append('-')
-        #     #     else : strlist.append(i)
-        #     # return "\001".join(strlist)
-        #     return list
-        # elif flag=='inc':
         return (shopId,list)
 
     except Exception,e:
@@ -146,15 +122,15 @@ def  parse_shop(line,flag):
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
 def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
-def f_coding(x):
-    if type(x) == type(""):
-        return x.decode("utf-8")
-    else:
-        return x
+# def f_coding(x):
+#     if type(x) == type(""):
+#         return x.decode("utf-8")
+#     else:
+#         return x
 
 def fun1(x,ds):
     x.append(ds)
-    return [f_coding(i) for i in x]
+    return [valid_jsontxt(i) for i in x]
 
 # def insert_get(y):
 
