@@ -24,8 +24,8 @@ def hist_similar(lh, rh):
 	return sum(1 - (0 if l == r else float(abs(l - r))/max(l, r)) for l, r in zip(lh, rh))/len(lh)
 
 def calc_similar(li, ri):
-#	return hist_similar(li.histogram(), ri.histogram())
-	return sum(hist_similar(l.histogram(), r.histogram()) for l, r in zip(split_image(li), split_image(ri))) / 16.0
+	return hist_similar(li.histogram(), ri.histogram())
+	# return sum(hist_similar(l.histogram(), r.histogram()) for l, r in zip(split_image(li), split_image(ri))) / 16.0
 			
 
 def calc_similar_by_path(lf, rf):
