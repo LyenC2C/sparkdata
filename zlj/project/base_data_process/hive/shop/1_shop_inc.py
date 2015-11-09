@@ -10,6 +10,7 @@ import  time
 import rapidjson as json
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -49,76 +50,79 @@ def valid_jsontxt(content):
 # s.split()
 
 def  parse_shop(line,flag):
-    try:
-        ts=''
-        txt=''
-        if flag=='insert':
-            txt=valid_jsontxt(line)
-        else:
-            lis=valid_jsontxt(line).split('\t')
-            if len(lis)!=3:
-                return
-            ts=lis[0]
-            txt=lis[2]
-        ob=json.loads((txt))
-        if type(ob)==type(0.0):
-            return None
-        itemInfoModel=ob['itemInfoModel']
-        location=valid_jsontxt(itemInfoModel.get('location','-'))
-        if 'seller' not in ob.keys():
-            return
-        seller = ob["seller"]
-        evaluateInfo = seller.get("evaluateInfo",[])
-        shopId=seller.get("shopId","-")
-        seller_id=seller.get("userNumId","-")
-        seller_name=seller.get("nick","-")
-        credit=seller.get("creditLevel","-")
-        starts = seller.get("starts","--")
-        trackParams=ob['trackParams']
-        BC_type=trackParams.get('BC_type','-')
-        item_count='0'
-        for item in seller.get('actionUnits',[]):
-            if item.has_key('track'):
-                if item['track']=='Button-AllItem':
-                    item_count=item.get('value','0')
-        fansCount = seller.get("fansCount","0")
-        goodRatePercentage = seller.get("goodRatePercentage","0.0")
-        # nick= seller.get("nick","--").encode('utf-8')
-        weitaoId = seller.get("weitaoId","--")
-        # userNumId = seller.get("userNumId","--")
-        # shopTitle = seller.get("shopTitle","--").encode('utf-8')
-        shopTitle = seller.get("shopTitle","--")
-        desc_score=evaluateInfo[0].get("score",'0.0')
-        service_score=evaluateInfo[1].get("score",'0.0')
-        wuliu_score=evaluateInfo[2].get("score",'0.0')
-        star='99'
-        list=[]
-        list.append(shopId)
-        list.append(seller_id)
-        list.append(shopTitle)
-        list.append(seller_name)
-        if 'B' in BC_type:
-            list.append(star)
-        else: list.append('0')
-        list.append(credit)
-        list.append(starts)
-        list.append(BC_type)
-        list.append(int(item_count))
-        list.append(int(fansCount))
-        list.append(float(goodRatePercentage.replace('%','')))
-        list.append(weitaoId)
-        list.append(float(desc_score))
-        list.append(float(service_score))
-        list.append(float(wuliu_score))
-        list.append(location)
-        if flag=='insert':
-            list.append(str(int(time.time())))
-        else:
-            list.append(ts)
-        return (shopId,list)
 
+    ts=''
+    txt=''
+    if flag=='insert':
+        txt=valid_jsontxt(line)
+    else:
+        lis=valid_jsontxt(line).split('\t')
+        if len(lis)!=3:
+            return
+        ts=lis[0]
+        txt=lis[2]
+    ob=json.loads((txt))
+    if type(ob)==type(0.0):
+        return None
+    itemInfoModel=ob['itemInfoModel']
+    location=valid_jsontxt(itemInfoModel.get('location','-'))
+    if 'seller' not in ob.keys():
+        return
+    seller = ob["seller"]
+    evaluateInfo = seller.get("evaluateInfo",[])
+    shopId=seller.get("shopId","-")
+    seller_id=seller.get("userNumId","-")
+    seller_name=seller.get("nick","-")
+    credit=seller.get("creditLevel","-")
+    starts = seller.get("starts","--")
+    trackParams=ob['trackParams']
+    BC_type=trackParams.get('BC_type','-')
+    item_count='0'
+    for item in seller.get('actionUnits',[]):
+        if item.has_key('track'):
+            if item['track']=='Button-AllItem':
+                item_count=item.get('value','0')
+    fansCount = seller.get("fansCount","0")
+    try:
+        t = seller.get("goodRatePercentage","0.0")
+        goodRatePercentage=float(t.replace('%',''))
     except Exception,e:
-        print e,line
+           print e,line
+    # nick= seller.get("nick","--").encode('utf-8')
+    weitaoId = seller.get("weitaoId","--")
+    # userNumId = seller.get("userNumId","--")
+    # shopTitle = seller.get("shopTitle","--").encode('utf-8')
+    shopTitle = seller.get("shopTitle","--")
+    desc_score=evaluateInfo[0].get("score",'0.0')
+    service_score=evaluateInfo[1].get("score",'0.0')
+    wuliu_score=evaluateInfo[2].get("score",'0.0')
+    star='99'
+    list=[]
+    list.append(shopId)
+    list.append(seller_id)
+    list.append(shopTitle)
+    list.append(seller_name)
+    if 'B' in BC_type:
+        list.append(star)
+    else: list.append('0')
+    list.append(credit)
+    list.append(starts)
+    list.append(BC_type)
+    list.append(int(item_count))
+    list.append(int(fansCount))
+    list.append(goodRatePercentage)
+    list.append(weitaoId)
+    list.append(float(desc_score))
+    list.append(float(service_score))
+    list.append(float(wuliu_score))
+    list.append(location)
+    if flag=='insert':
+        list.append(str(int(time.time())))
+    else:
+        list.append(ts)
+    return (shopId,list)
+
+
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
 def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
