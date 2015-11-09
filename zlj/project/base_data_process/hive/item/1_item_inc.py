@@ -19,6 +19,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -163,8 +164,7 @@ cate_level1_name
 FROM
 t_base_ec_dim
 where  ds=20151023
-)t2 join  tmptable  t1 on t1.cat_id=t2.cate_id  ;
-
+)t2 join  tmptable  t1 on t1.cat_id=t2.cate_id
 '''
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
