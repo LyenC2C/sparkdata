@@ -19,7 +19,7 @@ LOAD DATA  INPATH '$path' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTI
 -- ��̬����
 -- INSERT overwrite TABLE t_base_ec_item_feed_dev PARTITION (ds )
 
-INSERT INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds)
+INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds)
 select
 item_id,
 item_title,
@@ -30,7 +30,6 @@ f_date ,
 annoy  ,
 ts ,
 regexp_replace(f_date,'-','') ds
-
 FROM t_base_ec_item_feed_dev_zlj where ds=20000001
 ;
 
