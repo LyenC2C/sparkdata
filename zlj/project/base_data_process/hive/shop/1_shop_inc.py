@@ -5,9 +5,9 @@ __author__ = 'zlj'
 from pyspark.sql import *
 import sys
 from pyspark import SparkContext
-import  time
 
 import rapidjson as json
+
 
 
 
@@ -55,6 +55,7 @@ def valid_jsontxt(content):
 # s.split()
 
 def  parse_shop(line,flag):
+    ts,id,txt=line.split('\t')
     ob=json.loads(valid_jsontxt(line))
     if type(ob)==type(0.0):
         return None
@@ -104,7 +105,8 @@ def  parse_shop(line,flag):
     list.append(float(service_score))
     list.append(float(wuliu_score))
     list.append(location)
-    list.append(str(int(time.time())))
+    # list.append(str(int(time.time())))
+    list.append(ts)
     if flag=='insert':
         # for i in list:
         #     if len(i)==0: strlist.append('-')
