@@ -11,6 +11,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -87,7 +88,8 @@ def  parse_shop(line,flag):
         t = seller.get("goodRatePercentage","0.0")
         goodRatePercentage=float(t.replace('%',''))
     except Exception,e:
-           print e,line
+        print e,line
+        return
     # nick= seller.get("nick","--").encode('utf-8')
     weitaoId = seller.get("weitaoId","--")
     # userNumId = seller.get("userNumId","--")
