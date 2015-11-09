@@ -14,6 +14,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -53,7 +54,7 @@ def valid_jsontxt(content):
 # s.split()
 
 def  parse_shop(line,flag):
-    ob=json.loads(line)
+    ob=json.loads(valid_jsontxt(line))
     itemInfoModel=ob['itemInfoModel']
     location=valid_jsontxt(itemInfoModel.get('location','-'))
     seller = ob["seller"]
