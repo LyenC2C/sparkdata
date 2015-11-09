@@ -1,3 +1,4 @@
+#coding:utf-8
 __author__ = 'zlj'
 
 
@@ -7,7 +8,7 @@ from pyspark import SparkContext
 import  sys
 
 '''
-ºÏ²¢ËùÓĞ±êÇ©
+åˆå¹¶æ‰€æœ‰æ ‡ç­¾
 '''
 
 
