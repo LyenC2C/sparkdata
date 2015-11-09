@@ -1,3 +1,4 @@
+source  /home/hadoop/.bashrc
 #spark-submit --executor-memory 20g --driver-memory 20g --total-executor-cores 120 pzz/cmt/cmt_inc_clean.py -gen_his_item_feed_file /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=201*/* /data/develop/ec/tb/cmt_dbfeedid.20151103^C
 
 all_feed_output=/data/develop/ec/tb/cmt_allfeedid.20151105
