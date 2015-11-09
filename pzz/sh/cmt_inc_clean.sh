@@ -10,4 +10,4 @@ tmp_data=/data/develop/ec/tb/cmt_tmpdata.20151105
 #hadoop fs -rmr $tmp_data
 #spark-submit --executor-memory 20g --driver-memory 20g --total-executor-cores 100 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc /data/develop/ec/tb/cmt_dbfeedid.20151103/part* /commit/comments/*2015-11-05 $all_feed_output $new_feed_output $tmp_data
 
-hive -f /mnt/pzz/worksapce/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
+hive -f /mnt/pzz/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
