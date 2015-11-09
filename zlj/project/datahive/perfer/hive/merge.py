@@ -4,6 +4,8 @@ __author__ = 'zlj'
 from pyspark.sql import *
 from pyspark import SparkContext
 
+import  sys
+
 '''
 合并所有标签
 '''
@@ -13,10 +15,25 @@ from pyspark import SparkContext
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
-sc=SparkContext(appName="test")
+sc=SparkContext(appName="merge_perfer")
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
+
+def mergeinfo(info):
+    dic={}
+    value=''
+    for item in info:
+        dic[item[0]]=item[1]
+    value+=dic.get('dim')
+    value+='_'+dic.get('brand')
+    value+='_'+dic.get('car')
+    value+='_'+dic.get('house')
+    return value
+
+
+
+
 
 
 hiveContext.sql('use wlbase_dev')
@@ -56,4 +73,19 @@ t
 group by user_id ;
 
 '''
-rdd_dim=hiveContext.sql(sql_dim%brand_limit).map(lambda x:(x.user_id,('brand',x.brandinfo)))
+rdd_brand=hiveContext.sql(sql_brand%brand_limit).map(lambda x:(x.user_id,('brand',x.brandinfo)))
+
+
+sql_car='''
+select user_id,tag
+from
+t_zlj_ec_perfer_house
+;
+
+'''
+rdd_car=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('car',x.tag)))
+
+rdd=rdd_dim.union(rdd_brand).union(rdd_car)
+
+rdd.groupByKey(100).map(lambda (x,y):(x,mergeinfo(y))).saveAsTextFile(sys.argv[1])
+
