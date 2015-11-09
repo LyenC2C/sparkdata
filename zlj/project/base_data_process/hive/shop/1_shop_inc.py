@@ -16,6 +16,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -92,11 +93,11 @@ def  parse_shop(line,flag):
     list.append(BC_type)
     list.append(item_count)
     list.append(fansCount)
-    list.append(goodRatePercentage.replace('%',''))
+    list.append(float(goodRatePercentage.replace('%','')))
     list.append(weitaoId)
-    list.append(desc_score)
-    list.append(service_score)
-    list.append(wuliu_score)
+    list.append(float(desc_score))
+    list.append(float(service_score))
+    list.append(float(wuliu_score))
     list.append(location)
     list.append(str(time.time()))
     if flag=='insert':
