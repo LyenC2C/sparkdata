@@ -12,7 +12,7 @@ set hive.exec.reducers.bytes.per.reducer=500000000;
 
 use wlbase_dev;
 
-LOAD DATA  INPATH '$path' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds='20101103');
+LOAD DATA  INPATH '$path' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds='20000001');
 
 
 
@@ -31,7 +31,7 @@ annoy  ,
 ts ,
 regexp_replace(f_date,'-','') ds
 
-FROM t_base_ec_item_feed_dev_zlj where ds=20101103
+FROM t_base_ec_item_feed_dev_zlj where ds=20000001
 ;
 
 EOF
