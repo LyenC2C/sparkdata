@@ -13,18 +13,6 @@ import rapidjson as json
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -172,7 +160,7 @@ if __name__ == "__main__":
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
         sql='''
-        insert overwrite table t_base_ec_item_dev partition(ds=%s)
+        insert overwrite table t_base_ec_shop_dev partition(ds=%s)
         select * from tmptable
         '''
         hiveContext.sql(sql%(ds))
