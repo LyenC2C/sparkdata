@@ -14,6 +14,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -47,6 +48,8 @@ def parse_price(price_dic):
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
+    elif  type(content) == type(""):
+         return content.encode("utf-8")
     else :
         return content
 # s=''
