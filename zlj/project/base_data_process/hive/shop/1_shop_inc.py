@@ -16,6 +16,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -55,8 +56,13 @@ def valid_jsontxt(content):
 # s.split()
 
 def  parse_shop(line,flag):
-    ts,id,txt=line.split('\t')
-    ob=json.loads(valid_jsontxt(line))
+    ts=''
+    txt=''
+    if flag=='insert':
+        txt=valid_jsontxt(line)
+    else:
+        ts,id,txt=valid_jsontxt(line).split('\t')
+    ob=json.loads((txt))
     if type(ob)==type(0.0):
         return None
     itemInfoModel=ob['itemInfoModel']
@@ -105,8 +111,10 @@ def  parse_shop(line,flag):
     list.append(float(service_score))
     list.append(float(wuliu_score))
     list.append(location)
-    # list.append(str(int(time.time())))
-    list.append(ts)
+    if flag=='insert':
+        list.append(str(int(time.time())))
+    else:
+        list.append(ts)
     if flag=='insert':
         # for i in list:
         #     if len(i)==0: strlist.append('-')
@@ -142,7 +150,7 @@ if __name__ == "__main__":
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse_shop(x,'insert'))\
             .filter(lambda x: x is not None)\
-            .map(lambda x:fun1(x,ds))
+            .map(lambda x:fun1(x,ds)).map(lambda x:(x[0],x[1])).groupByKey(50).map(lambda (x,y):y[0])
         df=hiveContext.sql('select * from t_base_ec_shop_dev limit 1')
         schema1=df.schema
         ddf=hiveContext.createDataFrame(rdd,schema1)
