@@ -128,44 +128,87 @@ schema = StructType([
     StructField("ts",StringType(), True)]
 )
 
-feed_count_rdd=hiveContext.sql('select * from t_zlj_ec_item_feed_count ').map(lambda x: (x.item_id,x.feed_ids))
 
-def fun(x):
-    feedids=x[0]
-    itemfeed=x[1]
+ds_1=''
+feed_count_rdd=hiveContext.sql('select * from t_zlj_ec_item_feed_count where ds=%s '%ds_1).map(lambda x: (x.item_id,x.feed_ids))
+
+
+def fun(x,y):
+    feedids=y[0]
+    itemfeed=y[1]
     feed_id=itemfeed[2]
-    if feed_id in feedids: return None
-    else: return itemfeed
+    t1=(1,[x,feedids])
+    t2=(0,itemfeed)
+    result=[]
+    if feed_id in feedids:
+        result.append(t1)
 
-filterrdd=rdd.union(feed_count_rdd).groupByKey().map(lambda (x ,y): fun(y)).filter(lambda  x: x !=None)
+    else:
+        lv=sorted([int(i) for i in feedids.split('_')],reverse=True)
+        ts=[ str(value) for index,value in enumerate(lv) if index<10]
+        t1=(1,[x,'_'.join(ts)])
+        result.append(t1)
+        result.append(t2)
+    return result
 
-
-df=hiveContext.createDataFrame(filterrdd,schema)
-hiveContext.registerDataFrameAsTable(df,'tmptable')
-
-hiveContext.sql('SET hive.exec.dynamic.partition=true')
-hiveContext.sql('SET hive.exec.dynamic.partition.mode=nonstrict')
-hiveContext.sql('SET hive.exec.max.dynamic.partitions.pernode = 1000')
-hiveContext.sql('SET hive.exec.max.dynamic.partitions=2000')
-hiveContext.sql('set hive.exec.reducers.bytes.per.reducer=500000000')
-
-sql='''
-INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds )
-select
-* from tmptable
-'''
-
-
-hiveContext.sql(sql)
+allrdd=rdd.union(feed_count_rdd).groupByKey().map(lambda (x ,y): fun(x,y)).flatMap(lambda x: x)
 
 
 
+countrdd=allrdd.filter(lambda x:x[0]==0).map(lambda x: x[1]) #[x,feedids]
 
-rdd=hiveContext.sql('select item_id,feed_id from t_base_ec_item_feed_dev where ds>20131002 and ds<20151103').map(lambda x:(x.item_id,x.feed_id))
+def save_count(countrdd,ds):
+    schema = StructType([
+	StructField("item_id",StringType(), True),
+	StructField("feedids",StringType(), True)
+	])
 
-def fun():
+    df=hiveContext.createDataFrame(countrdd,schema)
+    hiveContext.registerDataFrameAsTable(df,'tmptable')
 
-rdd.groupByKey().map(lambda x:x)
+    # hiveContext.sql('select * from tmptable limit 10').collect()
+    sql='''
+     insert overwrite table t_zlj_ec_item_feed_count partition(ds=%s)
+            select *,'%s' as ds from tmptable
+    '''
+    hiveContext.sql(sql%(ds,ds))
+
+
+def save_item_feed(item_feedrdd,ds):
+    df=hiveContext.createDataFrame(item_feedrdd,schema)
+    hiveContext.registerDataFrameAsTable(df,'tmptable')
+    hiveContext.sql('SET hive.exec.dynamic.partition=true')
+    hiveContext.sql('SET hive.exec.dynamic.partition.mode=nonstrict')
+    hiveContext.sql('SET hive.exec.max.dynamic.partitions.pernode = 1000')
+    hiveContext.sql('SET hive.exec.max.dynamic.partitions=2000')
+    hiveContext.sql('set hive.exec.reducers.bytes.per.reducer=500000000')
+
+    sql='''
+    INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds )
+    select
+    * from tmptable
+    '''
+    hiveContext.sql(sql)
+
+
+
+
+
+
+resultrdd=allrdd.filter(lambda x:x[0]==1).map(lambda x: x[0]) #itemfeed list
+
+
+
+
+
+
+
+
+
+
+
+
+
 # rdd=sc.textFile('/user/zlj/data/all_cmt/1/part-00000').map(lambda x:x.split('\001')[:-1]).filter(lambda  x:len(x)==8)
 
 # rdd=sc.textFile('/user/zlj/data/all_cmt/1').map(lambda x:x.split('\001')[:-1]).filter(lambda x:len(x)==8)
@@ -176,7 +219,7 @@ rdd.groupByKey().map(lambda x:x)
 
 
 
-sc.textFile('/data/develop/ec/tb/cmt_res_tmp/res2015').repartition(250).saveAsTextFile('/user/zlj/data/res2014_re')
+# sc.textFile('/data/develop/ec/tb/cmt_res_tmp/res2015').repartition(250).saveAsTextFile('/user/zlj/data/res2014_re')
 #
 #
 # df=hiveContext.createDataFrame(rdd,schema)

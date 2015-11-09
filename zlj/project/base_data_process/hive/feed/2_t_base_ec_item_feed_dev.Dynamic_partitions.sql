@@ -32,11 +32,11 @@ LOAD DATA  INPATH '$path' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTI
 -- 动态分区
 -- INSERT overwrite TABLE t_base_ec_item_feed_dev PARTITION (ds )
 
-INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds )
+INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds)
 select
-t3.item_id,
-t3.item_title,
-t3.feedid as feed_id,
+item_id,
+item_title,
+feed_id,
 user_id,
 content,
 f_date ,
@@ -44,69 +44,72 @@ annoy  ,
 ts ,
 regexp_replace(f_date,'-','') ds
 from
-(
-  select
-  t2.*
-  ,
-  case when t1.item_id is NULL  then 1
-  when t1.item_id is not NULL and t1.maxfeed_id<t2.feedid then 1
-  else 0 end  as rn
-  from
-  (
-    SELECT
-    *
-    from
-    t_base_ec_feed_add_everyday
---     where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd') as String)
-    where ds='$d_2'
 
-  )t1
-  RIGHT  OUTER  join
-  (
-    SELECT
-    item_id,
-    item_title,
-    CAST (feed_id as bigint) feedid,
-    user_id,
-    content,
-    f_date ,
-    annoy  ,
-    ts ,
-    regexp_replace(f_date,'-','') ds
-    FROM t_base_ec_item_feed_dev_zlj where ds=20101103  and item_id rlike   '^\\d+$'
-
-  )t2 on t1.item_id=t2.item_id
-)t3 where rn=1 ;
+FROM t_base_ec_item_feed_dev_zlj where ds=20101103  and item_id rlike   '^\\\\d+$'
+;
+-- (
+--   select
+--   t2.*
+--   ,
+--   case when t1.item_id is NULL  then 1
+--   when t1.item_id is not NULL and t1.maxfeed_id<t2.feedid then 1
+--   else 0 end  as rn
+--   from
+--   (
+--     SELECT
+--     *
+--     from
+--     t_base_ec_feed_add_everyday
+-- --     where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd') as String)
+--     where ds='$d_2'
+--
+--   )t1
+--   RIGHT  OUTER  join
+--   (
+--     SELECT
+--     item_id,
+--     item_title,
+--     CAST (feed_id as bigint) feedid,
+--     user_id,
+--     content,
+--     f_date ,
+--     annoy  ,
+--     ts ,
+--     regexp_replace(f_date,'-','') ds
+--     FROM t_base_ec_item_feed_dev_zlj where ds=20101103  and item_id rlike   '^\\d+$'
+--
+--   )t2 on t1.item_id=t2.item_id
+-- )t3 where rn=1 ;
 
 
 
 
 -- 最大分区
-insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds)
-  select
-  item_id,max(maxfeed_id) as feedid ,sum(feed_times)
--- ,cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd') as STRING) ds
-,'$d_1' ds
-  from
-(
-   SELECT
-    item_id,
-    maxfeed_id,
-    feed_times
-    from
-    t_base_ec_feed_add_everyday
---        where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd') as STRING)
-     where ds='$d_2' and item_id rlike   '^\\\\d+$'
-    UNION  ALL
-     SELECT
-    item_id,
-    max(CAST (feed_id as bigint)) maxfeed_id ,
-    count(1) as feed_times
-
-    FROM t_base_ec_item_feed_dev_zlj where ds=20101103 and item_id rlike   '^\\\\d+$'
-    group by item_id
-
-)t group by item_id  ;
+-- insert overwrite  table t_base_ec_feed_add_everyday PARTITION(ds)
+--   select
+--   item_id,max(maxfeed_id) as feedid ,sum(feed_times)
+-- -- ,cast(from_unixtime(unix_timestamp()-86400*2,'yyyyMMdd') as STRING) ds
+-- ,'$d_1' ds
+--   from
+-- (
+--    SELECT
+--     item_id,
+--     maxfeed_id,
+--     feed_times
+--     from
+--     t_base_ec_feed_add_everyday
+-- --        where ds=cast(from_unixtime(unix_timestamp()-86400*3,'yyyyMMdd') as STRING)
+--      where ds='$d_2' and item_id rlike   '^\\\\d+$'
+--     UNION  ALL
+--      SELECT
+--     item_id,
+--     max(CAST (feed_id as bigint)) maxfeed_id ,
+--     count(1) as feed_times
+--
+--     FROM t_base_ec_item_feed_dev_zlj where ds=20101103 and item_id rlike   '^\\\\d+$'
+--     group by item_id
+--
+-- )t group by item_id  ;
 
 
 EOF
