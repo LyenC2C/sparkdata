@@ -3,17 +3,21 @@
 
 source /etc/profile;
 
-m=1
-m_1=`expr $m + 1`
-d_1=$(date -d '-'$m' day' '+%Y%m%d')
-d_2=$(date -d '-'$m_1' day' '+%Y%m%d')
+#m=1
+#m_1=`expr $m + 1`
+#d_1=$(date -d '-'$m' day' '+%Y%m%d')
+#d_2=$(date -d '-'$m_1' day' '+%Y%m%d')
 
-lastmonth=$(date -d '-1 month' '+%Y%m%d')
-path=$2
+#lastmonth=$(date -d '-1 month' '+%Y%m%d')
+
+
+path=$1
 
 ##hive  ²¿·Ö
 
 /home/zlj/hive/bin/hive<<EOF
+
+
 
 
 SET hive.exec.dynamic.partition=true;
