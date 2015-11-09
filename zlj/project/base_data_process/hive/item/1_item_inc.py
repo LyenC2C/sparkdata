@@ -17,6 +17,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -130,6 +131,47 @@ def fun1(x,ds):
     x.append(ds)
     return [f(i) for i in x]
 
+sql_insert='''
+insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
+
+  SELECT
+
+    /*+ mapjoin(t2)*/
+
+t1.item_id,
+t1.title,
+t1.cat_id,
+t2.cate_name as cat_name,
+t2.cate_level1_id as root_cat_id,
+t2.cate_level1_name as root_cat_name,
+t1.brand_id,
+t1.brand_name,
+t1.bc_type,
+t1.price,
+t1.price_zone,
+t1.is_online,
+t1.off_time,
+t1.favor,
+t1.seller_id,
+t1.shop_id,
+t1.ts
+  from
+(
+
+SELECT
+cate_id,
+cate_name,
+cate_level1_id,
+cate_level1_name
+FROM
+t_base_ec_dim
+where  ds=20151023
+)t2 join
+    tmptable
+t1
+on t1.cat_id=t2.cate_id  ;
+
+'''
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
     if sys.argv[1] == '-h':
@@ -148,11 +190,11 @@ if __name__ == "__main__":
         schema1=df.schema
         ddf=hiveContext.createDataFrame(rdd,schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        sql='''
-        insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        select * from tmptable
-        '''
-        hiveContext.sql(sql%(ds))
+        # sql='''
+        # insert overwrite table t_base_ec_item_dev partition(ds=%s)
+        # select * from tmptable
+        # '''
+        hiveContext.sql(sql_insert%(ds))
 
     elif sys.argv[1]=='-inc':
         filepath=sys.argv[2]
