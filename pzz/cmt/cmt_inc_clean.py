@@ -30,9 +30,11 @@ def parse_cmt_new(line_s):
             try:
                 l = []
                 itemid = value.get('auctionNumId', '-')
+                int(itemid)
                 l.append(itemid)
                 l.append(value.get('auctionTitle', '-'))
                 feedid = value.get('id', '-')
+                int(feedid)
                 l.append(feedid)
                 l.append(value.get('userId', '-'))
                 # l.append(data.get('userStar'))
@@ -46,7 +48,7 @@ def parse_cmt_new(line_s):
                 # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
                 list.append([itemid, [feedid,"\001".join(l)]])
             except Exception,e:
-                print line
+                print e,line
         return list
     return None
 
