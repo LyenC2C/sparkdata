@@ -1,6 +1,8 @@
 source /home/hadoop/.bashrc
 path=$1
 
+/home/hadoop/hive/bin/hive<<EOF
+
 SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
 SET hive.exec.max.dynamic.partitions.pernode = 1000;
@@ -32,3 +34,5 @@ from
 
 FROM t_base_ec_item_feed_dev_zlj where ds=20101103
 ;
+
+EOF
