@@ -14,6 +14,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -53,8 +54,8 @@ def valid_jsontxt(content):
 # s.split()
 def parse(line_s,flag):
     line=valid_jsontxt(line_s)
-    ts,id,txt=line.split('\t')
-    ob=json.loads(txt)
+    # ts,id,txt=line.split('\t')
+    ob=json.loads(line)
     if type(ob)==type(0.0):
         return None
     itemInfoModel=ob['itemInfoModel']
@@ -133,11 +134,11 @@ if __name__ == "__main__":
         print comment
         print '-insert argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n'
         print '-inc      argvs:\n argv[1]:file or dir input\n argv[2]:ds_1  \n argv[3] ds\n'
-    elif sys.argv[1]=='insert':
+    elif sys.argv[1]=='-insert':
         filepath=sys.argv[1]
         ds=sys.argv[2]
         rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse(x,'insert'))
+            .map(lambda x:parse(x,'insert')).filter(lambda x: x is not None)
         df=hiveContext.sql('select * from t_base_ec_item_dev limit 1')
         schema1=df.schema
         ddf=hiveContext.createDataFrame(rdd,schema1)
@@ -148,12 +149,12 @@ if __name__ == "__main__":
         '''
         hiveContext.sql(sql%(ds))
 
-    elif sys.argv[1]=='inc':
+    elif sys.argv[1]=='-inc':
         filepath=sys.argv[1]
         ds_1=sys.argv[2]
         ds=sys.argv[3]
         rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse(x,'inc'))
+            .map(lambda x:parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
         schema1=df.schema

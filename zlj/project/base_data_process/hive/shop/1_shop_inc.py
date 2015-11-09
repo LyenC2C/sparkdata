@@ -15,6 +15,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -138,6 +139,7 @@ if __name__ == "__main__":
         ds=sys.argv[3]
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse_shop(x,'insert'))\
+            .filter(lambda x: x is not None)\
             .map(lambda x:fun1(x,ds))
         df=hiveContext.sql('select * from t_base_ec_shop_dev limit 1')
         schema1=df.schema

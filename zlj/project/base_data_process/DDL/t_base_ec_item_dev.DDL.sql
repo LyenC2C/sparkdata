@@ -16,6 +16,7 @@ off_time STRING COMMENT '下架时间',
 favor BIGINT COMMENT '收藏人数',
 seller_id STRING  COMMENT '店家id',
 shop_id STRING  COMMENT '店铺id',
+location  String COMMENT '地址' ,
 ts STRING COMMENT '采集时间戳'
 )
 COMMENT '电商商品基础信息表'
