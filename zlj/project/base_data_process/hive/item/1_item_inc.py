@@ -13,6 +13,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -54,6 +55,8 @@ def parse(line_s,flag):
     line=valid_jsontxt(line_s)
     ts,id,txt=line.split('\t')
     ob=json.loads(txt)
+    if type(ob)==type(0.0):
+        return None
     itemInfoModel=ob['itemInfoModel']
     location=valid_jsontxt(itemInfoModel.get('location','-'))
     item_id=itemInfoModel.get('itemId','-')

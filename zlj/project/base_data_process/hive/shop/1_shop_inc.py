@@ -14,6 +14,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -54,7 +55,7 @@ def valid_jsontxt(content):
 
 def  parse_shop(line,flag):
     ob=json.loads(valid_jsontxt(line))
-    if type(ob)==type(''):
+    if type(ob)==type(0.0):
         return None
     itemInfoModel=ob['itemInfoModel']
     location=valid_jsontxt(itemInfoModel.get('location','-'))
