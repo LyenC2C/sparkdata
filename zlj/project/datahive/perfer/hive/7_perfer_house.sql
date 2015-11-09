@@ -1,9 +1,10 @@
 
 
 --房产类
-
+drop table if EXISTS  t_zlj_ec_perfer_house;
+create table t_zlj_ec_perfer_house as
 select
-user_id, sum(f) as score
+user_id,'有房一族' tag, sum(f) as score
 from
 t_zlj_ec_perfer_dim
 where  root_cat_id in
@@ -22,4 +23,6 @@ where  root_cat_id in
 124698018
 )
 group by user_id
-order by sum(f) desc  limit 100;
+order by sum(f) desc
+-- limit 100;
+;
