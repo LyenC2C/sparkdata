@@ -1,16 +1,14 @@
 __author__ = 'zlj'
 
-
+from pyspark.sql import *
+from pyspark.mllib.clustering import *
+from pyspark import SparkContext
 
 from numpy import array
-import json
-from pyspark.sql import *
-import numpy as np
-from pyspark.mllib.clustering import *
-from pyspark.sql.types import *
-from pyspark import SparkContext
+
 sc=SparkContext(appName="test")
 sqlContext = SQLContext(sc)
+
 
 
 
