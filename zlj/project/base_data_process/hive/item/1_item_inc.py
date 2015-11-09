@@ -22,6 +22,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -132,7 +133,7 @@ def parse(line,flag):
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
 def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
-def f(x):
+def f_coding(x):
     if type(x) == type(""):
         return x.decode("utf-8")
     else:
@@ -140,7 +141,7 @@ def f(x):
 
 def fun1(x,ds):
     x.append(ds)
-    return [f(i) for i in x]
+    return [f_coding(i) for i in x]
 
 sql_insert='''
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
@@ -216,7 +217,7 @@ if __name__ == "__main__":
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
         # sql='''
         # insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        # select * from tmptable
+        # s
         # '''
         hiveContext.sql(sql_insert%(ds))
 

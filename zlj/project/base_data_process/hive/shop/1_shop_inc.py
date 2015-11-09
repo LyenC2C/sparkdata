@@ -23,6 +23,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -121,14 +122,14 @@ def  parse_shop(line,flag):
         list.append(str(int(time.time())))
     else:
         list.append(ts)
-    if flag=='insert':
-        # for i in list:
-        #     if len(i)==0: strlist.append('-')
-        #     else : strlist.append(i)
-        # return "\001".join(strlist)
-        return list
-    elif flag=='inc':
-        return (shopId,list)
+    # if flag=='insert':
+    #     # for i in list:
+    #     #     if len(i)==0: strlist.append('-')
+    #     #     else : strlist.append(i)
+    #     # return "\001".join(strlist)
+    #     return list
+    # elif flag=='inc':
+    return (shopId,list)
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
 def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
@@ -158,7 +159,7 @@ if __name__ == "__main__":
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse_shop(x,'insert'))\
             .filter(lambda x: x is not None)\
-            .map(lambda x:(x[0],x)).groupByKey(50).map(lambda (x,y):[i  for i in y][0]).map(lambda x:fun1(x,ds))
+            .groupByKey(50).map(lambda (x,y):[i  for i in y][0]).map(lambda x:fun1(x,ds))
         df=hiveContext.sql('select * from t_base_ec_shop_dev limit 1')
         schema1=df.schema
         ddf=hiveContext.createDataFrame(rdd,schema1)
@@ -174,7 +175,7 @@ if __name__ == "__main__":
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse_shop(x,'inc')).filter(lambda x: x is not None)\
-            .map(lambda x:fun1(x,ds)).map(lambda x:(x[0],x)).groupByKey(50).map(lambda (x,y):[i  for i in y][0])
+            .groupByKey(50).map(lambda (x,y):[i  for i in y][0])
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_shop_dev where ds=%s'%ds_1)
         schema1=df.schema
