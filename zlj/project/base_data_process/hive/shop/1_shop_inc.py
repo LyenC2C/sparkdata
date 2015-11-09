@@ -13,6 +13,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -53,6 +54,8 @@ def valid_jsontxt(content):
 
 def  parse_shop(line,flag):
     ob=json.loads(valid_jsontxt(line))
+    if type(ob)==type(''):
+        return None
     itemInfoModel=ob['itemInfoModel']
     location=valid_jsontxt(itemInfoModel.get('location','-'))
     seller = ob["seller"]
@@ -149,7 +152,7 @@ if __name__ == "__main__":
         ds_1=sys.argv[3]
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse_shop(x,'inc'))
+            .map(lambda x:parse_shop(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_shop_dev where ds=%s'%ds_1)
         schema1=df.schema
