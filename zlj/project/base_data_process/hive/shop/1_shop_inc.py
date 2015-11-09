@@ -24,6 +24,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -110,7 +111,7 @@ def  parse_shop(line,flag):
     list.append(float(service_score))
     list.append(float(wuliu_score))
     list.append(location)
-    list.append(str(time.time()))
+    list.append(str(int(time.time())))
     if flag=='insert':
         # for i in list:
         #     if len(i)==0: strlist.append('-')
@@ -121,7 +122,7 @@ def  parse_shop(line,flag):
         return (shopId,list)
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
 def fun(y):
-    return sorted(y,key=lambda t : t[-1],reverse=True)[0]
+    return sorted(y,key=lambda t : t[-2],reverse=True)[0]
 def f_coding(x):
     if type(x) == type(""):
         return x.decode("utf-8")
@@ -130,7 +131,7 @@ def f_coding(x):
 
 def fun1(x,ds):
     x.append(ds)
-    return [f_coding(i) for i in x]
+    return [(i) for i in x]
 
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
