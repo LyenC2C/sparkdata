@@ -15,6 +15,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -48,8 +49,6 @@ def parse_price(price_dic):
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
-    elif  type(content) == type(""):
-         return content.encode("utf-8")
     else :
         return content
 # s=''
@@ -133,15 +132,15 @@ def  parse_shop(line,flag):
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
 def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
-# def f_coding(x):
-#     if type(x) == type(""):
-#         return x.decode("utf-8")
-#     else:
-#         return x
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 
 def fun1(x,ds):
     x.append(ds)
-    return [valid_jsontxt(i) for i in x]
+    return [f_coding(i) for i in x]
 
 # def insert_get(y):
 
