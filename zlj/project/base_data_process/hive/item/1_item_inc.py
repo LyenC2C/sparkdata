@@ -14,8 +14,6 @@ import rapidjson as json
 
 
 
-
-
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -130,6 +128,7 @@ def fun1(x,ds):
     return [f(i) for i in x]
 
 if __name__ == "__main__":
+    hiveContext.sql('use wlbase_dev')
     if sys.argv[1] == '-h':
         comment = '-新增商品 \n\
 				  '
