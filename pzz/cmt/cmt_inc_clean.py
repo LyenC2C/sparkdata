@@ -27,23 +27,26 @@ def parse_cmt_new(line_s):
         data = ob['data']
         list = []
         for value in data['rateList']:
-            l = []
-            itemid = value.get('auctionNumId', '-')
-            l.append(itemid)
-            l.append(value.get('auctionTitle', '-'))
-            feedid = value.get('id', '-')
-            l.append(feedid)
-            l.append(value.get('userId', '-'))
-            # l.append(data.get('userStar'))
-            feedback = value.get('feedback', '-').replace('\001', '').replace('\n', '')
-            l.append(valid_jsontxt(feedback))
-            date = value.get('feedbackDate', '-')
-            l.append(date)
-            l.append(value.get('annoy', '-'))
-            l.append(ts)
-            l.append(date.replace('-', ''))
-            # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
-            list.append([itemid, [feedid,"\001".join(l)]])
+            try:
+                l = []
+                itemid = value.get('auctionNumId', '-')
+                l.append(itemid)
+                l.append(value.get('auctionTitle', '-'))
+                feedid = value.get('id', '-')
+                l.append(feedid)
+                l.append(value.get('userId', '-'))
+                # l.append(data.get('userStar'))
+                feedback = value.get('feedback', '-').replace('\001', '').replace('\n', '')
+                l.append(valid_jsontxt(feedback))
+                date = value.get('feedbackDate', '-')
+                l.append(date)
+                l.append(value.get('annoy', '-'))
+                l.append(ts)
+                l.append(date.replace('-', ''))
+                # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
+                list.append([itemid, [feedid,"\001".join(l)]])
+            except Exception,e:
+                print line_s
         return list
     return None
 
