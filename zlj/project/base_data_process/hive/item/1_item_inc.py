@@ -12,10 +12,23 @@ import rapidjson as json
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
-sc=SparkContext(appName="test")
+sc=SparkContext(appName="iter_inc")
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
@@ -49,11 +62,25 @@ def valid_jsontxt(content):
         return content
 # s=''
 # s.split()
-def parse(line_s):
-    line=valid_jsontxt(line_s)
-    ts,id,txt=line.split('\t')
+def parse(line,flag):
+    ts=''
+    txt=''
+    if flag=='insert':
+        txt=valid_jsontxt(line)
+    else:
+        lis=valid_jsontxt(line).split('\t')
+        if len(lis)!=3:
+            return
+        ts=lis[0]
+        txt=lis[2]
     ob=json.loads(txt)
+    # line=valid_jsontxt(line_s)
+    # ts,id,txt=line.split('\t')
+    # ob=json.loads(txt)
+    if type(ob)==type(0.0):
+        return None
     itemInfoModel=ob['itemInfoModel']
+    location=valid_jsontxt(itemInfoModel.get('location','-'))
     item_id=itemInfoModel.get('itemId','-')
     title=itemInfoModel.get('title','-')
     categoryId=itemInfoModel.get('categoryId','-')
@@ -95,19 +122,24 @@ def parse(line_s):
     list.append(int(favor))
     list.append(seller_id)
     list.append(shopId)
-    list.append(str(ts))
+    list.append(location)
+    # list.append(str(int(time.time())))
+    list.append((ts))
     strlist=[]
-    # for i in list:
-    #     if len(i)==0: strlist.append('-')
-    #     else : strlist.append(i)
-    # return "\001".join(strlist)
-    return (item_id,list)
+    if flag=='insert':
+        # for i in list:
+        #     if len(i)==0: strlist.append('-')
+        #     else : strlist.append(i)
+        # return "\001".join(strlist)
+        return list
+    elif flag=='inc':
+        return (item_id,list)
 
 
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
-def fun(y):
+def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
-def f(x):
+def f_coding(x):
     if type(x) == type(""):
         return x.decode("utf-8")
     else:
@@ -115,34 +147,85 @@ def f(x):
 
 def fun1(x,ds):
     x.append(ds)
-    return [f(i) for i in x]
+    return [f_coding(i) for i in x]
 
+sql_insert='''
+insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
+  SELECT  /*+ mapjoin(t2)*/
+t1.item_id,
+t1.title,
+t1.cat_id,
+t2.cate_name as cat_name,
+t2.cate_level1_id as root_cat_id,
+t2.cate_level1_name as root_cat_name,
+t1.brand_id,
+t1.brand_name,
+t1.bc_type,
+t1.price,
+t1.price_zone,
+t1.is_online,
+t1.off_time,
+t1.favor,
+t1.seller_id,
+t1.shop_id,
+t1.location,
+t1.ts
+  from
+(
+SELECT
+cate_id,
+cate_name,
+cate_level1_id,
+cate_level1_name
+FROM
+t_base_ec_dim
+where  ds=20151023
+)t2 join  tmptable  t1 on t1.cat_id=t2.cate_id
+'''
 if __name__ == "__main__":
+    hiveContext.sql('use wlbase_dev')
     if sys.argv[1] == '-h':
         comment = '-新增商品 \n\
 				  '
         print comment
-        print 'argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n argv[3] ds_1\n'
-    elif len(sys.argv)==4:
-        filepath=sys.argv[1]
-        ds_1=sys.argv[2]
+        print '-insert argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n'
+        print '-inc      argvs:\n argv[1]:file or dir input\n argv[2]:ds_1  \n argv[3] ds\n'
+    elif sys.argv[1]=='-insert':
+        filepath=sys.argv[2]
         ds=sys.argv[3]
         rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse(x))
+            .map(lambda x:parse(x,'insert')).filter(lambda x: x is not None)\
+            .map(lambda x:fun1(x,ds))
+        df=hiveContext.sql('select * from t_base_ec_item_dev limit 1')
+        schema1=df.schema
+        ddf=hiveContext.createDataFrame(rdd,schema1)
+        hiveContext.registerDataFrameAsTable(ddf,'tmptable')
+        # sql='''
+        # insert overwrite table t_base_ec_item_dev partition(ds=%s)
+        # select * from tmptable
+        # '''
+        hiveContext.sql(sql_insert%(ds))
+
+    elif sys.argv[1]=='-inc':
+        filepath=sys.argv[2]
+        ds_1=sys.argv[3]
+        ds=sys.argv[4]
+        rdd=sc.textFile(filepath,100)\
+            .map(lambda x:parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
         schema1=df.schema
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
-                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.ts]))
+                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         rdd2=rdd1.union(rdd).groupByKey()
-        rdd3=rdd2.map(lambda (x,y):fun(y)).coalesce(40)
+        rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        sql='''
-        insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        select * from tmptable
-        '''
-        hiveContext.sql(sql%(ds))
+        # sql='''
+        # insert overwrite table t_base_ec_item_dev partition(ds=%s)
+        # s
+        # '''
+        hiveContext.sql(sql_insert%(ds))
 
 
 

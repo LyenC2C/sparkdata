@@ -195,7 +195,7 @@ def save_item_feed(item_feedrdd,ds):
 
 
 
-resultrdd=allrdd.filter(lambda x:x[0]==1).map(lambda x: x[0]) #itemfeed list
+# resultrdd=allrdd.filter(lambda x:x[0]==1).map(lambda x: x[0]) #itemfeed list
 
 
 
