@@ -13,10 +13,11 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
-sc=SparkContext(appName="test")
+sc=SparkContext(appName="shop-inc")
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
@@ -118,7 +119,7 @@ def fun1(x,ds):
     return [f_coding(i) for i in x]
 
 if __name__ == "__main__":
-
+    hiveContext.sql('use wlbase_dev')
     if sys.argv[1] == '-h':
        comment = '-店铺 \n\
 			  '
