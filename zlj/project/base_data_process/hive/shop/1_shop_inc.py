@@ -12,6 +12,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -170,7 +171,7 @@ if __name__ == "__main__":
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse_shop(x,'inc')).filter(lambda x: x is not None)\
-            .groupByKey(50).map(lambda (x,y):[i  for i in y][0])
+            .groupByKey(50).map(lambda (x,y):[i  for i in y][0]).map(lambda x:(x[0],x))
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_shop_dev where ds=%s'%ds_1)
         schema1=df.schema
