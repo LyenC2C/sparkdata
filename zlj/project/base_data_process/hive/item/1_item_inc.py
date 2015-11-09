@@ -24,6 +24,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -215,7 +216,7 @@ if __name__ == "__main__":
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
         schema1=df.schema
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
-                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.ts]))
+                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         rdd2=rdd1.union(rdd).groupByKey()
         rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
