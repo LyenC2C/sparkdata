@@ -18,6 +18,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -70,16 +71,16 @@ def  parse_shop(line,flag):
     trackParams=ob['trackParams']
     BC_type=trackParams.get('BC_type','-')
     item_count=seller.get('actionUnits',[])[0].get('value','0')
-    fansCount = seller.get("fansCount","--")
+    fansCount = seller.get("fansCount","0")
     goodRatePercentage = seller.get("goodRatePercentage","--")
     # nick= seller.get("nick","--").encode('utf-8')
     weitaoId = seller.get("weitaoId","--")
     # userNumId = seller.get("userNumId","--")
     # shopTitle = seller.get("shopTitle","--").encode('utf-8')
     shopTitle = seller.get("shopTitle","--")
-    desc_score=evaluateInfo[0].get("score")
-    service_score=evaluateInfo[1].get("score")
-    wuliu_score=evaluateInfo[2].get("score")
+    desc_score=evaluateInfo[0].get("score",'0.0')
+    service_score=evaluateInfo[1].get("score",'0.0')
+    wuliu_score=evaluateInfo[2].get("score",'0.0')
     star='99'
     list=[]
     list.append(shopId)
