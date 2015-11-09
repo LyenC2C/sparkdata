@@ -15,6 +15,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -102,7 +103,8 @@ def parse(line_s,flag):
     list.append(seller_id)
     list.append(shopId)
     list.append(location)
-    list.append(str(ts))
+    list.append(str(int(time.time())))
+    # list.append((ts))
     strlist=[]
     if flag=='insert':
         # for i in list:
