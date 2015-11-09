@@ -20,6 +20,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -73,7 +74,7 @@ def  parse_shop(line,flag):
     BC_type=trackParams.get('BC_type','-')
     item_count='0'
     for item in seller.get('actionUnits',[]):
-        if item['track']=='Button-AllItem':
+        if item.has_key('track') & item['track']=='Button-AllItem':
             item_count=item.get('value','0')
     fansCount = seller.get("fansCount","0")
     goodRatePercentage = seller.get("goodRatePercentage","--")
