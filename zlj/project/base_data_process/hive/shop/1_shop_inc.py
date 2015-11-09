@@ -21,6 +21,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -128,8 +129,8 @@ def  parse_shop(line,flag):
     elif flag=='inc':
         return (shopId,list)
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
-def fun(y):
-    return sorted(y,key=lambda t : t[-2],reverse=True)[0]
+def fun_sorted(y):
+    return sorted(y,key=lambda t : t[-1],reverse=True)[0]
 def f_coding(x):
     if type(x) == type(""):
         return x.decode("utf-8")
@@ -171,14 +172,15 @@ if __name__ == "__main__":
         ds_1=sys.argv[3]
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse_shop(x,'inc')).filter(lambda x: x is not None)
+            .map(lambda x:parse_shop(x,'inc')).filter(lambda x: x is not None)\
+            .map(lambda x:fun1(x,ds)).map(lambda x:(x[0],x)).groupByKey(50).map(lambda (x,y):[i  for i in y][0])
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_shop_dev where ds=%s'%ds_1)
         schema1=df.schema
         rdd1=df.map(lambda x:(x.shop_id,[x.shop_id, x.seller_id, x.shop_name, x.seller_name, x.star, x.credit, x.starts, x.bc_type,
                                          x.item_count, x.fans_count, x.good_rate_p, x.weitao_id, x.desc_score, x.service_score, x.wuliu_score, x.location, x.ts, x.ds]))
         rdd2=rdd1.union(rdd).groupByKey()
-        rdd3=rdd2.map(lambda (x,y):fun(y)).coalesce(40)
+        rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
         sql='''

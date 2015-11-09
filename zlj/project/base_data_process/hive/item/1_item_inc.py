@@ -20,6 +20,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -128,7 +129,7 @@ def parse(line,flag):
 
 
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
-def fun(y):
+def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
 def f(x):
     if type(x) == type(""):
@@ -209,14 +210,14 @@ if __name__ == "__main__":
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                          x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.ts]))
         rdd2=rdd1.union(rdd).groupByKey()
-        rdd3=rdd2.map(lambda (x,y):fun(y)).coalesce(40)
+        rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        sql='''
-        insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        select * from tmptable
-        '''
-        hiveContext.sql(sql%(ds))
+        # sql='''
+        # insert overwrite table t_base_ec_item_dev partition(ds=%s)
+        # select * from tmptable
+        # '''
+        hiveContext.sql(sql_insert%(ds))
 
 
 
