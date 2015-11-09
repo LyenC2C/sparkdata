@@ -21,10 +21,11 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
-sc=SparkContext(appName="test")
+sc=SparkContext(appName="iter_inc")
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)

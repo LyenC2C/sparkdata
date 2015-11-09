@@ -22,6 +22,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -139,7 +140,7 @@ def f_coding(x):
 
 def fun1(x,ds):
     x.append(ds)
-    return [(i) for i in x]
+    return [f_coding(i) for i in x]
 
 # def insert_get(y):
 
@@ -157,7 +158,7 @@ if __name__ == "__main__":
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse_shop(x,'insert'))\
             .filter(lambda x: x is not None)\
-            .map(lambda x:fun1(x,ds)).map(lambda x:(x[0],x)).groupByKey(50).map(lambda (x,y):[i  for i in y][0])
+            .map(lambda x:(x[0],x)).groupByKey(50).map(lambda (x,y):[i  for i in y][0]).map(lambda x:fun1(x,ds))
         df=hiveContext.sql('select * from t_base_ec_shop_dev limit 1')
         schema1=df.schema
         ddf=hiveContext.createDataFrame(rdd,schema1)
