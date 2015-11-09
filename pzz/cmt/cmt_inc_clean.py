@@ -44,7 +44,8 @@ def parse_cmt_new(line_s):
                 l.append(date)
                 l.append(value.get('annoy', '-'))
                 l.append(ts)
-                l.append(date.replace('-', ''))
+                date = date.replace('-', '')
+                int(date)
                 # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
                 list.append([itemid, [feedid,"\001".join(l)]])
             except Exception,e:
