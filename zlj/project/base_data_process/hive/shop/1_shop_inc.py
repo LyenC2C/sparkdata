@@ -25,6 +25,7 @@ import rapidjson as json
 
 
 
+
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -79,6 +80,8 @@ def  parse_shop(line,flag):
         return None
     itemInfoModel=ob['itemInfoModel']
     location=valid_jsontxt(itemInfoModel.get('location','-'))
+    if 'seller' not in ob.keys():
+        return
     seller = ob["seller"]
     evaluateInfo = seller.get("evaluateInfo",[])
     shopId=seller.get("shopId","-")
@@ -94,7 +97,7 @@ def  parse_shop(line,flag):
             if item['track']=='Button-AllItem':
                 item_count=item.get('value','0')
     fansCount = seller.get("fansCount","0")
-    goodRatePercentage = seller.get("goodRatePercentage","--")
+    goodRatePercentage = seller.get("goodRatePercentage","0.0")
     # nick= seller.get("nick","--").encode('utf-8')
     weitaoId = seller.get("weitaoId","--")
     # userNumId = seller.get("userNumId","--")
