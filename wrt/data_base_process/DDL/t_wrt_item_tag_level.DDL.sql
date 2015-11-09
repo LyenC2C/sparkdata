@@ -1,3 +1,4 @@
+use wlbase_dev;
 CREATE  TABLE  if not exists t_wrt_item_tag_level(
 brand_id   String COMMENT '品牌id',
 brand_name  String ,
