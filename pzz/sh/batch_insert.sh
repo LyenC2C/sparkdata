@@ -12,7 +12,7 @@ all_feedid_1108=${feed_dir}/cmt_allfeedid.20151108
 all_feedid_1109=${feed_dir}/cmt_allfeedid.20151109
 
 #1105
-sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1103/part* $commit_dir/*2015-11-05 $all_feedid_1105 $feed_dir/cmt_newfeedid.20151105 $data_dir/cmt_inc_data.20151105
+#sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1103/part* $commit_dir/*2015-11-05 $all_feedid_1105 $feed_dir/cmt_newfeedid.20151105 $data_dir/cmt_inc_data.20151105
 
 #1106
 sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1105/part* $commit_dir/*2015-11-06 $all_feedid_1106 $feed_dir/cmt_newfeedid.20151106 $data_dir/cmt_inc_data.20151106
