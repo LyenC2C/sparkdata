@@ -50,7 +50,7 @@ def make_doc_data(lf, rf):
 	li.save(lf + '_lines.png')
 	
 
-path_prex=sys[1]
+path_prex=sys.argv[1]
 
 if __name__ == '__main__':
 	path1=sys.argv[2]

@@ -1,20 +1,22 @@
 #coding:utf-8
 import sys
-import time
-import rapidjson as json
 from pyspark import SparkContext
 from pyspark.sql import *
 from pyspark.sql.types import *
 
+import rapidjson as json
 
 sc = SparkContext(appName="spark brandinfo")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
 def valid_jsontxt(content):
-    if type(content) == type(u""):
+    """
+    :rtype :
+    """
+	if type(content) == type(u""):
         return content.encode("utf-8")
-    else :
+    else:
         return content
 def f(line):
 	line_s = valid_jsontxt(line)
