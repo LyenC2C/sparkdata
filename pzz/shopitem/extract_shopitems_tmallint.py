@@ -3,7 +3,7 @@
 import rapidjson as json
 import sys
 
-#店铺id 商品id 商品title 总销量 售价 原价
+#店铺id 商品id 商品title 总销量 售价 原价 picurl
 
 def valid_jsontxt(content):
     res = content

@@ -133,7 +133,7 @@ if __name__ == "__main__":
                     .coalesce(100)
 
         rdd_inc_feedid_num = rdd_res.map(lambda x:x[2])\
-                    .map(lambda x:x+'\t'+str(len(x)-1))\
+                    .map(lambda x:x[0]+'\t'+str(len(x)-1))\
                     .coalesce(10)
 
         rdd_data = rdd_res.map(lambda x:x[0])\
