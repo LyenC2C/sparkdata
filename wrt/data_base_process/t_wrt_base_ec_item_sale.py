@@ -21,7 +21,16 @@ def f_coding(x):
         return x.decode("utf-8")
     else:
         return x
-
+def int_k(x):
+    if x == "":
+        return 0
+    else:
+        return int(x)
+def float_k(x):
+    if x == "":
+        return 0.0
+    else:
+        return float(x)
 def f(line):
     ss = line.strip().split('\t')
     zhengwen = ""
@@ -47,20 +56,20 @@ def f(line):
         lv = []
         item_id = item.get("auctionId","-")
         item_title = item.get("title","-")
-        r_price = item.get("reservePrice","-")
-        s_price = item.get("salePrice","-")
+        r_price = item.get("reservePrice",0.0)
+        s_price = item.get("salePrice",0.0)
         bc_type = item.get("auctionType","-")
-        quantity = item.get("quantity","-")
-        total_sold = item.get("totalSoldQuantity","-")
-        order_cost = item.get("orderCost","-")
+        quantity = item.get("quantity",0)
+        total_sold = item.get("totalSoldQuantity",0)
+        order_cost = item.get("orderCost",0)
         lv.append(valid_jsontxt(item_id))
         lv.append(valid_jsontxt(item_title))
-        lv.append(float(r_price))
-        lv.append(float(s_price))
+        lv.append(float_k(r_price))
+        lv.append(float_k(s_price))
         lv.append(valid_jsontxt(bc_type))
-        lv.append(int(quantity))
-        lv.append(int(total_sold))
-        lv.append(int(order_cost))
+        lv.append(int_k(quantity))
+        lv.append(int_k(total_sold))
+        lv.append(int_k(order_cost))
         lv.append(valid_jsontxt(shop_id))
         lv.append(ts)
         result.append(lv)
