@@ -21,6 +21,8 @@ def f(line):
     l = len(zhengwen)
     result = []
     ob = json.loads(valid_jsontxt(zhengwen[12:l-1]))
+    if type(ob) != type({}):
+        return [None]
     if not ob.has_key("data"):
         return [None]
     if not ob["data"].has_key("totalResults"):
