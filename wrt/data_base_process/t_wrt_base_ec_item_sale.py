@@ -26,7 +26,7 @@ def f(line):
     ss = line.strip().split('\t')
     zhengwen = ""
     ts = ss[0]
-    for ln in ss[2:]:
+    for ln in ss[3:]:
         zhengwen += ln
     l = len(zhengwen)
     result = []
@@ -81,11 +81,12 @@ schema = StructType([
 	])
 
 hiveContext.sql('use wlbase_dev')
-rdd = sc.textFile("/commit/shopitem/tmall.shop.2.item.2015-10-27").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
-df = hiveContext.createDataFrame(rdd.map(lambda x: f_coding(x)), schema)
-
+s = sys.argv[1]
+rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None)
+df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.registerDataFrameAsTable(df, 'data')
-ds2 = '20151027'
+st = s.find('2015')
+ds2 = s[st:st+4] + s[st+5:st+7] + s[st+8:st+10]
 hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + ds2 + ') select * from data')
 		#.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
