@@ -24,6 +24,35 @@ def is_image(filename):
 #     for k, img_list in images.iteritems():
 #         if len(img_list) > 1:
 #         print(" ".join(img_list))
+def test_dhash(image, hash_size = 8):
+    # Grayscale and shrink the image in one step.
+    image = image.convert('L').resize(
+        (hash_size + 1, hash_size),
+        Image.ANTIALIAS,
+    )
+
+    pixels = list(image.getdata())
+
+    # Compare adjacent pixels.
+    difference = []
+    for row in xrange(hash_size):
+        for col in xrange(hash_size):
+            pixel_left = image.getpixel((col, row))
+            pixel_right = image.getpixel((col + 1, row))
+            difference.append(pixel_left > pixel_right)
+
+    # Convert the binary array to a hexadecimal string.
+    decimal_value = 0
+    hex_string = []
+    for index, value in enumerate(difference):
+        if value:
+            decimal_value += 2**(index % 8)
+        if (index % 8) == 7:
+            hex_string.append(hex(decimal_value)[2:].rjust(2, '0'))
+            decimal_value = 0
+
+    return ''.join(hex_string)
+
 def find_sim(userpath, hashfunc = imagehash.average_hash):
     image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
     images={}
@@ -36,9 +65,10 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
         itemid=dv[2]
         shopitem_dic[itemid]=shopid
     for img in sorted(image_filenames):
-        hash = hashfunc(Image.open(img))
+        # hash = hashfunc(Image.open(img))
+        hash = test_dhash(Image.open(img))
         itemid=img.split('/')[-1].split('_')[0]
-        list.append((img.split('/')[-1],shopitem_dic.get(itemid),hash))
+        list.append((img.split('/')[-1],shopitem_dic.get(itemid),str(hash)))
         # itemid=img.split('/')[-1].split('_')[0]
         # print itemid
         # images[hash] = images.get(hash, []) + [img]
@@ -50,7 +80,7 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
             if item1[1]==item2[1]:continue
             sim=distance.hamming(item1[2],item2[2])
             if sim<4:
-                print "_".join(item1),"_".join(item2),sim
+                print "-".join(item1),"-".join(item2),sim
 
     # for k, img_list in images.iteritems():
     #     if len(img_list) > 1:
