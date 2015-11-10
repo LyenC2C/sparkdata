@@ -38,7 +38,7 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
     for img in sorted(image_filenames):
         hash = hashfunc(Image.open(img))
         itemid=img.split('/')[-1].split('_')[0]
-        list.append((itemid,shopitem_dic.get(itemid),hash))
+        list.append((img.split('/')[-1],shopitem_dic.get(itemid),hash))
         # itemid=img.split('/')[-1].split('_')[0]
         # print itemid
         # images[hash] = images.get(hash, []) + [img]
