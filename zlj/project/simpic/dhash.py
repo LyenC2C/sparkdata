@@ -27,7 +27,7 @@ def is_image(filename):
 def find_sim(userpath, hashfunc = imagehash.average_hash):
     image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
     images={}
-    f=open('')
+    f=open(sys.argv[2])
     shopitem_dic={}
     list=[]
     for line in f:
