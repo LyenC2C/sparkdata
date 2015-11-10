@@ -23,3 +23,10 @@ hadoop fs -cp $tmp_data ${tmp_data}.test
 
 echo "insert hive"
 sh  /mnt/pzz/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
+
+echo "completed insertting "$tmp_data
+
+echo "feed back item feed inc number to commit.."
+hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
+
+echo "mission FINISH!"
