@@ -26,7 +26,7 @@ def f(line):
     ss = line.strip().split('\t')
     zhengwen = ""
     ts = ss[0]
-    for ln in ss[2:]:
+    for ln in ss[3:]:
         zhengwen += ln
     l = len(zhengwen)
     result = []
