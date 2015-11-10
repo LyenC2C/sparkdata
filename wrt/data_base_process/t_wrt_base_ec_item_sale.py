@@ -5,6 +5,11 @@ import sys
 import rapidjson as json
 import time
 from pyspark import SparkContext
+from pyspark.sql import *
+from pyspark.sql.types import *
+sc = SparkContext(appName="spark item_sale")
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
 
 def valid_jsontxt(content):
 	if type(content) == type(u""):
@@ -56,11 +61,25 @@ def f(line):
         result.append('\001'.join([valid_jsontxt(i) for i in lv]))
         #result.append(item_id + '\001' + r_price + '\001' + s_price + '\001' + bc_type + '\001' + quantity + '\001' + total_sold + '\001' + order_cost + '\001' + shop_id + '\001' + ts)
     return result
+schema = StructType([
+    StructField("item_id",StringType(), True),
+	StructField("item_title",StringType(), True),
+	StructField("r_price",FloatType(), True),
+    StructField("s_price",FloatType(), True),
+    StructField("bc_type",StringType(), True),
+    StructField("quantity",IntegerType(), True),
+    StructField("total_sold",IntegerType(), True),
+    StructField("order_cost",IntegerType(), True),
+    StructField("shop_id",StringType(), True),
+    StructField("ts",StringType(), True)
+	])
 
-if __name__ == "__main__":
-	sc = SparkContext(appName="spark item_sale")
-	rdd = sc.textFile("/commit/shopitem/tmall.shop.2.item.2015-10-27")
-	rdd.flatMap(lambda x:f(x))\
-		.filter(lambda x:x!=None)\
-			.saveAsTextFile("/user/wrt/item_sale")
-	sc.stop()
+rdd = sc.textFile("/commit/shopitem/tmall.shop.2.item.2015-10-27")\
+    .flatMap(lambda x:f(x)).filter(lambda x:x!=None)
+df = hiveContext.createDataFrame(rdd, schema)
+hiveContext.sql('use wlbase_dev')
+hiveContext.registerDataFrameAsTable(df, 'data')
+ds2 = '20151027'
+hiveContext.sql('insert overwrite table t_base_ec_item_sale PARTITION(ds='+ds2+') select * from data')
+		#.saveAsTextFile("/user/wrt/item_sale")
+sc.stop()
