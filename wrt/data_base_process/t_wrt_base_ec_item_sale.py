@@ -12,10 +12,10 @@ sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
 def valid_jsontxt(content):
-	if type(content) == type(u""):
-		return content.encode("utf-8")
-    	else :
-        		return content
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
 
 def f(line):
     ss = line.strip().split('\t')
