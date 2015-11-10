@@ -46,7 +46,7 @@ def parse_cmt_new(line_s):
                 l.append(ts)
                 date = date.replace('-', '')
                 int(date)
-                if len(date) != 6:
+                if len(date) != 8:
                     print "date is wrong,now is "+date
                     continue
                 # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
