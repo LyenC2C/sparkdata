@@ -74,8 +74,7 @@ schema = StructType([
     StructField("ts",StringType(), True)
 	])
 
-rdd = sc.textFile("/commit/shopitem/tmall.shop.2.item.2015-10-27")\
-    .flatMap(lambda x:f(x)).filter(lambda x:x!=None)
+rdd = sc.textFile("/commit/shopitem/tmall.shop.2.item.2015-10-27").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.sql('use wlbase_dev')
 hiveContext.registerDataFrameAsTable(df, 'data')
