@@ -16,6 +16,11 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else:
         return content
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 
 def f(line):
     ss = line.strip().split('\t')
@@ -77,7 +82,7 @@ schema = StructType([
 
 hiveContext.sql('use wlbase_dev')
 rdd = sc.textFile("/commit/shopitem/tmall.shop.2.item.2015-10-27").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
-df = hiveContext.createDataFrame(rdd, schema)
+df = hiveContext.createDataFrame(rdd.map(lambda x: f_coding(x)), schema)
 
 hiveContext.registerDataFrameAsTable(df, 'data')
 ds2 = '20151027'
