@@ -9,8 +9,10 @@ import  time
 
 import rapidjson as json
 
-
-
+'''
+使用脚本
+spark-submit  --total-executor-cores  100  --executor-memory 20g  --driver-memory 20g  1_shop_inc.py  -inc    /commit/iteminfo/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01  20151030 20151101
+'''
 
 
 
@@ -142,7 +144,7 @@ def fun1(x,ds):
     x.append(ds)
     return [f_coding(i) for i in x]
 
-# def insert_get(y):
+
 
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
