@@ -17,9 +17,9 @@ spark-submit --executor-memory 20g --driver-memory 20g --total-executor-cores 10
 
 
 #hive 入库
-echo 'cp result data for test..'
+echo "cp result data for test.."$tmp_data" to "${tmp_data}.test
 hadoop fs -rmr ${tmp_data}.test
 hadoop fs -cp $tmp_data ${tmp_data}.test
 
-echo 'insert hive'
+echo "insert hive"
 sh  /mnt/pzz/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
