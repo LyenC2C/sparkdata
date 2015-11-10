@@ -129,16 +129,19 @@ if __name__ == "__main__":
                 .map(lambda (x,y):clean_data_by_hisfeedid(x,y))
 
         rdd_all_feedid = rdd_res.map(lambda x:x[1])\
-                    .map(lambda x:"\001".join(x))
+                    .map(lambda x:"\001".join(x))\
+                    .coalesce(100)
 
-        rdd_new_feedid = rdd_res.map(lambda x:x[2])\
-                    .map(lambda x:"\001".join(x))
+        rdd_inc_feedid_num = rdd_res.map(lambda x:x[2])\
+                    .map(lambda x:x+'\t'+str(len(x)-1))\
+                    .coalesce(10)
 
         rdd_data = rdd_res.map(lambda x:x[0])\
-                    .flatMap(lambda x:x)
+                    .flatMap(lambda x:x)\
+                    .coalesce(100)
 
         rdd_all_feedid.saveAsTextFile(sys.argv[4])
-        rdd_new_feedid.saveAsTextFile(sys.argv[5])
+        rdd_inc_feedid_num.saveAsTextFile(sys.argv[5])
         rdd_data.saveAsTextFile(sys.argv[6])
 
         sc.stop()
