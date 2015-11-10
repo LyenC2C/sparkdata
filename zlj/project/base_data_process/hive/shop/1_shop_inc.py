@@ -17,7 +17,7 @@ spark-submit  --total-executor-cores  100  --executor-memory 20g  --driver-memor
 
 
 
-
+print()
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
