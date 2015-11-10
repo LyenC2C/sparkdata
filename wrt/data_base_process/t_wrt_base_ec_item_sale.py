@@ -10,7 +10,6 @@ from pyspark.sql.types import *
 sc = SparkContext(appName="spark item_sale")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
-
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
