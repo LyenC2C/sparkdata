@@ -75,11 +75,12 @@ schema = StructType([
     StructField("ts",StringType(), True)
 	])
 
+hiveContext.sql('use wlbase_dev')
 rdd = sc.textFile("/commit/shopitem/tmall.shop.2.item.2015-10-27").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 df = hiveContext.createDataFrame(rdd, schema)
-hiveContext.sql('use wlbase_dev')
+
 hiveContext.registerDataFrameAsTable(df, 'data')
-ds2 = '20151027'
-hiveContext.sql('insert overwrite table t_base_ec_item_sale PARTITION(ds=20151027) select * from data')
+ds2 = 20151027
+hiveContext.sql('insert overwrite table t_base_ec_item_sale PARTITION(ds=' + ds2 + ') select * from data')
 		#.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
