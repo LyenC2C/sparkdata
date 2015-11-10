@@ -1,6 +1,8 @@
 #coding:utf-8
 __author__ = 'zlj'
 
+
+
 # import json
 from pyspark.sql import *
 import sys
@@ -8,8 +10,10 @@ from pyspark import SparkContext
 
 import rapidjson as json
 
-
-
+'''
+使用脚本
+spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-memory 20g  1_item_inc.py  -inc  /commit/iteminfo/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-02  20151101 20151102
+'''
 
 
 
