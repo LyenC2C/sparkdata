@@ -23,7 +23,7 @@ def parse_cmt_new(line_s):
     # ts=str(time.mktime(datetime.datetime.now().timetuple()))
     json_txt = line.strip()[line.find('2(') + 2:-1]
     ob = json.loads(json_txt)
-    if type(ob) == type({}) and ob["data"].has_key("rateList"):
+    if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
         data = ob['data']
         list = []
         for value in data['rateList']:
@@ -46,6 +46,9 @@ def parse_cmt_new(line_s):
                 l.append(ts)
                 date = date.replace('-', '')
                 int(date)
+                if len(date) != 4:
+                    print "date is wrong,now is "+date
+                    continue
                 # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
                 list.append([itemid, [feedid,"\001".join(l)]])
             except Exception,e:
