@@ -5,9 +5,9 @@ __author__ = 'zlj'
 from pyspark.sql import *
 import sys
 from pyspark import SparkContext
+import  time
 
 import rapidjson as json
-
 
 
 
@@ -24,11 +24,11 @@ sc=SparkContext(appName="shop-inc")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-def valid_jsontxt(content):
-    if type(content) == type(u""):
-        return content.encode("utf-8")
-    else :
-        return content
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else :
+#         return content
 
 path=sys.argv[1]
 def parse_price(price_dic):
@@ -55,12 +55,24 @@ def valid_jsontxt(content):
 # s.split()
 
 def  parse_shop(line,flag):
-    ts,id,txt=line.split('\t')
-    ob=json.loads(valid_jsontxt(line))
+
+    ts=''
+    txt=''
+    if flag=='insert':
+        txt=valid_jsontxt(line)
+    else:
+        lis=valid_jsontxt(line).split('\t')
+        if len(lis)!=3:
+            return
+        ts=lis[0]
+        txt=lis[2]
+    ob=json.loads((txt))
     if type(ob)==type(0.0):
         return None
     itemInfoModel=ob['itemInfoModel']
     location=valid_jsontxt(itemInfoModel.get('location','-'))
+    if 'seller' not in ob.keys():
+        return
     seller = ob["seller"]
     evaluateInfo = seller.get("evaluateInfo",[])
     shopId=seller.get("shopId","-")
@@ -76,7 +88,12 @@ def  parse_shop(line,flag):
             if item['track']=='Button-AllItem':
                 item_count=item.get('value','0')
     fansCount = seller.get("fansCount","0")
-    goodRatePercentage = seller.get("goodRatePercentage","--")
+    try:
+        t = seller.get("goodRatePercentage","0.0")
+        goodRatePercentage=float(t.replace('%',''))
+    except Exception,e:
+        print e,line
+        return
     # nick= seller.get("nick","--").encode('utf-8')
     weitaoId = seller.get("weitaoId","--")
     # userNumId = seller.get("userNumId","--")
@@ -99,25 +116,22 @@ def  parse_shop(line,flag):
     list.append(BC_type)
     list.append(int(item_count))
     list.append(int(fansCount))
-    list.append(float(goodRatePercentage.replace('%','')))
+    list.append(goodRatePercentage)
     list.append(weitaoId)
     list.append(float(desc_score))
     list.append(float(service_score))
     list.append(float(wuliu_score))
     list.append(location)
-    # list.append(str(int(time.time())))
-    list.append(ts)
     if flag=='insert':
-        # for i in list:
-        #     if len(i)==0: strlist.append('-')
-        #     else : strlist.append(i)
-        # return "\001".join(strlist)
-        return list
-    elif flag=='inc':
-        return (shopId,list)
+        list.append(str(int(time.time())))
+    else:
+        list.append(ts)
+    return (shopId,list)
+
+
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
-def fun(y):
-    return sorted(y,key=lambda t : t[-2],reverse=True)[0]
+def fun_sorted(y):
+    return sorted(y,key=lambda t : t[-1],reverse=True)[0]
 def f_coding(x):
     if type(x) == type(""):
         return x.decode("utf-8")
@@ -126,7 +140,9 @@ def f_coding(x):
 
 def fun1(x,ds):
     x.append(ds)
-    return [(i) for i in x]
+    return [f_coding(i) for i in x]
+
+# def insert_get(y):
 
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
@@ -142,7 +158,7 @@ if __name__ == "__main__":
         rdd=sc.textFile(filepath,100)\
             .map(lambda x:parse_shop(x,'insert'))\
             .filter(lambda x: x is not None)\
-            .map(lambda x:fun1(x,ds))
+            .groupByKey(50).map(lambda (x,y):[i  for i in y][0]).map(lambda x:fun1(x,ds))
         df=hiveContext.sql('select * from t_base_ec_shop_dev limit 1')
         schema1=df.schema
         ddf=hiveContext.createDataFrame(rdd,schema1)
@@ -157,14 +173,15 @@ if __name__ == "__main__":
         ds_1=sys.argv[3]
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse_shop(x,'inc')).filter(lambda x: x is not None)
+            .map(lambda x:parse_shop(x,'inc')).filter(lambda x: x is not None)\
+            .groupByKey(50).map(lambda (x,y):[i  for i in y][0]).map(lambda x:(x[0],x))
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_shop_dev where ds=%s'%ds_1)
         schema1=df.schema
         rdd1=df.map(lambda x:(x.shop_id,[x.shop_id, x.seller_id, x.shop_name, x.seller_name, x.star, x.credit, x.starts, x.bc_type,
-                                         x.item_count, x.fans_count, x.good_rate_p, x.weitao_id, x.desc_score, x.service_score, x.wuliu_score, x.location, x.ts, x.ds]))
+                                         x.item_count, x.fans_count, x.good_rate_p, x.weitao_id, x.desc_score, x.service_score, x.wuliu_score, x.location, x.ts]))
         rdd2=rdd1.union(rdd).groupByKey()
-        rdd3=rdd2.map(lambda (x,y):fun(y)).coalesce(40)
+        rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
         sql='''

@@ -30,7 +30,6 @@ f_date ,
 annoy  ,
 ts ,
 regexp_replace(f_date,'-','') ds
-
 FROM t_base_ec_item_feed_dev_zlj where ds=20000001
 ;
 

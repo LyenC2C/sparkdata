@@ -5,9 +5,15 @@ __author__ = 'zlj'
 from pyspark.sql import *
 import sys
 from pyspark import SparkContext
-import  time
 
 import rapidjson as json
+
+
+
+
+
+
+
 
 
 
@@ -22,7 +28,7 @@ import rapidjson as json
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
-sc=SparkContext(appName="test")
+sc=SparkContext(appName="iter_inc")
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
@@ -56,10 +62,21 @@ def valid_jsontxt(content):
         return content
 # s=''
 # s.split()
-def parse(line_s,flag):
-    line=valid_jsontxt(line_s)
+def parse(line,flag):
+    ts=''
+    txt=''
+    if flag=='insert':
+        txt=valid_jsontxt(line)
+    else:
+        lis=valid_jsontxt(line).split('\t')
+        if len(lis)!=3:
+            return
+        ts=lis[0]
+        txt=lis[2]
+    ob=json.loads(txt)
+    # line=valid_jsontxt(line_s)
     # ts,id,txt=line.split('\t')
-    ob=json.loads(line)
+    # ob=json.loads(txt)
     if type(ob)==type(0.0):
         return None
     itemInfoModel=ob['itemInfoModel']
@@ -106,8 +123,8 @@ def parse(line_s,flag):
     list.append(seller_id)
     list.append(shopId)
     list.append(location)
-    list.append(str(int(time.time())))
-    # list.append((ts))
+    # list.append(str(int(time.time())))
+    list.append((ts))
     strlist=[]
     if flag=='insert':
         # for i in list:
@@ -120,9 +137,9 @@ def parse(line_s,flag):
 
 
 # rdd=sc.textFile('/data/develop/ec/tb/iteminfo_new/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-01',100)\
-def fun(y):
+def fun_sorted(y):
     return sorted(y,key=lambda t : t[-1],reverse=True)[0]
-def f(x):
+def f_coding(x):
     if type(x) == type(""):
         return x.decode("utf-8")
     else:
@@ -130,7 +147,7 @@ def f(x):
 
 def fun1(x,ds):
     x.append(ds)
-    return [f(i) for i in x]
+    return [f_coding(i) for i in x]
 
 sql_insert='''
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
@@ -163,8 +180,7 @@ cate_level1_name
 FROM
 t_base_ec_dim
 where  ds=20151023
-)t2 join  tmptable  t1 on t1.cat_id=t2.cate_id  ;
-
+)t2 join  tmptable  t1 on t1.cat_id=t2.cate_id
 '''
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
@@ -200,16 +216,16 @@ if __name__ == "__main__":
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
         schema1=df.schema
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
-                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.ts]))
+                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         rdd2=rdd1.union(rdd).groupByKey()
-        rdd3=rdd2.map(lambda (x,y):fun(y)).coalesce(40)
+        rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        sql='''
-        insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        select * from tmptable
-        '''
-        hiveContext.sql(sql%(ds))
+        # sql='''
+        # insert overwrite table t_base_ec_item_dev partition(ds=%s)
+        # s
+        # '''
+        hiveContext.sql(sql_insert%(ds))
 
 
 
