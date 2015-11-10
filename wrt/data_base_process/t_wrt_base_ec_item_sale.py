@@ -90,8 +90,7 @@ schema = StructType([
 
 hiveContext.sql('use wlbase_dev')
 s = sys.argv[1]
-rdd = sc.textFile(s).flatMap(lambda x:f(x))\
-    .filter(lambda x:x!=None)
+rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.registerDataFrameAsTable(df, 'data')
 st = s.find('2015')
