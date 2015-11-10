@@ -13,7 +13,7 @@ tmp_data=$5
 hadoop fs -rmr $all_feed_output
 hadoop fs -rmr $new_feed_output
 hadoop fs -rmr $tmp_data
-spark-submit --executor-memory 15g --driver-memory 15g --total-executor-cores 80 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc $all_feed_input $new_data_input $all_feed_output $new_feed_output $tmp_data
+spark-submit --executor-memory 24g --driver-memory 24g --total-executor-cores 120 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc $all_feed_input $new_data_input $all_feed_output $new_feed_output $tmp_data
 
 
 #hive 入库
@@ -26,6 +26,7 @@ sh  /mnt/pzz/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.
 
 echo "completed insertting "$tmp_data
 
+#反馈商品评论增量
 echo "feed back item feed inc number to commit.."
 hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 
