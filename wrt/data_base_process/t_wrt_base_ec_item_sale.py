@@ -21,7 +21,7 @@ def f(line):
     l = len(zhengwen)
     result = []
     ob = json.loads(valid_jsontxt(zhengwen[zhengwen.find("({") + 2:l-1]))
-    if type(ob) != type({}):
+    if type(ob) == type(0.1):
         return [None]
     if not ob.has_key("data"):
         return [None]
