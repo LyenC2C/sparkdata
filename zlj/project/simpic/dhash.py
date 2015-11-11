@@ -92,7 +92,7 @@ def just_sim(userpath):
     fr=open(userpath)
     for img in fr:
         # hash = hashfunc(Image.open(img))
-        hash = test_dhash(Image.open(img))
+        # hash = test_dhash(Image.open(img))
         item,hash=img.split()
         itemid=item.split('_')[0]
         list.append((item,shopitem_dic.get(itemid),str(hash)))

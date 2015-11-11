@@ -1,6 +1,4 @@
 __author__ = 'zlj'
-import numpy as np
-from pyspark.mllib.clustering import *
 
 from pyspark.sql.types import  *
 from pyspark.sql import *

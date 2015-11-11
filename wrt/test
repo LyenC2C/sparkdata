@@ -1,1 +1,38 @@
-ddd
+
+
+
+
+
+
+SELECT
+  t1.* ,
+  case when t2.total_sold is null then t1.total_sold else t1.total_sold-t2.total_sold end everyday_sold
+from
+
+(
+SELECT
+*
+from
+t_base_ec_item_sale_dev
+
+where ds=20151109 )
+t1
+left join
+(
+SELECT
+*
+from
+t_base_ec_item_sale_dev
+
+where ds=20151108 )t2
+on t1.item_id =t2.item_id
+
+limit 10;
+
+
+
+
+
+
+
+

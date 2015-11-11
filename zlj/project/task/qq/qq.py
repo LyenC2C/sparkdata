@@ -2,11 +2,8 @@ __author__ = 'zlj'
 
 path='/user/hadoop/refer/refer.20150824'
 
-from numpy import array
 import json
 from pyspark.sql import *
-import numpy as np
-from pyspark.mllib.clustering import *
 from pyspark.sql.types import *
 from pyspark import SparkContext
 

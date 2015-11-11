@@ -1,13 +1,11 @@
 __author__ = 'zlj'
 # 类目价格区间
 
-import numpy as np
 from pyspark.mllib.clustering import *
-
 from pyspark.sql import *
-import json
-
 from pyspark import SparkContext
+
+import numpy as np
 
 sc = SparkContext(appName="test")
 
