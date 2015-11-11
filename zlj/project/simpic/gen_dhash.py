@@ -41,7 +41,7 @@ def test_dhash(image, hash_size = 16):
 def find_sim():
     # image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
     # images={}
-    f=open(sys.argv[1])
+    f=open(sys.argv[2])
     shopitem_dic={}
     list=[]
     for line in f:
@@ -49,7 +49,7 @@ def find_sim():
         shopid=dv[1]
         itemid=dv[2]
         shopitem_dic[itemid]=shopid
-    for line in open(sys.argv[2]):
+    for line in open(sys.argv[3]):
         # hash = hashfunc(Image.open(img))
         # hash = test_dhash(Image.open(img))
         img,hash=line.split()
