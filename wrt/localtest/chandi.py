@@ -14,6 +14,6 @@ for line in sys.stdin:
     chandi = "-"
     if ob.has_key("props"):
         for ln in ob["props"]:
-            if ln["name"] == "产地":
+            if ln["name"].encode('utf-8') == "产地":
                 chandi = ln["value"].encode('utf-8')
     print item_id + "\001" + location + "\001" + chandi
