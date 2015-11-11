@@ -109,7 +109,7 @@ if __name__ == "__main__":
         sc.stop()
 
     elif sys.argv[1] == '-gen_data_inc':
-        sc = SparkContext(appName="gen_cmt_inc")
+        sc = SparkContext(appName="gen_cmt_inc"+sys.argv[3].split(".")[-1])
         # rdd_his:return [itemid,[0,[feedid1,feedid2]]]
         rdd_his = sc.textFile(sys.argv[2])\
                     .map(lambda x:x.strip().split("\001"))\
