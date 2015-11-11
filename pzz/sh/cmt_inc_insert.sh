@@ -13,7 +13,7 @@ tmp_data=$5
 hadoop fs -rmr $all_feed_output
 hadoop fs -rmr $new_feed_output
 hadoop fs -rmr $tmp_data
-spark-submit --executor-memory 24g --driver-memory 24g --total-executor-cores 120 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc $all_feed_input $new_data_input $all_feed_output $new_feed_output $tmp_data
+spark-submit --executor-memory 20g --driver-memory 20g --total-executor-cores 105 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc $all_feed_input $new_data_input $all_feed_output $new_feed_output $tmp_data
 
 
 #hive 入库
