@@ -79,7 +79,7 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
                 print "-".join(item1),"-".join(item2),sim
 
 
-def just_sim(userpath, hashfunc = imagehash.average_hash):
+def just_sim(userpath):
     images={}
     f=open(sys.argv[3])
     shopitem_dic={}
@@ -134,6 +134,10 @@ Method:
         hashfunc = imagehash.phash
     elif hashmethod == 'dhash':
         hashfunc = imagehash.dhash
+    elif hashmethod=='justhash':
+        userpath = sys.argv[2] if len(sys.argv) > 2 else "."
+        just_sim(userpath=userpath)
+        sys.exit(1)
     else:
         usage()
     userpath = sys.argv[2] if len(sys.argv) > 2 else "."
