@@ -15,10 +15,10 @@ all_feedid_1109=${feed_dir}/cmt_allfeedid.20151109
 #sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1103/part* $commit_dir/*2015-11-05 $all_feedid_1105 $feed_dir/cmt_newfeedid.20151105 $data_dir/cmt_inc_data.20151105
 
 #1106
-sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1105/part* $commit_dir/*2015-11-06 $all_feedid_1106 $feed_dir/cmt_newfeedid.20151106 $data_dir/cmt_inc_data.20151106
+#sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1105/part* $commit_dir/*2015-11-06 $all_feedid_1106 $feed_dir/cmt_newfeedid.20151106 $data_dir/cmt_inc_data.20151106
 
 #1107
-sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1106/part* $commit_dir/*2015-11-07 $all_feedid_1107 $feed_dir/cmt_newfeedid.20151107 $data_dir/cmt_inc_data.20151107
+#sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1106/part* $commit_dir/*2015-11-07 $all_feedid_1107 $feed_dir/cmt_newfeedid.20151107 $data_dir/cmt_inc_data.20151107
 
 #1108
 sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $all_feedid_1107/part* $commit_dir/*2015-11-08 $all_feedid_1108 $feed_dir/cmt_newfeedid.20151108 $data_dir/cmt_inc_data.20151108
