@@ -53,12 +53,16 @@ def find_sim():
         # hash = hashfunc(Image.open(img))
         # hash = test_dhash(Image.open(img))
         img,hash=line.split()
-        itemid=img.split('_')[0]
+        if 'home' in img:
+            itemid=img.split('/')[-1].split('_')[0]
+        else:
+            itemid=img.split('_')[0]
         list.append((img,shopitem_dic.get(itemid),str(hash)))
         # itemid=img.split('/')[-1].split('_')[0]
         # print itemid
         # images[hash] = images.get(hash, []) + [img]
     num=len(list)
+    print num
     for i in xrange(num):
         item1=list[i]
         for  j in xrange(num-i):
