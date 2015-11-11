@@ -78,36 +78,6 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
             if sim<4:
                 print "-".join(item1),"-".join(item2),sim
 
-
-def just_sim(userpath):
-    images={}
-    f=open(sys.argv[3])
-    shopitem_dic={}
-    list=[]
-    for line in f:
-        dv=line.split()
-        shopid=dv[1]
-        itemid=dv[2]
-        shopitem_dic[itemid]=shopid
-    fr=open(userpath)
-    for img in fr:
-        # hash = hashfunc(Image.open(img))
-        hash = test_dhash(Image.open(img))
-        item,hash=img.split()
-        itemid=item.split('_')[0]
-        list.append((item,shopitem_dic.get(itemid),str(hash)))
-        # itemid=img.split('/')[-1].split('_')[0]
-        # print itemid
-        # images[hash] = images.get(hash, []) + [img]
-    num=len(list)
-    for i in xrange(num):
-        item1=list[i]
-        for  j in xrange(num-i):
-            item2=list[i+j]
-            if item1[1]==item2[1]:continue
-            sim=distance.hamming(item1[2],item2[2])
-            if sim<4:
-                print "-".join(item1),"-".join(item2),sim
     # for k, img_list in images.iteritems():
     #     if len(img_list) > 1:
     #         s=set([i.split('/')[-1].split('_')[0] for i in img_list])
@@ -115,30 +85,24 @@ def just_sim(userpath):
     #             print(" ".join(s))
 if __name__ == '__main__':
     import sys, os
-    def usage():
-        sys.stderr.write("""SYNOPSIS: %s [ahash|phash|dhash] [<directory>]
-Identifies similar images in the directory.
-Method:
-  ahash: Average hash
-  phash: Perceptual hash
-  dhash: Difference hash
-(C) Johannes Buchner, 2013
- python dhash.py  dhash  /home/zlj/data/pic_cat/suit/  /home/zlj/data/tmallint_item >log_test_dhash_16
-""" % sys.argv[0])
-        sys.exit(1)
-
-    hashmethod = sys.argv[1] if len(sys.argv) > 1 else usage()
-    if hashmethod == 'ahash':
-        hashfunc = imagehash.average_hash
-    elif hashmethod == 'phash':
-        hashfunc = imagehash.phash
-    elif hashmethod == 'dhash':
-        hashfunc = imagehash.dhash
-    elif hashmethod=='justhash':
-        userpath = sys.argv[2] if len(sys.argv) > 2 else "."
-        just_sim(userpath=userpath)
-        sys.exit(1)
-    else:
-        usage()
-    userpath = sys.argv[2] if len(sys.argv) > 2 else "."
-    find_sim(userpath=userpath, hashfunc=hashfunc)
+    prex='/home/zlj/data/pic_cat/suit/'
+    path=sys.argv[1]
+    item=''
+    if('/home/zlj/data/' in path):
+        item=path.split('/')[-1]
+        hash=test_dhash(Image.open(path))
+    else :
+        hash=test_dhash(Image.open(prex+path))
+        item=path
+    print path,hash
+    # hashmethod = sys.argv[1] if len(sys.argv) > 1 else usage()
+    # if hashmethod == 'ahash':
+    #     hashfunc = imagehash.average_hash
+    # elif hashmethod == 'phash':
+    #     hashfunc = imagehash.phash
+    # elif hashmethod == 'dhash':
+    #     hashfunc = imagehash.dhash
+    # else:
+    #     usage()
+    # userpath = sys.argv[2] if len(sys.argv) > 2 else "."
+    # find_sim(userpath=userpath, hashfunc=hashfunc)
