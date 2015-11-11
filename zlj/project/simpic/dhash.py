@@ -24,7 +24,7 @@ def is_image(filename):
 #     for k, img_list in images.iteritems():
 #         if len(img_list) > 1:
 #         print(" ".join(img_list))
-def test_dhash(image, hash_size = 8):
+def test_dhash(image, hash_size = 16):
     # Grayscale and shrink the image in one step.
     image = image.convert('L').resize(
         (hash_size + 1, hash_size),
