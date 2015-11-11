@@ -87,8 +87,13 @@ if __name__ == '__main__':
     import sys, os
     prex='/home/zlj/data/pic_cat/suit/'
     path=sys.argv[1]
-    # item=path.split('/')[-1]
-    hash=test_dhash(Image.open(prex+path))
+    item=''
+    if('/home/zlj/data/' in path):
+        item=path.split('/')[-1]
+        hash=test_dhash(Image.open(path))
+    else :
+        hash=test_dhash(Image.open(prex+path))
+        item=path
     print path,hash
     # hashmethod = sys.argv[1] if len(sys.argv) > 1 else usage()
     # if hashmethod == 'ahash':
