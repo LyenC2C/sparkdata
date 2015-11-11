@@ -78,6 +78,36 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
             if sim<4:
                 print "-".join(item1),"-".join(item2),sim
 
+
+def just_sim(userpath, hashfunc = imagehash.average_hash):
+    images={}
+    f=open(sys.argv[3])
+    shopitem_dic={}
+    list=[]
+    for line in f:
+        dv=line.split()
+        shopid=dv[1]
+        itemid=dv[2]
+        shopitem_dic[itemid]=shopid
+    fr=open(userpath)
+    for img in fr:
+        # hash = hashfunc(Image.open(img))
+        hash = test_dhash(Image.open(img))
+        item,hash=img.split()
+        itemid=item.split('_')[0]
+        list.append((item,shopitem_dic.get(itemid),str(hash)))
+        # itemid=img.split('/')[-1].split('_')[0]
+        # print itemid
+        # images[hash] = images.get(hash, []) + [img]
+    num=len(list)
+    for i in xrange(num):
+        item1=list[i]
+        for  j in xrange(num-i):
+            item2=list[i+j]
+            if item1[1]==item2[1]:continue
+            sim=distance.hamming(item1[2],item2[2])
+            if sim<4:
+                print "-".join(item1),"-".join(item2),sim
     # for k, img_list in images.iteritems():
     #     if len(img_list) > 1:
     #         s=set([i.split('/')[-1].split('_')[0] for i in img_list])
