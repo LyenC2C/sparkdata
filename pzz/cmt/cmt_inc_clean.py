@@ -121,8 +121,10 @@ if __name__ == "__main__":
             .map(lambda x: parse_cmt_new(x)) \
             .filter(lambda x: x != None)\
             .flatMap(lambda x:x)\
-            .groupByKey(120)\
+            .groupByKey()\
             .map(lambda (x,y):[x,[1,uniq_cmt(y)]])
+
+            #groupByKey(120) before setting some oom error
 
         rdd_res = rdd_his.union(rdd_new)\
                 .groupByKey()\
