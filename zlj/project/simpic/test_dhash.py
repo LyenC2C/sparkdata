@@ -85,26 +85,19 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
     #             print(" ".join(s))
 if __name__ == '__main__':
     import sys, os
-    def usage():
-        sys.stderr.write("""SYNOPSIS: %s [ahash|phash|dhash] [<directory>]
-Identifies similar images in the directory.
-Method:
-  ahash: Average hash
-  phash: Perceptual hash
-  dhash: Difference hash
-(C) Johannes Buchner, 2013
- python dhash.py  dhash  /home/zlj/data/pic_cat/suit/  /home/zlj/data/tmallint_item >log_test_dhash_16
-""" % sys.argv[0])
-        sys.exit(1)
-
-    hashmethod = sys.argv[1] if len(sys.argv) > 1 else usage()
-    if hashmethod == 'ahash':
-        hashfunc = imagehash.average_hash
-    elif hashmethod == 'phash':
-        hashfunc = imagehash.phash
-    elif hashmethod == 'dhash':
-        hashfunc = imagehash.dhash
-    else:
-        usage()
-    userpath = sys.argv[2] if len(sys.argv) > 2 else "."
-    find_sim(userpath=userpath, hashfunc=hashfunc)
+    prex='/home/zlj/data/pic_cat/suit/'
+    path=sys.argv[1]
+    # item=path.split('/')[-1]
+    hash=test_dhash(Image.open(prex+path))
+    print path,hash
+    # hashmethod = sys.argv[1] if len(sys.argv) > 1 else usage()
+    # if hashmethod == 'ahash':
+    #     hashfunc = imagehash.average_hash
+    # elif hashmethod == 'phash':
+    #     hashfunc = imagehash.phash
+    # elif hashmethod == 'dhash':
+    #     hashfunc = imagehash.dhash
+    # else:
+    #     usage()
+    # userpath = sys.argv[2] if len(sys.argv) > 2 else "."
+    # find_sim(userpath=userpath, hashfunc=hashfunc)
