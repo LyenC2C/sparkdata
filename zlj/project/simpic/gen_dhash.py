@@ -87,8 +87,8 @@ def gen():
         hashfunc = imagehash.dhash
     else:
         print 'error'
-    prex='/home/zlj/data/pic_cat/suit/'
-    path=sys.argv[3]
+    prex=sys.argv[3]
+    path=sys.argv[4]
     item=''
     if('/home/zlj/data/' in path):
         item=path.split('/')[-1]
