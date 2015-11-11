@@ -12,18 +12,7 @@ def is_image(filename):
 	f = filename.lower()
 	return f.endswith(".png") or f.endswith(".jpg") or \
 			f.endswith(".jpeg") or f.endswith(".bmp") or f.endswith(".gif")
-# def find_similar_images(userpath, hashfunc = imagehash.average_hash):
-# 	image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
-# 	images={}
-#     for img in sorted(image_filenames):
-#         hash = hashfunc(Image.open(img))
-#         itemid=img.split('/')[-1].split('_')[0]
-#         print itemid
-#         images[hash] = images.get(hash, []) + [img]
-#
-#     for k, img_list in images.iteritems():
-#         if len(img_list) > 1:
-#         print(" ".join(img_list))
+
 def test_dhash(image, hash_size = 16):
     # Grayscale and shrink the image in one step.
     image = image.convert('L').resize(
@@ -49,10 +38,10 @@ def test_dhash(image, hash_size = 16):
             decimal_value = 0
     return ''.join(hex_string)
 
-def find_sim(userpath, hashfunc = imagehash.average_hash):
-    image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
-    images={}
-    f=open(sys.argv[3])
+def find_sim():
+    # image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
+    # images={}
+    f=open(sys.argv[1])
     shopitem_dic={}
     list=[]
     for line in f:
@@ -60,11 +49,12 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
         shopid=dv[1]
         itemid=dv[2]
         shopitem_dic[itemid]=shopid
-    for img in sorted(image_filenames):
+    for line in open(sys.argv[2]):
         # hash = hashfunc(Image.open(img))
-        hash = test_dhash(Image.open(img))
-        itemid=img.split('/')[-1].split('_')[0]
-        list.append((img.split('/')[-1],shopitem_dic.get(itemid),str(hash)))
+        # hash = test_dhash(Image.open(img))
+        img,hash=line.split()
+        itemid=img.split('_')[0]
+        list.append((img,shopitem_dic.get(itemid),str(hash)))
         # itemid=img.split('/')[-1].split('_')[0]
         # print itemid
         # images[hash] = images.get(hash, []) + [img]
@@ -83,26 +73,40 @@ def find_sim(userpath, hashfunc = imagehash.average_hash):
     #         s=set([i.split('/')[-1].split('_')[0] for i in img_list])
     #         if len(s>1):
     #             print(" ".join(s))
-if __name__ == '__main__':
-    import sys, os
+
+'''
+gen ahash  prex  file
+'''
+def gen():
+    hashmethod = sys.argv[2]
+    if hashmethod == 'ahash':
+        hashfunc = imagehash.average_hash
+    elif hashmethod == 'phash':
+        hashfunc = imagehash.phash
+    elif hashmethod == 'dhash':
+        hashfunc = imagehash.dhash
+    else:
+        print 'error'
     prex='/home/zlj/data/pic_cat/suit/'
-    path=sys.argv[1]
+    path=sys.argv[3]
     item=''
     if('/home/zlj/data/' in path):
         item=path.split('/')[-1]
-        hash=test_dhash(Image.open(path))
+
     else :
-        hash=test_dhash(Image.open(prex+path))
+        path=prex+path
         item=path
-    print path,hash
-    # hashmethod = sys.argv[1] if len(sys.argv) > 1 else usage()
-    # if hashmethod == 'ahash':
-    #     hashfunc = imagehash.average_hash
-    # elif hashmethod == 'phash':
-    #     hashfunc = imagehash.phash
-    # elif hashmethod == 'dhash':
-    #     hashfunc = imagehash.dhash
-    # else:
-    #     usage()
-    # userpath = sys.argv[2] if len(sys.argv) > 2 else "."
-    # find_sim(userpath=userpath, hashfunc=hashfunc)
+
+    if is_image(path):
+        print item ,hashfunc(Image.open(path))
+
+
+if __name__ == '__main__':
+    import sys
+
+    method=sys.argv[1]
+    if method=='gen':
+        gen()
+    elif method=='sim':
+        find_sim()
+
