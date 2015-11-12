@@ -1,6 +1,7 @@
 
 
 use wlbase_dev;
+drop table   t_zlj_base_ec_item_sale_dev_day;
 
 CREATE  TABLE  if not exists t_zlj_base_ec_item_sale_dev_day (
 shop_id string ,
@@ -11,8 +12,8 @@ day_sold_price FLOAT ,
 location string ,
 cate_id string ,
 cate_name  string ,
-root_cat_id string ,
-root_cat_name string ,
+cate_level1_id  string ,
+cate_level1_name string ,
 brand_id string ,
 brand_name  string
 )

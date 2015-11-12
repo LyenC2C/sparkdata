@@ -20,8 +20,8 @@ SELECT
   t5.location,
   cate_id,
   cate_name,
-  root_cat_id,
-  root_cat_name,
+  cate_level1_id,
+  cate_level1_name,
   brand_id,
   brand_name,
   '$ds' AS ds
@@ -76,10 +76,10 @@ FROM
   (
     SELECT
       item_id,
-      cat_id,
+      cate_id,
       cate_name,
-      root_cat_id,
-      root_cat_name,
+      cate_level1_id,
+      cate_level1_name,
       brand_id,
       brand_name
     FROM t_base_ec_item_dev
