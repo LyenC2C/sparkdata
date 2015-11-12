@@ -18,12 +18,12 @@ SELECT
   t5.day_sold,
   t5.day_sold_price,
   t5.location,
-  cate_id,
-  cate_name,
-  cate_level1_id,
-  cate_level1_name,
-  brand_id,
-  brand_name,
+  t6.cate_id,
+  t6.cate_name,
+  t6.cate_level1_id,
+  t6.cate_level1_name,
+  t6.brand_id,
+  t6.brand_name,
   '$ds' AS ds
 FROM
 
