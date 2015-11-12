@@ -27,6 +27,7 @@ SELECT
 FROM
 
   (SELECT
+    shop_id,
      item_id,
      s_price,
      total_sold
