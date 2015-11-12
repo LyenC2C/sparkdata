@@ -1,3 +1,5 @@
+
+
 source /home/hadoop/.bashrc
 path=$1
 

@@ -58,9 +58,6 @@ def find_sim():
         else:
             itemid=img.split('_')[0]
         list.append((img,shopitem_dic.get(itemid),str(hash)))
-        # itemid=img.split('/')[-1].split('_')[0]
-        # print itemid
-        # images[hash] = images.get(hash, []) + [img]
     num=len(list)
     print num
     for i in xrange(num):
@@ -71,12 +68,6 @@ def find_sim():
             sim=distance.hamming(item1[2],item2[2])
             if sim<4:
                 print "-".join(item1),"-".join(item2),sim
-
-    # for k, img_list in images.iteritems():
-    #     if len(img_list) > 1:
-    #         s=set([i.split('/')[-1].split('_')[0] for i in img_list])
-    #         if len(s>1):
-    #             print(" ".join(s))
 
 '''
 gen ahash  prex  file
@@ -94,7 +85,7 @@ def gen():
     prex=sys.argv[3]
     path=sys.argv[4]
     item=''
-    if('/home/zlj/data/' in path):
+    if( prex in path):
         item=path.split('/')[-1]
 
     else :
@@ -102,7 +93,9 @@ def gen():
         item=path
 
     if is_image(path):
-        print item ,hashfunc(Image.open(path))
+        hash=hashfunc(Image.open(path))
+        if '00000000' not in hash:
+            print item ,hash
 
 
 if __name__ == '__main__':
