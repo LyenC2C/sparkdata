@@ -31,14 +31,14 @@ FROM
      total_sold
    FROM t_base_ec_item_sale_dev
    WHERE ds ='$ds'
-    )
+    ) t1
   LEFT JOIN
 
   (SELECT
      item_id,
      total_sold
    FROM t_base_ec_item_sale_dev
-   WHERE ds ='$ds_1')
+   WHERE ds ='$ds_1')t2
     ON t1.item_id = t2.item_id
-
+  ;
  EOF
