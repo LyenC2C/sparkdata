@@ -31,3 +31,4 @@ echo "feed back item feed inc number to commit.."
 hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 
 echo "mission FINISH!"
+date

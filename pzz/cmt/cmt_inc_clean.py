@@ -109,7 +109,7 @@ if __name__ == "__main__":
         sc.stop()
 
     elif sys.argv[1] == '-gen_data_inc':
-        sc = SparkContext(appName="gen_cmt_inc"+sys.argv[3].split(".")[-1])
+        sc = SparkContext(appName="gen_cmt_inc "+sys.argv[3])
         # rdd_his:return [itemid,[0,[feedid1,feedid2]]]
         rdd_his = sc.textFile(sys.argv[2])\
                     .map(lambda x:x.strip().split("\001"))\
@@ -132,15 +132,15 @@ if __name__ == "__main__":
 
         rdd_all_feedid = rdd_res.map(lambda x:x[1])\
                     .map(lambda x:"\001".join(x))\
-                    .coalesce(100)
+                    .coalesce(200)
 
         rdd_inc_feedid_num = rdd_res.map(lambda x:x[2])\
                     .map(lambda x:x[0]+'\t'+str(len(x)-1))\
-                    .coalesce(50)
+                    .coalesce(100)
 
         rdd_data = rdd_res.map(lambda x:x[0])\
                     .flatMap(lambda x:x)\
-                    .coalesce(200)
+                    .coalesce(500)
 
         rdd_all_feedid.saveAsTextFile(sys.argv[4])
         rdd_inc_feedid_num.saveAsTextFile(sys.argv[5])
