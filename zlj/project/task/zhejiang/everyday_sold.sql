@@ -22,7 +22,7 @@ SELECT
     THEN s_price * t1.total_sold
   ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price,
 
-  ds
+  '$ds'
 FROM
 
   (SELECT
