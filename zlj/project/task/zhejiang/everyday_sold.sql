@@ -7,10 +7,11 @@ ds=$2
 /home/hadoop/hive/bin/hive<<EOF
 
 use wlbase_dev;
+SET hive.exec.dynamic.partition.mode=nonstrict;
 set hive.exec.reducers.bytes.per.reducer=1000000000;
 SET hive.exec.dynamic.partition=true;
 
-insert overwrite table t_base_ec_item_sale_dev_day partition(ds)
+insert overwrite table t_zlj_base_ec_item_sale_dev_day partition(ds)
 SELECT
   shop_id,
   t1.item_id,
@@ -22,7 +23,7 @@ SELECT
     THEN s_price * t1.total_sold
   ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price,
 
-  '$ds'
+  '$ds' as ds
 FROM
 
   (SELECT
