@@ -38,13 +38,13 @@ CREATE TABLE t_zlj_ec_userbuy
           item_id,
           user_id,
           f_date,
-#           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date) - 40 AS datediff
+--           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date) - 40 AS datediff
           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date)  AS datediff
         FROM
           t_base_ec_item_feed_dev
         WHERE ds > 20150701
 
       ) t2 ON t1.item_id = t2.item_id
-
+ ;
 
   EOF
