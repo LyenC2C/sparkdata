@@ -9,7 +9,7 @@ from pyspark.sql.types import *
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-rdd = sc.textFile('/user/hadoop/qq/info/qq_age.0611', '100').map(lambda x: x.split())
+rdd = sc.textFile('/user/hadoop/qq/info/qq_age.0611', 100).map(lambda x: x.split())
 rdd.groupByKey().count()
 rdd.filter(lambda x: '469330328' in x[0]).collect()
 rdd1 = rdd.map(lambda x: x.split()[0]).distinct()
