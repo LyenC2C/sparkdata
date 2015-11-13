@@ -206,7 +206,7 @@ Insert overwrite table t_base_q_user_dev  PARTITION(ds=20151112)
                 select uin ,birthday, phone, gender_id, college, lnick, loc_id, loc,
                 h_loc_id, h_loc, personal, shengxiao, gender, occupation, constel, blood, url, homepage, nick, email, uin2, mobile, ts,
 
-                case when qqinfo_age< 150 and qqinfo_age >5 then qqinfo_age else   t2.qqage end age
+                case when qqinfo_age< 150 and qqinfo_age >5 then qqinfo_age else   t2.age end age
                 from
 
                 (select *,(2015-year(birthday)) as qqinfo_age
