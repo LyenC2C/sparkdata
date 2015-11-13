@@ -1,4 +1,8 @@
 
+
+/home/hadoop/hive/bin/hive<<EOF
+
+
 set hive.exec.reducers.bytes.per.reducer=500000000;
 use wlbase_dev;
 
@@ -24,6 +28,10 @@ t_zlj_ec_userbuy
 group by user_id,root_cat_id,root_cat_name
 ) t
  ;
+
+
+EOF
+
 
 
 # drop table IF EXISTS  t_zlj_ec_perfer_dim_groupinfo;

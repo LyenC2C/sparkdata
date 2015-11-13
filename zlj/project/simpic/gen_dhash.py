@@ -38,17 +38,25 @@ def test_dhash(image, hash_size = 16):
             decimal_value = 0
     return ''.join(hex_string)
 
+
+'''
+sim type  cat_file  hash_file
+'''
 def find_sim():
     # image_filenames = [os.path.join(userpath, path) for path in os.listdir(userpath) if is_image(path)]
     # images={}
     f=open(sys.argv[2])
     shopitem_dic={}
     list=[]
+    type_item_set=set()
     for line in f:
         dv=line.split()
+        type=dv[0]
         shopid=dv[1]
         itemid=dv[2]
         shopitem_dic[itemid]=shopid
+        if type=='':
+            type_item_set.add(itemid)
     for line in open(sys.argv[3]):
         # hash = hashfunc(Image.open(img))
         # hash = test_dhash(Image.open(img))
@@ -57,7 +65,8 @@ def find_sim():
             itemid=img.split('/')[-1].split('_')[0]
         else:
             itemid=img.split('_')[0]
-        list.append((img,shopitem_dic.get(itemid),str(hash)))
+        if itemid in type_item_set:
+            list.append((img,shopitem_dic.get(itemid),str(hash)))
     num=len(list)
     print num
     for i in xrange(num):
@@ -87,13 +96,12 @@ def gen():
     item=''
     if( prex in path):
         item=path.split('/')[-1]
-
     else :
         path=prex+path
         item=path
 
     if is_image(path):
-        hash=hashfunc(Image.open(path))
+        hash=str(hashfunc(Image.open(path)))
         if '00000000' not in hash:
             print item ,hash
 
@@ -106,4 +114,3 @@ if __name__ == '__main__':
         gen()
     elif method=='sim':
         find_sim()
-

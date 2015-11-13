@@ -1,5 +1,5 @@
 use wlbase_dev;
-CREATE  TABLE  if not exists t_wrt_item_tag_level(
+CREATE  TABLE  if not exists t_wrt_zhejiang_shop_loc(
 shop_id STRING,
 shop_local STRING
 )

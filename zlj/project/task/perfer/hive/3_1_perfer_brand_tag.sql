@@ -1,5 +1,8 @@
 
 
+
+/home/hadoop/hive/bin/hive<<EOF
+
 SET hive.exec.reducers.bytes.per.reducer = 500000000;
 USE wlbase_dev;
 
@@ -30,7 +33,9 @@ CREATE TABLE t_zlj_ec_perfer_brand_tag_level
 
             ON (t2.rn < 5 AND t1.brand_id = t2.brand_id)
       ) t3
-    GROUP BY user_id;
+    GROUP BY user_id
+;
 
 
 
+EOF
