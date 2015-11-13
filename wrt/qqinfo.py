@@ -163,7 +163,7 @@ p_dict = rdd2.map(lambda x: x.split('\t')).collectAsMap()
 broadcastVar = sc.broadcast(p_dict)
 place_dict = broadcastVar.value
 rdd_info = rdd.map(lambda x: f(x, place_dict)).filter(lambda x: x != None)
-rdd_age = sc.textFile('/user/hadoop/qq/info/qq_age.0611').map(lambda x: x.split('\t'))
+rdd_age = sc.textFile('/user/hadoop/qq/info/qq_age.0611').map(lambda x: x.split('\t')).map(lambda x:[x[0],int(x[1])])
 schema1 = StructType([
     StructField("uin", StringType(), True),
     StructField("birthday", StringType(), True),
@@ -202,14 +202,14 @@ hiveContext.registerDataFrameAsTable(df2, 'qqage')
 hiveContext.sql('use wlbase_dev')
 
 sql = '''
-Insert overwrite table t_base_q_user_dev_wrt  PARTITION(ds=20151112)
+Insert overwrite table t_base_q_user_dev  PARTITION(ds=20151112)
                 select uin ,birthday, phone, gender_id, college, lnick, loc_id, loc,
                 h_loc_id, h_loc, personal, shengxiao, gender, occupation, constel, blood, url, homepage, nick, email, uin2, mobile, ts,
 
-                case when qqinfo_age< 150 and qqinfo_age >5 then qqinfo_age else   t2.qqage end age
+                case when qqinfo_age< 150 and qqinfo_age >5 then qqinfo_age else   t2.age end age
                 from
 
-                (select *,(2015-year(birthday) as qqinfo_age
+                (select *,(2015-year(birthday)) as qqinfo_age
                  from
                 qqinfo
                 where uin is not null)t1
