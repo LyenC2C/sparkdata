@@ -24,27 +24,41 @@ hiveContext.sql('use wlbase_dev')
 
 hiveContext.sql('drop table IF EXISTS  t_zlj_ec_perfer_priceavg')
 
-hiveContext.sql('create table t_zlj_ec_perfer_priceavg as '
-                'select  user_id ,count(1)  buytimes,sum(price) as sum_price, avg(price) as avg_price '
-                'from  t_zlj_ec_userbuy group by user_id    HAVING  avg(price)>0 ')
+
+# sql='''create table t_zlj_ec_perfer_priceavg as
+#       select  user_id ,count(1)  buytimes,sum(price) as sum_price, avg(price) as avg_price
+#       from  t_zlj_ec_userbuy group by user_id    HAVING  avg(price)>0
+# '''
 
 
+sql='''create table t_zlj_ec_perfer_priceavg as
+      select  user_id ,count(1)  buytimes,sum(price) as sum_price, avg(price) as avg_price
+      from  t_zlj_ec_userbuy group by user_id    HAVING  avg(price)>0
+'''
+hiveContext.sql(sql)
 
 
+# rdd=hiveContext.sql('select cast(price as int) price from wlbase_dev.t_base_ec_item_dev where ds=20151030 and cast(price as int)>0').map(lambda x:x.price)
+rdd1=hiveContext.sql('select user_id,avg_price from   t_zlj_ec_userbuy group by user_id    HAVING  avg(price)>0 ').map(lambda x:[x.user_id,x.avg_price])
 
-rdd=hiveContext.sql('select cast(price as int) price from wlbase_dev.t_base_ec_item_dev where ds=20151030 and cast(price as int)>0').map(lambda x:x.price)
+rdd=rdd1.map(lambda x: x[1])
 
-rdd.filter(lambda  x:x<50000).histogram(1000)
+# rdd.filter(lambda  x:x<50000).histogram(1000)
 
 
-data=rdd.filter(lambda x:x<10000).map(lambda x:array(x))
+data=rdd.filter(lambda x:x<30000).map(lambda x:array(x))
 model = KMeans.train(
     data, 5, maxIterations=20, runs=30, initializationMode="random",
     seed=50, initializationSteps=5, epsilon=1e-4)
 
 
 
-model.centers
+m={}
+l=[]
+for index,i in enumerate(model.centers):
+    l.append(i[0][0])
+
+sorted(l,reverse=True)
 # [array([ 947.35742005]), array([ 278.74380204]), array([ 2558.86612172]), array([ 41.31785555]), array([ 6119.56633409])]
 
 rdd2=sqlContext.sql('select user_id,price from wlbase_dev.t_zlj_ec_userbuy_1 where price>0')

@@ -10,14 +10,15 @@ sc = SparkContext(appName="spark brandinfo")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-def valid_jsontxt(content):
-    """
-    :rtype :
-    """
-	if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+# def valid_jsontxt(content):
+#     """
+#     :rtype :
+#     """
+# 	if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else:
+#         return ''
+
 def f(line):
 	line_s = valid_jsontxt(line)
 	ob = json.loads(line_s)

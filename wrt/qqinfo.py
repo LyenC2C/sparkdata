@@ -95,11 +95,11 @@ def f(line,place_dict):
 	mobile = trans(ob.get("mobile","-"))
 	ts =  str(int(time.time()))
 	lv=[]
+	lv.append(uin)
 	lv.append(birthday)
 	lv.append(phone)
 	lv.append(gender_id)
 	lv.append(college)
-	lv.append(uin)
 	lv.append(lnick)
 	lv.append(loc_id)
 	lv.append(loc)
