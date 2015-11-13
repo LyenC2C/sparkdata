@@ -39,7 +39,7 @@ userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],model.predict([x[1]])))
 
 schema = StructType([
            StructField("uid", StringType(), True),
-           StructField("avg_price", IntegerType(), True),
+           StructField("avg_price", FloatType(), True),
            StructField("ulevel",IntegerType(), True)])
 df=sqlContext.createDataFrame(userlevel_rdd,schema)
 sqlContext.registerDataFrameAsTable(df,'userlevel')
