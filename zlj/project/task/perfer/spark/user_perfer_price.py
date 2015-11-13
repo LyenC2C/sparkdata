@@ -1,8 +1,9 @@
+# coding:utf-8
 __author__ = 'zlj'
 
-# 用户偏好 价格
-# 先将商品价格 聚类划分价格区间，然后将用户购买记录对应上去，最后去分数最大的价格阶段
-# 最后结果还没做映射
+# 鐢ㄦ埛鍋忓ソ 浠锋牸
+# 鍏堝皢鍟嗗搧浠锋牸 鑱氱被鍒掑垎浠锋牸鍖洪棿锛岀劧鍚庡皢鐢ㄦ埛璐拱璁板綍瀵瑰簲涓婂幓锛屾渶鍚庡幓鍒嗘暟鏈�澶х殑浠锋牸闃舵
+# 鏈�鍚庣粨鏋滆繕娌″仛鏄犲皠
 
 
 
@@ -62,9 +63,10 @@ sqlContext.registerDataFrameAsTable(df,'userlevel')
 #                'from (select uid,ulevel,count(1) as num from userlevel group by uid, ulevel) t ')
 
 
-# 保存
+# 淇濆瓨
 hiveContext.registerDataFrameAsTable(df,'sals')
-hiveContext.sql('create table wlbase_dev.t_zlj_perfer_user_levelqq as select * from sals')
+hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level ')
+hiveContext.sql('create table wlbase_dev.t_zlj_perfer_user_level as select * from sals')
 
 # sqlContext.sql('select uid,ulevel,count(1) as num from userlevel group by uid, ulevel').take(1)
 
