@@ -209,7 +209,7 @@ Insert overwrite table t_base_q_user_dev  PARTITION(ds=20151112)
                 case when qqinfo_age< 150 and qqinfo_age >5 then qqinfo_age else   t2.qqage end age
                 from
 
-                (select *,(2015-year(birthday) as qqinfo_age
+                (select *,(2015-year(birthday)) as qqinfo_age
                  from
                 qqinfo
                 where uin is not null)t1
