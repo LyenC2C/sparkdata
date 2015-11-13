@@ -8,7 +8,6 @@ SET hive.exec.reducers.bytes.per.reducer=500000000;
 USE wlbase_dev;
 
 
--- 计算出分数
 DROP TABLE IF EXISTS t_zlj_ec_userbuy;
 CREATE TABLE t_zlj_ec_userbuy
   AS
