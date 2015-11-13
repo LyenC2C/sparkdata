@@ -18,7 +18,6 @@ def f_coding(x):
     else:
         return x
 
-
 def birth(x):
     if x == "":
         return 0
@@ -127,22 +126,22 @@ def f(line, place_dict):
     lv.append(birthday)
     lv.append(phone)
     lv.append(gender_id)
-    lv.append(college)
-    lv.append(lnick)
+    lv.append(f_coding(college))
+    lv.append(f_coding(lnick))
     lv.append(loc_id)
-    lv.append(loc)
+    lv.append(f_coding(loc))
     lv.append(h_loc_id)
-    lv.append(h_loc)
-    lv.append(personal)
-    lv.append(shengxiao)
+    lv.append(f_coding(h_loc))
+    lv.append(f_coding(personal))
+    lv.append(f_coding(shengxiao))
     lv.append(gender)
-    lv.append(occupation)
-    lv.append(constel)
-    lv.append(blood)
+    lv.append(f_coding(occupation))
+    lv.append(f_coding(constel))
+    lv.append(f_coding(blood))
     lv.append(url)
-    lv.append(homepage)
-    lv.append(nick)
-    lv.append(email)
+    lv.append(f_coding(homepage))
+    lv.append(f_coding(nick))
+    lv.append(f_coding(email))
     lv.append(uin2)
     lv.append(mobile)
     lv.append(ts)
@@ -202,7 +201,7 @@ hiveContext.registerDataFrameAsTable(df2, 'qqage')
 hiveContext.sql('use wlbase_dev')
 
 sql = '''
-Insert overwrite table t_base_q_user_dev  PARTITION(ds=20151112)
+Insert overwrite table t_base_qq_user_dev  PARTITION(ds=20151112)
                 select uin ,birthday, phone, gender_id, college, lnick, loc_id, loc,
                 h_loc_id, h_loc, personal, shengxiao, gender, occupation, constel, blood, url, homepage, nick, email, uin2, mobile, ts,
 
