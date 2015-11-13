@@ -1,28 +1,35 @@
+/home/hadoop/hive/bin/hive<<EOF
 
 
 --房产类
-drop table if EXISTS  t_zlj_ec_perfer_house;
-create table t_zlj_ec_perfer_house as
-select
-user_id,'有房一族' tag, sum(f) as score
-from
-t_zlj_ec_perfer_dim
-where  root_cat_id in
-(
-27,
-50008164,
-50020332,
-50020808,
-50022649,
-50022703,
-50022987,
-50023804,
-50025881,
-122852001,
-123302001,
-124698018
-)
-group by user_id
-order by sum(f) desc
+DROP TABLE IF EXISTS t_zlj_ec_perfer_house;
+CREATE TABLE t_zlj_ec_perfer_house
+  AS
+    SELECT
+      user_id,
+      '有房一族'    tag,
+      sum(f) AS score
+    FROM
+      t_zlj_ec_perfer_dim
+    WHERE root_cat_id IN
+          (
+            27,
+            50008164,
+            50020332,
+            50020808,
+            50022649,
+            50022703,
+            50022987,
+            50023804,
+            50025881,
+            122852001,
+            123302001,
+            124698018
+          )
+    GROUP BY user_id
+    ORDER BY sum(f) DESC
 -- limit 100;
 ;
+
+
+EOF
