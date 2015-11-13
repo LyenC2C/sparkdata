@@ -148,14 +148,10 @@ def f(line, place_dict):
     lv.append(ts)
     lv.append(0)
     return lv
-
-
 # return '\001'.join([ valid_jsontxt(i) for i in lv])
 # return birthday + '\001' + phone + '\001' + gender_id + '\001' + college + '\001' + uin + '\001' + lnick + '\001' + loc_id + '\001' + loc + '\001' + h_loc_id + '\001' + h_loc + '\001' +\
 #    personal + '\001' + shengxiao + '\001' + gender + '\001' + occupation + '\001' + constel + '\001' + blood + '\001' + url + '\001' + homepage + '\001' + nick + '\001' +\
 # 		email + '\001' + uin2 + '\001' + mobile + '\001' + ts
-
-
 if sys.argv[1] == '-h':
     comment = 'qq用户信息格式化为hive数据格式'
     print comment
@@ -172,16 +168,16 @@ schema1 = StructType([
     StructField("uin", StringType(), True),
     StructField("birthday", StringType(), True),
     StructField("phone", StringType(), True),
-    StructField("gender_id", IntegerType(), True),
+    StructField("gender_id", StringType(), True),
     StructField("college", StringType(), True),
-    StructField("lnick", IntegerType(), True),
-    StructField("loc_id", IntegerType(), True),
-    StructField("loc", IntegerType(), True),
+    StructField("lnick", StringType(), True),
+    StructField("loc_id", StringType(), True),
+    StructField("loc", StringType(), True),
     StructField("h_loc_id", StringType(), True),
     StructField("h_loc", StringType(), True),
     StructField("personal", StringType(), True),
     StructField("shengxiao", StringType(), True),
-    StructField("gender", IntegerType(), True),
+    StructField("gender", StringType(), True),
     StructField("occupation", StringType(), True),
     StructField("constel", StringType(), True),
     StructField("blood", StringType(), True),
@@ -196,8 +192,8 @@ schema1 = StructType([
 ])
 schema2 = StructType([
     StructField("qq", StringType(), True),
-    StructField("age", IntegerType(), True)]
-)
+    StructField("age", IntegerType(), True)
+])
 
 df1 = hiveContext.createDataFrame(rdd_info, schema1)
 hiveContext.registerDataFrameAsTable(df1, 'qqinfo')
