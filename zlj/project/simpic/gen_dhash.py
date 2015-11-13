@@ -101,7 +101,7 @@ def gen():
         item=path
 
     if is_image(path):
-        hash=hashfunc(Image.open(path))
+        hash=str(hashfunc(Image.open(path)))
         if '00000000' not in hash:
             print item ,hash
 
