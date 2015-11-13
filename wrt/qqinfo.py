@@ -163,7 +163,7 @@ p_dict = rdd2.map(lambda x: x.split('\t')).collectAsMap()
 broadcastVar = sc.broadcast(p_dict)
 place_dict = broadcastVar.value
 rdd_info = rdd.map(lambda x: f(x, place_dict)).filter(lambda x: x != None)
-rdd_age = sc.textFile('/user/hadoop/qq/info/qq_age.0611').map(lambda x: x.split('\t'))
+rdd_age = sc.textFile('/user/hadoop/qq/info/qq_age.0611').map(lambda x: x.split('\t')).map(lambda x:[x[0],int(x[1])])
 schema1 = StructType([
     StructField("uin", StringType(), True),
     StructField("birthday", StringType(), True),
