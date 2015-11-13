@@ -36,4 +36,4 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
 
 -- select birthday,uin  from t_base_q_user_dev where constel='-' limit 100;
 
-select locid, count(1) from (select case when LENGTH(loc)>3 then 1  else 0 end  as locid from t_base_q_user_dev) t GROUP  locid;
+-- select locid, count(1) from (select case when LENGTH(loc)>3 then 1  else 0 end  as locid from t_base_q_user_dev) t GROUP  locid;
