@@ -39,7 +39,7 @@ hiveContext.sql(sql)
 
 
 # rdd=hiveContext.sql('select cast(price as int) price from wlbase_dev.t_base_ec_item_dev where ds=20151030 and cast(price as int)>0').map(lambda x:x.price)
-rdd1=hiveContext.sql('select user_id,avg_price from   t_zlj_ec_userbuy group by user_id    HAVING  avg(price)>0 ').map(lambda x:[x.user_id,x.avg_price])
+rdd1=hiveContext.sql('select user_id,avg(price) avg_price from   t_zlj_ec_userbuy group by user_id    HAVING  avg(price)>0 ').map(lambda x:[x.user_id,x.avg_price])
 
 rdd=rdd1.map(lambda x: x[1])
 
