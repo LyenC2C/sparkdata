@@ -1,11 +1,11 @@
 use wlbase_dev;
 
-CREATE EXTERNAL TABLE  if not exists t_base_q_user_dev_zlj (
+CREATE EXTERNAL TABLE  if not exists t_base_qq_user_dev (
+uin  STRING   COMMENT 'qq号' ,
 birthday STRING COMMENT 'yyyy-mm-dd',
 phone  STRING COMMENT '手机号，自己填写，内容可能失真' ,
 gender_id  BIGINT COMMENT '性别 1：男  2：女' ,
 college  STRING   COMMENT '学校' ,
-uin  STRING   COMMENT 'qq号' ,
 lnick  STRING COMMENT '个人签名' ,
 loc_id STRING COMMENT '所在地编码' ,
 loc STRING COMMENT '所在地',
