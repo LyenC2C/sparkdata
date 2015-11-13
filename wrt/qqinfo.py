@@ -118,6 +118,7 @@ def f(line,place_dict):
 	lv.append(uin2)
 	lv.append(mobile)
 	lv.append(ts)
+	lv.append('0')
 
 	return '\001'.join([ valid_jsontxt(i) for i in lv])
 	# return birthday + '\001' + phone + '\001' + gender_id + '\001' + college + '\001' + uin + '\001' + lnick + '\001' + loc_id + '\001' + loc + '\001' + h_loc_id + '\001' + h_loc + '\001' +\
