@@ -1,3 +1,6 @@
+/home/hadoop/hive/bin/hive<<EOF
+
+
 SET hive.exec.reducers.bytes.per.reducer = 500000000;
 USE wlbase_dev;
 
@@ -30,9 +33,11 @@ FROM
   WHERE ds=20151107
   )t2 ON t1.shop_id =t2.shop_id
 
-  GROUP BY user_id, t1.shop_id,t2.shop_name
+  GROUP BY user_id, t1.shop_id, t2.shop_name
   ) t;
 
+
+EOF
 
 # DROP TABLE IF EXISTS t_zlj_ec_perfer_shop_groupinfo;
 # CREATE TABLE t_zlj_ec_perfer_shop_groupinfo
