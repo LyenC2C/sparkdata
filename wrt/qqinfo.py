@@ -202,7 +202,7 @@ hiveContext.registerDataFrameAsTable(df2, 'qqage')
 hiveContext.sql('use wlbase_dev')
 
 sql = '''
-Insert overwrite table t_base_q_user_dev_wrt  PARTITION(ds=20151112)
+Insert overwrite table t_base_q_user_dev  PARTITION(ds=20151112)
                 select uin ,birthday, phone, gender_id, college, lnick, loc_id, loc,
                 h_loc_id, h_loc, personal, shengxiao, gender, occupation, constel, blood, url, homepage, nick, email, uin2, mobile, ts,
 
