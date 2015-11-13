@@ -31,7 +31,7 @@ CREATE TABLE t_zlj_ec_userbuy
           cast(price AS INT) price,
           shop_id
         FROM t_base_ec_item_dev
-        WHERE ds = 20151030
+        WHERE ds = 20151107
       ) t1
       JOIN
       (
@@ -39,7 +39,8 @@ CREATE TABLE t_zlj_ec_userbuy
           item_id,
           user_id,
           f_date,
-          datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date) - 40 AS datediff
+#           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date) - 40 AS datediff
+          datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date)  AS datediff
         FROM
           t_base_ec_item_feed_dev
         WHERE ds > 20150701
