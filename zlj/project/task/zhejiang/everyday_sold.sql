@@ -24,6 +24,7 @@ SELECT
   t6.cate_level1_name,
   t6.brand_id,
   t6.brand_name,
+  t5.bc_type,
   '$ds' AS ds
 FROM
 
@@ -50,14 +51,16 @@ FROM
          ELSE t1.total_sold - t2.total_sold END             AS day_sold,
          CASE WHEN t2.item_id IS NULL
            THEN s_price * t1.total_sold
-         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price
+         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price,
+         bc_type
        FROM
 
          (SELECT
             shop_id,
             item_id,
             s_price,
-            total_sold
+            total_sold,
+           bc_type
           FROM t_base_ec_item_sale_dev
           WHERE ds = '$ds'
          ) t1
