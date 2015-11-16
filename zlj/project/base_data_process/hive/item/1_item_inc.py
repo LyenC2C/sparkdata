@@ -66,6 +66,11 @@ def valid_jsontxt(content):
         return content
 # s=''
 # s.split()
+def try_parse(line,flag):
+    try:
+        parse(line,flag)
+    except:return None
+
 def parse(line,flag):
     ts=''
     txt=''
@@ -215,7 +220,7 @@ if __name__ == "__main__":
         ds_1=sys.argv[3]
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse(x,'inc')).filter(lambda x: x is not None)
+            .map(lambda x:try_parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
         schema1=df.schema
