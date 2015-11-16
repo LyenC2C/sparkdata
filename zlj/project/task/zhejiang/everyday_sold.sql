@@ -18,10 +18,10 @@ SELECT
   t5.day_sold,
   t5.day_sold_price,
   t5.location,
-  t6.cate_id,
-  t6.cate_name,
-  t6.cate_level1_id,
-  t6.cate_level1_name,
+  t6.cat_id,
+  t6.cat_name,
+  t6.root_cat_id,
+  t6.root_cat_name,
   t6.brand_id,
   t6.brand_name,
   t5.bc_type,
@@ -79,10 +79,10 @@ left JOIN
   (
     SELECT
       item_id,
-      cate_id,
-      cate_name,
-      cate_level1_id,
-      cate_level1_name,
+      cat_id,
+      cat_name,
+      root_cat_id,
+      root_cat_name,
       brand_id,
       brand_name
     FROM t_base_ec_item_dev
