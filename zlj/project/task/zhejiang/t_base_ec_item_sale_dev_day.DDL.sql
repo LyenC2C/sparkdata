@@ -15,7 +15,8 @@ cate_name  string ,
 cate_level1_id  string ,
 cate_level1_name string ,
 brand_id string ,
-brand_name  string
+brand_name  string,
+bc_type String
 )
 COMMENT ''
 PARTITIONED BY  (ds STRING )
