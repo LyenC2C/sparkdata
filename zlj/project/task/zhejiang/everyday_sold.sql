@@ -75,7 +75,7 @@ FROM
      ) t4
        ON t3.shop_id = t4.shop_id
   ) t5
-  JOIN
+left JOIN
   (
     SELECT
       item_id,
