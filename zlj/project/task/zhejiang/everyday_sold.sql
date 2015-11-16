@@ -37,7 +37,7 @@ FROM
        SELECT
          shop_id,
          location
-       FROM t_base_ec_shop_dev
+       FROM t_zlj_zj_shop
        WHERE ds = 20151107
      ) t3
      JOIN
