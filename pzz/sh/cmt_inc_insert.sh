@@ -23,10 +23,10 @@ tmp_data=${data_dir}/cmt_inc_data.${mission_id}
 echo "Mission start at:"
 date
 echo "check argvs: "
-echo "\tdata location:\t"${new_data_input}
-echo "\tlast all feedid location\t"${all_feed_input}
-echo "\tall feedid location\t"${all_feed_output}
-echo "\tnew feedid location\t"${new_feed_output}
+echo $'\t'"data location:"$'\t'${new_data_input}
+echo $'\t'"last all feedid location:"$'\t'${all_feed_input}
+echo $'\t'"all feedid location:"$'\t'${all_feed_output}
+echo $'\t'"new feedid location:"$'\t'${new_feed_output}
 
 #处理数据
 echo "Start spark job."
