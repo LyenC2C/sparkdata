@@ -101,9 +101,10 @@ if __name__ == "__main__":
 
     elif sys.argv[1] == '-gen_his_item_feed_file':
         sc = SparkContext(appName="gen_his_item_feed_file")
-        sc.textFile(sys.argv[2]) \
+        hive_dbpath = sys.argv[2]
+        sc.textFile(hive_dbpath) \
             .map(lambda x: gen_item_feedid(x)) \
-            .groupByKey(50) \
+            .groupByKey(100) \
             .map(lambda (x, y): x + "\001" + "\001".join(y)) \
             .saveAsTextFile(sys.argv[3])
         sc.stop()
