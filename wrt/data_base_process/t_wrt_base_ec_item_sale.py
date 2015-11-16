@@ -77,7 +77,7 @@ def f(line):
             #result.append(item_id + '\001' + r_price + '\001' + s_price + '\001' + bc_type + '\001' + quantity + '\001' + total_sold + '\001' + order_cost + '\001' + shop_id + '\001' + ts)
         return result
     except Exception,e:
-		print e,line
+		print e,valid_jsontxt(line)
 		return [None]
 schema = StructType([
     StructField("item_id",StringType(), True),
