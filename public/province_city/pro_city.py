@@ -14,4 +14,4 @@ def pro_city(line):
             city = ln[len(p):]
             return (p,city)
     return (ln,"")
-print pro_city("吉林长春")
+print pro_city("吉林长春")[0],pro_city("吉林长春")[1]
