@@ -18,12 +18,13 @@ SELECT
   t5.day_sold,
   t5.day_sold_price,
   t5.location,
-  t6.cate_id,
-  t6.cate_name,
-  t6.cate_level1_id,
-  t6.cate_level1_name,
+  t6.cat_id,
+  t6.cat_name,
+  t6.root_cat_id,
+  t6.root_cat_name,
   t6.brand_id,
   t6.brand_name,
+  t5.bc_type,
   '$ds' AS ds
 FROM
 
@@ -36,7 +37,7 @@ FROM
        SELECT
          shop_id,
          location
-       FROM t_base_ec_shop_dev
+       FROM t_zlj_zj_shop
        WHERE ds = 20151107
      ) t3
      JOIN
@@ -50,36 +51,40 @@ FROM
          ELSE t1.total_sold - t2.total_sold END             AS day_sold,
          CASE WHEN t2.item_id IS NULL
            THEN s_price * t1.total_sold
-         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price
+         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price,
+         bc_type
        FROM
 
          (SELECT
             shop_id,
             item_id,
             s_price,
-            total_sold
+            total_sold,
+            bc_type
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds'
+          WHERE ds = '$ds' and  bc_type='b'
          ) t1
          LEFT JOIN
 
-         (SELECT
+         (
+           SELECT
             item_id,
             total_sold
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds_1') t2
+          WHERE ds = '$ds_1' and bc_type='b'
+         ) t2
            ON t1.item_id = t2.item_id
      ) t4
        ON t3.shop_id = t4.shop_id
   ) t5
-  JOIN
+  LEFT JOIN
   (
     SELECT
       item_id,
-      cate_id,
-      cate_name,
-      cate_level1_id,
-      cate_level1_name,
+      cat_id,
+      cat_name,
+      root_cat_id,
+      root_cat_name,
       brand_id,
       brand_name
     FROM t_base_ec_item_dev
