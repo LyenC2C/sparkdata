@@ -33,7 +33,8 @@ CREATE TABLE t_zlj_ec_perfer_brand_tag_level
 
             ON (t2.rn < 5 AND t1.brand_id = t2.brand_id)
       ) t3
-    GROUP BY user_id;
+    GROUP BY user_id
+;
 
 
 

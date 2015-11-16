@@ -26,9 +26,10 @@ t_zlj_ec_userbuy
 where  LENGTH(brand_id)>2
 group by user_id,brand_id ,brand_name
 ) t
- ;
 
-EOF
+;
+
+
 
 -- Drop table IF EXISTS  t_zlj_ec_perfer_brand_groupinfo;
 --
@@ -47,3 +48,5 @@ EOF
 -- )
 -- t
 -- group by user_id ;
+
+EOF

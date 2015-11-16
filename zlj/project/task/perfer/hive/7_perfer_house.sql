@@ -1,7 +1,12 @@
+
+
 /home/hadoop/hive/bin/hive<<EOF
 
 
---房产类
+
+SET hive.exec.reducers.bytes.per.reducer = 500000000;
+USE wlbase_dev;
+-- 房产类
 DROP TABLE IF EXISTS t_zlj_ec_perfer_house;
 CREATE TABLE t_zlj_ec_perfer_house
   AS

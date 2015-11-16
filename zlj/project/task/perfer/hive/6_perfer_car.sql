@@ -1,6 +1,9 @@
 /home/hadoop/hive/bin/hive<<EOF
 
---汽车类
+-- 汽车类
+SET hive.exec.reducers.bytes.per.reducer = 500000000;
+USE wlbase_dev;
+
 
 DROP TABLE IF EXISTS t_zlj_ec_perfer_cat;
 CREATE TABLE t_zlj_ec_perfer_cat

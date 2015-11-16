@@ -30,9 +30,3 @@ FROM
 GROUP BY user_id, week, t_month;
 
 EOF
-
--- SELECT times,count(1)
--- FROM(
---   SELECT cast(times as string )
--- FROM t_zlj_userbuy_freq
---  )t GROUP BY  times;

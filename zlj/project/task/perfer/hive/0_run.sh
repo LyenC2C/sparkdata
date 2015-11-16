@@ -8,7 +8,7 @@ sh   2_perfer_dim.sql
 sh  3_perfer_brand.sql
 sh  4_perfer_shop.sql
 
-sh  5.1_perfer_price.sql
+sh  5.2_perfer_price.sh
 
 sh 6_perfer_car.sql
 sh 7_perfer_house.sql
