@@ -60,22 +60,24 @@ FROM
             item_id,
             s_price,
             total_sold,
-           bc_type
+            bc_type
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds'
+          WHERE ds = '$ds' and  bc_type='b'
          ) t1
          LEFT JOIN
 
-         (SELECT
+         (
+           SELECT
             item_id,
             total_sold
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds_1') t2
+          WHERE ds = '$ds_1' and bc_type='b'
+         ) t2
            ON t1.item_id = t2.item_id
      ) t4
        ON t3.shop_id = t4.shop_id
   ) t5
-left JOIN
+  LEFT JOIN
   (
     SELECT
       item_id,
