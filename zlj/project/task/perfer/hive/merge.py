@@ -103,12 +103,20 @@ def brandtag():
         GROUP BY user_id;
 
     '''
-    rdd_brandtag=hiveContext.sql(sql_brandtag).map(lambda x:(x.user_id,('brandtag',x.tag)))
+    rdd_brandtag=hiveContext.sql(sql_brandtag).map(lambda x:(x.user_id,('brandtag',x.brandtags)))
     return rdd_brandtag
 
 
 def price():
-    return ''
+    sql_price='''
+    select
+    uid,ulevel
+    from
+    t_zlj_perfer_user_level
+    '''
+    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',x.ulevel)))
+    return rdd_price
+    # return ''
 
 def shop():
     sql_shop='''
@@ -124,33 +132,100 @@ def shop():
     t
     group by user_id ;
     '''
-    rdd_shop=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('shop',x.tag)))
+    rdd_shop=hiveContext.sql(sql_shop).map(lambda x:(x.user_id,('shop',x.shopinfos)))
     return rdd_shop
 
 def car():
     sql_car='''
-    select user_id,tag
+    select
+    user_id,tag
     from
     t_zlj_ec_perfer_house
-    ;
     '''
     rdd_car=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('car',x.tag)))
     return rdd_car
 
 def house():
     sql_car='''
-    select user_id,tag
+    select
+    user_id,tag
     from
     t_zlj_ec_perfer_house
-    ;
-
     '''
     rdd=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('house',x.tag)))
     return rdd
 
 
 def qq():
-    return ''
+    sql_qq='''
+        SELECT
+    t4.user_id,
+    t3.uin
+    t3.birthday
+    t3.phone
+    t3.gender_id
+    t3.college
+    t3.lnick
+    t3.loc_id
+    t3.loc
+    t3.h_loc_id
+    t3.h_loc
+    t3.personal
+    t3.shengxiao
+    t3.gender
+    t3.occupation
+    t3.constel
+    t3.blood
+    t3.url
+    t3.homepage
+    t3.nick
+    t3.email
+    t3.uin2
+    t3.mobile
+    t3.ts
+    t3.age
+    FROM
+      (
+        SELECT
+          t2.*
+          t1.tbuid,
+          t1.qq
+        FROM
+          t_zlj_data_link t1
+          JOIN
+          t_base_qq_user_dev t2
+            ON (LENGTH(t2.uin) > 0 AND LENGTH(t1.qq) > 0 AND t1.qq = t2.uin)
+      ) t3 JOIN
+      t_zlj_ec_userbuy
+      t4
+        ON (length(t4.user_id)>0 and length(t3.tbuid)>0 and t3.tbuid= t4.user_id)
+    '''
+    rdd=hiveContext.sql(sql_qq).map(lambda x:[x.user_id,x.uin  ,
+                                                                x.birthday  ,
+                                                                x.phone     ,
+                                                                x.gender_id ,
+                                                                x.college   ,
+                                                                x.lnick     ,
+                                                                x.loc_id    ,
+                                                                x.loc       ,
+                                                                x.h_loc_id  ,
+                                                                x.h_loc     ,
+                                                                x.personal  ,
+                                                                x.shengxiao ,
+                                                                x.gender    ,
+                                                                x.occupation,
+                                                                x.constel   ,
+                                                                x.blood     ,
+                                                                x.url       ,
+                                                                x.homepage  ,
+                                                                x.nick      ,
+                                                                x.email     ,
+                                                                x.uin2      ,
+                                                                x.mobile    ,
+                                                                x.ts        ,
+                                                                x.age ]) \
+        .map(lambda x:(x[0],('house','\001'.join([str(i) for i in x[1:]]))))
+    return rdd
 
 
 # def freq():
