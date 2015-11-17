@@ -47,8 +47,10 @@ def dim():
     FROM t_zlj_ec_perfer_dim
 
     where rn <%s
+    limit  10000
     )
-    t group by user_id ;
+    t group by user_id
+
     '''
     rdd_dim=hiveContext.sql(sql_dim%(dim_limit)).map(lambda x:(x.user_id,('dim',x.diminfo)))
     return rdd_dim
@@ -65,9 +67,11 @@ def brand():
      user_id, concat_ws('_',brand_id,brand_name,cast(rn as String)) as brandinfo
     FROM t_zlj_ec_perfer_brand
     where rn <%s
+    limit  10000
     )
     t
-    group by user_id ;
+    group by user_id
+
 
     '''
     rdd_brand=hiveContext.sql(sql_brand%brand_limit).map(lambda x:(x.user_id,('brand',x.brandinfo)))
@@ -92,12 +96,13 @@ def brandtag():
                   brand_level,
                   brand_tag
                 FROM t_wrt_item_tag_level
+
               ) t1
               JOIN t_zlj_ec_perfer_brand t2
 
                 ON (t2.rn < 5 AND t1.brand_id = t2.brand_id)
           ) t3
-        GROUP BY user_id;
+        GROUP BY user_id
 
     '''
     rdd_brandtag=hiveContext.sql(sql_brandtag).map(lambda x:(x.user_id,('brandtag',x.brandtags)))
@@ -110,6 +115,7 @@ def price():
     uid,ulevel
     from
     t_zlj_perfer_user_level
+    limit  10000
     '''
     rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',x.ulevel)))
     return rdd_price
@@ -125,9 +131,10 @@ def shop():
      user_id, concat_ws('_',shop_id,shop_name,cast(f as String),cast(rn as String)) as v
     FROM  t_zlj_ec_perfer_shop
     where rn <5
+    limit  10000
     )
     t
-    group by user_id ;
+    group by user_id
     '''
     rdd_shop=hiveContext.sql(sql_shop).map(lambda x:(x.user_id,('shop',x.shopinfos)))
     return rdd_shop
@@ -138,6 +145,7 @@ def car():
     user_id,tag
     from
     t_zlj_ec_perfer_house
+    limit  10000
     '''
     rdd_car=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('car',x.tag)))
     return rdd_car
@@ -148,6 +156,7 @@ def house():
     user_id,tag
     from
     t_zlj_ec_perfer_house
+    limit  10000
     '''
     rdd=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('house',x.tag)))
     return rdd
@@ -193,6 +202,7 @@ def qq():
           JOIN
           t_base_qq_user_dev t2
             ON (LENGTH(t2.uin)>0 AND LENGTH(t1.qq)>0 AND t1.qq = t2.uin)
+            limit  1000000
       ) t3
       JOIN
       (
@@ -201,6 +211,7 @@ def qq():
       t_zlj_ec_userbuy
       where length(user_id)>0
       group by user_id
+      limit  10000
       )
       t4
         ON ( length(t3.tbuid)>0 and t3.tbuid= t4.user_id)
