@@ -10,6 +10,7 @@ SET hive.exec.reducers.bytes.per.reducer = 500000000;
 
 USE wlbase_dev;
 
+drop table  if exists t_zlj_userbuy_freq;
 
 CREATE TABLE t_zlj_userbuy_freq AS
 SELECT
