@@ -285,19 +285,19 @@ if __name__ == "__main__":
     elif sys.argv[1]=='-merge':
         rdd_dim=dim()
         rdd_brand=brand()
-        rdd_brandtag=brandtag()
-        rdd_price=price()
-        rdd_shop=shop()
-        rdd_car=car()
-        rdd_house=house()
-        rdd_qq=qq()
-        rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car).union(rdd_house).union(rdd_qq)
+        # rdd_brandtag=brandtag()
+        # rdd_price=price()
+        # rdd_shop=shop()
+        # rdd_car=car()
+        # rdd_house=house()
+        # rdd_qq=qq()
+        # rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car).union(rdd_house).union(rdd_qq)
+        rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
         hiveContext.sql('drop table if exists t_zlj_user_tag_join')
         hiveContext.sql('''
-
         create table  t_zlj_user_tag_join
         as
         select * from  tmptable
