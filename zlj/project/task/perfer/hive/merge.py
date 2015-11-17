@@ -268,6 +268,7 @@ def mergeinfo(uid,info):
     lv.append(m.get('car',''))
     lv.append(m.get('house',''))
     lv.append(m.get('qq',''))
+    return lv
 
 
 
