@@ -7,6 +7,7 @@ from pyspark import SparkContext
 
 '''
 合并所有标签
+spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-memory 20g   merge.py  -merge
 '''
 
 
@@ -43,7 +44,7 @@ def dim():
     FROM
     (
     SELECT
-     user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(f as String),cast(rn as String)) as v
+     user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(rn as String)) as v
     FROM t_zlj_ec_perfer_dim
 
     where rn <%s
@@ -127,7 +128,7 @@ def shop():
     FROM
     (
     SELECT
-     user_id, concat_ws('_',shop_id,shop_name,cast(f as String),cast(rn as String)) as v
+     user_id, concat_ws('_',shop_id,shop_name,cast(rn as String)) as v
     FROM  t_zlj_ec_perfer_shop
     where rn <5
     )

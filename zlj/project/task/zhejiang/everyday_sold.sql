@@ -11,10 +11,11 @@ SET hive.exec.dynamic.partition = TRUE;
 INSERT overwrite TABLE t_zlj_base_ec_item_sale_dev_day PARTITION(ds)
 
 SELECT
-  /*+ mapjoin(t4)*/
+
   t5.shop_id,
+  t5.shop_name,
   t5.item_id,
-  t5.title,
+  t5.item_title,
   t5.s_price,
   t5.day_sold,
   t5.day_sold_price,
@@ -66,7 +67,8 @@ FROM
             total_sold,
             bc_type
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds' and  bc_type='b'
+          WHERE ds = '$ds'
+--                 and  bc_type='b'
            limit 100000
          ) t1
          LEFT JOIN
@@ -76,7 +78,8 @@ FROM
             item_id,
             total_sold
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds_1' and bc_type='b'
+          WHERE ds = '$ds_1'
+--                 and bc_type='b'
             limit 100000
          ) t2
            ON t1.item_id = t2.item_id
