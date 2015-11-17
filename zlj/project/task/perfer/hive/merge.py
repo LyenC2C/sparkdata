@@ -47,7 +47,7 @@ def dim():
     FROM t_zlj_ec_perfer_dim
 
     where rn <%s
-    limit  10000
+
     )
     t group by user_id
 
@@ -67,7 +67,7 @@ def brand():
      user_id, concat_ws('_',brand_id,brand_name,cast(rn as String)) as brandinfo
     FROM t_zlj_ec_perfer_brand
     where rn <%s
-    limit  10000
+
     )
     t
     group by user_id
@@ -114,7 +114,7 @@ def price():
     uid,ulevel
     from
     t_zlj_perfer_user_level
-    limit  10000
+
     '''
     rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',x.ulevel)))
     return rdd_price
@@ -130,7 +130,6 @@ def shop():
      user_id, concat_ws('_',shop_id,shop_name,cast(f as String),cast(rn as String)) as v
     FROM  t_zlj_ec_perfer_shop
     where rn <5
-    limit  10000
     )
     t
     group by user_id
@@ -144,7 +143,7 @@ def car():
     user_id,tag
     from
     t_zlj_ec_perfer_house
-    limit  10000
+
     '''
     rdd_car=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('car',x.tag)))
     return rdd_car
@@ -155,7 +154,6 @@ def house():
     user_id,tag
     from
     t_zlj_ec_perfer_house
-    limit  10000
     '''
     rdd=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('house',x.tag)))
     return rdd
@@ -201,7 +199,7 @@ def qq():
           JOIN
           t_base_qq_user_dev t2
             ON (LENGTH(t2.uin)>0 AND LENGTH(t1.qq)>0 AND t1.qq = t2.uin)
-            limit  1000000
+
       ) t3
       JOIN
       (
@@ -210,7 +208,6 @@ def qq():
       t_zlj_ec_userbuy
       where length(user_id)>0
       group by user_id
-      limit  10000
       )
       t4
         ON ( length(t3.tbuid)>0 and t3.tbuid= t4.user_id)
@@ -286,14 +283,14 @@ if __name__ == "__main__":
     elif sys.argv[1]=='-merge':
         rdd_dim=dim()
         rdd_brand=brand()
-        # rdd_brandtag=brandtag()
-        # rdd_price=price()
-        # rdd_shop=shop()
-        # rdd_car=car()
-        # rdd_house=house()
-        # rdd_qq=qq()
-        # rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car).union(rdd_house).union(rdd_qq)
-        rdd=rdd_dim.union(rdd_brand)
+        rdd_brandtag=brandtag()
+        rdd_price=price()
+        rdd_shop=shop()
+        rdd_car=car()
+        rdd_house=house()
+        rdd_qq=qq()
+        rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car).union(rdd_house).union(rdd_qq)
+        # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
