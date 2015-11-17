@@ -25,6 +25,15 @@ hiveContext.sql('use wlbase_dev')
 from pyspark.sql.types import *
 
 import  sys
+
+
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else :
+        return content
+
+
 dim_limit=5
 
 def dim():
@@ -144,6 +153,7 @@ def house():
     return rdd
 
 
+
 def qq():
     sql_qq='''
         SELECT
@@ -219,7 +229,7 @@ def qq():
                                                                 x.mobile    ,
                                                                 x.ts        ,
                                                                 x.age ]) \
-        .map(lambda x:(x[0],('qq','\001'.join([str(i) for i in x[1:]]))))
+        .map(lambda x:(x[0],('qq','\001'.join([str(valid_jsontxt(i)) for i in x[1:]]))))
     return rdd
 
 
@@ -259,7 +269,7 @@ if __name__ == "__main__":
         print '-inc      argvs:\n argv[1]:file or dir input\n argv[2]:ds_1  \n argv[3] ds\n'
     elif sys.argv[1]=='-test':
         rdd_qq=qq()
-        rdd_qq.count()
+        rdd_qq.saveAsTextFile('/user/zlj/data/temp/qq')
     elif sys.argv[1]=='-merge':
         rdd_dim=dim()
         rdd_brand=brand()
@@ -273,7 +283,6 @@ if __name__ == "__main__":
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-
         hiveContext.sql('drop table if exists t_zlj_user_tag_join')
         hiveContext.sql('''
 
