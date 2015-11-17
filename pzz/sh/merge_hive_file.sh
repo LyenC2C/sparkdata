@@ -25,13 +25,13 @@ echo 'deal file merger'
 
 while read line
 do
-    echo  "hadoop fs -cat $path/$line/* > part-00000"
+    echo  "hadoop fs -cat $path/$line/* > ${merge_day}-0000"
     hadoop fs -cat $path/$line/* > ${local_tmp_path}/${merge_day}-0000
 
     echo "hadoop fs -rm $path/$line/part-*"
     hadoop fs -rm $path/$line/*
 
-    echo  "hadoop fs -put part-00000  $path/$line/"
+    echo  "hadoop fs -put ${merge_day}-0000 $path/$line/"
     hadoop fs -put ${local_tmp_path}/${merge_day}-0000  $path/$line/
     rm ${local_tmp_path}/${merge_day}-0000
 done<ds_log
