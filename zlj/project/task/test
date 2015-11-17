@@ -25,3 +25,17 @@ drop table  if exists t_zlj_tmp;
 
 create table t_zlj_tmp as
 select brand_id from t_base_ec_brand group by brand_id ;
+
+
+
+SELECT
+     user_id ,concat_ws('|', collect_set(v)) as diminfos
+    FROM
+    (
+    SELECT
+     t1.user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(f as String),cast(rn as String)) as v
+    FROM t_base_ec_dim
+
+    where rn <%s
+    )
+    t group by user_id ;
