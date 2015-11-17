@@ -33,7 +33,7 @@ do
 
     echo  "hadoop fs -put part-00000  $path/$line/"
     hadoop fs -put ${local_tmp_path}/${merge_day}-0000  $path/$line/
-    rm ${local_tmp_path}/${merge_day}-000
+    rm ${local_tmp_path}/${merge_day}-0000
 done<ds_log
 
 while read line
