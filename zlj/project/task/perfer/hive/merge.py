@@ -52,7 +52,7 @@ def dim():
     t group by user_id
 
     '''
-    rdd_dim=hiveContext.sql(sql_dim%(dim_limit)).map(lambda x:(x.user_id,('dim',x.diminfo)))
+    rdd_dim=hiveContext.sql(sql_dim%(dim_limit)).map(lambda x:(x.user_id,('dim',x.diminfos)))
     return rdd_dim
 
 
@@ -72,9 +72,8 @@ def brand():
     t
     group by user_id
 
-
     '''
-    rdd_brand=hiveContext.sql(sql_brand%brand_limit).map(lambda x:(x.user_id,('brand',x.brandinfo)))
+    rdd_brand=hiveContext.sql(sql_brand%brand_limit).map(lambda x:(x.user_id,('brand',x.brandinfos)))
     return rdd_brand
 
 
