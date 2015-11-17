@@ -19,24 +19,12 @@ sc=SparkContext(appName="merge_perfer")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-def mergeinfo(info):
-    dic={}
-    value=''
-    for item in info:
-        dic[item[0]]=item[1]
-    value+=dic.get('dim')
-    value+='_'+dic.get('brand')
-    value+='_'+dic.get('car')
-    value+='_'+dic.get('house')
-    return value
-
-
-
-
 
 
 hiveContext.sql('use wlbase_dev')
+from pyspark.sql.types import *
 
+import  sys
 dim_limit=5
 
 def dim():
@@ -45,9 +33,10 @@ def dim():
      user_id ,concat_ws('|', collect_set(v)) as diminfos
     FROM
     (
-    SELECT /*+ mapjoin(t2)*/
-     t1.user_id, concat_ws('_',,cast(t2.cate_id as String),cate_name,cast(f as String),cast(rn as String)) as v
-    FROM t_base_ec_dim t2 join  t_zlj_ec_perfer_dim t1 on t1.root_cat_id=t2.cate_id
+    SELECT
+     user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(f as String),cast(rn as String)) as v
+    FROM t_zlj_ec_perfer_dim
+
     where rn <%s
     )
     t group by user_id ;
@@ -63,12 +52,10 @@ def brand():
      user_id ,concat_ws('|', collect_set(brandinfo)) as brandinfos
     FROM
     (
-    SELECT /*+ mapjoin(t2)*/
-     t1.user_id, concat_ws('_',t2.brand_id,brand_name,cast(rn as String)) as brandinfo
-
-    FROM t_base_ec_brand t2 join t_zlj_ec_perfer_brand t1 on t1.brand_id=t2.brand_id
-
-    where t1.rn <%s
+    SELECT
+     user_id, concat_ws('_',brand_id,brand_name,cast(rn as String)) as brandinfo
+    FROM t_zlj_ec_perfer_brand
+    where rn <%s
     )
     t
     group by user_id ;
@@ -92,6 +79,7 @@ def brandtag():
             FROM
               (
                 SELECT
+                  brand_id,
                   brand_level,
                   brand_tag
                 FROM t_wrt_item_tag_level
@@ -124,9 +112,9 @@ def shop():
      user_id ,concat_ws('|', collect_set(v)) as shopinfos
     FROM
     (
-    SELECT /*+ mapjoin(t2)*/
-     t1.user_id, concat_ws('_',t2.shop_id,shop_name,cast(f as String),cast(rn as String)) as v
-    FROM t_base_ec_shop  t2 join  t_zlj_ec_perfer_dim t1 on t1.root_cat_id=t2.cate_id
+    SELECT
+     user_id, concat_ws('_',shop_id,shop_name,cast(f as String),cast(rn as String)) as v
+    FROM  t_zlj_ec_perfer_shop
     where rn <5
     )
     t
@@ -160,45 +148,52 @@ def qq():
     sql_qq='''
         SELECT
     t4.user_id,
-    t3.uin
-    t3.birthday
-    t3.phone
-    t3.gender_id
-    t3.college
-    t3.lnick
-    t3.loc_id
-    t3.loc
-    t3.h_loc_id
-    t3.h_loc
-    t3.personal
-    t3.shengxiao
-    t3.gender
-    t3.occupation
-    t3.constel
-    t3.blood
-    t3.url
-    t3.homepage
-    t3.nick
-    t3.email
-    t3.uin2
-    t3.mobile
-    t3.ts
+      t3.uin,
+    t3.birthday,
+    t3.phone,
+    t3.gender_id,
+    t3.college,
+    t3.lnick,
+    t3.loc_id,
+    t3.loc,
+    t3.h_loc_id,
+    t3.h_loc,
+    t3.personal,
+    t3.shengxiao,
+    t3.gender,
+    t3.occupation,
+    t3.constel,
+    t3.blood,
+    t3.url,
+    t3.homepage,
+    t3.nick,
+    t3.email,
+    t3.uin2,
+    t3.mobile,
+    t3.ts,
     t3.age
     FROM
       (
         SELECT
-          t2.*
+          t2.* ,
           t1.tbuid,
           t1.qq
         FROM
           t_zlj_data_link t1
           JOIN
           t_base_qq_user_dev t2
-            ON (LENGTH(t2.uin) > 0 AND LENGTH(t1.qq) > 0 AND t1.qq = t2.uin)
-      ) t3 JOIN
+            ON (LENGTH(t2.uin)>0 AND LENGTH(t1.qq)>0 AND t1.qq = t2.uin)
+      ) t3
+      JOIN
+      (
+      select user_id
+      from
       t_zlj_ec_userbuy
+      where length(user_id)>0
+      group by user_id
+      )
       t4
-        ON (length(t4.user_id)>0 and length(t3.tbuid)>0 and t3.tbuid= t4.user_id)
+        ON ( length(t3.tbuid)>0 and t3.tbuid= t4.user_id)
     '''
     rdd=hiveContext.sql(sql_qq).map(lambda x:[x.user_id,x.uin  ,
                                                                 x.birthday  ,
@@ -224,14 +219,72 @@ def qq():
                                                                 x.mobile    ,
                                                                 x.ts        ,
                                                                 x.age ]) \
-        .map(lambda x:(x[0],('house','\001'.join([str(i) for i in x[1:]]))))
+        .map(lambda x:(x[0],('qq','\001'.join([str(i) for i in x[1:]]))))
     return rdd
+
+
+schema1 = StructType([
+    StructField("uid", StringType(), True),
+    StructField("dim", StringType(), True),
+    StructField("brand", StringType(), True),
+    StructField("brandtag", StringType(), True),
+    StructField("shop", StringType(), True),
+    StructField("car", StringType(), True),
+    StructField("house", StringType(), True),
+    StructField("qq", StringType(), True)
+        ])
+def mergeinfo(uid,info):
+    m={}
+    lv=[]
+    lv.append(uid)
+    for value in info:
+        m[value[0]]=value[1]
+    lv.append(m['dim'])
+    lv.append(m['brand'])
+    lv.append(m['brandtag'])
+    lv.append(m['shop'])
+    lv.append(m['car'])
+    lv.append(m['house'])
+    lv.append(m['qq'])
+
+
+
+if __name__ == "__main__":
+    hiveContext.sql('use wlbase_dev')
+    if sys.argv[1] == '-h':
+        comment = '-合并所有标签 \n\
+				  '
+        print comment
+        print '-merge argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n'
+        print '-inc      argvs:\n argv[1]:file or dir input\n argv[2]:ds_1  \n argv[3] ds\n'
+    elif sys.argv[1]=='-test':
+        rdd_qq=qq()
+        rdd_qq.count()
+    elif sys.argv[1]=='-merge':
+        rdd_dim=dim()
+        rdd_brand=brand()
+        rdd_brandtag=brandtag()
+        rdd_price=price()
+        rdd_shop=shop()
+        rdd_car=car()
+        rdd_house=house()
+        rdd_qq=qq()
+        rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car).union(rdd_house).union(rdd_qq)
+        rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
+        ddf=hiveContext.createDataFrame(rdd1,schema1)
+        hiveContext.registerDataFrameAsTable(ddf,'tmptable')
+
+        hiveContext.sql('drop table if exists t_zlj_user_tag_join')
+        hiveContext.sql('''
+
+        create table  t_zlj_user_tag_join
+        as
+        select * from  tmptable
+        ''')
 
 
 # def freq():
 #
-
-
 # rdd=rdd_dim.union(rdd_brand).union(rdd_car)
 #
 # rdd.groupByKey(100).map(lambda (x,y):(x,mergeinfo(y))).saveAsTextFile(sys.argv[1])
