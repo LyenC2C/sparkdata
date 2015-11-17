@@ -259,13 +259,15 @@ def mergeinfo(uid,info):
     lv.append(uid)
     for value in info:
         m[value[0]]=value[1]
-    lv.append(m['dim'])
-    lv.append(m['brand'])
-    lv.append(m['brandtag'])
-    lv.append(m['shop'])
-    lv.append(m['car'])
-    lv.append(m['house'])
-    lv.append(m['qq'])
+    key=m.keys()
+    # if 'dim' in key:
+    lv.append(m.get('dim',''))
+    lv.append(m.get('brand',''))
+    lv.append(m.get('brandtag',''))
+    lv.append(m.get('shop',''))
+    lv.append(m.get('car',''))
+    lv.append(m.get('house',''))
+    lv.append(m.get('qq',''))
 
 
 
