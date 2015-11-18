@@ -18,11 +18,11 @@ hiveContext.sql('use wlbase_dev')
 
 def join(x, y):
     word = x
-    x0 = y[1]
-    x1 = y[0]
-    doc_id = x0[0]
-    tf = x0[1]
-    idf = x1
+    tfinfo = y[1]
+    idfinfo = y[0]
+    doc_id = tfinfo[0]
+    tf = tfinfo[1]
+    idf = idfinfo
     return (doc_id, (word, tf * idf))
 
 
@@ -54,8 +54,15 @@ schema = StructType([
     StructField("tfidftags", StringType(), True)
 ])
 
+def join1(x,dict):
+    word=x[0]
+    doc_id=x[1][0]
+    tf=x[1][1]
+    tfidf=tf*dict.get(word,0.5)
+    return (doc_id,(word,tfidf))
+
 if __name__ == "__main__":
-    rdd_pre = hiveContext.sql(sql).map(lambda x: (x.user_id, [i for i in x._c1.split('_') if len(i) > 0]))
+    rdd_pre = hiveContext.sql(sql).map(lambda x: (x.user_id, [i for i in x[1].split('_') if len(i) > 3]))
     # top_freq=5   and x[1]<top_freq
     words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).groupByKey().map(
         lambda (x, y): (x, len(y))).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
@@ -69,10 +76,16 @@ if __name__ == "__main__":
     dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
     # word idf
     idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
+    # idfrdd.collectAsMap()
+    # idfrdd.join()
+    broadcastVar = sc.broadcast(idfrdd.collectAsMap())
+    idfdict = broadcastVar.value
     rddjoin=idfrdd.join(tfrdd)
+    joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
-    rst=rddjoin.map(lambda (x, y): join(x, y)).groupByKey().map(lambda (x, y): [x, "\t".join(
+    # rst=rddjoin.map(lambda (x, y): join(x, y))
+    rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
         [i[0] for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     df=hiveContext.createDataFrame(rst,schema)
     hiveContext.registerDataFrameAsTable(df, 'tmptable')
