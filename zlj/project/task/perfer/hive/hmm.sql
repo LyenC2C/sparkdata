@@ -14,7 +14,6 @@ select item_id,hmm from t_zlj_item_hmm
 where LENGTH (hmm)>3
 )t1
 join
-
 (
 select item_id,user_id from t_base_ec_item_feed_dev
 
