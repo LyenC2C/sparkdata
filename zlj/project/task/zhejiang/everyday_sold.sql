@@ -33,7 +33,8 @@ FROM
   (SELECT
      /*+ mapjoin(t3)*/
      t4.*,
-     t3.location
+     t3.location,
+  t3.shop_name
    FROM
      (
        SELECT

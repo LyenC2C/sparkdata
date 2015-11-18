@@ -143,7 +143,7 @@ def car():
     select
     user_id,tag
     from
-    t_zlj_ec_perfer_house
+    t_zlj_ec_perfer_car
 
     '''
     rdd_car=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('car',x.tag)))
