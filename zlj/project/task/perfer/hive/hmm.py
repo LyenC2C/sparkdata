@@ -56,19 +56,21 @@ select
 limit 10000
 '''
 
-sql='''
-select
-* from t_zlj_userbuy_item_hmm
-limit 2
-'''
-
-rdd=hiveContext.sql(sql).map(lambda  x:(x.user_id,[i for i in x._c1.split('_') if len(i)>0]))
 
 
+rdd_pre=hiveContext.sql(sql).map(lambda  x:(x.user_id,[i for i in x._c1.split('_') if len(i)>0]))
 
-rdd=sc.parallelize([('1',['a','b','d','e','c','c']),('2',['c','a','a','a','b','c'])])
+
+min_freq=10
+# top_freq=5   and x[1]<top_freq
+words=set(rdd_pre.map(lambda x:x[1]).flatMap(lambda x:x).map(lambda  x:(x,1)).groupByKey().map(lambda (x,y):(x,len(y))).filter(lambda x: x[1]>min_freq ).map(lambda x:x[0]).collect())
+
+rdd=rdd_pre.map(lambda (x,y):(x,[i for i in y if i in words]))
+
+# rdd=sc.parallelize([('1',['a','b','d','e','c','c']),('2',['c','a','a','a','b','c'])])
 
 doc_num=rdd.count()
+
 
 
 # ['apple', 'banana', 'apple', 'strawberry', 'banana', 'lemon']
@@ -103,13 +105,17 @@ def join(x,y):
     x1=y[1]
     doc_id=x0[0]
     tf=x0[1]
-    idf=x[1]
-    return (doc_id,word+":"+str(tf*idf))
+    idf=x1
+    return (doc_id,(word,tf*idf))
 
+limit=5
 
-rddjoin.map(lambda (x,y):join(x,y)).groupByKey().map(lambda  (x,y):x+"_"+"@_@".join(y))
+# sorted(a,key=a[1],reverse=True)
 
+rddjoin.map(lambda (x,y):join(x,y)).groupByKey().map(lambda  (x,y):x+":"+"\t".join([ i[0] for index,i in  sorted(y,key=lambda t : t[-1],reverse=True) if index<limit]))\
+    .saveAsTextFile('/user/zlj/temp/tfidf')
 
+# rdd.saveAsTextFile
 # rdd=hiveContext.sql(sql).map(lambda  x:[i for i in x._c1.split('_') if len(i)>0])
 #
 #
