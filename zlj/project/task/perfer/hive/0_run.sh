@@ -14,3 +14,6 @@ sh 6_perfer_car.sql
 sh 7_perfer_house.sql
 
 sh 8_perfer_freq.sql
+
+
+spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-memory 20g   merge.py  -merge

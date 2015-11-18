@@ -14,21 +14,6 @@ import rapidjson as json
 使用脚本
 spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-memory 20g  1_item_inc.py  -inc  /commit/iteminfo/tmall.shop.2.item.2015-10-27.iteminfo.2015-11-02  20151101 20151102
 '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
 
 
@@ -36,14 +21,12 @@ sc=SparkContext(appName="iter_inc")
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
-
-def valid_jsontxt(content):
-    if type(content) == type(u""):
-        return content.encode("utf-8")
-    else :
-        return content
-
 path=sys.argv[1]
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else :
+#         return content
 def parse_price(price_dic):
     min=1000000000.0
     price='0'
@@ -58,19 +41,15 @@ def parse_price(price_dic):
             price=v
             if '-' in tmp: price_range=tmp
     return [price,price_range]
-
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
     else :
         return content
-# s=''
-# s.split()
 def try_parse(line,flag):
     try:
-        parse(line,flag)
+        return parse(line,flag)
     except:return None
-
 def parse(line,flag):
     ts=''
     txt=''
@@ -219,14 +198,13 @@ if __name__ == "__main__":
         filepath=sys.argv[2]
         ds_1=sys.argv[3]
         ds=sys.argv[4]
-        rdd=sc.textFile(filepath,100)\
-            .map(lambda x:try_parse(x,'inc')).filter(lambda x: x is not None)
+        rdd=sc.textFile(filepath,100).map(lambda x:try_parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
         schema1=df.schema
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                          x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
-        rdd2=rdd1.union(rdd).groupByKey()
+        rdd2=rdd.union(rdd1).groupByKey()
         rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
         ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
@@ -235,7 +213,7 @@ if __name__ == "__main__":
         # s
         # '''
         hiveContext.sql(sql_insert%(ds))
-
+        rdd.groupByKey().count()
 
 
 # hiveContext.sql('use wlbase_dev')

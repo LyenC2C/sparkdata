@@ -11,9 +11,11 @@ SET hive.exec.dynamic.partition = TRUE;
 INSERT overwrite TABLE t_zlj_base_ec_item_sale_dev_day PARTITION(ds)
 
 SELECT
-  /*+ mapjoin(t4)*/
+
   t5.shop_id,
+  t5.shop_name,
   t5.item_id,
+  t5.item_title,
   t5.s_price,
   t5.day_sold,
   t5.day_sold_price,
@@ -36,8 +38,9 @@ FROM
      (
        SELECT
          shop_id,
+         shop_name,
          location
-       FROM t_zlj_zj_shop
+       FROM t_base_ec_shop_dev
        WHERE ds = 20151107
      ) t3
      JOIN
@@ -45,24 +48,27 @@ FROM
        SELECT
          shop_id,
          t1.item_id,
+         t1.item_title,
          s_price,
          CASE WHEN t2.item_id IS NULL
            THEN t1.total_sold
          ELSE t1.total_sold - t2.total_sold END             AS day_sold,
          CASE WHEN t2.item_id IS NULL
            THEN s_price * t1.total_sold
-         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price,
-         bc_type
+         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price ,
+         t1.bc_type
        FROM
 
          (SELECT
             shop_id,
             item_id,
+            item_title,
             s_price,
             total_sold,
             bc_type
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds' and  bc_type='b'
+          WHERE ds = '$ds'
+--                 and  bc_type='b'
          ) t1
          LEFT JOIN
 
@@ -71,7 +77,9 @@ FROM
             item_id,
             total_sold
           FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds_1' and bc_type='b'
+          WHERE ds = '$ds_1'
+--                 and bc_type='b'
+
          ) t2
            ON t1.item_id = t2.item_id
      ) t4
