@@ -100,11 +100,9 @@ hiveContext.registerDataFrameAsTable(df, 'data')
 #st = s.find('2015')
 #ds2 = s[st:st+4] + s[st+5:st+7] + s[st+8:st+10]
 l = len(s)
-#ds2 = s[l-8:]
-ds2 = '20151116'
+ds2 = s[l-8:]
 hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + ds2 + ') select * from data')
 		#.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
-
 #spark-submit  --executor-memory 4G  --driver-memory 20G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
 #/commit/shopitem/20151116/*6
