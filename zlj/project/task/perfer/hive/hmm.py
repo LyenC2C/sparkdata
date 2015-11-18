@@ -61,9 +61,9 @@ limit 10000
 rdd_pre=hiveContext.sql(sql).map(lambda  x:(x.user_id,[i for i in x._c1.split('_') if len(i)>0]))
 
 
-min_freq=1
-top_freq=5
-words=set(rdd_pre.map(lambda x:x[1]).flatMap(lambda x:x).map(lambda  x:(x,1)).groupByKey().map(lambda (x,y):(x,len(y))).filter(lambda x: x[1]>min_freq and x[1]<top_freq).map(lambda x:x[0]).collect())
+min_freq=10
+# top_freq=5   and x[1]<top_freq
+words=set(rdd_pre.map(lambda x:x[1]).flatMap(lambda x:x).map(lambda  x:(x,1)).groupByKey().map(lambda (x,y):(x,len(y))).filter(lambda x: x[1]>min_freq ).map(lambda x:x[0]).collect())
 
 rdd=rdd_pre.map(lambda (x,y):(x,[i for i in y if i in words]))
 
