@@ -69,7 +69,6 @@ FROM
           FROM t_base_ec_item_sale_dev
           WHERE ds = '$ds'
 --                 and  bc_type='b'
-           limit 100000
          ) t1
          LEFT JOIN
 
@@ -80,7 +79,7 @@ FROM
           FROM t_base_ec_item_sale_dev
           WHERE ds = '$ds_1'
 --                 and bc_type='b'
-            limit 100000
+
          ) t2
            ON t1.item_id = t2.item_id
      ) t4
