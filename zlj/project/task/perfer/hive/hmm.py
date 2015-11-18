@@ -59,7 +59,9 @@ if __name__ == "__main__":
     # top_freq=5   and x[1]<top_freq
     words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).groupByKey().map(
         lambda (x, y): (x, len(y))).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in words]))
+    broadcastVar = sc.broadcast(words)
+    dict = broadcastVar.value
+    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
     doc_num = rdd.count()
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
