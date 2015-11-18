@@ -33,7 +33,6 @@ CREATE TABLE t_zlj_ec_perfer_house
           )
     GROUP BY user_id
     ORDER BY sum(f) DESC
--- limit 100;
 ;
 
 

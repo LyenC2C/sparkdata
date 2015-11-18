@@ -20,8 +20,6 @@ CREATE TABLE t_zlj_ec_perfer_cat
           )
     GROUP BY user_id
 ;
--- order by sum(f) desc
---  limit 100;
 
 
 

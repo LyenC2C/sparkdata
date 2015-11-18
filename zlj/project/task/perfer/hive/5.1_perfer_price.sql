@@ -20,6 +20,3 @@ CREATE TABLE t_zlj_ec_perfer_priceavg
 
 
 EOF
-
--- select count(1) from
--- t_zlj_ec_perfer_priceavg ;

@@ -44,7 +44,7 @@ def dim():
     FROM
     (
     SELECT
-     user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(rn as String)) as v
+     user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(rn as String),cast(f as String)) as v
     FROM t_zlj_ec_perfer_dim
 
     where rn <%s
@@ -65,7 +65,7 @@ def brand():
     FROM
     (
     SELECT
-     user_id, concat_ws('_',brand_id,brand_name,cast(rn as String)) as brandinfo
+     user_id, concat_ws('_',brand_id,brand_name,cast(rn as String),cast(f as String)) as brandinfo
     FROM t_zlj_ec_perfer_brand
     where rn <%s
 
@@ -128,7 +128,7 @@ def shop():
     FROM
     (
     SELECT
-     user_id, concat_ws('_',shop_id,shop_name,cast(rn as String)) as v
+     user_id, concat_ws('_',shop_id,shop_name,cast(rn as String),cast(f as String)) as v
     FROM  t_zlj_ec_perfer_shop
     where rn <5
     )
@@ -165,7 +165,7 @@ def qq():
     sql_qq='''
         SELECT
     t4.user_id,
-      t3.uin,
+    t3.uin,
     t3.birthday,
     t3.phone,
     t3.gender_id,
