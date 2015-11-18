@@ -34,7 +34,7 @@ FROM
      /*+ mapjoin(t3)*/
      t4.*,
      t3.location,
-  t3.shop_name
+     t3.shop_name
    FROM
      (
        SELECT
@@ -56,7 +56,7 @@ FROM
          ELSE t1.total_sold - t2.total_sold END             AS day_sold,
          CASE WHEN t2.item_id IS NULL
            THEN s_price * t1.total_sold
-         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price ,
+         ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price,
          t1.bc_type
        FROM
 
@@ -69,17 +69,17 @@ FROM
             bc_type
           FROM t_base_ec_item_sale_dev
           WHERE ds = '$ds'
---                 and  bc_type='b'
+           --                 and  bc_type='b'
          ) t1
          LEFT JOIN
 
          (
            SELECT
-            item_id,
-            total_sold
-          FROM t_base_ec_item_sale_dev
-          WHERE ds = '$ds_1'
---                 and bc_type='b'
+             item_id,
+             total_sold
+           FROM t_base_ec_item_sale_dev
+           WHERE ds = '$ds_1'
+           --                 and bc_type='b'
 
          ) t2
            ON t1.item_id = t2.item_id

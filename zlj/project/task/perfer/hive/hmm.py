@@ -18,8 +18,8 @@ hiveContext.sql('use wlbase_dev')
 
 def join(x, y):
     word = x
-    x0 = y[0]
-    x1 = y[1]
+    x0 = y[1]
+    x1 = y[0]
     doc_id = x0[0]
     tf = x0[1]
     idf = x1
@@ -69,7 +69,8 @@ if __name__ == "__main__":
     dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
     # word idf
     idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
-    rddjoin = tfrdd.join(idfrdd)
+    rddjoin=idfrdd.join(tfrdd)
+    # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     rst=rddjoin.map(lambda (x, y): join(x, y)).groupByKey().map(lambda (x, y): [x, "\t".join(
         [i[0] for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
