@@ -7,7 +7,7 @@ set hive.exec.reducers.bytes.per.reducer=500000000;
 use wlbase_dev;
 
 
--- ÀàÄ¿±êÇ©
+
 
 drop table IF EXISTS  t_zlj_ec_perfer_dim;
 

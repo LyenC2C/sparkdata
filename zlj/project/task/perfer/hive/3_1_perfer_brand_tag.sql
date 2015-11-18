@@ -8,8 +8,6 @@ USE wlbase_dev;
 
 
 
--- ∆∑≈∆±Í«© Ã∑…Ÿ
-
 DROP TABLE IF EXISTS t_zlj_ec_perfer_brand_groupinfo;
 
 CREATE TABLE t_zlj_ec_perfer_brand_tag_level
