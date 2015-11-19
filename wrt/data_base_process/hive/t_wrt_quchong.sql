@@ -21,7 +21,7 @@ FROM
     FROM t_base_ec_item_sale_dev
     where ds=$ds
   )y
-WHERE rn = 1
+WHERE rn = 1;
 
 
 EOF
