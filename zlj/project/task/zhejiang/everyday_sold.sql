@@ -33,7 +33,7 @@ SELECT
   t6.brand_id,
   t6.brand_name,
   t5.bc_type,
-  '$ds' AS ds
+  '$ds_1' AS ds
 FROM
 
   (SELECT
