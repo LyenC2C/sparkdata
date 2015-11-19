@@ -1,6 +1,12 @@
+
+# echo ''
+
+# sh  sql  ds_1  ds    shop_ds  item_ds
 ds_1=$1
 ds=$2
 
+shop_ds=$3
+item_ds=$4
 /home/hadoop/hive/bin/hive<<EOF
 
 USE wlbase_dev;
@@ -42,7 +48,7 @@ FROM
          shop_name,
          location
        FROM t_base_ec_shop_dev
-       WHERE ds = 20151107
+       WHERE ds = '$shop_ds'
      ) t3
      JOIN
      (
@@ -97,7 +103,7 @@ FROM
       brand_id,
       brand_name
     FROM t_base_ec_item_dev
-    WHERE ds = 20151107
+    WHERE ds = '$item_ds'
   ) t6 ON t5.item_id = t6.item_id;
 
 

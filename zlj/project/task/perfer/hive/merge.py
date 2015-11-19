@@ -316,7 +316,7 @@ if __name__ == "__main__":
         select * from  tmptable
         ''')
 
-
+''.strip()
 # def freq():
 #
 # rdd=rdd_dim.union(rdd_brand).union(rdd_car)
