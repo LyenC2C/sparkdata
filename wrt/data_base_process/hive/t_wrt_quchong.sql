@@ -1,5 +1,7 @@
+ds = $1
+/home/hadoop/hive/bin/hive<<EOF
 use wlbase_dev;
-INSERT OVERWRITE TABLE t_base_ec_item_sale_dev PARTITION(ds=20151107)
+INSERT OVERWRITE TABLE t_base_ec_item_sale_dev PARTITION(ds=$ds)
 SELECT
   item_id,
   item_title,
@@ -17,6 +19,6 @@ FROM
       *,
       ROW_NUMBER() OVER (PARTITION BY item_id ORDER BY ts DESC) AS rn
     FROM t_base_ec_item_sale_dev
-    where ds=20151107
+    where ds=$ds
   )y
 WHERE rn = 1
