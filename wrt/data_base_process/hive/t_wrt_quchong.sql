@@ -1,4 +1,4 @@
-ds = $1
+ds=$1
 /home/hadoop/hive/bin/hive<<EOF
 use wlbase_dev;
 INSERT OVERWRITE TABLE t_base_ec_item_sale_dev PARTITION(ds=$ds)
