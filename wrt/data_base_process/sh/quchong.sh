@@ -1,0 +1,1 @@
+sh ../hive/t_wrt_quchong.sql 20151110
