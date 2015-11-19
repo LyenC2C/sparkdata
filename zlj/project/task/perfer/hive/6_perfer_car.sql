@@ -5,8 +5,8 @@ SET hive.exec.reducers.bytes.per.reducer = 500000000;
 USE wlbase_dev;
 
 
-DROP TABLE IF EXISTS t_zlj_ec_perfer_cat;
-CREATE TABLE t_zlj_ec_perfer_cat
+DROP TABLE IF EXISTS t_zlj_ec_perfer_car;
+CREATE TABLE t_zlj_ec_perfer_car
   AS
     SELECT
       user_id,
