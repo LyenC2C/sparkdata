@@ -30,6 +30,7 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else :
         return content
+
 def seg(x):
     title=x.title
     if title is None:
@@ -39,9 +40,20 @@ def seg(x):
     for word,tag in pseg.cut(valid_jsontxt(title).strip()):
         lv1.append(valid_jsontxt(word))
         lv2.append(valid_jsontxt(word)+"@_@"+valid_jsontxt(tag))
-    return [x.item_id,x.root_cat_id,x.root_cat_name,x.title].append([' '.join(lv1),' '.join(lv2)])
+    lv=[]
+    lv.append(x.item_id)
+    lv.append(x.root_cat_id)
+    lv.append(x.root_cat_name)
+    lv.append(x.title)
+    lv.append(' '.join(lv1))
+    lv.append(' '.join(lv1))
+    return lv
 
-
+def seg1(x):
+    title=x.title
+    if title is None:
+        return None
+    else: return pseg.lcut(valid_jsontxt(title).strip())
 
 hiveContext.sql('use wlbase_dev')
 
@@ -57,6 +69,7 @@ where ds=20151112
 '''
 
 df=hiveContext.sql(sql)
+
 rdd=df.map(lambda x:seg(x)).filter(lambda x: x is not None)
 
 df1=hiveContext.createDataFrame(rdd,schema1)
