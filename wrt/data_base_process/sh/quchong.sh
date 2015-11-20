@@ -1,7 +1,60 @@
 pre_path='/home/wrt/wrt/sparkdata'
 
-spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151027 20151026
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151029 20151028
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151030 20151029
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151102 20151030
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151104 20151102
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151105 20151104
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151106 20151105
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151107 20151106
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151108 20151107
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151109 20151108
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151110 20151109
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151111 20151110
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151112 20151111
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151113 20151112
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151114 20151113
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151115 20151114
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151116 20151115
+spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
+$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151117 20151116
+
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151027 20151026
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151028 20151027
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151029 20151028
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151030 20151029
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151102 20151030
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151104 20151102
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151105 20151104
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151106 20151105
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151107 20151106
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151108 20151107
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151109 20151108
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151110 20151109
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151111 20151110
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151112 20151111
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151113 20151112
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151114 20151113
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151115 20151114
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151116 20151115
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20151117 20151116
+
 #sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151111
 #sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151112
 #sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151113
