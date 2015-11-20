@@ -22,9 +22,9 @@ def quchong(x,y):
     max = 0
     item_list = y
     if len(item_list) == 1:
-        for ln in item_list:
-            ln[9] = '1'
-            y = ln
+        ln = item_list[0]
+        ln[9] = '1'
+        y = ln
     else:
         for ln in item_list:
             if int(ln[8]) > max:
@@ -51,7 +51,7 @@ s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[1] #
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
 rdd1 = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd2 = sc.textFile(s2).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd = rdd1.union(rdd2).groupByKey().map(lambda (x,y):quchong(x,y))
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
 df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.registerDataFrameAsTable(df, 'data')
 #st = s.find('2015')
