@@ -6,13 +6,13 @@
 
 SET hive.exec.reducers.bytes.per.reducer = 500000000;
 USE wlbase_dev;
--- ·¿²úÀà
+
 DROP TABLE IF EXISTS t_zlj_ec_perfer_house;
 CREATE TABLE t_zlj_ec_perfer_house
   AS
     SELECT
       user_id,
-      'ÓĞ·¿Ò»×å'    tag,
+      'æœ‰æˆ¿ä¸€æ—'    tag,
       sum(f) AS score
     FROM
       t_zlj_ec_perfer_dim
@@ -32,8 +32,6 @@ CREATE TABLE t_zlj_ec_perfer_house
             124698018
           )
     GROUP BY user_id
-    ORDER BY sum(f) DESC
--- limit 100;
 ;
 
 

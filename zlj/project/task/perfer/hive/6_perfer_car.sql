@@ -1,16 +1,16 @@
 /home/hadoop/hive/bin/hive<<EOF
 
--- Æû³µÀà
+-- æ±½è½¦ç±»
 SET hive.exec.reducers.bytes.per.reducer = 500000000;
 USE wlbase_dev;
 
 
-DROP TABLE IF EXISTS t_zlj_ec_perfer_cat;
-CREATE TABLE t_zlj_ec_perfer_cat
+DROP TABLE IF EXISTS t_zlj_ec_perfer_car;
+CREATE TABLE t_zlj_ec_perfer_car
   AS
     SELECT
       user_id,
-      'ÓÐ³µÒ»×å'    tag,
+      'æœ‰è½¦ä¸€æ—'    tag,
       sum(f) AS score
     FROM
       t_zlj_ec_perfer_dim
@@ -18,10 +18,9 @@ CREATE TABLE t_zlj_ec_perfer_cat
           (
             26, 50016768, 50024971, 124470006
           )
-    GROUP BY user_id;
--- order by sum(f) desc
---  limit 100;
+    GROUP BY user_id
 ;
+
 
 
 EOF

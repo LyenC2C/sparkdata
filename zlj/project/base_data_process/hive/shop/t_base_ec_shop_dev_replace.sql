@@ -2,7 +2,6 @@
 
 
 
---店铺信息去重
 
 
 set hive.exec.reducers.bytes.per.reducer=500000000;

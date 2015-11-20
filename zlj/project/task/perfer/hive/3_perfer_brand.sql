@@ -31,22 +31,4 @@ group by user_id,brand_id ,brand_name
 
 
 
--- Drop table IF EXISTS  t_zlj_ec_perfer_brand_groupinfo;
---
--- create table t_zlj_ec_perfer_brand_groupinfo as
--- SELECT
---  user_id ,concat_ws('|', collect_set(brandinfo)) as brandinfos
--- FROM
--- (
--- SELECT /*+ mapjoin(t2)*/
---  t1.user_id, concat_ws('_',t2.brand_id,brand_name,cast(rn as String)) as brandinfo
---
--- FROM t_zlj_ec_perfer_brand t1 join t_base_ec_brand t2 on t1.brand_id=t2.brand_id
---
--- where t1.rn <5
--- --  ORDER BY  t1.rn
--- )
--- t
--- group by user_id ;
-
 EOF

@@ -1,6 +1,6 @@
 
 
-#价格区间
+
 
 hive -f  5.1_perfer_price.sql
 

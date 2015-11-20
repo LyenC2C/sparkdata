@@ -1,6 +1,9 @@
 
 
 
+item_ds=$1
+feed_ds=$2
+
 /home/hadoop/hive/bin/hive<<EOF
 
 
@@ -16,7 +19,7 @@ CREATE TABLE t_zlj_ec_userbuy
       t2.user_id,
       t2.f_date,
 
-      pow(0.5, datediff / 4.0) AS score
+      round(pow(0.5, datediff / 4.0),4) AS score
     FROM
       (
 
@@ -30,7 +33,7 @@ CREATE TABLE t_zlj_ec_userbuy
           cast(price AS INT) price,
           shop_id
         FROM t_base_ec_item_dev
-        WHERE ds = 20151107
+        WHERE ds = '$item_ds'
       ) t1
       JOIN
       (
@@ -42,7 +45,7 @@ CREATE TABLE t_zlj_ec_userbuy
           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date)  AS datediff
         FROM
           t_base_ec_item_feed_dev
-        WHERE ds > 20150701
+        WHERE ds > 'feed_ds'
 
       ) t2 ON t1.item_id = t2.item_id
  ;

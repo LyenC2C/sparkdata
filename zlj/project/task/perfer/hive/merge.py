@@ -7,6 +7,7 @@ from pyspark import SparkContext
 
 '''
 合并所有标签
+spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-memory 20g   merge.py  -merge
 '''
 
 
@@ -35,6 +36,7 @@ def valid_jsontxt(content):
 
 
 dim_limit=5
+brand_limit=5
 
 def dim():
     sql_dim='''
@@ -43,7 +45,7 @@ def dim():
     FROM
     (
     SELECT
-     user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(f as String),cast(rn as String)) as v
+     user_id, concat_ws('_',cast(root_cat_id as String),root_cat_name,cast(rn as String),cast(f as String)) as v
     FROM t_zlj_ec_perfer_dim
 
     where rn <%s
@@ -57,14 +59,14 @@ def dim():
 
 
 def brand():
-    brand_limit=5
+
     sql_brand='''
     SELECT
      user_id ,concat_ws('|', collect_set(brandinfo)) as brandinfos
     FROM
     (
     SELECT
-     user_id, concat_ws('_',brand_id,brand_name,cast(rn as String)) as brandinfo
+     user_id, concat_ws('_',brand_id,brand_name,cast(rn as String),cast(f as String)) as brandinfo
     FROM t_zlj_ec_perfer_brand
     where rn <%s
 
@@ -127,7 +129,7 @@ def shop():
     FROM
     (
     SELECT
-     user_id, concat_ws('_',shop_id,shop_name,cast(f as String),cast(rn as String)) as v
+     user_id, concat_ws('_',shop_id,shop_name,cast(rn as String),cast(f as String)) as v
     FROM  t_zlj_ec_perfer_shop
     where rn <5
     )
@@ -142,7 +144,7 @@ def car():
     select
     user_id,tag
     from
-    t_zlj_ec_perfer_house
+    t_zlj_ec_perfer_car
 
     '''
     rdd_car=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('car',x.tag)))
@@ -164,7 +166,7 @@ def qq():
     sql_qq='''
         SELECT
     t4.user_id,
-      t3.uin,
+    t3.uin,
     t3.birthday,
     t3.phone,
     t3.gender_id,
@@ -240,6 +242,16 @@ def qq():
     return rdd
 
 
+def hmm_tag():
+    sql_car='''
+    select
+    user_id,tfidftags
+    from
+    t_zlj_userbuy_item_hmm_tfidf_tags
+    '''
+    rdd=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('hmm_tag',x.tfidftags)))
+    return rdd
+
 schema1 = StructType([
     StructField("uid", StringType(), True),
     StructField("dim", StringType(), True),
@@ -248,6 +260,7 @@ schema1 = StructType([
     StructField("shop", StringType(), True),
     StructField("car", StringType(), True),
     StructField("house", StringType(), True),
+    StructField("hmm_tag", StringType(), True),
     StructField("qq", StringType(), True)
         ])
 def mergeinfo(uid,info):
@@ -264,6 +277,7 @@ def mergeinfo(uid,info):
     lv.append(m.get('shop',''))
     lv.append(m.get('car',''))
     lv.append(m.get('house',''))
+    lv.append(m.get('hmm_tag',''))
     lv.append(m.get('qq',''))
     return lv
 
@@ -288,8 +302,10 @@ if __name__ == "__main__":
         rdd_shop=shop()
         rdd_car=car()
         rdd_house=house()
+        rdd_tag=hmm_tag()
         rdd_qq=qq()
-        rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car).union(rdd_house).union(rdd_qq)
+        rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car)\
+            .union(rdd_house).union(rdd_qq).union(rdd_tag)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)
@@ -301,7 +317,7 @@ if __name__ == "__main__":
         select * from  tmptable
         ''')
 
-
+# ''.strip()
 # def freq():
 #
 # rdd=rdd_dim.union(rdd_brand).union(rdd_car)
