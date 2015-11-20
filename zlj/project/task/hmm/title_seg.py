@@ -30,9 +30,13 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else :
         return content
-
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 def seg(x):
-    title=x.title
+    title=valid_jsontxt(x.title)
     if title is None:
         return None
     lv1=[]
@@ -45,8 +49,8 @@ def seg(x):
     lv.append(x.root_cat_id)
     lv.append(x.root_cat_name)
     lv.append(x.title)
-    lv.append(' '.join(lv1))
-    lv.append(' '.join(lv1))
+    lv.append(f_coding(' '.join(lv1)))
+    lv.append(f_coding(' '.join(lv1)))
     return lv
 
 def seg1(x):
@@ -66,6 +70,7 @@ from
 t_base_ec_item_dev
 where ds=20151112
 
+limit 100
 '''
 
 df=hiveContext.sql(sql)
