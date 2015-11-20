@@ -58,10 +58,10 @@ FROM
          t1.item_title,
          s_price,
          CASE WHEN t2.item_id IS NULL
-           THEN t1.total_sold
+           THEN 0
          ELSE t1.total_sold - t2.total_sold END             AS day_sold,
          CASE WHEN t2.item_id IS NULL
-           THEN s_price * t1.total_sold
+           THEN 0
          ELSE s_price * (t1.total_sold - t2.total_sold) END AS day_sold_price,
          t1.bc_type
        FROM
