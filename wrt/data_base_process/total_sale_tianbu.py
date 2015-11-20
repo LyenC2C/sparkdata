@@ -25,8 +25,8 @@ def quchong(x):
         item_list[9] = '1'
     else:
         for ln in item_list:
-            if ln[8] > max:
-                max = ln[8]
+            if int(ln[8]) > max:
+                max = int(ln[8])
                 x[1] = item_list
     return x
 
