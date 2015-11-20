@@ -36,6 +36,7 @@ def valid_jsontxt(content):
 
 
 dim_limit=5
+brand_limit=5
 
 def dim():
     sql_dim='''
@@ -58,7 +59,7 @@ def dim():
 
 
 def brand():
-    brand_limit=5
+
     sql_brand='''
     SELECT
      user_id ,concat_ws('|', collect_set(brandinfo)) as brandinfos
@@ -316,7 +317,7 @@ if __name__ == "__main__":
         select * from  tmptable
         ''')
 
-''.strip()
+# ''.strip()
 # def freq():
 #
 # rdd=rdd_dim.union(rdd_brand).union(rdd_car)

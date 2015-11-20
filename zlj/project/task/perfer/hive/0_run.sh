@@ -1,7 +1,8 @@
 
 
 
-sh   1_t_zlj_ec_userbuy.sql
+#sh   1_t_zlj_ec_userbuy.sql  商品最新ds  feed_ds
+sh   1_t_zlj_ec_userbuy.sql  20151112 20150701
 sh   2_perfer_dim.sql
 #sh   2_1_perfer_dim_tag.sql
 
