@@ -60,6 +60,6 @@ df1=hiveContext.createDataFrame(rdd,schema1)
 
 hiveContext.registerDataFrameAsTable(df1,'tmptable')
 
-
+hiveContext.sql('drop table if exists t_zlj_corpus_item_seg')
 hiveContext.sql('create table  t_zlj_corpus_item_seg  as select * from tmptable')
 
