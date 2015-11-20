@@ -22,9 +22,9 @@ def quchong(x,y):
     max = 0
     item_list = y
     if len(item_list) == 1:
-        ln = item_list[0]
-        ln[9] = '1'
-        y = ln
+        for ln in item_list:
+            ln[9] = '1'
+            y = ln
     else:
         for ln in item_list:
             if int(ln[8]) > max:
