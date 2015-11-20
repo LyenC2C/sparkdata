@@ -10,14 +10,19 @@ sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 def f(line):
     ss = line.strip().split('\001')
-    flag = 0
+    flag = '0'
     ss.append(flag)
+    ss[2] = float(ss[2])
+    ss[3] = float(ss[3])
+    ss[5] = int(ss[5])
+    ss[6] = int(ss[6])
+    ss[7] = int(ss[7])
     return ss
 def quchong(x):
     max = 0
     item_list = x[1:]
     if len(item_list) == 1:
-        item_list[9] = 1
+        item_list[9] = '1'
     else:
         for ln in item_list:
             if int(ln[8]) > max:
@@ -35,7 +40,8 @@ schema = StructType([
     StructField("total_sold",IntegerType(), True),
     StructField("order_cost",IntegerType(), True),
     StructField("shop_id",StringType(), True),
-    StructField("ts",StringType(), True)
+    StructField("ts",StringType(), True),
+    StructField("flag",StringType(),True)
 	])
 
 hiveContext.sql('use testhive')
