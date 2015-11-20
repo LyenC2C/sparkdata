@@ -17,7 +17,7 @@ def quchong(x):
     max = 0
     item_list = x[1:]
     if len(item_list) == 1:
-        item_list[9] = 1 #flag为1,该总销量为复制前一天信息
+        item_list[9] = 1
     else:
         for ln in item_list:
             if int(ln[8]) > max:
