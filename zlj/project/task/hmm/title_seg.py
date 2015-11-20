@@ -38,7 +38,7 @@ def seg(x):
     lv2=[]
     for word,tag in pseg.cut(valid_jsontxt(title).strip()):
         lv1.append(valid_jsontxt(word))
-        lv2.append(valid_jsontxt(word)+"@_@"+tag)
+        lv2.append(valid_jsontxt(word)+"@_@"+valid_jsontxt(tag))
     return [x.item_id,x.root_cat_id,x.root_cat_name,x.title].append([' '.join(lv1),' '.join(lv2)])
 
 
@@ -57,7 +57,7 @@ where ds=20151112
 '''
 
 df=hiveContext.sql(sql)
-rdd=df.filter(lambda x:x.title is not None).map(lambda x:)
+rdd=df.map(lambda x:seg(x)).filter(lambda x: x is not None)
 
 df1=hiveContext.createDataFrame(rdd,schema1)
 
