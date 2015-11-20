@@ -43,14 +43,14 @@ def seg(x):
     lv2=[]
     for word,tag in pseg.cut(valid_jsontxt(title).strip()):
         lv1.append(valid_jsontxt(word))
-        lv2.append(valid_jsontxt(word)+"@_@"+valid_jsontxt(tag))
+        lv2.append(valid_jsontxt(word)+"\001"+valid_jsontxt(tag))
     lv=[]
     lv.append(x.item_id)
     lv.append(x.root_cat_id)
     lv.append(x.root_cat_name)
     lv.append(x.title)
     lv.append(f_coding(' '.join(lv1)))
-    lv.append(f_coding(' '.join(lv1)))
+    lv.append(f_coding(' '.join(lv2)))
     return lv
 
 def seg1(x):
@@ -70,7 +70,6 @@ from
 t_base_ec_item_dev
 where ds=20151112
 
-limit 100
 '''
 
 df=hiveContext.sql(sql)
