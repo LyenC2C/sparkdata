@@ -8,7 +8,7 @@ from pyspark.sql.types import *
 sc = SparkContext(appName="spark item_sale")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
-def f(line):
+def f1(line):
     ss = line.strip().split('\001')
     flag = '0'
     ss.append(flag)
@@ -17,6 +17,15 @@ def f(line):
     ss[5] = int(ss[5])
     ss[6] = int(ss[6])
     ss[7] = int(ss[7])
+    return ss
+def f2(line):
+    ss = line.strip().split('\001')
+    ss[2] = float(ss[2])
+    ss[3] = float(ss[3])
+    ss[5] = int(ss[5])
+    ss[6] = int(ss[6])
+    ss[7] = int(ss[7])
+    ss[10] = '0'
     return ss
 def quchong(x,y):
     max = 0
@@ -44,14 +53,14 @@ schema = StructType([
     StructField("shop_id",StringType(), True),
     StructField("ts",StringType(), True),
     StructField("flag",StringType(),True)
-	])
+])
 
 hiveContext.sql('use testhive')
 ds = sys.argv[1]
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + ds #today
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
-rdd1 = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd2 = sc.textFile(s2).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+s2 = "/hive/warehouse/testhive.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
+rdd1 = sc.textFile(s1).map(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
 df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.registerDataFrameAsTable(df, 'data')
