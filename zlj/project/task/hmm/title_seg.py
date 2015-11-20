@@ -4,7 +4,7 @@ __author__ = 'zlj'
 from pyspark import SparkContext
 from pyspark.sql import *
 
-sc = SparkContext(appName="cmt")
+sc = SparkContext(appName="seg")
 sqlContext = SQLContext(sc)
 from pyspark.sql.types import *
 
@@ -33,7 +33,7 @@ def valid_jsontxt(content):
 def seg(title):
     lv1=[]
     lv2=[]
-    for word,tag in pseg.cut(title.strip()):
+    for word,tag in pseg.cut(valid_jsontxt(title).strip()):
         lv1.append(valid_jsontxt(word))
         lv2.append(valid_jsontxt(word)+"@_@"+tag)
     return [' '.join(lv1),' '.join(lv2)]
@@ -54,7 +54,7 @@ where ds=20151112
 '''
 
 df=hiveContext.sql(sql)
-rdd=df.map(lambda x:[x.item_id,x.root_cat_id,x.root_cat_name,x.title].append(seg(x.title)))
+rdd=df.filter(lambda x:x.title is not None).map(lambda x:[x.item_id,x.root_cat_id,x.root_cat_name,x.title].append(seg(x.title)))
 
 df1=hiveContext.createDataFrame(rdd,schema1)
 
