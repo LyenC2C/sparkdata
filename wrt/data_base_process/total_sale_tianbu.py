@@ -8,6 +8,11 @@ from pyspark.sql.types import *
 sc = SparkContext(appName="spark item_sale")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
+def f(line):
+    ss = line.strip().split('\001')
+    flag = 0
+    ss.append(flag)
+    return ss
 def quchong(x):
     max = 0
     item_list = x[1:]
@@ -34,18 +39,18 @@ schema = StructType([
 	])
 
 hiveContext.sql('use testhive')
-s1 = sys.argv[1] #today
-s2 = sys.argv[2] #yesterday
-rdd1 = sc.textFile(s1).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd2 = sc.textFile(s2).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[1] #today
+s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
+rdd1 = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd2 = sc.textFile(s2).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd = rdd1.union(rdd2).groupByKey().map(lambda x:quchong(x)).map(lambda x:[x[0]] + x[1:])
 df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.registerDataFrameAsTable(df, 'data')
 #st = s.find('2015')
 #ds2 = s[st:st+4] + s[st+5:st+7] + s[st+8:st+10]
-l = len(s1)
-ds1 = s1[l-8:]
-hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + ds1 + ') select * from data')
+#l = len(s1)
+#ds1 = s1[l-8:]
+hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + s1 + ') select * from data')
 		#.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
 #spark-submit  --executor-memory 4G  --driver-memory 20G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
