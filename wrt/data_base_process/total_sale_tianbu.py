@@ -18,17 +18,19 @@ def f(line):
     ss[6] = int(ss[6])
     ss[7] = int(ss[7])
     return ss
-def quchong(x):
+def quchong(x,y):
     max = 0
-    item_list = x[1:]
+    item_list = y
     if len(item_list) == 1:
-        item_list[9] = '1'
+        ln = item_list[0]
+        ln[9] = '1'
+        y = ln
     else:
         for ln in item_list:
             if int(ln[8]) > max:
                 max = int(ln[8])
-                x[1] = item_list
-    return x
+                y = ln
+    return [x] + y
 
 schema = StructType([
     StructField("item_id",StringType(), True),
@@ -49,7 +51,7 @@ s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[1] #
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
 rdd1 = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd2 = sc.textFile(s2).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd = rdd1.union(rdd2).groupByKey().map(lambda x:quchong(x)).map(lambda x:[x[0]] + x[1:])
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
 df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.registerDataFrameAsTable(df, 'data')
 #st = s.find('2015')
