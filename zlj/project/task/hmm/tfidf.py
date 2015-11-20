@@ -65,12 +65,12 @@ def join1(x,dict):
 sql_hmm='''
 select
 /*+ mapjoin(t1)*/
-user_id, concat_ws('_', collect_set(hmm)) as hmm
+user_id, concat_ws(' ', collect_set(hmm)) as hmm
 
 from
 (
-select item_id,hmm from t_zlj_item_hmm
-where LENGTH (hmm)>3
+select item_id,title_cut as hmm from t_zlj_corpus_item_seg
+where LENGTH (title_cut)>3
 )t1
 join
 (
@@ -120,8 +120,8 @@ if __name__ == "__main__":
         [i[0] for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     df=hiveContext.createDataFrame(rst,schema)
     hiveContext.registerDataFrameAsTable(df, 'tmptable')
-    hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_hmm_tfidf_tags')
-    hiveContext.sql('create table t_zlj_userbuy_item_hmm_tfidf_tags as select * from tmptable')
+    hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
+    hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
 
 
 
