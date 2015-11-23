@@ -92,7 +92,7 @@ user_id, concat_ws(' ', collect_set(hmm)) as hmm
 
 from
 (
-select user_id as item_id,tfidftags  as title_cut as hmm from t_zlj_corpus_item_seg_tfidf
+select user_id as item_id,tfidftags  as hmm from t_zlj_corpus_item_seg_tfidf
 where LENGTH (title_cut)>3
 )t1
 join
@@ -156,7 +156,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        rdd_pre = hiveContext.sql(sql_hmm%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split()]))
+        rdd_pre = hiveContext.sql(sql_tfidf%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split()]))
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
