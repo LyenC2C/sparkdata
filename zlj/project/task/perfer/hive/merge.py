@@ -117,12 +117,12 @@ def brandtag():
 def price():
     sql_price='''
     select
-    uid,ulevel
+    uid,avg_price,ulevel
     from
     t_zlj_perfer_user_level
 
     '''
-    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',x.ulevel)))
+    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',str(x.ulevel)+"_"+str(x.avg_price))))
     return rdd_price
     # return ''
 
@@ -262,6 +262,7 @@ schema1 = StructType([
     StructField("brand", StringType(), True),
     StructField("brandtag", StringType(), True),
     StructField("shop", StringType(), True),
+    StructField("price_level", StringType(), True),
     StructField("car", StringType(), True),
     StructField("house", StringType(), True),
     StructField("hmm_tag", StringType(), True),
@@ -278,6 +279,7 @@ def mergeinfo(uid,info):
     lv.append(m.get('brand',''))
     lv.append(m.get('brandtag',''))
     lv.append(m.get('shop',''))
+    lv.append(m.get('price_level',''))
     lv.append(m.get('car',''))
     lv.append(m.get('house',''))
     lv.append(m.get('hmm_tag',''))
