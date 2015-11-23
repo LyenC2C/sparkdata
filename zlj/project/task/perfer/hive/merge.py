@@ -34,7 +34,11 @@ def valid_jsontxt(content):
     else :
         return content
 
-
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 dim_limit=5
 brand_limit=5
 
@@ -238,7 +242,7 @@ def qq():
                                                                 x.mobile    ,
                                                                 x.ts        ,
                                                                 x.age ]) \
-        .map(lambda x:(x[0],('qq','\003'.join([str(valid_jsontxt(i)) for i in x[1:]]))))
+        .map(lambda x:(x[0],('qq','\003'.join([f_coding(str(valid_jsontxt(i))) for i in x[1:]]))))
     return rdd
 
 
