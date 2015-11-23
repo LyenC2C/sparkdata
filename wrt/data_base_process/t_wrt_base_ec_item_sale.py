@@ -30,7 +30,7 @@ def float_k(x):
         return 0.0
     else:
         return float(x)
-def f(line):
+def f1(line):
     try:
         ss = line.strip().split('\t')
         zhengwen = ""
@@ -62,6 +62,7 @@ def f(line):
             quantity = item.get("quantity",0)
             total_sold = item.get("totalSoldQuantity",0)
             order_cost = item.get("orderCost",0)
+            #flag = "0"
             lv.append(valid_jsontxt(item_id))
             lv.append(f_coding(item_title))
             lv.append(float_k(r_price))
@@ -73,12 +74,43 @@ def f(line):
             lv.append(valid_jsontxt(shop_id))
             lv.append(ts)
             result.append(lv)
-            # result.append('\001'.join([valid_jsontxt(i) for i in lv]))
-            #result.append(item_id + '\001' + r_price + '\001' + s_price + '\001' + bc_type + '\001' + quantity + '\001' + total_sold + '\001' + order_cost + '\001' + shop_id + '\001' + ts)
         return result
     except Exception,e:
 		print e,valid_jsontxt(line)
 		return [None]
+def f2(line):
+    ss = line.strip().split('\001')
+    ss[2] = float(ss[2])
+    ss[3] = float(ss[3])
+    ss[5] = int(ss[5])
+    ss[6] = int(ss[6])
+    ss[7] = int(ss[7])
+    ss[10] = '0'
+    return ss
+def quchong_1(x, y):
+    max = 0
+    item_list = y
+    for ln in item_list:
+        if int(ln[8]) > max:
+            max = int(ln[8])
+            y = ln
+    flag = '0'
+    y.append(flag)
+    return (x, y)
+def quchong_2(x, y):
+    max = 0
+    item_list = y
+    if len(item_list) == 1:
+        ln = item_list[0]
+        ln[9] = '1'
+        y = ln
+    else:
+        for ln in item_list:
+            if int(ln[8]) > max:
+                max = int(ln[8])
+                y = ln
+    return [x] + y
+
 schema = StructType([
     StructField("item_id",StringType(), True),
 	StructField("item_title",StringType(), True),
@@ -89,15 +121,17 @@ schema = StructType([
     StructField("total_sold",IntegerType(), True),
     StructField("order_cost",IntegerType(), True),
     StructField("shop_id",StringType(), True),
-    StructField("ts",StringType(), True)
+    StructField("ts",StringType(), True),
+    StructField("flag",StringType(),True)
 	])
 
 hiveContext.sql('use wlbase_dev')
-s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[1] #today
+s1 = "/commit/comments/" + sys.argv[1] #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
-rdd1 = sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd2 = sc.textFile(s2).map(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd = rdd1.union(rdd2).map(lambda x:[x[0],])
+rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
+rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
 df = hiveContext.createDataFrame(rdd, schema)
 hiveContext.registerDataFrameAsTable(df, 'data')
 #st = s.find('2015')
@@ -105,7 +139,7 @@ hiveContext.registerDataFrameAsTable(df, 'data')
 #l = len(s1)
 #ds1 = s1[l-8:]
 hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + s1 + ') select * from data')
-		#.saveAsTextFile("/user/wrt/item_sale")
+#.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
 #spark-submit  --executor-memory 4G  --driver-memory 20G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
 #/commit/shopitem/20151116/*6
