@@ -140,7 +140,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[2])
         feed_ds=sys.argv[3]
         rdd_pre = hiveContext.sql(sql_hmm%feed_ds).map(lambda x: (x.user_id, [i for i in x[1].split('_') if len(i) > 1]))
-        rst=tfidf(rdd_pre,top_freq=1000,min_freq=100,limit)
+        rst=tfidf(rdd_pre,top_freq=1000,min_freq=100,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
@@ -165,7 +165,7 @@ if __name__ == "__main__":
         %s
         '''
         # hmm_ds=sys.argv[4]
-        rdd_pre = hiveContext.sql(sql_hmm%(input_table_docid,input_table_title,input_table)).map(lambda x: (x[0], [i for i in x[1].split() if len(i) > 1]))
+        rdd_pre = hiveContext.sql(sql_itemtitle%(input_table_docid,input_table_title,input_table)).map(lambda x: (x[0], [i for i in x[1].split() if len(i) > 1]))
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=100,limit=5)
 
         # top_freq=5   and x[1]<top_freq
