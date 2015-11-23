@@ -147,20 +147,23 @@ import sys
 if __name__ == "__main__":
 
     if len(sys.argv)<4:
-        print ' py -user  min_freq limit feed_ds'
+        print ' py -user  min_freq limit feed_ds outputtable'
         print ' py -item min_freq limit feed_ds input_table input_docid, input_talbe_title  output_table'
         sys.exit(0)
     if sys.argv[1]=='-usertfidf':
-        min_freq=int(sys.argv[1])
-        limit=int(sys.argv[2])
-        feed_ds=sys.argv[3]
+        i=1
+        min_freq=int(sys.argv[i+1])
+        limit=int(sys.argv[i+2])
+        feed_ds=sys.argv[i+3]
+        output_talbe=sys.argv[i+4]
         rdd_pre = hiveContext.sql(sql_hmm%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split()]))
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=100,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
-        hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
-
+        # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
+        # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
+        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
 
     elif sys.argv[1]=='-item':
         i=1
