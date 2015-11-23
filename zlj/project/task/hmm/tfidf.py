@@ -93,7 +93,6 @@ user_id, concat_ws(' ', collect_set(hmm)) as hmm
 from
 (
 select user_id as item_id,tfidftags  as hmm from t_zlj_corpus_item_seg_tfidf
-where LENGTH (title_cut)>3
 )t1
 join
 (
@@ -116,8 +115,9 @@ return rdd [id, word_tfifd word_tfidf]
 '''
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # rdd=sc.textFile()
-    words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).groupByKey().map(
-        lambda (x, y): (x, len(y))).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+    # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).groupByKey().map(
+    #     lambda (x, y): (x, len(y))).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+    words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
