@@ -43,7 +43,7 @@ def seg(x):
     lv2=[]
     for word,tag in pseg.cut(valid_jsontxt(title).strip()):
         lv1.append(valid_jsontxt(word))
-        lv2.append(valid_jsontxt(word)+"\001"+valid_jsontxt(tag))
+        lv2.append(valid_jsontxt(word)+"\003"+valid_jsontxt(tag))
     lv=[]
     lv.append(x.item_id)
     lv.append(x.root_cat_id)

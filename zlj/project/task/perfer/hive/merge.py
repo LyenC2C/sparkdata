@@ -34,7 +34,11 @@ def valid_jsontxt(content):
     else :
         return content
 
-
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 dim_limit=5
 brand_limit=5
 
@@ -113,12 +117,12 @@ def brandtag():
 def price():
     sql_price='''
     select
-    uid,ulevel
+    uid,avg_price,ulevel
     from
     t_zlj_perfer_user_level
 
     '''
-    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',x.ulevel)))
+    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',str(x.ulevel)+"_"+str(x.avg_price))))
     return rdd_price
     # return ''
 
@@ -238,7 +242,7 @@ def qq():
                                                                 x.mobile    ,
                                                                 x.ts        ,
                                                                 x.age ]) \
-        .map(lambda x:(x[0],('qq','\001'.join([str(valid_jsontxt(i)) for i in x[1:]]))))
+        .map(lambda x:(x[0],('qq','\003'.join([f_coding(str(valid_jsontxt(i))) for i in x[1:]]))))
     return rdd
 
 
@@ -258,6 +262,7 @@ schema1 = StructType([
     StructField("brand", StringType(), True),
     StructField("brandtag", StringType(), True),
     StructField("shop", StringType(), True),
+    StructField("price_level", StringType(), True),
     StructField("car", StringType(), True),
     StructField("house", StringType(), True),
     StructField("hmm_tag", StringType(), True),
@@ -269,12 +274,12 @@ def mergeinfo(uid,info):
     lv.append(uid)
     for value in info:
         m[value[0]]=value[1]
-    key=m.keys()
     # if 'dim' in key:
     lv.append(m.get('dim',''))
     lv.append(m.get('brand',''))
     lv.append(m.get('brandtag',''))
     lv.append(m.get('shop',''))
+    lv.append(m.get('price_level',''))
     lv.append(m.get('car',''))
     lv.append(m.get('house',''))
     lv.append(m.get('hmm_tag',''))
@@ -305,7 +310,7 @@ if __name__ == "__main__":
         rdd_tag=hmm_tag()
         rdd_qq=qq()
         rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).union(rdd_qq).union(rdd_tag)
+            .union(rdd_house).union(rdd_tag).union(rdd_qq)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)
