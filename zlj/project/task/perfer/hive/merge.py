@@ -238,7 +238,7 @@ def qq():
                                                                 x.mobile    ,
                                                                 x.ts        ,
                                                                 x.age ]) \
-        .map(lambda x:(x[0],('qq','\001'.join([str(valid_jsontxt(i)) for i in x[1:]]))))
+        .map(lambda x:(x[0],('qq','\003'.join([str(valid_jsontxt(i)) for i in x[1:]]))))
     return rdd
 
 
@@ -269,7 +269,6 @@ def mergeinfo(uid,info):
     lv.append(uid)
     for value in info:
         m[value[0]]=value[1]
-    key=m.keys()
     # if 'dim' in key:
     lv.append(m.get('dim',''))
     lv.append(m.get('brand',''))
@@ -305,7 +304,7 @@ if __name__ == "__main__":
         rdd_tag=hmm_tag()
         rdd_qq=qq()
         rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).union(rdd_qq).union(rdd_tag)
+            .union(rdd_house).union(rdd_tag).union(rdd_qq)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)
