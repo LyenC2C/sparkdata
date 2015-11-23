@@ -84,15 +84,28 @@ on t1.item_id=t2.item_id
 group by user_id
 '''
 
+
+sql_tfidf='''
+select
+/*+ mapjoin(t1)*/
+user_id, concat_ws(' ', collect_set(hmm)) as hmm
+
+from
+(
+select user_id as item_id,tfidftags  as title_cut as hmm from t_zlj_corpus_item_seg_tfidf
+where LENGTH (title_cut)>3
+)t1
+join
+(
+select item_id,user_id from t_base_ec_item_feed_dev
+
+where ds>%s
+and  LENGTH (user_id)>0
+
+)t2
+on t1.item_id=t2.item_id
+group by user_id
 '''
-rdd  {k,[w1 w2 w3 .....]}
-
-return rdd [id, word_tfifd word_tfidf]
-'''
-
-
-
-
 
 
 
@@ -127,7 +140,9 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
-
+'''spark-submit
+ --total-executor-cores  20   --executor-memory  4g  --driver-memory 4g  tfidf.py -item 10   8  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
+'''
 import sys
 if __name__ == "__main__":
 
@@ -139,7 +154,7 @@ if __name__ == "__main__":
         min_freq=int(sys.argv[1])
         limit=int(sys.argv[2])
         feed_ds=sys.argv[3]
-        rdd_pre = hiveContext.sql(sql_hmm%feed_ds).map(lambda x: (x.user_id, [i for i in x[1].split('_') if len(i) > 1]))
+        rdd_pre = hiveContext.sql(sql_hmm%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split()]))
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=100,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
@@ -194,8 +209,8 @@ if __name__ == "__main__":
         #     [i[0] for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        hiveContext.sql('drop table if EXISTS  %s',output_talbe)
-        hiveContext.sql('create table %s as select * from tmptable',output_talbe)
+        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
 
 
 
