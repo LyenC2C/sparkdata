@@ -108,16 +108,27 @@ group by user_id
 
 
 
+def hashid(freq,hashNum,word):
+    i = hash(word)%hashNum
+    freq[i] = freq.get(i, 0) + 1.0
+
 '''
 rdd  {k,[w1 w2 w3 .....]}
 
 return rdd [id, word_tfifd word_tfidf]
 '''
+
+def tcount(lv):
+    s=set(lv)
+    re=[]
+    for i in s:
+        re.append((i,lv.count(i)))
+    return re
+
 def tfidf(rdd_pre,top_freq,min_freq,limit):
-    # rdd=sc.textFile()
-    # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).groupByKey().map(
-    #     lambda (x, y): (x, len(y))).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+    # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+    words = set(rdd_pre.map(lambda x: tcount(x)).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
@@ -125,14 +136,15 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
     # word ,len
-    dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
+    # dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
+    dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
     # word idf
     idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
     # idfrdd.collectAsMap()
     # idfrdd.join()
     broadcastVar = sc.broadcast(idfrdd.collectAsMap())
     idfdict = broadcastVar.value
-    rddjoin=idfrdd.join(tfrdd)
+    # rddjoin=idfrdd.join(tfrdd)
     joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
@@ -226,7 +238,6 @@ if __name__ == "__main__":
     #
     #
     # from pyspark import SparkContext
-    # from pyspark.mllib.feature import HashingTF
     # from pyspark.mllib.feature import IDF
     #
     # # sc = SparkContext()
@@ -234,8 +245,9 @@ if __name__ == "__main__":
     # # Load documents (one per line).
     # documents = sc.textFile("...").map(lambda line: line.split(" "))
     #
+
     # hashingTF = HashingTF()
-    # # tf = hashingTF.transform(documents)
+    # tf = hashingTF.transform(documents)
     # tfrdd=rdd.map(lambda  x: (x[0],hashingTF.transform(x[1])))
     #
     # # tfrdd = hashingTF.transform(rdd)
