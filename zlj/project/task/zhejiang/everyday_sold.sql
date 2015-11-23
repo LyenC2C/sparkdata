@@ -50,7 +50,7 @@ FROM
        FROM t_base_ec_shop_dev
        WHERE ds = '$shop_ds'
      ) t3
-     JOIN
+     RIGHT JOIN
      (
        SELECT
          shop_id,
