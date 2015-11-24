@@ -50,10 +50,10 @@ def df(x, y):
 
 # min_freq = 100
 # limit = 5
-schema = StructType([
-    StructField("user_id", StringType(), True),
-    StructField("tfidftags", StringType(), True)
-])
+# schema = StructType([
+#     StructField("user_id", StringType(), True),
+#     StructField("tfidftags", StringType(), True)
+# ])
 
 def join1(x,dict):
     word=x[0]
@@ -169,6 +169,14 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 '''
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
 '''
+
+
+schema = StructType([
+    StructField("user_id", StringType(), True),
+    StructField("tfidftags", StringType(), True)
+])
+
+
 import sys
 if __name__ == "__main__":
 

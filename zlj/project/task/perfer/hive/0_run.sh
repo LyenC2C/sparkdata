@@ -14,7 +14,7 @@ sh  5.2_perfer_price.sh
 sh 6_perfer_car.sql
 sh 7_perfer_house.sql
 
-sh 8_perfer_freq.sql
-spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-memory 20g hmm.py 100  5 20150701
+#sh 8_perfer_freq.sql
+#spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g hmm.py 100  5 20150701
 
-spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-memory 20g   merge.py  -merge
+spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g   merge.py  -merge

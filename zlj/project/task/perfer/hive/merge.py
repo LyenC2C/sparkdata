@@ -247,14 +247,15 @@ def qq():
 
 
 def hmm_tag():
-    sql_car='''
+    sql_tag='''
     select
     user_id,tfidftags
     from
-    t_zlj_userbuy_item_hmm_tfidf_tags
+    t_zlj_userbuy_item_tfidf_tag_20150901
     '''
-    rdd=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('hmm_tag',x.tfidftags)))
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('tfidftags',x.tfidftags)))
     return rdd
+
 
 schema1 = StructType([
     StructField("uid", StringType(), True),
@@ -308,9 +309,10 @@ if __name__ == "__main__":
         rdd_car=car()
         rdd_house=house()
         rdd_tag=hmm_tag()
-        rdd_qq=qq()
+        # rdd_qq=qq()
         rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).union(rdd_tag).union(rdd_qq)
+            .union(rdd_house).union(rdd_tag)\
+            # .union(rdd_qq)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)
