@@ -143,7 +143,8 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
-    doc_num = rdd_pre.map(lambda x:1).count()
+    # doc_num = rdd_pre.map(lambda x:1).count()
+    doc_num = 50000000
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
 
     # (word,(doc_id,tf))
@@ -227,7 +228,7 @@ if __name__ == "__main__":
         #     wordmap[value]=index
         broadcastVar = sc.broadcast(words)
         dict = broadcastVar.value
-        rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict])).map(lambda (x,y):x+"\t"+" ".join([ i[0]+":"+i[1] for i in tcount(y)]))
+        rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict])).map(lambda (x,y):x+"\t"+" ".join([ i[0]+":"+str(i[1]) for i in tcount(y)]))
         rdd.saveAsTextFile("/user/zlj/temp/user_corpus")
 
 
