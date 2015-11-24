@@ -50,7 +50,7 @@ FROM
        FROM t_base_ec_shop_dev
        WHERE ds = '$shop_ds'
      ) t3
-     JOIN
+     RIGHT JOIN
      (
        SELECT
          shop_id,
@@ -73,7 +73,7 @@ FROM
             s_price,
             total_sold,
             bc_type
-          FROM t_base_ec_item_sale_dev
+          FROM testhive.t_base_ec_item_sale_dev
           WHERE ds = '$ds'
            --                 and  bc_type='b'
          ) t1
@@ -83,7 +83,7 @@ FROM
            SELECT
              item_id,
              total_sold
-           FROM t_base_ec_item_sale_dev
+           FROM testhive.t_base_ec_item_sale_dev
            WHERE ds = '$ds_1'
            --                 and bc_type='b'
 
