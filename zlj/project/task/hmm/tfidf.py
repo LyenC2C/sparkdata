@@ -127,12 +127,12 @@ def tcount(lv):
 
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+    words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
 
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
-    doc_num = rdd.count()
+    doc_num = rdd.map(lambda x:1).count()
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
     # word ,len
@@ -152,8 +152,8 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
-'''spark-submit
- --total-executor-cores  20   --executor-memory  4g  --driver-memory 4g  tfidf.py -item 10   8  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
+'''
+spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
 '''
 import sys
 if __name__ == "__main__":
