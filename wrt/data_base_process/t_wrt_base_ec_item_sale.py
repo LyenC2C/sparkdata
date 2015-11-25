@@ -126,7 +126,8 @@ schema = StructType([
 	])
 
 hiveContext.sql('use wlbase_dev')
-s1 = "/commit/comments/" + sys.argv[1] #today
+ds = sys.argv[1]
+s1 = "/commit/shopitem/" + ds #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
@@ -138,7 +139,7 @@ hiveContext.registerDataFrameAsTable(df, 'data')
 #ds2 = s[st:st+4] + s[st+5:st+7] + s[st+8:st+10]
 #l = len(s1)
 #ds1 = s1[l-8:]
-hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + s1 + ') select * from data')
+hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + ds + ') select * from data')
 #.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
 #spark-submit  --executor-memory 4G  --driver-memory 20G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
