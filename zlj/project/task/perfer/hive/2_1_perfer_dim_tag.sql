@@ -6,13 +6,15 @@
 set hive.exec.reducers.bytes.per.reducer=500000000;
 use wlbase_dev;
 
-
+set hive.groupby.skewindata=true ;
 
 
 drop table IF EXISTS  t_zlj_ec_perfer_dim;
 
 create table t_zlj_ec_perfer_dim as
 
+
+(
 select  user_id, root_cat_id ,root_cat_name, f ,
 
 row_number()  OVER (PARTITION BY user_id ORDER BY f desc) as rn
@@ -27,10 +29,34 @@ t_zlj_ec_userbuy
 
 group by user_id,root_cat_id,root_cat_name
 ) t
+
+)t2
+ ;
+
+EOF
+
+
+drop table IF EXISTS  t_zlj_ec_perfer_dim;
+
+create table t_zlj_ec_perfer_dim as
+
+select  user_id, root_cat_id, f ,
+
+row_number()  OVER (PARTITION BY user_id ORDER BY f desc) as rn
+
+from
+(
+select
+ user_id, root_cat_id  ,sum(score) as f
+from
+
+t_zlj_ec_userbuy
+
+group by user_id,root_cat_id
+) t
  ;
 
 
-EOF
 
 
 
