@@ -45,9 +45,10 @@ CREATE TABLE t_zlj_ec_userbuy
           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date)  AS datediff
         FROM
           t_base_ec_item_feed_dev
-        WHERE ds > 'feed_ds'
+        WHERE ds > '$feed_ds' and user_id rlike   '^\\\\d+$'  and item_id rlike   '^\\\\d+$'
 
       ) t2 ON t1.item_id = t2.item_id
  ;
+
 
   EOF

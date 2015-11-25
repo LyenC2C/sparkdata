@@ -50,10 +50,10 @@ def df(x, y):
 
 # min_freq = 100
 # limit = 5
-schema = StructType([
-    StructField("user_id", StringType(), True),
-    StructField("tfidftags", StringType(), True)
-])
+# schema = StructType([
+#     StructField("user_id", StringType(), True),
+#     StructField("tfidftags", StringType(), True)
+# ])
 
 def join1(x,dict):
     word=x[0]
@@ -107,6 +107,18 @@ group by user_id
 '''
 
 
+# sql_count='''
+# select
+# from
+# (
+# select item_id,user_id from t_base_ec_item_feed_dev
+#
+# where ds>%s
+# and  LENGTH (user_id)>0
+# group by user_id
+# )t
+# '''
+
 
 def hashid(freq,hashNum,word):
     i = hash(word)%hashNum
@@ -127,12 +139,14 @@ def tcount(lv):
 
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+    words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
 
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
+    # doc_num = rdd_pre.map(lambda x:1).count()
+    doc_num = 50000000
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
-    doc_num = rdd.count()
+
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
     # word ,len
@@ -152,9 +166,17 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
-'''spark-submit
- --total-executor-cores  20   --executor-memory  4g  --driver-memory 4g  tfidf.py -item 10   8  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
 '''
+spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
+'''
+
+
+schema = StructType([
+    StructField("user_id", StringType(), True),
+    StructField("tfidftags", StringType(), True)
+])
+
+
 import sys
 if __name__ == "__main__":
 
@@ -197,36 +219,25 @@ if __name__ == "__main__":
         # hmm_ds=sys.argv[4]
         rdd_pre = hiveContext.sql(sql_itemtitle%(input_table_docid,input_table_title,input_table)).map(lambda x: (x[0], [i for i in x[1].split() if len(i) > 1]))
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=100,limit=5)
-
-        # top_freq=5   and x[1]<top_freq
-        # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).groupByKey().map(
-        #     lambda (x, y): (x, len(y))).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-        # broadcastVar = sc.broadcast(words)
-        # dict = broadcastVar.value
-        # rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
-        # doc_num = rdd.count()
-        # # (word,(doc_id,tf))
-        # tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
-        # # word ,len
-        # dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
-        # # word idf
-        # idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
-        # # idfrdd.collectAsMap()
-        # # idfrdd.join()
-        # broadcastVar = sc.broadcast(idfrdd.collectAsMap())
-        # idfdict = broadcastVar.value
-        # rddjoin=idfrdd.join(tfrdd)
-        # joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
-        # # rddjoin = tfrdd.join(idfrdd)
-        # # sorted(a,key=a[1],reverse=True)
-        # # rst=rddjoin.map(lambda (x, y): join(x, y))
-        # rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
-        #     [i[0] for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
-
+    elif sys.argv[1]=='-corpus':
+        i=1
+        min_freq=int(sys.argv[i+1])
+        limit=int(sys.argv[i+2])
+        feed_ds=sys.argv[i+3]
+        output_talbe=sys.argv[i+4]
+        rdd_pre = hiveContext.sql(sql_tfidf%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split()]))
+        words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+        # wordmap={}
+        # for  index,value in enumerate(words,1):
+        #     wordmap[value]=index
+        broadcastVar = sc.broadcast(words)
+        dict = broadcastVar.value
+        rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict])).map(lambda (x,y):x+"\t"+" ".join([ i[0]+":"+str(i[1]) for i in tcount(y)]))
+        rdd.saveAsTextFile("/user/zlj/temp/user_corpus")
 
 
 

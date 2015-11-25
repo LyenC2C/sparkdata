@@ -39,9 +39,10 @@ def f_coding(x):
         return x.decode("utf-8")
     else:
         return x
-dim_limit=5
-brand_limit=5
-
+dim_limit=10
+brand_limit=10
+shop_limit=10
+brandtag_limit=10
 def dim():
     sql_dim='''
     SELECT
@@ -105,12 +106,12 @@ def brandtag():
               ) t1
               JOIN t_zlj_ec_perfer_brand t2
 
-                ON (t2.rn < 5 AND t1.brand_id = t2.brand_id)
+                ON (t2.rn <%s AND t1.brand_id = t2.brand_id)
           ) t3
         GROUP BY user_id
 
     '''
-    rdd_brandtag=hiveContext.sql(sql_brandtag).map(lambda x:(x.user_id,('brandtag',x.brandtags)))
+    rdd_brandtag=hiveContext.sql(sql_brandtag%brandtag_limit).map(lambda x:(x.user_id,('brandtag',x.brandtags)))
     return rdd_brandtag
 
 
@@ -135,12 +136,12 @@ def shop():
     SELECT
      user_id, concat_ws('_',shop_id,shop_name,cast(rn as String),cast(f as String)) as v
     FROM  t_zlj_ec_perfer_shop
-    where rn <5
+    where rn <%s
     )
     t
     group by user_id
     '''
-    rdd_shop=hiveContext.sql(sql_shop).map(lambda x:(x.user_id,('shop',x.shopinfos)))
+    rdd_shop=hiveContext.sql(sql_shop%shop_limit).map(lambda x:(x.user_id,('shop',x.shopinfos)))
     return rdd_shop
 
 def car():
@@ -247,14 +248,15 @@ def qq():
 
 
 def hmm_tag():
-    sql_car='''
+    sql_tag='''
     select
     user_id,tfidftags
     from
-    t_zlj_userbuy_item_hmm_tfidf_tags
+    t_zlj_userbuy_item_tfidf_tag_20150901
     '''
-    rdd=hiveContext.sql(sql_car).map(lambda x:(x.user_id,('hmm_tag',x.tfidftags)))
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('tfidftags',x.tfidftags)))
     return rdd
+
 
 schema1 = StructType([
     StructField("uid", StringType(), True),
@@ -308,9 +310,10 @@ if __name__ == "__main__":
         rdd_car=car()
         rdd_house=house()
         rdd_tag=hmm_tag()
-        rdd_qq=qq()
+        # rdd_qq=qq()
         rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).union(rdd_tag).union(rdd_qq)
+            .union(rdd_house).union(rdd_tag)\
+            # .union(rdd_qq)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
         ddf=hiveContext.createDataFrame(rdd1,schema1)

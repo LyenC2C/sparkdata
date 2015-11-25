@@ -62,6 +62,10 @@ def valid_jsontxt(content):
 
 # s=''
 # s.split()
+def try_parse(line,flag):
+    try:
+        return parse_shop(line,flag)
+    except:return None
 
 def parse_shop(line, flag):
     ts = ''
@@ -170,7 +174,7 @@ if __name__ == "__main__":
         filepath = sys.argv[2]
         ds = sys.argv[3]
         rdd = sc.textFile(filepath, 100) \
-            .map(lambda x: parse_shop(x, 'insert')) \
+            .map(lambda x: try_parse(x, 'insert')) \
             .filter(lambda x: x is not None) \
             .groupByKey(50).map(lambda (x, y): [i for i in y][0]).map(lambda x: fun1(x, ds))
         df = hiveContext.sql('select * from t_base_ec_shop_dev limit 1')
@@ -187,7 +191,7 @@ if __name__ == "__main__":
         ds_1 = sys.argv[3]
         ds = sys.argv[4]
         rdd = sc.textFile(filepath, 100) \
-            .map(lambda x: parse_shop(x, 'inc')).filter(lambda x: x is not None) \
+            .map(lambda x: try_parse(x, 'inc')).filter(lambda x: x is not None) \
             .groupByKey(50).map(lambda (x, y): [i for i in y][0]).map(lambda x: (x[0], x))
         hiveContext.sql('use wlbase_dev')
         df = hiveContext.sql('select * from t_base_ec_shop_dev where ds=%s' % ds_1)

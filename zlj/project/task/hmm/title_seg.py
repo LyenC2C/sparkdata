@@ -9,12 +9,12 @@ sqlContext = SQLContext(sc)
 from pyspark.sql.types import *
 
 hiveContext = HiveContext(sc)
-
+import jieba
 import jieba.posseg as pseg
 
 
 
-# jieba.load_userdict('./dict/userdict')
+jieba.load_userdict('/home/zlj/data/brandword')
 
 
 schema1 = StructType([
