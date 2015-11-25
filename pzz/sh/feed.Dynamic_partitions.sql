@@ -21,7 +21,7 @@ LOAD DATA  INPATH '$path' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_zlj PARTI
 -- 增量数据fetch 入库
 -- INSERT overwrite TABLE t_base_ec_item_feed_dev PARTITION (ds )
 
-INSERT INTO TABLE t_base_ec_item_feed_dev_zlj PARTITION (ds)
+INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds)
 select
 item_id,
 item_title,
