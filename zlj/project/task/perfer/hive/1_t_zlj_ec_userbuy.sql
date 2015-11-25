@@ -19,7 +19,7 @@ CREATE TABLE t_zlj_ec_userbuy
       t2.user_id,
       t2.f_date,
 
-      round(pow(0.5, datediff / 4.0),4) AS score
+      round(pow(0.5, datediff / 4.0)*1000,4) AS score
     FROM
       (
 
