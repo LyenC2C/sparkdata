@@ -126,7 +126,7 @@ schema = StructType([
 	])
 
 hiveContext.sql('use wlbase_dev')
-s1 = "/commit/comments/" + sys.argv[1] #today
+s1 = "/commit/shopitem/" + sys.argv[1] #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
