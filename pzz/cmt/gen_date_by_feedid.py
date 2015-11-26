@@ -5,13 +5,13 @@ def BinarySearch(array,t):
     #print array
     low = 0
     height = len(array)
-    while low < height:
+    while low < height-1:
         mid = (low+height)/2
         print height,low,mid
         if array[mid] < t:
-            low = mid + 1
+            low = mid
         elif array[mid] > t:
-            height = mid - 1
+            height = mid
         else:
             return mid
     return (low + height)/2
