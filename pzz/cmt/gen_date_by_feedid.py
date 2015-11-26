@@ -21,7 +21,7 @@ def gen_date(data_dic,value_dic,feedid):
     t = int(feedid)
     i = BinarySearch(value_dic,t)
     print "1:" + str(i)
-    print len(value_dic)
+    print str(len(value_dic))
     #return i
     if i == 0:
         return data_dic[0]
