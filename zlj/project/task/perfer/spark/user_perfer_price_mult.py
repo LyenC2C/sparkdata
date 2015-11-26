@@ -23,7 +23,12 @@ from pyspark.sql import HiveContext
 hiveContext = HiveContext(sc)
 hiveContext.sql('use wlbase_dev')
 
-rdd1=hiveContext.sql('select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg limit 199').map(lambda x:[x[0],x[1],x[2],x[3]])
+sql='''
+
+select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg limit 199
+'''
+
+rdd1=hiveContext.sql(sql).map(lambda x:[x[0],1.0*x[1],1.0*x[2],1.0*x[3]])
 rdd=rdd1.map(lambda x: x[1:]).repartition(100)
 
 data=rdd.filter(lambda x:x[-1]<30000).map(lambda x:array(x))
@@ -31,20 +36,21 @@ model = KMeans.train( data, 5, maxIterations=20, runs=50, initializationMode="ra
 
 model.centers=sorted(model.centers,key=lambda t:t[-2])
 
-userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],model.predict(array([x[1:]]))))
+userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],x[2], x[3],model.predict(array(x[1:]))))
 
 
 # rdd1.map(lambda  x: model.predict(array([x[1]]))).take(10)
 schema = StructType([
            StructField("uid", StringType(), True),
-           StructField("buytimes", FloatType(), True),
+           StructField("buytimes", IntegerType(), True),
            StructField("sum_price", FloatType(), True),
            StructField("avg_price", FloatType(), True),
            StructField("ulevel",IntegerType(), True)])
-df=sqlContext.createDataFrame(userlevel_rdd,schema)
+
+df=hiveContext.createDataFrame(userlevel_rdd,schema)
 # sqlContext.registerDataFrameAsTable(df,'userlevel')
 
 # 保存
-sqlContext.registerDataFrameAsTable(df,'userlevel')
+hiveContext.registerDataFrameAsTable(df,'userlevel')
 hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level_mult ')
-hiveContext.sql('create table wlbase_dev.t_zlj_perfer_user_level_mult as select * from userlevel')
+hiveContext.sql('create table t_zlj_perfer_user_level_mult as select * from userlevel')
