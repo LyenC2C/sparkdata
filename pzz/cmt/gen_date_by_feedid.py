@@ -3,7 +3,7 @@ import sys
 
 def BinarySearch(array,t):
     #print array
-    low = 1
+    low = 0
     height = len(array)
     #print array[1]
     while low < height:
