@@ -27,7 +27,6 @@ rdd=rdd1.map(lambda x: x[1]).repartition(100)
 
 data=rdd.filter(lambda x:x<30000).map(lambda x:array(x))
 model = KMeans.train( data, 5, maxIterations=20, runs=50, initializationMode="random",seed=50, initializationSteps=5, epsilon=1e-4)
-
 model.centers=sorted(model.centers)
 
 userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],model.predict([x[1]])))
@@ -37,9 +36,9 @@ schema = StructType([
            StructField("avg_price", FloatType(), True),
            StructField("ulevel",IntegerType(), True)])
 df=sqlContext.createDataFrame(userlevel_rdd,schema)
-sqlContext.registerDataFrameAsTable(df,'userlevel')
+# sqlContext.registerDataFrameAsTable(df,'userlevel')
 
 # 保存
-hiveContext.registerDataFrameAsTable(df,'sals')
+sqlContext.registerDataFrameAsTable(df,'userlevel')
 hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level ')
-hiveContext.sql('create table wlbase_dev.t_zlj_perfer_user_level as select * from sals')
+hiveContext.sql('create table wlbase_dev.t_zlj_perfer_user_level as select * from userlevel')

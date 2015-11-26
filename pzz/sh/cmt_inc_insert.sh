@@ -20,8 +20,8 @@ all_feed_output=${feed_dir}/cmt_allfeedid.${mission_id}
 new_feed_output=${feed_dir}/cmt_newfeedid.${mission_id}
 tmp_data=${data_dir}/cmt_inc_data.${mission_id}
 
-echo "Mission start at:"
-date
+start_t=`date`
+echo "Mission start at:"${start_t}
 echo "check argvs: "
 echo $'\t'"data location:"$'\t'${new_data_input}
 echo $'\t'"last all feedid location:"$'\t'${all_feed_input}
@@ -51,5 +51,6 @@ echo "feed back item feed inc number to commit.."
 hadoop fs -rmr /commit_feedbck/cmt/cmt_newfeedid.${mission_id}
 hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 
-echo "mission FINISH!"
-date
+echo "mission FINISH! "$2
+end_t=`date`
+echo "start at:"${start_t}", end at:"${end_t}
