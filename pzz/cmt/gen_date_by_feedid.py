@@ -3,11 +3,12 @@ import sys
 
 def BinarySearch(array,t):
     #print array
-    low = 0
-    height = len(array)-1
+    low = 1
+    height = len(array)
+    print array[1]
     while low < height:
         mid = (low+height)/2
-        #print mid
+        print mid
         if array[mid] < t:
             low = mid + 1
         elif array[mid] > t:
@@ -41,7 +42,7 @@ def gen_date(data_dic,value_dic,feedid):
 def format_dic(f_in):
     data_dic = {}
     value_dic = {}
-    i = 0
+    i = 1
     for line in open(f_in,"r"):
         ls = line.strip().split("\t")
         data_dic[i] = ls[0]
