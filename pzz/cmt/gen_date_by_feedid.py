@@ -15,7 +15,7 @@ def BinarySearch(array,t):
             height = mid - 1
         else:
             return mid
-    return mid
+    return (low + height)/2
 
 
 def gen_date(data_dic,value_dic,feedid):
