@@ -31,7 +31,7 @@ FROM
 JOIN
   (
 
-  SELECT user_id, shop_id, sum(core) AS f
+  SELECT user_id, shop_id, sum(score) AS f
   FROM
 
   t_zlj_ec_userbuy
