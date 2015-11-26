@@ -24,8 +24,8 @@ def gen_date(data_dic,value_dic,feedid):
     #return i
     if i == 0:
         return value_dic[0]
-    if i == len(value_dic) - 1:
-        return value_dic[len(value_dic)-1]
+    if i == len(value_dic):
+        return value_dic[len(value_dic)]
     a = abs(value_dic[i]-t)
     b = abs(value_dic[i+1]-t)
     #c = abs(value_dic[i+1]-t)
