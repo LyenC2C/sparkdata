@@ -6,7 +6,6 @@ def BinarySearch(array,t):
     height = len(array)
     while low < height-1:
         mid = (low+height)/2
-        print height,low,mid
         if array[mid] < t:
             low = mid
         elif array[mid] > t:
@@ -19,7 +18,6 @@ def BinarySearch(array,t):
 def gen_date(data_dic,value_dic,feedid):
     t = int(feedid)
     i = BinarySearch(value_dic,t)
-    print "1:" + str(i)
     if i == 0:
         return data_dic[0]
     if i == len(value_dic):
@@ -49,7 +47,7 @@ def format_dic(f_in):
 if __name__ == "__main__":
     data_dic,value_dic = format_dic("time.feedid.sort")
     feed = sys.argv[1]
-    print "2:" + str(gen_date(data_dic,value_dic,feed))
+    print str(gen_date(data_dic,value_dic,feed))
 
 '''
 1111    20130101
