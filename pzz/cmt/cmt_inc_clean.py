@@ -135,8 +135,8 @@ if __name__ == "__main__":
                     .map(lambda x:"\001".join(x))\
                     .coalesce(200)
 
-        rdd_inc_feedid_num = rdd_res.map(lambda x:x[2])\
-                    .map(lambda x:x[0]+'\t'+str(len(x)-1))\
+        rdd_inc_feedid_num = rdd_res.map(lambda (x,y,z):(y,z))\
+                    .map(lambda (y,z):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1))\
                     .coalesce(50)
 
         rdd_data = rdd_res.map(lambda x:x[0])\
