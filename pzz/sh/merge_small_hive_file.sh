@@ -28,10 +28,10 @@ do
     #256*1024*1024 268435456
     #grep except the floder
     #cat
-    hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print "'$path/$line/'"$NF}}'|xargs hadoop fs -cat > ${local_tmp_path}/${merge_day}-0000
+    hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'|xargs -I {} hadoop fs -cat $path/$line/{} > ${local_tmp_path}/${merge_day}-0000
     echo "hadoop fs -rm $path/$line/part-*"
 
-    hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print "'$path/$line/'"$NF}}'|xargs hadoop fs -rm
+    hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'|xargs -I {} hadoop fs -rm $path/$line/{} 
     echo  "hadoop fs -put ${merge_day}-0000 $path/$line/"
     hadoop fs -put ${local_tmp_path}/${merge_day}-0000  $path/$line/
     rm ${local_tmp_path}/${merge_day}-0000
