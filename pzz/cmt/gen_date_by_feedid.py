@@ -18,13 +18,15 @@ def BinarySearch(array,t):
 
 
 def gen_date(data_dic,value_dic,feedid):
-	t = int(feedid)
-	i = BinarySearch(data_dic,t)
+    t = int(feedid)
+    i = BinarySearch(data_dic,t)
+    return i
+    '''
 	if i == 0:
 		return value_dic[0]
-	a = abs(data_dic[i]-t)
-	b = abs(data_dic[i-1]-t)
-	c = abs(data_dic[i+1]-t)
+	a = abs(value_dic[i]-t)
+	b = abs(value_dic[i-1]-t)
+	c = abs(value_dic[i+1]-t)
 	dic = {
 			a:i,
 			b:i-1,
@@ -32,6 +34,7 @@ def gen_date(data_dic,value_dic,feedid):
 			}
 	#print dic
 	return value_dic[dic[min(a,b,c)]]
+	'''
 
 #f_in:feedid \t date
 def format_dic(f_in):
@@ -40,13 +43,13 @@ def format_dic(f_in):
 	i = 0
 	for line in open(f_in,"r"):
 		ls = line.strip().split("\t")
-		data_dic[i] = int(ls[0])
-		value_dic[i] = ls[1]
+		data_dic[i] = ls[0]
+		value_dic[i] = int(ls[1])
 		i += 1
 	return data_dic,value_dic
 
 if __name__ == "__main__":
-	data_dic,value_dic = format_dic("./test.feedid.date")
+	data_dic,value_dic = format_dic("time.feedid.sort")
 	feed = sys.argv[1]
 	print gen_date(data_dic,value_dic,feed)
 
