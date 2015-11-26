@@ -21,21 +21,19 @@ def BinarySearch(array,t):
 def gen_date(data_dic,value_dic,feedid):
     t = int(feedid)
     i = BinarySearch(value_dic,t)
-    return i
-    '''
+    #return i
     if i == 0:
         return value_dic[0]
     a = abs(value_dic[i]-t)
     b = abs(value_dic[i-1]-t)
-    c = abs(value_dic[i+1]-t)
+    #c = abs(value_dic[i+1]-t)
     dic = {
             a:i,
-            b:i-1,
-            c:i+1
+            b:i-1
+            #c:i+1
             }
     #print dic
-    return value_dic[dic[min(a,b,c)]]
-    '''
+    return value_dic[dic[min(a,b)]]
 
 #f_in:feedid \t date
 
@@ -48,6 +46,8 @@ def format_dic(f_in):
         data_dic[i] = ls[0]
         value_dic[i] = int(ls[1])
         i += 1
+    data_dic[0] = "0"
+    value_dic[0] = 0
     return data_dic,value_dic
 
 if __name__ == "__main__":
