@@ -5,7 +5,7 @@ def BinarySearch(array,t):
     #print array
     low = 0
     height = len(array)
-    #print array[1]
+    print array[1]
     while low < height:
         mid = (low+height)/2
         #print mid
