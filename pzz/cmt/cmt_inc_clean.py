@@ -137,11 +137,11 @@ if __name__ == "__main__":
 
         rdd_inc_feedid_num = rdd_res.map(lambda x:x[2])\
                     .map(lambda x:x[0]+'\t'+str(len(x)-1))\
-                    .coalesce(100)
+                    .coalesce(50)
 
         rdd_data = rdd_res.map(lambda x:x[0])\
                     .flatMap(lambda x:x)\
-                    .coalesce(500)
+                    .coalesce(min(rdd_res.getNumPartitions(),300))
 
         rdd_all_feedid.saveAsTextFile(sys.argv[4])
         rdd_inc_feedid_num.saveAsTextFile(sys.argv[5])

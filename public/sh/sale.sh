@@ -1,7 +1,7 @@
 pre_path='/home/wrt/wrt/sparkdata'
 
 spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151117 20151116
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151118 20151117
 
 sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql   20151113 20151115
 
