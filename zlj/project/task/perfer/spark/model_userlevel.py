@@ -15,11 +15,6 @@ sqlContext = SQLContext(sc)
 sqlContext.read.json('/user/hadoop/qq/info/qqinfo.total')
 
 
-# 用户消费水平   消费水平和
-'''
-用户的购买次数 购买总价 购买均价
-用kmean 训练聚类模型，然后将用户的消费水平和购买偏好不太一样
-'''
 
 
 data=sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_ec_perfer_priceavg/',90)\
@@ -30,7 +25,7 @@ data.cache()
 
 # path='/hive/warehouse/wlbase_dev.db/t_zlj_ec_perfer_priceavg/'
 
-#过滤均价10000 以上的，有待讨论
+#锟斤拷锟剿撅拷锟斤拷10000 锟斤拷锟较的ｏ拷锟叫达拷锟斤拷锟斤拷
 
 
 s1=data.filter(lambda x:x[2]<10000).map(lambda x:array(x))
