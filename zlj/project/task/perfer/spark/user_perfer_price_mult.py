@@ -36,7 +36,7 @@ model = KMeans.train( data, 5, maxIterations=20, runs=50, initializationMode="ra
 
 model.centers=sorted(model.centers,key=lambda t:t[-2])
 
-userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],model.predict(array(x[1:]))))
+userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],x[2], x[3],model.predict(array(x[1:]))))
 
 
 # rdd1.map(lambda  x: model.predict(array([x[1]]))).take(10)
