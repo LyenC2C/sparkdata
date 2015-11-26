@@ -20,7 +20,7 @@ def BinarySearch(array,t):
 def gen_date(data_dic,value_dic,feedid):
     t = int(feedid)
     i = BinarySearch(value_dic,t)
-    print "1:"+i
+    print "1:" + str(i)
     #return i
     #if i == 0:
         #return value_dic[0]
@@ -53,7 +53,7 @@ def format_dic(f_in):
 if __name__ == "__main__":
     data_dic,value_dic = format_dic("time.feedid.sort")
     feed = sys.argv[1]
-    print "2:" + gen_date(data_dic,value_dic,feed)
+    print "2:" + str(gen_date(data_dic,value_dic,feed))
 
 '''
 1111    20130101
