@@ -13,7 +13,7 @@ spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-mem
 
 
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
-
+sc = SparkContext(appName="merge")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
