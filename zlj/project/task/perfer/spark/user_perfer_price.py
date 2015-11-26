@@ -35,10 +35,10 @@ schema = StructType([
            StructField("uid", StringType(), True),
            StructField("avg_price", FloatType(), True),
            StructField("ulevel",IntegerType(), True)])
-df=sqlContext.createDataFrame(userlevel_rdd,schema)
+df=hiveContext.createDataFrame(userlevel_rdd,schema)
 # sqlContext.registerDataFrameAsTable(df,'userlevel')
 
 # 保存
-sqlContext.registerDataFrameAsTable(df,'userlevel')
+hiveContext.registerDataFrameAsTable(df,'userlevel')
 hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level ')
 hiveContext.sql('create table wlbase_dev.t_zlj_perfer_user_level as select * from userlevel')
