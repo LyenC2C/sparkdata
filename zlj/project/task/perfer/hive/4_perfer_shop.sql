@@ -1,4 +1,9 @@
+
+
+shop_ds=$1
+
 /home/hadoop/hive/bin/hive<<EOF
+
 
 
 SET hive.exec.reducers.bytes.per.reducer = 500000000;
@@ -10,7 +15,7 @@ CREATE TABLE t_zlj_ec_perfer_shop
   AS
     SELECT
       user_id,
-      shop_id,
+      t2.shop_id,
       shop_name,
       f,
 
@@ -18,23 +23,21 @@ CREATE TABLE t_zlj_ec_perfer_shop
 
 FROM
   (
-  SELECT
-  user_id, t1.shop_id, shop_name, sum(score) AS f
-  FROM
-
-  (
-  SELECT user_id, shop_id, score FROM
-  t_zlj_ec_userbuy
-  )t1
-  JOIN
-  (
   SELECT shop_id, shop_name
   FROM t_base_ec_shop_dev
-  WHERE ds=20151107
-  )t2 ON t1.shop_id =t2.shop_id
+  WHERE ds='$shop_ds'
+  )t2
 
-  GROUP BY user_id, t1.shop_id, t2.shop_name
-  ) t;
+JOIN
+  (
 
+  SELECT user_id, shop_id, sum(core) AS f
+  FROM
+
+  t_zlj_ec_userbuy
+  GROUP BY user_id, shop_id
+  )t1 ON t1.shop_id =t2.shop_id
+
+;
 
 EOF

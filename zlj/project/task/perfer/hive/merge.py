@@ -13,16 +13,10 @@ spark-submit  --total-executor-cores  100   --executor-memory  20g  --driver-mem
 
 
 # /data/develop/ec/tb/iteminfo/jiu.iteminfo
-
-
-sc=SparkContext(appName="merge_perfer")
-
+sc = SparkContext(appName="merge")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-
-
-hiveContext.sql('use wlbase_dev')
 from pyspark.sql.types import *
 
 import  sys
@@ -267,7 +261,7 @@ schema1 = StructType([
     StructField("price_level", StringType(), True),
     StructField("car", StringType(), True),
     StructField("house", StringType(), True),
-    StructField("hmm_tag", StringType(), True),
+    StructField("tfidftags", StringType(), True),
     StructField("qq", StringType(), True)
         ])
 def mergeinfo(uid,info):
@@ -284,7 +278,7 @@ def mergeinfo(uid,info):
     lv.append(m.get('price_level',''))
     lv.append(m.get('car',''))
     lv.append(m.get('house',''))
-    lv.append(m.get('hmm_tag',''))
+    lv.append(m.get('tfidftags',''))
     lv.append(m.get('qq',''))
     return lv
 
