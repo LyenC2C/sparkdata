@@ -8,7 +8,7 @@ def BinarySearch(array,t):
     #print array[1]
     while low < height:
         mid = (low+height)/2
-        print mid
+        #print mid
         if array[mid] < t:
             low = mid + 1
         elif array[mid] > t:
@@ -22,8 +22,8 @@ def gen_date(data_dic,value_dic,feedid):
     t = int(feedid)
     i = BinarySearch(value_dic,t)
     #return i
-    if i == 0:
-        return value_dic[0]
+    #if i == 0:
+        #return value_dic[0]
     a = abs(value_dic[i]-t)
     b = abs(value_dic[i-1]-t)
     #c = abs(value_dic[i+1]-t)
