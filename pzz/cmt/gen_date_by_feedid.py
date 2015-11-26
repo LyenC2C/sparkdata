@@ -26,16 +26,17 @@ def gen_date(data_dic,value_dic,feedid):
         return value_dic[0]
     if i == len(value_dic):
         return value_dic[len(value_dic)]
-    a = abs(value_dic[i]-t)
-    b = abs(value_dic[i+1]-t)
-    #c = abs(value_dic[i+1]-t)
-    dic = {
+    else:
+        a = abs(value_dic[i]-t)
+        b = abs(value_dic[i+1]-t)
+        #c = abs(value_dic[i+1]-t)
+        dic = {
             a:i,
             b:i+1
             #c:i+1
-            }
-    #print dic
-    return value_dic[dic[min(a,b)]]
+        }
+        #print dic
+        return value_dic[dic[min(a,b)]]
 
 #f_in:feedid \t date
 
