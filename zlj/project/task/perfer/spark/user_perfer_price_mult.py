@@ -7,7 +7,7 @@ __author__ = 'zlj'
 
 
 
-    
+
 from pyspark.sql import *
 from pyspark.mllib.clustering import *
 from pyspark.sql.types import *
@@ -42,7 +42,7 @@ userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],x[2], x[3],model.predict(array(x[1:
 # rdd1.map(lambda  x: model.predict(array([x[1]]))).take(10)
 schema = StructType([
            StructField("uid", StringType(), True),
-           StructField("buytimes", IntegerType(), True),
+           StructField("buytimes", FloatType(), True),
            StructField("sum_price", FloatType(), True),
            StructField("avg_price", FloatType(), True),
            StructField("ulevel",IntegerType(), True)])

@@ -84,7 +84,7 @@ on t1.item_id=t2.item_id
 group by user_id
 '''
 
-
+# select user_id as item_id,title_cut  as hmm from t_base_ec_item_title_cut t_zlj_corpus_item_seg_tfidf
 sql_tfidf='''
 select
 /*+ mapjoin(t1)*/
@@ -92,7 +92,7 @@ user_id, concat_ws(' ', collect_set(hmm)) as hmm
 
 from
 (
-select user_id as item_id,tfidftags  as hmm from t_zlj_corpus_item_seg_tfidf
+select user_id as item_id,title_cut  as hmm from t_base_ec_item_title_cut
 )t1
 join
 (
@@ -229,7 +229,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        rdd_pre = hiveContext.sql(sql_tfidf%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split()]))
+        rdd_pre = hiveContext.sql(sql_tfidf%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split() if len(i.split('_')[0])>1]))
         words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
         # wordmap={}
         # for  index,value in enumerate(words,1):
