@@ -8,13 +8,15 @@ def f(line):
     return (ss[0],ss[1:])
 
 def shai(x,y):
+    lv = []
     if len(y) == 1:
         return None
     else:
         for ln in y:
             if ln != "":
-                return str(x) + "\t" + str(y)
-sc = SparkContext(appName="shai_qqnick.py")
+                lv = [ln] + y
+            return "\t".join(lv)
+sc = SparkContext(appName = "shai_qqnick.py")
 f1 = "/data/develop/qq/group/qq.nicks.tag"
 f2 = "/user/wrt/uin_d"
 rdd1 = sc.textFile(f1).map(lambda x: f(x))
