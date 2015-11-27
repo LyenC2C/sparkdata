@@ -31,7 +31,6 @@ def trans(x):
     else:
         return x
 
-
 def dis(x):
     if x == "":
         return "0"
@@ -123,30 +122,31 @@ def f(line, place_dict):
     ts = str(int(time.time()))
     lv = []
     lv.append(uin)
-    lv.append(birthday)
-    lv.append(phone)
-    lv.append(gender_id)
+    lv.append(f_coding(birthday))
+    lv.append(f_coding(phone))
+    lv.append(f_coding(gender_id))
     lv.append(f_coding(college))
     lv.append(f_coding(lnick))
-    lv.append(loc_id)
+    lv.append(f_coding(loc_id))
     lv.append(f_coding(loc))
-    lv.append(h_loc_id)
+    lv.append(f_coding(h_loc_id))
     lv.append(f_coding(h_loc))
     lv.append(f_coding(personal))
     lv.append(f_coding(shengxiao))
-    lv.append(gender)
+    lv.append(f_coding(gender))
     lv.append(f_coding(occupation))
     lv.append(f_coding(constel))
     lv.append(f_coding(blood))
-    lv.append(url)
+    lv.append(f_coding(url))
     lv.append(f_coding(homepage))
     lv.append(f_coding(nick))
     lv.append(f_coding(email))
     lv.append(uin2)
-    lv.append(mobile)
+    lv.append(f_coding(mobile))
     lv.append(ts)
     lv.append(0)
     return lv
+
 # return '\001'.join([ valid_jsontxt(i) for i in lv])
 # return birthday + '\001' + phone + '\001' + gender_id + '\001' + college + '\001' + uin + '\001' + lnick + '\001' + loc_id + '\001' + loc + '\001' + h_loc_id + '\001' + h_loc + '\001' +\
 #    personal + '\001' + shengxiao + '\001' + gender + '\001' + occupation + '\001' + constel + '\001' + blood + '\001' + url + '\001' + homepage + '\001' + nick + '\001' +\
@@ -161,8 +161,9 @@ rdd2 = sc.textFile(sys.argv[2])
 p_dict = rdd2.map(lambda x: x.split('\t')).collectAsMap()
 broadcastVar = sc.broadcast(p_dict)
 place_dict = broadcastVar.value
-rdd_info = rdd.map(lambda x: f(x, place_dict)).filter(lambda x: x != None)
-rdd_age = sc.textFile('/user/hadoop/qq/info/qq_age.0611').map(lambda x: x.split('\t')).map(lambda x:[x[0],int(x[1])])
+rdd_info_chong = rdd.map(lambda x: f(x, place_dict)).filter(lambda x: x != None).map(lambda x:(x[0],x[1:]))
+rdd_info = rdd_info_chong.groupByKey().mapValues(list).map(lambda (x, y): [x]+y[0])
+rdd_age = sc.textFile('/user/wrt/qq_age.0611').map(lambda x: x.split('\t')).map(lambda x:[x[0],int(x[1])])
 schema1 = StructType([
     StructField("uin", StringType(), True),
     StructField("birthday", StringType(), True),
