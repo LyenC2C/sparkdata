@@ -39,7 +39,8 @@ done<ds_log
 
 while read line
 do
-    hadoop fs -rm $path/$line/*
+    echo "test,don't remove"
+    #hadoop fs -rm $path/$line/*
 done<ds_log_error
 
 

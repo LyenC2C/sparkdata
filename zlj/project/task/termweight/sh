@@ -1,0 +1,7 @@
+
+
+spark-submit  --total-executor-cores  100   --executor-memory  10g  --driver-memory 10g tfidf.py  -corpus  250   12  20151101  t_zlj_userbuy_item_tfidf_tag_2015081
+
+
+
+spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
