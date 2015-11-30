@@ -4,15 +4,15 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from pyspark import SparkContext
 ##读取品类映射表，作为过滤条件
-def get_cat_map(cat_name,line):
+def get_cat_map(line):
     ls=line.strip().split('\t')
     #print ls
     if len(ls)<2:
         pass
     else:
-        cate=ls[-1].split('$')[0]
-        if cat_name == cate:
-            return (ls[-2].replace('$','|'),ls[-1].replace('$','|'))
+        #cate=ls[-1].split('$')[0]
+        #if cat_name == cate:
+        return (ls[-2].replace('$','|'),ls[-1].replace('$','|'))
     #else:
     #	return None
 ###获取固定格式的目标item.data数据
@@ -56,18 +56,18 @@ def get_pageview(item_dict,line):
 
 if __name__=="__main__":
     sc=SparkContext(appName="pyspark baifendian pre_process")
-    cat_name=sys.argv[1]
+    #cat_name=sys.argv[1]
     #cat_name=u"日用百货"
     #广播字典
-    cat_dict=sc.broadcast(sc.textFile(sys.argv[2]+"*").map(lambda x:get_cat_map(cat_name.decode('utf-8'),x)).filter(lambda x:x!=None).collectAsMap())
+    cat_dict=sc.broadcast(sc.textFile(sys.argv[1]+"*").map(lambda x:get_cat_map(cat_name.decode('utf-8'),x)).filter(lambda x:x!=None).collectAsMap())
     #item.data运算
-    rdd_item=sc.textFile(sys.argv[3]).map(lambda x:get_item(cat_dict.value,x)).filter(lambda x:x!=None).distinct()
+    rdd_item=sc.textFile(sys.argv[2]).map(lambda x:get_item(cat_dict.value,x)).filter(lambda x:x!=None).distinct()
     #广播item_dict
     item_dict=sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
     #pageview.data运算
-    rdd_pageview=sc.textFile(sys.argv[4]).map(lambda x:get_pageview(item_dict.value,x)).filter(lambda x:x!=None).distinct()
-    rdd_item.saveAsTextFile(sys.argv[5])
-    rdd_pageview.saveAsTextFile(sys.argv[6])
+    rdd_pageview=sc.textFile(sys.argv[3]).map(lambda x:get_pageview(item_dict.value,x)).filter(lambda x:x!=None).distinct()
+    rdd_item.saveAsTextFile(sys.argv[4])
+    rdd_pageview.saveAsTextFile(sys.argv[5])
     sc.stop()
     #for line in sys.stdin:
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
