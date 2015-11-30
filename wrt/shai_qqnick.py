@@ -14,8 +14,8 @@ def shai(x,y):
     else:
         for ln in y:
             if ln != "":
-                lv = [ln] + y
-            return "\t".join(lv)
+                lv = [x] + ln
+        return "\t".join(lv)
 sc = SparkContext(appName = "shai_qqnick.py")
 f1 = "/data/develop/qq/group/qq.nicks.tag"
 f2 = "/user/wrt/uin_d"
