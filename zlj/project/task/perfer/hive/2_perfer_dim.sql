@@ -24,6 +24,7 @@ CREATE TABLE t_zlj_ec_perfer_dim
           cate_level1_id,
           cate_level1_name
         FROM t_base_ec_dim
+        group by cate_level1_id,cate_level1_name
       ) t1
       JOIN
       (
