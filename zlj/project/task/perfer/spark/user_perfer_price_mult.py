@@ -28,6 +28,8 @@ sql='''
 select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg limit 199
 '''
 
+
+
 rdd1=hiveContext.sql(sql).map(lambda x:[x[0],1.0*x[1],1.0*x[2],1.0*x[3]])
 rdd=rdd1.map(lambda x: x[1:]).repartition(100)
 
