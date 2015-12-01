@@ -1,4 +1,4 @@
-pre_path='/home/wrt/wrt/sparkdata'
+pre_path='/home/wrt/sparkdata'
 
 #spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
 #$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
