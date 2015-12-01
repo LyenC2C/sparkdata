@@ -25,6 +25,7 @@ def  f(x):
     lv.append(id)
     lv.append(t)
     lv.append(v)
+    return  lv
 
 rdd=sc.textFile(sys.argv[1]).map(lambda x:f(x)).filter(lambda x: x is not None)
 
