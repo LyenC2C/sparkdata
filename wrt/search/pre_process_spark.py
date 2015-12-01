@@ -11,7 +11,7 @@ def f_coding(x):
         return x
 def valid_jsontxt(content):
     if type(content) == type(u""):
-        return content.encode("utf-8")
+        return content.encode("gbk")
     else:
         return content
 ##读取品类映射表，作为过滤条件
