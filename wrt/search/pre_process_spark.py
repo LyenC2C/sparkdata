@@ -22,7 +22,7 @@ def get_cat_map(line):
         pass
     else:
         #cate=ls[-1].split('$')[0]
-        #if cat_name == cate:
+        #if cat_name ==cate:
         return (ls[-2].replace('$','|'),ls[-1].replace('$','|'))
     #else:
     #	return None
