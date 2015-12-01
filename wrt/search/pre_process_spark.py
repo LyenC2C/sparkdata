@@ -26,12 +26,13 @@ def get_item(cat_dict,line):
         key='|'.join(key.split('|')[:-2])
     if key in cat_dict:
         return '\t'.join((ls[0],ls[1],ls[2],ls[3],ls[14],ls[15],cat_dict[key]))
+        #网站英文id 商品id 商品title 商品url 类目 品牌 标准类目
     else:
         return None
 ###存储规范化的item_url映射关系
 def get_item_dict(line):
-    ls=line.strip().split('\t')
-    key=ls[3].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]#url规范化方法
+    ls = line.strip().split('\t')
+    key = ls[3].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]#url规范化方法
     return (key,ls[2])
 ##提取搜索行为
 def get_sousuo(ss):
@@ -45,31 +46,33 @@ def get_sousuo(ss):
         return False
 #获取有效用户行为
 def get_pageview(item_dict,line):
-    ls=line.strip().split('\t')
+    ls = line.strip().split('\t')
     if len(ls)<13:
         return
-    if ls[6]==ls[11] and len(ls[12])>0 and ls[12]!="NULL" and len(ls[13])>0:
+    if ls[6] == ls[11] and len(ls[12])>0 and ls[12] != "NULL" and len(ls[13]) > 0:
         if get_sousuo(ls[12]):
             key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
             if key in item_dict:
-                return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
+                return "\t".join((ls[13], item_dict[key], ls[0], ls[11], ls[12], key))
+                #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
+                #网站英文id cookie userid 跳转后网站 跳转前搜索页 搜索词
 
-if __name__=="__main__":
+if __name__ == "__main__":
     sc=SparkContext(appName="pyspark baifendian pre_process")
     #cat_name=sys.argv[1]
     #cat_name=u"日用百货"
     #广播字典
-    cat_dict=sc.broadcast(sc.textFile(sys.argv[1]+"*").map(lambda x: get_cat_map(x)).filter(lambda x:x!=None).collectAsMap())
+    cat_dict = sc.broadcast(sc.textFile(sys.argv[1]+"*").map(lambda x: get_cat_map(x)).filter(lambda x:x!=None).collectAsMap())
     #item.data运算
-    rdd_item=sc.textFile(sys.argv[2]).map(lambda x: get_item(cat_dict.value, x)).filter(lambda x:x!=None)\
+    rdd_item = sc.textFile(sys.argv[2]).map(lambda x: get_item(cat_dict.value, x)).filter(lambda x:x!=None)\
         .map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
     #广播item_dict
-    item_dict=sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
+    item_dict = sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
     #pageview.data运算
-    rdd_pageview=sc.textFile(sys.argv[3]).map(lambda x:get_pageview(item_dict.value,x)).filter(lambda x:x!=None)\
+    rdd_pageview = sc.textFile(sys.argv[3]).map(lambda x:get_pageview(item_dict.value,x)).filter(lambda x:x!=None)\
         .map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
-    rdd_item.saveAsTextFile(sys.argv[4])
-    rdd_pageview.saveAsTextFile(sys.argv[5])
+    #rdd_item.saveAsTextFile(sys.argv[4])
+    rdd_pageview.saveAsTextFile(sys.argv[4])
     sc.stop()
     #for line in sys.stdin:
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
