@@ -9,6 +9,11 @@ def f_coding(x):
         return x.decode("utf-8")
     else:
         return x
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
 ##读取品类映射表，作为过滤条件
 def get_cat_map(line):
     ls=line.strip().split('\t')
@@ -80,7 +85,7 @@ def get_pageview(item_dict,line):
             if key in item_dict:
                 srch_word = ls[13]
                 if ls[13] == "NULL":
-                    srch_word = f_coding(get_sousuo(ls[12])[1])
+                    srch_word = valid_jsontxt(get_sousuo(ls[12])[1])
                 return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
                 #搜索词
                 #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
