@@ -1,5 +1,6 @@
 #coding:utf-8
 import sys
+import urllib
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from pyspark import SparkContext
@@ -33,27 +34,50 @@ def get_item(cat_dict,line):
 def get_item_dict(line):
     ls = line.strip().split('\t')
     key = ls[3].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]#url规范化方法
-    return (key,ls[2])
+    return (key,"\t".join((ls[2],ls[4],ls[5],ls[6])))
 ##提取搜索行为
 def get_sousuo(ss):
-    p =  False
-    if "query=" in ss or "q=" in ss or "word=" in ss or "wd=" in ss or "keyword=" in ss or "keyWord=" in ss:
+    p = False
+    srch_word = None
+    if "query=" in ss:
         p = True
-    if p :
+        srch_word = ss.split('query=')[-1]
+    if "q=" in ss:
+        p = True
+        srch_word = ss.split('q=')[-1]
+    if "word=" in ss:
+        p = True
+        srch_word = ss.split('word=')[-1]
+    if "wd=" in ss:
+        p = True
+        srch_word = ss.split('wd=')[-1]
+    if "keyword=" in ss:
+        p = True
+        srch_word = ss.split('keyword=')[-1]
+    if "keyWord=" in ss:
+        p = True
+        srch_word = ss.split('keyWord=')[-1]
+    if srch_word != None:
+        srch_word = urllib.unquote(srch_word)
+    if p:
         #print "\t".join(ss)
-        return True
+        return (True,srch_word)
     else:
-        return False
+        return (False,srch_word)
 #获取有效用户行为
 def get_pageview(item_dict,line):
     ls = line.strip().split('\t')
-    if len(ls)<13:
+    if len(ls) < 13:
         return
     if ls[6] == ls[11] and len(ls[12])>0 and ls[12] != "NULL" and len(ls[13]) > 0:
-        if get_sousuo(ls[12]):
+        if get_sousuo(ls[12])[0]:
             key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
             if key in item_dict:
-                return "\t".join((ls[13], item_dict[key], ls[0], ls[11], ls[12], key))
+                srch_word = ls[13]
+                if ls[13] == "NULL":
+                    srch_word = get_sousuo(ls[12])[1]
+                return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
+                #搜索词
                 #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
                 #网站英文id cookie userid 跳转后网站 跳转前搜索页 搜索词
 
