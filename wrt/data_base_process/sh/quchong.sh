@@ -1,4 +1,25 @@
 pre_path='/home/wrt/wrt/sparkdata'
+
+spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
+/commit/iteminfo/20151126/*  20151125 20151126
+
+spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
+/commit/iteminfo/20151127/*  20151126 20151127
+
+#spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
+#$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
+#/commit/iteminfo/20151128/*  20151127 20151128
+#
+#spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
+#$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
+#/commit/iteminfo/20151129/*  20151128 20151129
+#
+#spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
+#$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
+#/commit/iteminfo/20151130/*  20151129 20151130
+
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
 #$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151125 20151124
 #
@@ -11,8 +32,8 @@ pre_path='/home/wrt/wrt/sparkdata'
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
 #$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151128 20151127
 
-spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151130 20151129
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151130 20151129
 
 #spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
 #$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
