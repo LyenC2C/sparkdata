@@ -38,4 +38,4 @@ schema1 = StructType([
 df1 = hiveContext.createDataFrame(rdd, schema1)
 hiveContext.registerDataFrameAsTable(df1, 'seg_title')
 hiveContext.sql('use wlbase_dev')
-hiveContext.sql('insert overwrite table t_base_ec_item_title_cut partiton(ds=%s) select * from seg_title'%ds)
+hiveContext.sql('insert overwrite table t_base_ec_item_title_cut partition(ds=%s) select * from seg_title'%ds)
