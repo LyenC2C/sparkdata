@@ -67,8 +67,8 @@ def get_sousuo(ss):
     if "keyWord=" in ss:
         p = True
         srch_word = ss.split('keyWord=')[-1]
-    if srch_word != None:
-        srch_word = urllib.unquote(srch_word)
+    #if srch_word != None:
+        #srch_word = urllib.unquote(srch_word)
     if p:
         #print "\t".join(ss)
         return (True,srch_word)
