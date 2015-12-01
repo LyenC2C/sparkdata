@@ -71,8 +71,8 @@ if __name__ == "__main__":
     #pageview.data运算
     rdd_pageview = sc.textFile(sys.argv[3]).map(lambda x:get_pageview(item_dict.value,x)).filter(lambda x:x!=None)\
         .map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
-    rdd_item.saveAsTextFile(sys.argv[4])
-    rdd_pageview.saveAsTextFile(sys.argv[5])
+    #rdd_item.saveAsTextFile(sys.argv[4])
+    rdd_pageview.saveAsTextFile(sys.argv[4])
     sc.stop()
     #for line in sys.stdin:
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
