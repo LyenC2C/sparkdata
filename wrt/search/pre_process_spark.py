@@ -20,7 +20,7 @@ def get_item(cat_dict,line):
     ls=line.strip().split('\t')
     if len(ls)<24:
         return None
-    key=ls[14].replace('-','|')
+    key=ls[14].replace('-', '|')
     import re
     if re.findall(r'\d+',key):
         key='|'.join(key.split('|')[:-2])
@@ -59,13 +59,15 @@ if __name__=="__main__":
     #cat_name=sys.argv[1]
     #cat_name=u"日用百货"
     #广播字典
-    cat_dict=sc.broadcast(sc.textFile(sys.argv[1]+"*").map(lambda x:get_cat_map(x)).filter(lambda x:x!=None).collectAsMap())
+    cat_dict=sc.broadcast(sc.textFile(sys.argv[1]+"*").map(lambda x: get_cat_map(x)).filter(lambda x:x!=None).collectAsMap())
     #item.data运算
-    rdd_item=sc.textFile(sys.argv[2]).map(lambda x:get_item(cat_dict.value,x)).filter(lambda x:x!=None).distinct()
+    rdd_item=sc.textFile(sys.argv[2]).map(lambda x: get_item(cat_dict.value, x)).filter(lambda x:x!=None)\
+        .map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
     #广播item_dict
     item_dict=sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
     #pageview.data运算
-    rdd_pageview=sc.textFile(sys.argv[3]).map(lambda x:get_pageview(item_dict.value,x)).filter(lambda x:x!=None).distinct()
+    rdd_pageview=sc.textFile(sys.argv[3]).map(lambda x:get_pageview(item_dict.value,x)).filter(lambda x:x!=None)\
+        .map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
     rdd_item.saveAsTextFile(sys.argv[4])
     rdd_pageview.saveAsTextFile(sys.argv[5])
     sc.stop()
@@ -73,4 +75,4 @@ if __name__=="__main__":
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
 
 #spark-submit  --executor-memory 4G  --driver-memory 8G  --total-executor-cores 40 pre_process_spark.py \
-#u"日用百货" /user/wrt/cat_map/* item_电器.dat  /user/zlj/baifendian.data/pageview_refer.data/pageview_Cjumeiyoupin.dat
+#u"日用百货" /user/wrt/cat_map/ item_电器.dat  /user/zlj/baifendian.data/pageview_refer.data/pageview_Cjumeiyoupin.dat
