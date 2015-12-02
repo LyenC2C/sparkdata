@@ -55,13 +55,14 @@ awk '{
         }
      }'|
 #sort them
-sort |
-
-#cat
+sort > tmp_rm_file
 
 #list they
 #xargs -I {} hadoop fs -ls {}
 
 #or remove they
-xargs -I {} hadoop fs -rm {}
-
+#xargs -I {} hadoop fs -rm {}
+while read line
+do
+    hadoop fs -rmr $line
+done<tmp_rm_file
