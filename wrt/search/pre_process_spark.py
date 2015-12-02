@@ -80,20 +80,19 @@ def get_pageview(item_dict,line):
     ls = line.strip().split('\t')
     if len(ls) < 13:
         return
-    if ls[6] == ls[11] and len(ls[12])>0 and ls[12] != "NULL" and len(ls[13]) > 0:
-        if get_sousuo(ls[12])[0]:
-            key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
-            if key in item_dict:
-                srch_word = ls[13]
-                if ls[13] == "NULL":
-                    srch_url = get_sousuo(ls[12])[1]
-                    srch_word = "|*" + f_coding(urllib.unquote(valid_jsontxt(srch_url))) + "*|"
-                    #srch_word += type(srch_word)
-                return type(srch_word) + srch_word
-                #return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
-                #搜索词
-                #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
-                #网站英文id cookie userid 跳转后网站 跳转前搜索页 搜索词
+    if ls[6] == ls[11] and len(ls[12]) > 0 and ls[12] != "NULL" and len(ls[13]) > 0 and get_sousuo(ls[12])[0]:
+        key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
+        if key in item_dict:
+            srch_word = ls[13]
+            if ls[13] == "NULL":
+                srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
+                srch_word = urllib.unquote(srch_url) + "***"
+                #srch_word += type(srch_word)
+            #return type(srch_word) + srch_word
+            return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
+            #搜索词
+            #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
+            #网站英文id cookie userid 跳转后网站 跳转前搜索页 搜索词
 
 if __name__ == "__main__":
     sc=SparkContext(appName="pyspark baifendian pre_process")
