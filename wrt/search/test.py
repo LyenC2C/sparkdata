@@ -52,14 +52,15 @@ def get_pageview(line):
     if ls[6] == ls[11] and len(ls[12])>0 and ls[12] != "NULL" and len(ls[13]) > 0:
         if get_sousuo(ls[12])[0]:
             srch_word = ls[13]
-            haha = "no"
+            #haha = "no"
             if ls[13] == "NULL":
                 srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
                 srch_word = urllib.unquote(srch_url)
-                haha = srch_word + "***"
+                #haha = srch_word + "***"
                 #srch_word += type(srch_word)
-            return "\t".join((str(type(srch_word)),haha))
+            #return "\t".join((str(type(srch_word)),haha))
             #return str(type(srch_word))+ "\t" + haha
+            return "\t".join((srch_word, ls[0], ls[11], ls[12]))
         else:
             return None
     return None
