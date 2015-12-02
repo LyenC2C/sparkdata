@@ -87,7 +87,7 @@ def get_pageview(item_dict,line):
                 srch_word = ls[13]
                 if ls[13] == "NULL":
                     srch_url = get_sousuo(ls[12])[1]
-                    srch_word = "|*" + urllib.unquote(srch_url) + "*|"
+                    srch_word = "|*" + f_coding(urllib.unquote(valid_jsontxt(srch_url))) + "*|"
                     #srch_word += type(srch_word)
                 return type(srch_word) + srch_word
                 #return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
