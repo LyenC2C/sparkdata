@@ -65,5 +65,5 @@ sort > tmp_rm_file
 echo 'ready'
 while read line
 do
-    echo 'to rm',$line
+    hadoop fs -rmr $line
 done<tmp_rm_file
