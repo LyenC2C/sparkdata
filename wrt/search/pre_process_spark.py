@@ -89,7 +89,7 @@ def get_pageview(item_dict,line):
                 srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
                 srch_word = urllib.unquote(srch_url) + "***"
                 #srch_word += type(srch_word)
-            lv.append(srch_word)
+            lv.append(valid_jsontxt(srch_word))
             lv.append(valid_jsontxt(item_dict[key]))
             lv.append(valid_jsontxt(ls[0]))
             lv.append(valid_jsontxt(ls[11]))
