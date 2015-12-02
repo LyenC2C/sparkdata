@@ -53,6 +53,7 @@ def get_pageview(line):
         if get_sousuo(ls[12])[0]:
             srch_word = ls[13]
             haha = "no"
+            srch_url = "no"
             if ls[13] == "NULL":
                 srch_url = get_sousuo(ls[12])[1]
                 haha = "url"
