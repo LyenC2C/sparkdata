@@ -57,11 +57,11 @@ awk '{
 #sort them
 sort |
 
-cat
+#cat
 
 #list they
 #xargs -I {} hadoop fs -ls {}
 
 #or remove they
-#xargs -I {} hadoop fs -rm {}
+xargs -I {} hadoop fs -rm {}
 
