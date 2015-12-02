@@ -53,13 +53,12 @@ def get_pageview(line):
         if get_sousuo(ls[12])[0]:
             srch_word = ls[13]
             haha = "no"
-            srch_url = "no"
             if ls[13] == "NULL":
                 srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
-                haha = "url"
-                #srch_word = "|*" + f_coding(urllib.unquote(valid_jsontxt(srch_url))) + "*|"
+                srch_word = urllib.unquote(srch_url)
+                haha = srch_word + "***"
                 #srch_word += type(srch_word)
-            return str(type(srch_url)) + srch_url
+            return str(type(srch_word)) + haha
         else:
             return None
     return None
@@ -80,8 +79,8 @@ if __name__ == "__main__":
     #广播item_dict
     #item_dict = sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
     #pageview.data运算
-    rdd_pageview = sc.textFile(sys.argv[1]).map(lambda x:get_pageview(x)).filter(lambda x:x!=None)\
-        .map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
+    rdd_pageview = sc.textFile(sys.argv[1]).map(lambda x:get_pageview(x)).filter(lambda x:x!=None)
+        #.map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
     #rdd_item.saveAsTextFile(sys.argv[4])
     rdd_pageview.saveAsTextFile(sys.argv[2])
     sc.stop()
