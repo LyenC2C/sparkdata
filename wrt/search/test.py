@@ -60,7 +60,7 @@ def get_pageview(line):
                 #srch_word += type(srch_word)
             #return "\t".join((str(type(srch_word)),haha))
             #return str(type(srch_word))+ "\t" + haha
-            return "\t".join((srch_word, ls[0]))
+            return "\t".join((srch_word, str(type(ls[0]))))
         else:
             return None
     return None
