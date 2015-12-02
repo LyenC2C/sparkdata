@@ -54,9 +54,10 @@ awk '{
            }
         }
      }'|
-
 #sort them
 sort |
+
+cat
 
 #list they
 #xargs -I {} hadoop fs -ls {}
