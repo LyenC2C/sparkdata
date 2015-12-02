@@ -2,8 +2,8 @@
 import sys
 #import chardet
 import urllib
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 from pyspark import SparkContext
 def f_coding(x):
     if type(x) == type(""):
