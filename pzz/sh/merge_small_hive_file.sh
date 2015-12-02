@@ -28,11 +28,12 @@ do
 
     #cat
     hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'|xargs -t -I {} hadoop fs -cat {} > ${local_tmp_path}/${merge_day}-0000
-    #put
-    hadoop fs -put ${local_tmp_path}/${merge_day}-0000  $path/$line/
 
     #hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'|xargs -t -I {} hadoop fs -rm {}
     hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'
+
+    #put
+    hadoop fs -put ${local_tmp_path}/${merge_day}-0000  $path/$line/
 
     #rm
     rm ${local_tmp_path}/${merge_day}-0000
