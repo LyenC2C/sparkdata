@@ -3,10 +3,6 @@ spark-submit  --executor-memory 16G  --driver-memory 20G  --total-executor-cores
 /user/zlj/baifendian.data/data_1205/pageview_家居 家纺.dat.tar.gz  /user/zlj/wrt/search/jiaju_keyword_itemtitle
 
 spark-submit  --executor-memory 16G  --driver-memory 20G  --total-executor-cores 160 pre_process_spark.py \
-/user/wrt/cat_map/ /user/zlj/baifendian.data/data_1205/item_文化娱乐.dat.tar.gz  \
-/user/zlj/baifendian.data/data_1205/pageview_文化娱乐.dat.tar.gz  /user/zlj/wrt/search/wenhua_keyword_itemtitle
-
-spark-submit  --executor-memory 16G  --driver-memory 20G  --total-executor-cores 160 pre_process_spark.py \
 /user/wrt/cat_map/ /user/zlj/baifendian.data/data_1205/item_美食特产.dat.tar.gz  \
 /user/zlj/baifendian.data/data_1205/pageview_美食特产.dat.tar.gz  /user/zlj/wrt/search/meishi_keyword_itemtitle
 
