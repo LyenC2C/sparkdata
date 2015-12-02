@@ -15,6 +15,9 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else:
         return content
+def is_num(content):
+    content = valid_jsontxt(content)
+    return content.isdigit()
 ##读取品类映射表，作为过滤条件
 def get_cat_map(line):
     ls=line.strip().split('\t')
@@ -56,7 +59,7 @@ def get_sousuo(ss):
     if "q=" in ss:
         p = True
         srch_word = ss.split('q=')[-1]
-    if "word=" in ss:
+    if ("word=" in ss) and not ("sword" in ss):
         p = True
         srch_word = ss.split('word=')[-1]
     if "wd=" in ss:
@@ -89,6 +92,8 @@ def get_pageview(item_dict,line):
                 srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
                 srch_word = urllib.unquote(srch_url) + "***"
                 #srch_word += type(srch_word)
+            if is_num(srch_word):
+                return None
             lv.append(valid_jsontxt(srch_word))
             lv.append(valid_jsontxt(item_dict[key]))
             lv.append(valid_jsontxt(ls[0]))
