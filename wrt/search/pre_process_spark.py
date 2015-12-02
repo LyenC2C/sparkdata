@@ -1,6 +1,6 @@
 #coding:utf-8
 import sys
-#import chardet
+import chardet
 import urllib
 reload(sys)
 sys.setdefaultencoding('utf-8')
