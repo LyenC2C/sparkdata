@@ -2,8 +2,8 @@
 import sys
 #import chardet
 import urllib
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 from pyspark import SparkContext
 def f_coding(x):
     if type(x) == type(""):
@@ -87,7 +87,7 @@ def get_pageview(item_dict,line):
                 srch_word = ls[13]
                 if ls[13] == "NULL":
                     srch = get_sousuo(ls[12])[1]
-                    srch_word = "|*" + valid_jsontxt(urllib.unquote(srch)) + "*|"
+                    srch_word = "|*" + urllib.unquote(srch) + "*|"
                     #srch_word += str(chardet.detect(srch_word))
                 return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
                 #搜索词
@@ -115,4 +115,4 @@ if __name__ == "__main__":
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
 
 #spark-submit  --executor-memory 4G  --driver-memory 8G  --total-executor-cores 40 pre_process_spark.py \
-#u"日用百货" /user/wrt/cat_map/ item_电器.dat  /user/zlj/baifendian.data/pageview_refer.data/pageview_Cjumeiyoupin.dat
+#/user/wrt/cat_map/ item_电器.dat  /user/zlj/baifendian.data/pageview_refer.data/pageview_Cjumeiyoupin.dat
