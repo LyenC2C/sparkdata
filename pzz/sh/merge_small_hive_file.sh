@@ -27,14 +27,14 @@ do
     #256*1024*1024 268435456
 
     #cat
-    hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'|xargs -t -I {} hadoop fs -cat {} > ${local_tmp_path}/${merge_day}-0000
+    hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'|xargs -t -I {} hadoop fs -cat {} > ${local_tmp_path}/${merge_day}-0001
     #put
-    hadoop fs -put ${local_tmp_path}/${merge_day}-0000  $path/$line/
+    hadoop fs -put ${local_tmp_path}/${merge_day}-0001  $path/$line/
     #rm
     #hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'|xargs -t -I {} hadoop fs -rm {}
     hadoop fs -ls $path/$line/ |grep -v '^d'|sed '1d'|awk '{if($5<268435456){print $NF}}'
 
-    rm ${local_tmp_path}/${merge_day}-0000
+    rm ${local_tmp_path}/${merge_day}-0001
     
 done<ds_log
 
