@@ -1,4 +1,6 @@
 #!/bin/bash
+#useage 
+#sh removecopy.sh hdfs://192.168.4.200:9400/xxx/xxx
 dirname=$1
 echo 'pre pare to clean the copy in '$dirname
 
@@ -52,10 +54,15 @@ awk '{
            }
         }
      }'|
+#sort them
+sort > tmp_rm_file
 
 #list they
-xargs -I {} hadoop fs -ls {}
+#xargs -I {} hadoop fs -ls {}
 
 #or remove they
 #xargs -I {} hadoop fs -rm {}
-
+while read line
+do
+    hadoop fs -rmr $line
+done<tmp_rm_file
