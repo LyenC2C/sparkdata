@@ -92,15 +92,16 @@ def get_pageview(item_dict,line):
                 srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
                 srch_word = urllib.unquote(srch_url) + "***"
                 #srch_word += type(srch_word)
-            if is_num(srch_word):
+            if valid_jsontxt(srch_word).isdigit():
                 return None
-            lv.append(valid_jsontxt(srch_word))
-            lv.append(valid_jsontxt(item_dict[key]))
-            lv.append(valid_jsontxt(ls[0]))
-            lv.append(valid_jsontxt(ls[11]))
-            lv.append(valid_jsontxt(ls[12]))
-            lv.append(valid_jsontxt(key))
-            return '\t'.join(lv)
+            else:
+                lv.append(valid_jsontxt(srch_word))
+                lv.append(valid_jsontxt(item_dict[key]))
+                lv.append(valid_jsontxt(ls[0]))
+                lv.append(valid_jsontxt(ls[11]))
+                lv.append(valid_jsontxt(ls[12]))
+                lv.append(valid_jsontxt(key))
+                return '\t'.join(lv)
         else:
             return None
     else:
