@@ -78,8 +78,9 @@ def get_sousuo(ss):
 #获取有效用户行为
 def get_pageview(item_dict,line):
     ls = line.strip().split('\t')
+    lv = []
     if len(ls) < 13:
-        return
+        return None
     if ls[6] == ls[11] and len(ls[12]) > 0 and ls[12] != "NULL" and len(ls[13]) > 0 and get_sousuo(ls[12])[0]:
         key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
         if key in item_dict:
@@ -88,7 +89,18 @@ def get_pageview(item_dict,line):
                 srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
                 srch_word = urllib.unquote(srch_url) + "***"
                 #srch_word += type(srch_word)
-            return srch_word
+            lv.append(srch_word)
+            lv.append(valid_jsontxt(item_dict[key]))
+            lv.append(valid_jsontxt(ls[0]))
+            lv.append(valid_jsontxt(ls[11]))
+            lv.append(valid_jsontxt(ls[12]))
+            lv.append(valid_jsontxt(key))
+            return '\t'.join(lv)
+        else:
+            return None
+    else:
+        return None
+
             #return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
             #搜索词
             #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
