@@ -74,7 +74,7 @@ if __name__ == "__main__":
     #rdd_item = sc.textFile(sys.argv[2]).map(lambda x: get_item(cat_dict.value, x)).filter(lambda x:x!=None)\
         #.map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
     #广播item_dict
-    item_dict = sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
+    #item_dict = sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
     #pageview.data运算
     rdd_pageview = sc.textFile(sys.argv[1]).map(lambda x:get_pageview(x)).filter(lambda x:x!=None)\
         .map(lambda x:(x,0)).groupByKey().mapValues(list).map(lambda (x,y): x)
