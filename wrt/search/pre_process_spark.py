@@ -1,6 +1,6 @@
 #coding:utf-8
 import sys
-import chardet
+#import chardet
 import urllib
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -86,8 +86,8 @@ def get_pageview(item_dict,line):
             if key in item_dict:
                 srch_word = ls[13]
                 if ls[13] == "NULL":
-                    srch_word = urllib.unquote(get_sousuo(ls[12])[1])
-                    srch_word += str(chardet.detect(srch_word))
+                    srch_word = "|*" + urllib.unquote(get_sousuo(ls[12])[1]) + "*|"
+                    #srch_word += str(chardet.detect(srch_word))
                 return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
                 #搜索词
                 #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
