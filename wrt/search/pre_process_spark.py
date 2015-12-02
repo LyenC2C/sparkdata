@@ -10,11 +10,11 @@ def f_coding(x):
         return x.decode("utf-8")
     else:
         return x
-def valid_jsontxt(content):
-    if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else:
+#         return content
 ##读取品类映射表，作为过滤条件
 def get_cat_map(line):
     ls=line.strip().split('\t')
