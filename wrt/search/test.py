@@ -62,7 +62,7 @@ def get_pageview(line):
                 #srch_word += type(srch_word)
             #return "\t".join((str(type(srch_word)),haha))
             #return str(type(srch_word))+ "\t" + haha
-            lv.append(srch_word)
+            lv.append(valid_jsontxt(srch_word))
             lv.append(valid_jsontxt(ls[0]))
             lv.append(valid_jsontxt(ls[11]))
             lv.append(valid_jsontxt(ls[12]))
