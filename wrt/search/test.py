@@ -59,7 +59,7 @@ def get_pageview(line):
                 haha = "url"
                 #srch_word = "|*" + f_coding(urllib.unquote(valid_jsontxt(srch_url))) + "*|"
                 #srch_word += type(srch_word)
-            return type(srch_url) + haha
+            return str(type(srch_url)) + haha
             #return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
             #搜索词
             #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
