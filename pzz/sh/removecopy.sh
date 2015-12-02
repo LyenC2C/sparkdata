@@ -62,7 +62,6 @@ sort > tmp_rm_file
 
 #or remove they
 #xargs -I {} hadoop fs -rm {}
-echo 'ready'
 while read line
 do
     hadoop fs -rmr $line
