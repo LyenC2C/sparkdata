@@ -48,7 +48,7 @@ def get_item(cat_dict,line):
 def get_item_dict(line):
     ls = line.strip().split('\t')
     key = ls[3].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]#url规范化方法
-    return (key,"\t".join((ls[2],ls[4],ls[5],ls[6])))
+    return (key,"\t".join((ls[2],ls[4],ls[6],ls[5]))) #商品title 类目 品牌 标准类目
 ##提取搜索行为
 def get_sousuo(ss):
     p = False
