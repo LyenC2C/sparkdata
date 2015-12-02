@@ -58,7 +58,7 @@ def get_pageview(line):
                 srch_word = urllib.unquote(srch_url)
                 haha = srch_word + "***"
                 #srch_word += type(srch_word)
-            return str(type(srch_word)) + haha
+            return str(type(srch_word))+ "\t" + haha
         else:
             return None
     return None
