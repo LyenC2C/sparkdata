@@ -15,13 +15,13 @@ echo $path
 
 merge_day="`date +%Y%m%d`"
 
-hadoop fs -ls $path  |sed  '1d' |awk -F"ds="  '{if(length($NF)==8) print "ds="$NF }' >ds_log
+hadoop fs -ls $path  |sed  '1d' |awk -F"ds="  '{if(length($NF)==8) print "ds="$NF }' >${local_tmp_path}/ds_log
 
-hadoop fs -ls $path  |sed  '1d' |awk -F"ds="  '{if(length($NF)!=8) print "ds="$NF }' >ds_log_error
+hadoop fs -ls $path  |sed  '1d' |awk -F"ds="  '{if(length($NF)!=8) print "ds="$NF }' >${local_tmp_path}/ds_log_error
 
 
 echo 'deal file merger'
-cat ds_log
+cat ${local_tmp_path}/ds_log
 while read line
 do    
     #256*1024*1024 268435456
@@ -36,13 +36,13 @@ do
 
     rm ${local_tmp_path}/${merge_day}-0001
     
-done<ds_log
+done<${local_tmp_path}/ds_log
 
-cat ds_log_error
+cat ${local_tmp_path}/ds_log_error
 while read line
 do
     echo "test,don't remove"
-    #hadoop fs -rm $path/$line/*
-done<ds_log_error
+    hadoop fs -rm $path/$line/*
+done<${local_tmp_path}/ds_log_error
 
 
