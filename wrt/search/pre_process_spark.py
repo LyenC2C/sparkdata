@@ -2,19 +2,19 @@
 import sys
 #import chardet
 import urllib
-#reload(sys)
-#sys.setdefaultencoding('utf-8')
+reload(sys)
+sys.setdefaultencoding('utf-8')
 from pyspark import SparkContext
 def f_coding(x):
     if type(x) == type(""):
         return x.decode("utf-8")
     else:
         return x
-# def valid_jsontxt(content):
-#     if type(content) == type(u""):
-#         return content.encode("utf-8")
-#     else:
-#         return content
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
 ##读取品类映射表，作为过滤条件
 def get_cat_map(line):
     ls=line.strip().split('\t')
@@ -86,8 +86,8 @@ def get_pageview(item_dict,line):
             if key in item_dict:
                 srch_word = ls[13]
                 if ls[13] == "NULL":
-                    srch = get_sousuo(ls[12])[1]
-                    srch_word = "|*" + urllib.unquote(srch) + "*|"
+                    srch_url = get_sousuo(ls[12])[1]
+                    srch_word = "|*" + urllib.unquote(str(srch_url)).decode('utf8') + "*|"
                     #srch_word += str(chardet.detect(srch_word))
                 return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
                 #搜索词
