@@ -87,7 +87,7 @@ def get_pageview(item_dict,line):
                 srch_word = ls[13]
                 if ls[13] == "NULL":
                     srch = get_sousuo(ls[12])[1]
-                    srch_word = "|*" + urllib.unquote(srch).decode('utf-8') + "*|"
+                    srch_word = "|*" + valid_jsontxt(urllib.unquote(srch)) + "*|"
                     #srch_word += str(chardet.detect(srch_word))
                 return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
                 #搜索词
