@@ -19,7 +19,7 @@ def valid_jsontxt(content):
 def get_cat_map(line):
     ls=line.strip().split('\t')
     #print ls
-    if len(ls)<2:
+    if len(ls) < 2:
         pass
     else:
         #cate=ls[-1].split('$')[0]
@@ -87,8 +87,8 @@ def get_pageview(item_dict,line):
                 srch_word = ls[13]
                 if ls[13] == "NULL":
                     srch_url = get_sousuo(ls[12])[1]
-                    srch_word = "|*" + urllib.unquote(str(srch_url)).decode('utf-8') + "*|"
-                    #srch_word += str(chardet.detect(srch_word))
+                    srch_word = "|*" + urllib.unquote(str(srch_url)) + "*|"
+                    srch_word += str(chardet.detect(srch_word))
                 return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
                 #搜索词
                 #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
