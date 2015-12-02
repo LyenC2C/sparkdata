@@ -56,7 +56,7 @@ def get_pageview(line):
             if ls[13] == "NULL":
                 srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
                 srch_word = urllib.unquote(srch_url) #+ u"***"
-                return srch_word + "\t" + ls[0]
+                return srch_word + "\t" + valid_jsontxt(ls[0])
                 #haha = srch_word + "***"
                 #srch_word += type(srch_word)
             #return "\t".join((str(type(srch_word)),haha))
