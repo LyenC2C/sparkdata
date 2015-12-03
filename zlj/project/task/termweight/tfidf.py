@@ -169,7 +169,7 @@ import itertools
 def groupvalue(y):
     lv=[]
     for key, group in itertools.groupby(y, lambda item: item[0]):
-        lv.append(key, sum([item[1] for item in group]))
+        lv.append((key, sum([item[1] for item in group])))
     return lv
 
 def tfidf(rdd_pre,top_freq,min_freq,limit):
