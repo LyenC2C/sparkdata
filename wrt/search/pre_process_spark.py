@@ -102,6 +102,7 @@ def get_pageview(line):
 def heti(x,y):
     if len(y) == 2:
         ss = y[0].split('\t')
+        x = valid_jsontxt(x)
         if len(ss) == 5:
             return "\t".join((x, y[0], y[1]))
         else:
