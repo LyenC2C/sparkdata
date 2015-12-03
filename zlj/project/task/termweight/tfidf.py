@@ -67,16 +67,22 @@ def join1(x,dict):
 
     if(word.endswith('-b')):
         tfidf=tfidf*1.5
+        word=word.replace('-b','')
     elif(word.endswith('-c')):
         tfidf=tfidf*1.2
+        word=word.replace('-c','')
     elif(word.endswith('_B1')):
         tfidf=tfidf*1.3
+        word=word.replace('_B1','')
     elif(word.endswith('_B2')):
         tfidf=tfidf*1.2
+        word=word.replace('_B2','')
     elif(word.endswith('_E1')):
         tfidf=tfidf*1.5
+        word=word.replace('_E1','')
     elif(word.endswith('_E2')):
         tfidf=tfidf*1.1
+        word=word.replace('_E2','')
 
     return (doc_id,(word,tfidf))
 
@@ -159,6 +165,13 @@ def tcount(lv):
         re.append((i,lv.count(i)))
     return re
 
+import itertools
+def groupvalue(y):
+    lv=[]
+    for key, group in itertools.groupby(y, lambda item: item[0]):
+        lv.append(key, sum([item[1] for item in group]))
+    return lv
+
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     # doc_num = rdd_pre.map(lambda x:x[0]).count()
@@ -188,7 +201,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
-    rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
+    rst=joinrs.groupByKey().map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
 '''
@@ -209,8 +222,8 @@ def title_clean(x):
         kv=i.split()
         s=len(kv)
         for index,v in enumerate(kv,1):
-            if  not i.find('_n'):continue
-            word=i.split('_')[0]
+            if  not v.find('_n'):continue
+            word=v.split('_')[0]
             if  len(word)<2:continue
             if index==1:
                 rs.append(word+'_B1')
