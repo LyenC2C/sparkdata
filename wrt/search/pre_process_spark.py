@@ -15,6 +15,9 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else:
         return content
+def is_num(content):
+    content = valid_jsontxt(content)
+    return content.isdigit()
 ##读取品类映射表，作为过滤条件
 def get_cat_map(line):
     ls=line.strip().split('\t')
@@ -45,7 +48,7 @@ def get_item(cat_dict,line):
 def get_item_dict(line):
     ls = line.strip().split('\t')
     key = ls[3].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]#url规范化方法
-    return (key,"\t".join((ls[2],ls[4],ls[5],ls[6])))
+    return (key,"\t".join((ls[2],ls[4],ls[6],ls[5]))) #商品title 类目 品牌 标准类目
 ##提取搜索行为
 def get_sousuo(ss):
     p = False
@@ -56,7 +59,7 @@ def get_sousuo(ss):
     if "q=" in ss:
         p = True
         srch_word = ss.split('q=')[-1]
-    if "word=" in ss:
+    if ("word=" in ss) and not ("sword" in ss):
         p = True
         srch_word = ss.split('word=')[-1]
     if "wd=" in ss:
@@ -78,22 +81,36 @@ def get_sousuo(ss):
 #获取有效用户行为
 def get_pageview(item_dict,line):
     ls = line.strip().split('\t')
+    lv = []
     if len(ls) < 13:
-        return
-    if ls[6] == ls[11] and len(ls[12])>0 and ls[12] != "NULL" and len(ls[13]) > 0:
-        if get_sousuo(ls[12])[0]:
-            key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
-            if key in item_dict:
-                srch_word = ls[13]
-                if ls[13] == "NULL":
-                    srch_url = get_sousuo(ls[12])[1]
-                    srch_word = "|*" + f_coding(urllib.unquote(valid_jsontxt(srch_url))) + "*|"
-                    #srch_word += type(srch_word)
-                return type(srch_word) + srch_word
-                #return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
-                #搜索词
-                #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
-                #网站英文id cookie userid 跳转后网站 跳转前搜索页 搜索词
+        return None
+    if ls[6] == ls[11] and len(ls[12]) > 0 and ls[12] != "NULL" and len(ls[13]) > 0 and get_sousuo(ls[12])[0]:
+        key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
+        if key in item_dict:
+            srch_word = ls[13]
+            if ls[13] == "NULL":
+                srch_url = valid_jsontxt(get_sousuo(ls[12])[1])
+                srch_word = urllib.unquote(srch_url) #+ "***"
+                #srch_word += type(srch_word)
+            if valid_jsontxt(srch_word).isdigit():
+                return None
+            else:
+                lv.append(valid_jsontxt(srch_word))
+                lv.append(valid_jsontxt(item_dict[key]))
+                lv.append(valid_jsontxt(ls[0]))
+                lv.append(valid_jsontxt(ls[11]))
+                lv.append(valid_jsontxt(ls[12]))
+                lv.append(valid_jsontxt(key))
+                return '\t'.join(lv)
+        else:
+            return None
+    else:
+        return None
+
+            #return "\t".join((srch_word, item_dict[key], ls[0], ls[11], ls[12], key))
+            #搜索词
+            #return "\t".join((ls[0], ls[2], ls[3], ls[11], ls[12], ls[13]))
+            #网站英文id cookie userid 跳转后网站 跳转前搜索页 搜索词
 
 if __name__ == "__main__":
     sc=SparkContext(appName="pyspark baifendian pre_process")
