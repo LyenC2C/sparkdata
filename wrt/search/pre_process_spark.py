@@ -109,10 +109,8 @@ def heti(x,y):
     flag = "0"
     sum = 0
     lv = []
-    for ln in y:
-        lv.append(ln)
-    return "\t".join(lv)
     '''
+    for ln in y:
         ss = ln.split('\t')
         if sum < 2:
             if flag != ss[4]:
@@ -126,20 +124,13 @@ def heti(x,y):
                 return "\t".join((lv[1], lv[0], x))
     if sum < 2:
         return None
-
+    '''
     if len(y) == 2:
         ss = y[0].split('\t')
-        x = valid_jsontxt(x)
-        y[0] = valid_jsontxt(y[0])
-        y[1] = valid_jsontxt(y[1])
-        if len(ss) == 5:
-            return "\t".join((y[1], y[0], x))
-        else:
-            return "\t".join((y[0], y[1], x))
-
+        return "\t".join((y[0], y[1], x))
     else:
         return None
-    '''
+
 if __name__ == "__main__":
     sc=SparkContext(appName="pyspark baifendian pre_process")
     #cat_name=sys.argv[1]
