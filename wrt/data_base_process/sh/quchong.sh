@@ -1,17 +1,41 @@
 pre_path='/home/wrt/sparkdata'
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151117 20151118 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151118 20151119 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151119 20151120 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151120 20151121 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151121 20151122 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151122 20151123 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151123 20151124 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151124 20151125 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151125 20151126 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151126 20151127 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151127 20151128 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151128 20151129 20151130 20151130
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151129 20151130 20151130 20151130
+
+spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
+/commit/iteminfo/20151201/*  20151130 20151201
+
+spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
+/commit/iteminfo/20151202/*  20151201 20151202
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 8g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/20151201/*  20151130 20151201
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 8g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/20151202/*  20151201 20151202
+
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151201 20151130
+
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151202 20151201
+
+
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151117 20151118 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151118 20151119 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151119 20151120 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151120 20151121 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151121 20151122 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151122 20151123 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151123 20151124 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151124 20151125 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151125 20151126 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151126 20151127 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151127 20151128 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151128 20151129 20151130 20151130
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151129 20151130 20151130 20151130
 
 #spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 8g \
 #$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
