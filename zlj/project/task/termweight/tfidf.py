@@ -198,8 +198,8 @@ def title_clean(x):
         rs.append(kv[1]+'_B2')
         rs.extend(kv[2:length-4])
         rs.append(kv[length-3]+'_E2')
-        rs.extend(kv[length-2]+'_E1')
-        rs.append(kv[:length-1])
+        rs.append(kv[length-2]+'_E1')
+        rs.extend(kv[:length-1])
     ls=[i.replace('_n','') for i in rs if i.find('_n')]
     return [i for i in ls if len(str(i))>1]
 
