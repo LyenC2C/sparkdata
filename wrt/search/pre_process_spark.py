@@ -109,7 +109,6 @@ def heti(x,y):
     flag = "0"
     sum = 0
     lv = []
-    '''
     for ln in y:
         ss = ln.split('\t')
         if sum < 2:
@@ -118,17 +117,11 @@ def heti(x,y):
                 sum += 1
                 lv.append(ln)
         else:
-            if ln[0][-1] == "2":
+            if lv[0][-1] == "2":
                 return "\t".join((lv[0], lv[1], x))
-            if ln[0][-1] == "1":
+            if lv[0][-1] == "1":
                 return "\t".join((lv[1], lv[0], x))
     if sum < 2:
-        return None
-    '''
-    if len(y) == 2:
-        ss = y[0].split('\t')
-        return "\t".join((y[0], y[1], x))
-    else:
         return None
 
 if __name__ == "__main__":
