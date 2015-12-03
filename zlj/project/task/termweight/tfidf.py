@@ -59,7 +59,13 @@ def join1(x,dict):
     word=x[0]
     doc_id=x[1][0]
     tf=x[1][1]
-    tfidf=tf*dict.get(word,0.5)
+    tfidf=0.5
+    if(word.endswith('-b')):
+        tfidf=tf*dict.get(word,0.5)*1.5
+    elif(word.endswith('-c')):
+        tfidf=tf*dict.get(word,0.5)*1.2
+    else:
+        tfidf=tf*dict.get(word,0.5)
     return (doc_id,(word,tfidf))
 
 sql_hmm='''
@@ -107,6 +113,30 @@ group by user_id
 '''
 
 
+sql_tfidfbrand='''
+select
+
+user_id, concat_ws(' ', collect_set(hmm)) as hmm
+
+from
+(
+
+    select item_id,concat_ws(' ',title_cut_stag,concat(cat_name,'-c_n'), concat(brand_name,'-b_n'))  as hmm
+     from t_base_ec_item_title_cut_with_brand_tag
+)t1
+join
+(
+select item_id,user_id from t_base_ec_item_feed_dev_temp group by item_id,user_id
+
+)t2
+on t1.item_id=t2.item_id
+group by user_id
+'''
+
+# t_base_ec_item_feed_dev
+#
+# where ds>%s
+# and  LENGTH (user_id)>0
 # sql_count='''
 # select
 # from
@@ -139,12 +169,15 @@ def tcount(lv):
 
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-
+    # doc_num = rdd_pre.map(lambda x:x[0]).count()
+    doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
+    words = set(rdd_pre.map(lambda x: tcount(x[1]))\
+                .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)\
+                .filter(lambda x: (x[1] > min_freq and len(x[1])>1) ).map(lambda x: x[0]).collect())
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
-    # doc_num = rdd_pre.map(lambda x:1).count()
-    doc_num = 50000000
+
+    # doc_num = 50000000
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
 
     # (word,(doc_id,tf))
@@ -190,7 +223,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        rdd_pre = hiveContext.sql(sql_tfidf%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split()]))
+        rdd_pre = hiveContext.sql(sql_tfidf%feed_ds).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split() ]))
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
@@ -198,7 +231,21 @@ if __name__ == "__main__":
         # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+    elif sys.argv[1]=='-usertfidf_brand':
+        i=1
+        min_freq=int(sys.argv[i+1])
+        limit=int(sys.argv[i+2])
+        feed_ds=sys.argv[i+3]
+        output_talbe=sys.argv[i+4]
+        rdd_pre = hiveContext.sql(sql_tfidfbrand).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split() if i.find('_n')])).coalesce(100)
 
+        rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
+        df=hiveContext.createDataFrame(rst,schema)
+        hiveContext.registerDataFrameAsTable(df, 'tmptable')
+        # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
+        # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
+        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
     elif sys.argv[1]=='-item':
         i=1
         min_freq=int(sys.argv[i+1])
