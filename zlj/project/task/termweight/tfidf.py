@@ -161,7 +161,7 @@ def tcount(lv):
 
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    doc_num = rdd_pre.map(lambda x:x).count()
+    doc_num = rdd_pre.map(lambda x:x[0]).count()
     words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq and x[1]<doc_num).map(lambda x: x[0]).collect())
 
     broadcastVar = sc.broadcast(words)
