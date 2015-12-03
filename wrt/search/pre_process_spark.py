@@ -105,9 +105,9 @@ def heti(x,y):
         y[0] = valid_jsontxt(y[0])
         y[1] = valid_jsontxt(y[1])
         if len(ss) == 5:
-            return "\t".join((x, y[0], y[1]))
+            return "\t".join((y[1], y[0], x))
         else:
-            return "\t".join((x, y[1], y[0]))
+            return "\t".join((y[0], y[1], x))
     else:
         return None
 if __name__ == "__main__":
