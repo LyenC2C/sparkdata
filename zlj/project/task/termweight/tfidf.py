@@ -63,13 +63,21 @@ def join1(x,dict):
     word=x[0]
     doc_id=x[1][0]
     tf=x[1][1]
-    tfidf=0.5
+    tfidf=tf*dict.get(word,0.5)
+
     if(word.endswith('-b')):
-        tfidf=tf*dict.get(word,0.5)*1.5
+        tfidf=tfidf*1.5
     elif(word.endswith('-c')):
-        tfidf=tf*dict.get(word,0.5)*1.2
-    else:
-        tfidf=tf*dict.get(word,0.5)
+        tfidf=tfidf*1.2
+    elif(word.endswith('_B1')):
+        tfidf=tfidf*1.3
+    elif(word.endswith('_B2')):
+        tfidf=tfidf*1.2
+    elif(word.endswith('_E1')):
+        tfidf=tfidf*1.5
+    elif(word.endswith('_E2')):
+        tfidf=tfidf*1.1
+
     return (doc_id,(word,tfidf))
 
 sql_hmm='''
@@ -120,7 +128,7 @@ group by user_id
 sql_tfidfbrand='''
 select
 
-user_id, concat_ws('\001', collect_set(hmm)) as hmm
+user_id, concat_ws('@_@', collect_set(hmm)) as hmm
 
 from
 (
@@ -188,12 +196,13 @@ spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-mem
 '''
 
 # word_n word_n  word-c_n
+# add position
 def title_clean(x):
-    lv=x.split('\001')
+    lv=x.split('@_@')
     rs=[]
     for i in lv:
         kv=i.split()
-        length=len(lv)
+        length=len(kv)
         rs.append(kv[0]+'_B1')
         rs.append(kv[1]+'_B2')
         rs.extend(kv[2:length-4])
