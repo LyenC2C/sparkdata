@@ -7,8 +7,6 @@ from pyspark.sql import *
 from pyspark.sql.types import *
 from itertools import groupby
 
-import math
-
 sc = SparkContext(appName="hmm")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
@@ -177,13 +175,18 @@ def groupvalue(y):
         lv.append((key, sum([item[1] for item in group])))
     return lv
 
+import math
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     # doc_num = rdd_pre.map(lambda x:x[0]).count()
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
-    words = set(rdd_pre.map(lambda x: tcount(x[1]))\
+    words_rdd = rdd_pre.map(lambda x: tcount(x[1]))\
                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)\
-                .filter(lambda x: (x[1] > min_freq ) or (str(x[1]).find('_')>0)).map(lambda x: x[0]).collect())
+                .filter(lambda x: (x[1] > min_freq ))
+    # filter more words
+    max=math.sqrt(words_rdd.map(lambda x: x[1]).max())
+    words=set(words_rdd.filter(lambda x: x[1]<max).map(lambda x:x[0]).collect())
+
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
