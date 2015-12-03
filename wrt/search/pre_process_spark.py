@@ -27,12 +27,12 @@ def get_cat_map(line):
     #else:
     #	return None
 ###获取固定格式的目标item.data数据
-def get_item(cat_dict,line):
+def get_item(cat_dict, line):
     lv = []
-    ls=line.strip().split('\t')
+    ls = line.strip().split('\t')
     if len(ls)<24:
         return None
-    key=ls[14].replace('-', '|')
+    key = ls[14].replace('-', '|')
     import re
     if re.findall(r'\d+',key):
         key='|'.join(key.split('|')[:-2])
@@ -44,8 +44,8 @@ def get_item(cat_dict,line):
         lv.append(valid_jsontxt(cat_dict[key]))
         lv.append(valid_jsontxt(ls[15]))
         lv.append(flag)
-        return (valid_jsontxt(url_key) ,"\t".join(lv))
-        #匹配关键词,商品url 商品title 类目 标准类目 品牌
+        return (valid_jsontxt(url_key), "\t".join(lv))
+        #匹配关键词, 商品title 类目 标准类目 品牌
     else:
         return None
 ###存储规范化的item_url映射关系
@@ -88,7 +88,7 @@ def get_pageview(line):
     if len(ls) < 13:
         return None
     if ls[6] == ls[11] and len(ls[12]) > 0 and ls[12] != "NULL" and len(ls[13]) > 0 and get_sousuo(ls[12])[0]:
-        url_key=ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
+        url_key = ls[11].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]
         srch_word = ls[13]
         if ls[13] == "NULL":
             srch_url = valid_jsontxt(get_sousuo(ls[12])[1]).split('&')[0]
@@ -117,9 +117,9 @@ def heti(x,y):
                 sum += 1
                 lv.append(ln)
         else:
-            if ln[0][-1] == "1":
-                return "\t".join((lv[0], lv[1], x))
             if ln[0][-1] == "2":
+                return "\t".join((lv[0], lv[1], x))
+            if ln[0][-1] == "1":
                 return "\t".join((lv[1], lv[0], x))
     if sum < 2:
         return None
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     rdd_pageview = sc.textFile(sys.argv[3]).map(lambda x:get_pageview(x)).filter(lambda x:x!=None)
         #.groupByKey().mapValues(list).map(lambda (x,y): (x,y[0]))
     #rdd_item.saveAsTextFile(sys.argv[4])
-    rdd = rdd_pageview.union(rdd_item).groupByKey().mapValues(list).map(lambda (x,y):heti(x,y)).filter(lambda x:x!=None)
+    rdd = rdd_pageview.union(rdd_item).groupByKey().mapValues(list).map(lambda (x, y): heti(x, y)).filter(lambda x:x!=None)
     rdd.saveAsTextFile(sys.argv[4])
     sc.stop()
     #for line in sys.stdin:
