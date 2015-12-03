@@ -161,7 +161,8 @@ def tcount(lv):
 
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    doc_num = rdd_pre.map(lambda x:x[0]).count()
+    # doc_num = rdd_pre.map(lambda x:x[0]).count()
+    doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_tmp group by user_id').count()
     words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq and x[1]<doc_num).map(lambda x: x[0]).collect())
 
     broadcastVar = sc.broadcast(words)
@@ -228,6 +229,7 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         rdd_pre = hiveContext.sql(sql_tfidfbrand).map(lambda x: (x.user_id, [i for i in x[1].split()]))
+
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
