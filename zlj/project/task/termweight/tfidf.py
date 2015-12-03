@@ -195,22 +195,42 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
 '''
 
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 # word_n word_n  word-c_n
 # add position
 def title_clean(x):
-    lv=x.split('@_@')
+    lv=f_coding(x).split('@_@')
     rs=[]
     for i in lv:
         kv=i.split()
-        length=len(kv)
-        rs.append(kv[0]+'_B1')
-        rs.append(kv[1]+'_B2')
-        rs.extend(kv[2:length-4])
-        rs.append(kv[length-3]+'_E2')
-        rs.append(kv[length-2]+'_E1')
-        rs.extend(kv[:length-1])
-    ls=[i.replace('_n','') for i in rs if i.find('_n')]
-    return [i for i in ls if len(str(i))>1]
+        s=len(kv)
+        for index,v in enumerate(kv,1):
+            if  not i.find('_n'):continue
+            word=i.split('_')[0]
+            if  len(word)<2:continue
+            if index==1:
+                rs.append(word+'_B1')
+            elif index==2:
+                rs.append(word+'_B2')
+            elif index==(s-3):
+                rs.append(word+'_E2')
+            elif index==(s-2):
+                rs.append(word+'_E1')
+            else:
+                rs.append(word)
+
+        # rs.append(kv[0]+'_B1')
+        # rs.append(kv[1]+'_B2')
+        # rs.extend(kv[2:length-4])
+        # rs.append(kv[length-3]+'_E2')
+        # rs.append(kv[length-2]+'_E1')
+        # rs.extend(kv[:length-1])
+    # ls=[i for i in rs if i.find('_n') and  len(i.split('_'))>1]
+    return rs
 
 
 import sys
