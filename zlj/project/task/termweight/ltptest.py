@@ -12,6 +12,7 @@ sc = SparkContext(appName="cmt")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
+''.startswith()
 root='/home/hadoop/common/segfile/tlpdata'
 from pyltp import Segmentor
 segmentor = Segmentor()
