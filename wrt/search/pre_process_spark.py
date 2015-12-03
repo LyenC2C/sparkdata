@@ -46,8 +46,6 @@ def get_item(cat_dict,line):
         lv.append(flag)
         return (valid_jsontxt(url_key) ,"\t".join(lv))
         #匹配关键词,商品url 商品title 类目 标准类目 品牌
-        #return '\t'.join((ls[0],ls[1],ls[2],ls[3],ls[14],ls[15],cat_dict[key]))
-        #网站英文id 商品id 商品title 商品url 类目 品牌 标准类目
     else:
         return None
 ###存储规范化的item_url映射关系
@@ -110,16 +108,21 @@ def get_pageview(line):
 def heti(x,y):
     flag = "0"
     sum = 0
-    lv = [x]
+    lv = []
     for ln in y:
         ss = ln.split('\t')
         if sum < 2:
             if flag != ss[4]:
                 flag = ss[4]
-                sum +=1
+                sum += 1
                 lv.append(ln)
         else:
-            return "\t".join(lv)
+            if ln[0][-1] == "1":
+                return "\t".join((lv[0], lv[1], x))
+            if ln[0][-1] == "2":
+                return "\t".join((lv[1], lv[0], x))
+    if sum < 2:
+        return None
     '''
     if len(y) == 2:
         ss = y[0].split('\t')
