@@ -125,7 +125,7 @@ if __name__ == "__main__":
     rdd_pageview = sc.textFile(sys.argv[3]).map(lambda x:get_pageview(x)).filter(lambda x:x!=None)\
         .groupByKey().mapValues(list).map(lambda (x,y): (x,y[0]))
     #rdd_item.saveAsTextFile(sys.argv[4])
-    rdd = rdd_pageview.union(rdd_item).groupByKey().mapValues(list).map(lambda (x,y):heti(x,y))
+    rdd = rdd_pageview.union(rdd_item).groupByKey().mapValues(list).map(lambda (x,y):heti(x,y)).filter(lambda x:x!=None)
     rdd.saveAsTextFile(sys.argv[4])
     sc.stop()
     #for line in sys.stdin:
