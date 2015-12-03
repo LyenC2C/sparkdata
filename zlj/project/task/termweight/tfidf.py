@@ -183,9 +183,11 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     words_rdd = rdd_pre.map(lambda x: tcount(x[1]))\
                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)\
                 .filter(lambda x: (x[1] > min_freq ))
+    words_rdd.cache()
     # filter more words
     max=math.sqrt(words_rdd.map(lambda x: x[1]).max())
     words=set(words_rdd.filter(lambda x: x[1]<max).map(lambda x:x[0]).collect())
+
 
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
@@ -234,14 +236,12 @@ def title_clean(x):
             word=v.split('_')[0]
             if  len(word)<2:continue
             if word.replace('.','',1).isdigit(): continue
-            if index==1:
-                rs.append(word+'_B1')
-            elif index==2:
-                rs.append(word+'_B2')
-            elif index==(s-3):
+            if index==(s-3):
                 rs.append(word+'_E2')
             elif index==(s-2):
                 rs.append(word+'_E1')
+            elif index==1:
+                rs.append(word+'_B1')
             else:
                 rs.append(word)
 
