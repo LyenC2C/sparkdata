@@ -63,13 +63,27 @@ def join1(x,dict):
     word=x[0]
     doc_id=x[1][0]
     tf=x[1][1]
-    tfidf=0.5
+    tfidf=tf*dict.get(word,0.5)
+
     if(word.endswith('-b')):
-        tfidf=tf*dict.get(word,0.5)*1.5
+        tfidf=tfidf*1.5
+        word=word.replace('-b','')
     elif(word.endswith('-c')):
-        tfidf=tf*dict.get(word,0.5)*1.2
-    else:
-        tfidf=tf*dict.get(word,0.5)
+        tfidf=tfidf*1.2
+        word=word.replace('-c','')
+    elif(word.endswith('_B1')):
+        tfidf=tfidf*1.3
+        word=word.replace('_B1','')
+    elif(word.endswith('_B2')):
+        tfidf=tfidf*1.2
+        word=word.replace('_B2','')
+    elif(word.endswith('_E1')):
+        tfidf=tfidf*1.5
+        word=word.replace('_E1','')
+    elif(word.endswith('_E2')):
+        tfidf=tfidf*1.1
+        word=word.replace('_E2','')
+
     return (doc_id,(word,tfidf))
 
 sql_hmm='''
@@ -120,7 +134,7 @@ group by user_id
 sql_tfidfbrand='''
 select
 
-user_id, concat_ws('\001', collect_set(hmm)) as hmm
+user_id, concat_ws('@_@', collect_set(hmm)) as hmm
 
 from
 (
@@ -151,10 +165,17 @@ def tcount(lv):
         re.append((i,lv.count(i)))
     return re
 
+import itertools
+def groupvalue(y):
+    lv=[]
+    for key, group in itertools.groupby(y, lambda item: item[0]):
+        lv.append((key, sum([item[1] for item in group])))
+    return lv
+
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     # doc_num = rdd_pre.map(lambda x:x[0]).count()
-    doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
+    # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     words = set(rdd_pre.map(lambda x: tcount(x[1]))\
                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)\
                 .filter(lambda x: (x[1] > min_freq )).map(lambda x: x[0]).collect())
@@ -180,28 +201,49 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
-    rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
+    rst=joinrs.groupByKey().map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
 '''
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
 '''
 
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 # word_n word_n  word-c_n
+# add position
 def title_clean(x):
-    lv=x.split('\001')
+    lv=f_coding(x).split('@_@')
     rs=[]
     for i in lv:
         kv=i.split()
-        length=len(lv)
-        rs.append(kv[0]+'_B1')
-        rs.append(kv[1]+'_B2')
-        rs.extend(kv[2:length-4])
-        rs.append(kv[length-3]+'_E2')
-        rs.extend(kv[length-2]+'_E1')
-        rs.append(kv[:length-1])
-    ls=[i.replace('_n','') for i in rs if i.find('_n')]
-    return [i for i in ls if len(str(i))>1]
+        s=len(kv)
+        for index,v in enumerate(kv,1):
+            if  not v.find('_n'):continue
+            word=v.split('_')[0]
+            if  len(word)<2:continue
+            if index==1:
+                rs.append(word+'_B1')
+            elif index==2:
+                rs.append(word+'_B2')
+            elif index==(s-3):
+                rs.append(word+'_E2')
+            elif index==(s-2):
+                rs.append(word+'_E1')
+            else:
+                rs.append(word)
+
+        # rs.append(kv[0]+'_B1')
+        # rs.append(kv[1]+'_B2')
+        # rs.extend(kv[2:length-4])
+        # rs.append(kv[length-3]+'_E2')
+        # rs.append(kv[length-2]+'_E1')
+        # rs.extend(kv[:length-1])
+    # ls=[i for i in rs if i.find('_n') and  len(i.split('_'))>1]
+    return rs
 
 
 import sys
