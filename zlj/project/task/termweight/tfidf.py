@@ -42,6 +42,10 @@ def df(x, y):
         lv.append((i, 1))
     return lv
 
+schema = StructType([
+    StructField("user_id", StringType(), True),
+    StructField("tfidftags", StringType(), True)
+])
 
 # sql = '''
 # select
@@ -116,7 +120,7 @@ group by user_id
 sql_tfidfbrand='''
 select
 
-user_id, concat_ws(' ', collect_set(hmm)) as hmm
+user_id, concat_ws('\001', collect_set(hmm)) as hmm
 
 from
 (
@@ -133,26 +137,6 @@ on t1.item_id=t2.item_id
 group by user_id
 '''
 
-# t_base_ec_item_feed_dev
-#
-# where ds>%s
-# and  LENGTH (user_id)>0
-# sql_count='''
-# select
-# from
-# (
-# select item_id,user_id from t_base_ec_item_feed_dev
-#
-# where ds>%s
-# and  LENGTH (user_id)>0
-# group by user_id
-# )t
-# '''
-
-
-def hashid(freq,hashNum,word):
-    i = hash(word)%hashNum
-    freq[i] = freq.get(i, 0) + 1.0
 
 '''
 rdd  {k,[w1 w2 w3 .....]}
@@ -173,11 +157,11 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     words = set(rdd_pre.map(lambda x: tcount(x[1]))\
                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)\
-                .filter(lambda x: (x[1] > min_freq and len(str(x[1]))>1)).map(lambda x: x[0]).collect())
+                .filter(lambda x: (x[1] > min_freq )).map(lambda x: x[0]).collect())
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
-
-    # doc_num = 50000000
+    # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
+    doc_num = 50000000
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
 
     # (word,(doc_id,tf))
@@ -203,11 +187,21 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
 '''
 
-
-schema = StructType([
-    StructField("user_id", StringType(), True),
-    StructField("tfidftags", StringType(), True)
-])
+# word_n word_n  word-c_n
+def title_clean(x):
+    lv=x.split('\001')
+    rs=[]
+    for i in lv:
+        kv=i.split()
+        length=len(lv)
+        rs.append(kv[0]+'_B1')
+        rs.append(kv[1]+'_B2')
+        rs.append(kv[2:length-4])
+        rs.append(kv[length-3]+'_E2')
+        rs.append(kv[length-2]+'_E1')
+        rs.append(kv[:length-1])
+    ls=[i.replace('_n','') for i in rs if i.find('_n')]
+    return [i for i in ls if len(str(i))>1]
 
 
 import sys
@@ -237,7 +231,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        rdd_pre = hiveContext.sql(sql_tfidfbrand).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split() if i.find('_n')])).coalesce(100)
+        rdd_pre = hiveContext.sql(sql_tfidfbrand).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
 
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
@@ -285,40 +279,3 @@ if __name__ == "__main__":
         dict = broadcastVar.value
         rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict])).map(lambda (x,y):x+"\t"+" ".join([ i[0]+":"+str(i[1]) for i in tcount(y)]))
         rdd.saveAsTextFile("/user/zlj/temp/user_corpus")
-
-
-
-
-    # rddjoin.map(lambda (x,y):join(x,y)).groupByKey().map(lambda  (x,y):(x,len(y)))
-    # rdd.saveAsTextFile
-    # rdd=hiveContext.sql(sql).map(lambda  x:[i for i in x._c1.split('_') if len(i)>0])
-    #
-    #
-    #
-    # from pyspark import SparkContext
-    # from pyspark.mllib.feature import IDF
-    #
-    # # sc = SparkContext()
-    #
-    # # Load documents (one per line).
-    # documents = sc.textFile("...").map(lambda line: line.split(" "))
-    #
-
-    # hashingTF = HashingTF()
-    # tf = hashingTF.transform(documents)
-    # tfrdd=rdd.map(lambda  x: (x[0],hashingTF.transform(x[1])))
-    #
-    # # tfrdd = hashingTF.transform(rdd)
-    # tfrdd.cache()
-    # idf=IDF().fit(tfrdd.values())
-    # fff=idf.transform
-    # tfidf=tfrdd.map(lambda  x: (x[0],fff(x[1])))
-    #
-    # tmp=[]
-    # for x,y in tfrdd.collect():
-    #     tmp.append((x,idf.transform(y)))
-    #
-    # rs=sc.parallelize(tmp)
-    #
-    # # tfidf = idf.transform(tfrdd)
-    # # val num_idf_pairs = tf_num_pairs.mapValues(v => idf.transform(v))
