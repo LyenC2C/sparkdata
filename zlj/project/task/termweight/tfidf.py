@@ -107,6 +107,28 @@ group by user_id
 '''
 
 
+sql_tfidfbrand='''
+select
+/*+ mapjoin(t1)*/
+user_id, concat_ws(' ', collect_set(hmm)) as hmm
+
+from
+(
+select item_id,concat_ws(' ',title_cut,concat(cat_name,'_c'), concat(brand_name,'_b'))  as hmm from t_base_ec_item_title_cut_with_brand
+)t1
+join
+(
+select item_id,user_id from t_base_ec_item_feed_dev_tmp
+
+)t2
+on t1.item_id=t2.item_id
+group by user_id
+'''
+
+# t_base_ec_item_feed_dev
+#
+# where ds>%s
+# and  LENGTH (user_id)>0
 # sql_count='''
 # select
 # from
@@ -139,12 +161,13 @@ def tcount(lv):
 
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
+    doc_num = rdd_pre.map(lambda x:x).count()
+    words = set(rdd_pre.map(lambda x: tcount(x[1])).flatMap(lambda x: x).coalesce(100).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq and x[1]<doc_num).map(lambda x: x[0]).collect())
 
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
-    # doc_num = rdd_pre.map(lambda x:1).count()
-    doc_num = 50000000
+
+    # doc_num = 50000000
     rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
 
     # (word,(doc_id,tf))
@@ -198,7 +221,20 @@ if __name__ == "__main__":
         # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
-
+    elif sys.argv[1]=='-usertfidf_brand':
+        i=1
+        min_freq=int(sys.argv[i+1])
+        limit=int(sys.argv[i+2])
+        feed_ds=sys.argv[i+3]
+        output_talbe=sys.argv[i+4]
+        rdd_pre = hiveContext.sql(sql_tfidfbrand).map(lambda x: (x.user_id, [i for i in x[1].split()]))
+        rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
+        df=hiveContext.createDataFrame(rst,schema)
+        hiveContext.registerDataFrameAsTable(df, 'tmptable')
+        # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
+        # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
+        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
     elif sys.argv[1]=='-item':
         i=1
         min_freq=int(sys.argv[i+1])
