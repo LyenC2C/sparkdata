@@ -121,7 +121,8 @@ user_id, concat_ws(' ', collect_set(hmm)) as hmm
 from
 (
 
-    select item_id,concat_ws(' ',title_cut_stag,concat(cat_name,'-c_'), concat(brand_name,'-b_'))  as hmm from t_base_ec_item_title_cut_with_brand_tag
+    select item_id,concat_ws(' ',title_cut_stag,concat(cat_name,'-c_n'), concat(brand_name,'-b_n'))  as hmm
+     from t_base_ec_item_title_cut_with_brand_tag
 )t1
 join
 (
@@ -236,7 +237,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        rdd_pre = hiveContext.sql(sql_tfidfbrand).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split() if i.split('_')[1].startswith('n')])).coalesce(100)
+        rdd_pre = hiveContext.sql(sql_tfidfbrand).map(lambda x: (x.user_id, [i.split('_')[0] for i in x[1].split() if i.find('_n')])).coalesce(100)
 
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)
