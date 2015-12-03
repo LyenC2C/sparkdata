@@ -111,17 +111,17 @@ def heti(x,y):
     lv = []
     for ln in y:
         ss = ln.split('\t')
-        if sum < 2:
+        if len(lv) < 2:
             if flag != ss[4]:
                 flag = ss[4]
-                sum += 1
+                #sum += 1
                 lv.append(ln)
         else:
-            if lv[0][-1] == "2":
+            if valid_jsontxt(lv[0][-1]) == "2":
                 return "\t".join((lv[0], lv[1], x))
-            if lv[0][-1] == "1":
+            if valid_jsontxt(lv[0][-1]) == "1":
                 return "\t".join((lv[1], lv[0], x))
-    if sum < 2:
+    if len(lv) < 2:
         return None
 
 if __name__ == "__main__":
