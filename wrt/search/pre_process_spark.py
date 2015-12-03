@@ -110,6 +110,9 @@ def heti(x,y):
     sum = 0
     lv = []
     for ln in y:
+        lv.append(ln)
+    return "\t".join(lv)
+    '''
         ss = ln.split('\t')
         if sum < 2:
             if flag != ss[4]:
@@ -123,7 +126,7 @@ def heti(x,y):
                 return "\t".join((lv[1], lv[0], x))
     if sum < 2:
         return None
-    '''
+
     if len(y) == 2:
         ss = y[0].split('\t')
         x = valid_jsontxt(x)
