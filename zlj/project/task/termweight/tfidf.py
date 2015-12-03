@@ -173,7 +173,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     words = set(rdd_pre.map(lambda x: tcount(x[1]))\
                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)\
-                .filter(lambda x: (x[1] > min_freq and len(x[1])>1) ).map(lambda x: x[0]).collect())
+                .filter(lambda x: (x[1] > min_freq and len(str(x[1])>1))).map(lambda x: x[0]).collect())
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
 
