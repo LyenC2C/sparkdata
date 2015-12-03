@@ -119,7 +119,7 @@ select item_id,concat_ws(' ',title_cut,concat(cat_name,'_c'), concat(brand_name,
 )t1
 join
 (
-select item_id,user_id from t_base_ec_item_feed_dev_temp group by tem_id,user_id
+select item_id,user_id from t_base_ec_item_feed_dev_temp group by item_id,user_id
 
 )t2
 on t1.item_id=t2.item_id
