@@ -183,13 +183,16 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     words_rdd = rdd_pre.coalesce(20).map(lambda x: tcount(x[1]))\
                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
 
-    words_rdd.saveAsTextFile('/user/zlj/word_count')
-    words_rdd.filter(lambda x: (x[1] > min_freq )).saveAsTextFile('/user/zlj/word_count_filter_min')
-    words_rdd.cache()
+    words_rdd.map(lambda x:str(x[1])+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count')
+    words_rdd_min=words_rdd.filter(lambda x: (x[1] > min_freq ))
+    words_rdd_min.cache()
+    words_rdd_min.map(lambda x:str(x[1])+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count_filter_min')
+
     # filter more words
-    max=math.sqrt(words_rdd.map(lambda x: x[1]).max())
-    words_rdd.filter(lambda x: x[1]<max).saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
-    words=set(words_rdd.filter(lambda x: x[1]<max).map(lambda x:x[0]).collect())
+    max=math.sqrt(words_rdd_min.map(lambda x: x[1]).max())
+    words_rdd_max=words_rdd_min.filter(lambda x:x[1]<max)
+    words_rdd_max.map(lambda x:str(x[1])+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
+    words=set(words_rdd_max.map(lambda x:x[0]).collect())
 
 
     broadcastVar = sc.broadcast(words)
