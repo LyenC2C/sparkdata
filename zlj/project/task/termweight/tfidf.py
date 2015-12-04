@@ -304,7 +304,7 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
-        rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0901').map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0901 limit 1000000').map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
         # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
 
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
