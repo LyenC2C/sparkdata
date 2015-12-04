@@ -174,19 +174,35 @@ def groupvalue(y):
     for key, group in itertools.groupby(y, lambda item: item[0]):
         lv.append((key, sum([item[1] for item in group])))
     return lv
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 
 import math
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     # doc_num = rdd_pre.map(lambda x:x[0]).count()
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
-    words_rdd = rdd_pre.map(lambda x: tcount(x[1]))\
-                .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)\
-                .filter(lambda x: (x[1] > min_freq ))
-    words_rdd.cache()
+    words_rdd = rdd_pre.coalesce(20).map(lambda x: tcount(x[1]))\
+                .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
+# str(f_coding(valid_jsontxt(x[0])))+"\t"+str(x[1])
+    words_rdd.saveAsTextFile('/user/zlj/word_count')
+    words_rdd_min=words_rdd.filter(lambda x: (x[1] > min_freq ))
+    words_rdd_min.cache()
+    words_rdd_min.saveAsTextFile('/user/zlj/word_count_filter_min')
+
     # filter more words
-    max=math.sqrt(words_rdd.map(lambda x: x[1]).max())
-    words=set(words_rdd.filter(lambda x: x[1]<max).map(lambda x:x[0]).collect())
+    max=math.sqrt(words_rdd_min.map(lambda x: x[1]).max())
+    words_rdd_max=words_rdd_min.filter(lambda x:x[1]<max)
+    words_rdd_max.saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
+    words=set(words_rdd_max.map(lambda x:x[0]).collect())
 
 
     broadcastVar = sc.broadcast(words)
@@ -283,14 +299,15 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
 
-        rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
-        df=hiveContext.createDataFrame(rst,schema)
-        hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
-        # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
-        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
-        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+        # rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
+        # df=hiveContext.createDataFrame(rst,schema)
+        # hiveContext.registerDataFrameAsTable(df, 'tmptable')
+        # # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
+        # # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
+        # hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
     elif sys.argv[1]=='-item':
         i=1
         min_freq=int(sys.argv[i+1])
