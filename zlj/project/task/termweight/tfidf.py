@@ -174,7 +174,11 @@ def groupvalue(y):
     for key, group in itertools.groupby(y, lambda item: item[0]):
         lv.append((key, sum([item[1] for item in group])))
     return lv
-
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
 import math
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
@@ -183,15 +187,15 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     words_rdd = rdd_pre.coalesce(20).map(lambda x: tcount(x[1]))\
                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
 
-    words_rdd.map(lambda x:str(x[0])+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count')
+    words_rdd.map(lambda x:str(valid_jsontxt(x[0]))+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count')
     words_rdd_min=words_rdd.filter(lambda x: (x[1] > min_freq ))
     words_rdd_min.cache()
-    words_rdd_min.map(lambda x:str(x[0])+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count_filter_min')
+    words_rdd_min.map(lambda x:str(valid_jsontxt(x[0]))+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count_filter_min')
 
     # filter more words
     max=math.sqrt(words_rdd_min.map(lambda x: x[1]).max())
     words_rdd_max=words_rdd_min.filter(lambda x:x[1]<max)
-    words_rdd_max.map(lambda x:str(x[0])+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
+    words_rdd_max.map(lambda x:str(valid_jsontxt(x[0]))+"\t"+str(x[1])).saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
     words=set(words_rdd_max.map(lambda x:x[0]).collect())
 
 
