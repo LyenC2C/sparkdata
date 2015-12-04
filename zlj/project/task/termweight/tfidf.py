@@ -299,14 +299,15 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        rdd_pre.map(lambda x:x[1]).saveAsTextFile('/user/zlj/corpus')
 
-        rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
-        df=hiveContext.createDataFrame(rst,schema)
-        hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
-        # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
-        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
-        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+        # rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
+        # df=hiveContext.createDataFrame(rst,schema)
+        # hiveContext.registerDataFrameAsTable(df, 'tmptable')
+        # # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
+        # # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
+        # hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
     elif sys.argv[1]=='-item':
         i=1
         min_freq=int(sys.argv[i+1])
