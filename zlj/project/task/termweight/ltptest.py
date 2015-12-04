@@ -14,7 +14,7 @@ hiveContext = HiveContext(sc)
 
 ''.startswith()
 root='/home/hadoop/common/segfile/tlpdata'
-from pyltp import Segmentor
+# from pyltp import Segmentor
 segmentor = Segmentor()
 segmentor.load(root+'cws.model')
 

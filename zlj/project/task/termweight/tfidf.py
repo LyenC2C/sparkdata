@@ -204,7 +204,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 #     words=set(words_rdd_max.map(lambda x:x[0]).collect())
     top_freq=124706
     min_freq=10
-    wordrdd=sc.textFile('/user/zlj/word_index').map(lambda x:x.split('\003'))\
+    wordrdd=sc.textFile('/user/zlj/need/word_index').map(lambda x:x.split('\003'))\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq).map(lambda  x:x[1])
     words=set(wordrdd.collect())
     broadcastVar = sc.broadcast(words)
