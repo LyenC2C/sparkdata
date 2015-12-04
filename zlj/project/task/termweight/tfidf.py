@@ -205,13 +205,14 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     top_freq=124706
     min_freq=10
     wordrdd=sc.textFile('/user/zlj/need/word_index').map(lambda x:x.split('\003'))\
-        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq).map(lambda  x:x[1])
-    words=set(wordrdd.collect())
+        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq)
+    words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
     broadcastVar = sc.broadcast(words)
-    dict = broadcastVar.value
+    worddic = broadcastVar.value
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     doc_num = 50000000
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
+    # {}.get()
+    rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
 
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
@@ -229,8 +230,9 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
+    worddicRs = dict(zip(worddic.values(),worddic.keys()))
     rst=joinrs.groupByKey().map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
-        [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
+        [worddicRs.get(i[0])+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
 '''
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
@@ -245,10 +247,10 @@ def f_coding(x):
 # add position
 
 def title_clean(x):
-    lv=f_coding(x).split('@_@')
+    lv=f_coding(x).split('\003')
     rs=[]
     for i in lv:
-        kv=i.split()
+        kv=i.split('\002')
         s=len(kv)
         for index,v in enumerate(kv,1):
             if  not v.find('_n'):continue

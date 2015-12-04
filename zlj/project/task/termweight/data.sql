@@ -38,4 +38,24 @@ and  LENGTH (user_id)>0 and  LENGTH (item_id)>0
 group by item_id,user_id
 )t2
 on t1.item_id=t2.item_id
-group by user_id
+group by user_id ;
+
+
+create table t_zlj_feed_tag_0701 as
+select
+user_id, concat_ws('\003', collect_set(hmm)) as hmm
+from
+(
+    select item_id,concat_ws('\002',title_cut_stag,concat(cat_name,'-c_n'), concat(brand_name,'-b_n'))  as hmm
+     from t_base_ec_item_title_cut_with_brand_tag_c
+     where LENGTH(item_id)>0
+)t1
+join
+(
+select item_id,user_id from t_base_ec_item_feed_dev
+where ds>20150701
+and  LENGTH (user_id)>0 and  LENGTH (item_id)>0
+group by item_id,user_id
+)t2
+on t1.item_id=t2.item_id
+group by user_id ;
