@@ -59,7 +59,7 @@ if __name__=="__main__":
 	#cat_name=sys.argv[1]
 	#cat_name=u"日用百货"
 	#广播字典
-	cat_dict=sc.broadcast(sc.textFile(sys.argv[1]+"*").map(lambda x:get_cat_map(cat_name.decode('utf-8'),x)).filter(lambda x:x!=None).collectAsMap())
+	cat_dict=sc.broadcast(sc.textFile(sys.argv[1]+"*").map(lambda x:get_cat_map(x)).filter(lambda x:x!=None).collectAsMap())
 	#item.data运算
 	rdd_item=sc.textFile(sys.argv[2]).map(lambda x:get_item(cat_dict.value,x)).filter(lambda x:x!=None).distinct()
 	#广播item_dict
@@ -72,6 +72,6 @@ if __name__=="__main__":
 	#for line in sys.stdin:
 	#print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
 
-# spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 pre_process_spark.py \
+# spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 test2.py \
 # /user/wrt/cat_map.txt /user/wrt/test/item_家居家纺.dat /user/wrt/test/pageview_家居家纺.dat \
-# /user/zlj/wrt/test/jiaju_keyword_itemtitle4
+# /user/zlj/wrt/test/jiaju_keyword_itemtitle5
