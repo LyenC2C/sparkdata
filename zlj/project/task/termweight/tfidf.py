@@ -57,12 +57,12 @@ schema = StructType([
 #     StructField("tfidftags", StringType(), True)
 # ])
 
-def join1(x,dict):
-    word=x[0]
+def join1(x,dict,worddic):
+    word_index=x[0]
     doc_id=x[1][0]
     tf=x[1][1]
-    tfidf=tf*dict.get(word,0.5)
-
+    tfidf=tf*dict.get(word_index,0.5)
+    word=worddic.get(word_index,'')
     if(word.endswith('-b')):
         tfidf=tfidf*1.5
         word=word.replace('-b','')
@@ -226,13 +226,14 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     broadcastVar = sc.broadcast(idfrdd.collectAsMap())
     idfdict = broadcastVar.value
     # rddjoin=idfrdd.join(tfrdd)
-    joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
+    worddicRs = dict(zip(worddic.values(),worddic.keys()))
+    joinrs=tfrdd.map(lambda  x: join1(x,idfdict,worddicRs))
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
-    worddicRs = dict(zip(worddic.values(),worddic.keys()))
+
     rst=joinrs.groupByKey().map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
-        [worddicRs.get(i[0])+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
+        [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
 '''
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
@@ -304,7 +305,7 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
-        rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0901 limit 1000000').map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0901 limit 1000').map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
         # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
 
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
