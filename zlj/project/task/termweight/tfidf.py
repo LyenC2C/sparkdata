@@ -57,12 +57,12 @@ schema = StructType([
 #     StructField("tfidftags", StringType(), True)
 # ])
 
-def join1(x,dict):
-    word=x[0]
+def join1(x,dict,worddic):
+    word_index=x[0]
     doc_id=x[1][0]
     tf=x[1][1]
-    tfidf=tf*dict.get(word,0.5)
-
+    tfidf=tf*dict.get(word_index,0.5)
+    word=worddic.get(word_index,'')
     if(word.endswith('-b')):
         tfidf=tfidf*1.5
         word=word.replace('-b','')
@@ -136,7 +136,6 @@ user_id, concat_ws('@_@', collect_set(hmm)) as hmm
 
 from
 (
-
     select item_id,concat_ws(' ',title_cut_stag,concat(cat_name,'-c_n'), concat(brand_name,'-b_n'))  as hmm
      from t_base_ec_item_title_cut_with_brand_tag_c
      where LENGTH(item_id)>0
@@ -174,29 +173,46 @@ def groupvalue(y):
     for key, group in itertools.groupby(y, lambda item: item[0]):
         lv.append((key, sum([item[1] for item in group])))
     return lv
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
+def f_coding(x):
+    if type(x) == type(""):
+        return x.decode("utf-8")
+    else:
+        return x
 
 import math
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     # doc_num = rdd_pre.map(lambda x:x[0]).count()
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
-    words_rdd = rdd_pre.coalesce(20).map(lambda x: tcount(x[1]))\
-                .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
-
-    words_rdd.saveAsTextFile('/user/zlj/word_count')
-    words_rdd.filter(lambda x: (x[1] > min_freq )).saveAsTextFile('/user/zlj/word_count_filter_min')
-    words_rdd.cache()
-    # filter more words
-    max=math.sqrt(words_rdd.map(lambda x: x[1]).max())
-    words_rdd.filter(lambda x: x[1]<max).saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
-    words=set(words_rdd.filter(lambda x: x[1]<max).map(lambda x:x[0]).collect())
-
-
+#     words_rdd = rdd_pre.coalesce(20).map(lambda x: tcount(x[1]))\
+#                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
+# # str(f_coding(valid_jsontxt(x[0])))+"\t"+str(x[1])
+#     words_rdd.saveAsTextFile('/user/zlj/word_count')
+#     words_rdd_min=words_rdd.filter(lambda x: (x[1] > min_freq ))
+#     words_rdd_min.cache()
+#     words_rdd_min.saveAsTextFile('/user/zlj/word_count_filter_min')
+#
+#     # filter more words
+#     max=math.sqrt(words_rdd_min.map(lambda x: x[1]).max())
+#     words_rdd_max=words_rdd_min.filter(lambda x:x[1]<max)
+#     words_rdd_max.saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
+#     words=set(words_rdd_max.map(lambda x:x[0]).collect())
+    top_freq=124706*2
+    min_freq=10
+    wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
+        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq)
+    words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
     broadcastVar = sc.broadcast(words)
-    dict = broadcastVar.value
+    worddic = broadcastVar.value
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     doc_num = 50000000
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
+    # {}.get()
+    rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
 
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
@@ -210,10 +226,12 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     broadcastVar = sc.broadcast(idfrdd.collectAsMap())
     idfdict = broadcastVar.value
     # rddjoin=idfrdd.join(tfrdd)
-    joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
+    worddicRs = dict(zip(worddic.values(),worddic.keys()))
+    joinrs=tfrdd.map(lambda  x: join1(x,idfdict,worddicRs))
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
+
     rst=joinrs.groupByKey().map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
@@ -228,11 +246,12 @@ def f_coding(x):
         return x
 # word_n word_n  word-c_n
 # add position
+
 def title_clean(x):
-    lv=f_coding(x).split('@_@')
+    lv=f_coding(x).split('\003')
     rs=[]
     for i in lv:
-        kv=i.split()
+        kv=i.split('\002')
         s=len(kv)
         for index,v in enumerate(kv,1):
             if  not v.find('_n'):continue
@@ -285,7 +304,9 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0901 limit 1000').map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
 
         rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
         df=hiveContext.createDataFrame(rst,schema)

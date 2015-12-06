@@ -93,8 +93,8 @@ def get_pageview(line):
         if ls[13] == "NULL":
             srch_url = valid_jsontxt(get_sousuo(ls[12])[1]).split('&')[0]
             srch_word = urllib.unquote(srch_url) #+ "***"
-        if valid_jsontxt(srch_word).isdigit(): #去掉纯数字
-            return None
+        #if valid_jsontxt(srch_word).isdigit(): #去掉纯数字
+            #return None
         flag = "2"
         lv.append(valid_jsontxt(srch_word))
         lv.append(valid_jsontxt(ls[0]))
@@ -107,7 +107,6 @@ def get_pageview(line):
         return None
 def heti(x,y):
     flag = "0"
-    sum = 0
     lv = []
     for ln in y:
         ss = ln.split('\t')
@@ -146,5 +145,7 @@ if __name__ == "__main__":
     #for line in sys.stdin:
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
 
-#spark-submit  --executor-memory 4G  --driver-memory 8G  --total-executor-cores 40 pre_process_spark.py \
-#/user/wrt/cat_map/ item_电器.dat  /user/zlj/baifendian.data/pageview_refer.data/pageview_Cjumeiyoupin.dat
+# spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 pre_process_spark.py \
+# /user/wrt/cat_map.txt /user/wrt/test/item_家居家纺.dat /user/wrt/test/pageview_家居家纺.dat \
+# /user/zlj/wrt/test/jiaju_keyword_itemtitle4
+
