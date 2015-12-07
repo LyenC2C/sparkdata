@@ -132,6 +132,8 @@ if __name__ == "__main__":
                 .groupByKey()\
                 .map(lambda (x,y):clean_data_by_hisfeedid(x,y))
 
+        rdd_res.cache()
+
         rdd_all_feedid = rdd_res.map(lambda x:x[1])\
                     .map(lambda x:"\001".join(x))\
                     .coalesce(300)
@@ -142,7 +144,7 @@ if __name__ == "__main__":
 
         rdd_data = rdd_res.map(lambda x:x[0])\
                     .flatMap(lambda x:x)\
-                    .coalesce(min(rdd_res.getNumPartitions(),500))
+                    .coalesce(min(rdd_res.getNumPartitions(),300))
 
         rdd_all_feedid.saveAsTextFile(sys.argv[4])
         rdd_inc_feedid_num.saveAsTextFile(sys.argv[5])
