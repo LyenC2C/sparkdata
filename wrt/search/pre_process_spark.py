@@ -93,8 +93,8 @@ def get_pageview(line):
         if ls[13] == "NULL":
             srch_url = valid_jsontxt(get_sousuo(ls[12])[1]).split('&')[0]
             srch_word = urllib.unquote(srch_url) #+ "***"
-        if valid_jsontxt(srch_word).isdigit(): #去掉纯数字
-            return None
+        #if valid_jsontxt(srch_word).isdigit(): #去掉纯数字
+            #return None
         flag = "2"  #用户行为表的flag为2
         lv.append(valid_jsontxt(srch_word))
         lv.append(valid_jsontxt(ls[0]))
