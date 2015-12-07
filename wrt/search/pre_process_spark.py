@@ -109,17 +109,21 @@ def get_pageview(line):
 def heti(x,y):
     lv = []
     v1 = "0"
+    v2 = "0"
     y = list(set(y))   #将列表去重
     for i in range(len(y)):
         ss = y[i].split('\t')
         if ss[4] == '1':
             v1 = y[i]
-            y.remove(y[i])
+            #y.remove(y[i])
     #将v1的值提出来，并且只保留一个值
-    if v1 == "0" or y == []:
+    if v1 == "0":
         return [None]
     for ln in y:
-        lv.append("\t".join((ln, v1, x)))
+        ss = ln.split('\t')
+        if ss[4] == '2':
+            v2 = ln
+            lv.append("\t".join((v2, v1, x)))
     #把每个v2与之前的v1和x一起作为结果
     return lv
 
@@ -145,7 +149,7 @@ if __name__ == "__main__":
     #for line in sys.stdin:
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
 
-# spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 pre_process_spark.py \
+# spark-submit  --executor-memory 4G  --driver-memory 10G  --total-executor-cores 40 pre_process_spark.py \
 # /user/wrt/cat_map.txt /user/wrt/test/item_家居家纺.dat /user/wrt/test/pageview_家居家纺.dat \
-# /user/zlj/wrt/test/jiaju_keyword_itemtitle4
+# /user/zlj/wrt/test/jiaju_keyword_itemtitle7
 
