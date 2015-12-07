@@ -13,12 +13,15 @@ def valid_jsontxt(content):
 
 def gen_item_feedid(line):
     ls = line.strip().split("\001")
-    mission_feed_ls = map(lambda x:str(x),sorted(map(lambda x: int(x), ls))[-20:])
-    if len(mission_feed_ls) < 20:
-        tmpls = ['0']
-        tmpls += mission_feed_ls
-        mission_feed_ls = tmpls
-    return ls[0]+'\t'+str(len(ls)-1)+'\t'+'\001'.join(mission_feed_ls)
+    try:
+        mission_feed_ls = map(lambda x:str(x),sorted(map(lambda x: int(x), ls))[-20:])
+        if len(mission_feed_ls) < 20:
+            tmpls = ['0']
+            tmpls += mission_feed_ls
+            mission_feed_ls = tmpls
+        return ls[0]+'\t'+str(len(ls)-1)+'\t'+'\001'.join(mission_feed_ls)
+    except:
+        return None
 
 
 def parse_cmt_new(line_s):
@@ -128,6 +131,7 @@ if __name__ == "__main__":
         hive_dbpath = sys.argv[2]
         sc.textFile(hive_dbpath) \
             .map(lambda x: gen_item_feedid(x)) \
+            .filter(lambda x:x!=None)\
             .saveAsTextFile(sys.argv[3])
         sc.stop()
 
