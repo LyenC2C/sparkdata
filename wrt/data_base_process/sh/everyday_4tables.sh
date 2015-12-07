@@ -1,4 +1,4 @@
-pre_path='/home/wrt/wrt/sparkdata'
+pre_path='/home/wrt/sparkdata'
 today=$(date +%Y%m%d)
 zuotian=$(date -d '1 days ago' +%Y%m%d)
 qiantian=$(date -d '2 days ago' +%Y%m%d)
