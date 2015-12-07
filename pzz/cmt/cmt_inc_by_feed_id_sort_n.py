@@ -119,7 +119,7 @@ def clean_data_by_hisfeedid_sorted(y):
 
 if __name__ == "__main__":
     if sys.argv[1] == '-h':
-        comment = '-gen_his_item_feed_file \t argv[2]:hive db file,argv[3]:output dir \t 提取库里商品feedid' + \
+        comment = '-gen_mission_feedid_file \t argv[2]:hive db file,argv[3]:output dir \t 生成任务feedid' + \
                   '-gen_data_inc \t argv[2]:his_item_feed_file argv[3]:data path to insert argv[4-5-6]:[all_feedid new_feedid data] output dir \t 根据his_item_feed_file,每日新增评论去重，过滤库里已有\n'
 
         print comment
