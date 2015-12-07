@@ -22,7 +22,7 @@ def get_cat_map(line):
         pass
     else:
         #cate=ls[-1].split('$')[0]
-        #if cat_name ==cate:
+        #if cat_name == cate:
         return (ls[-2].replace('$','|'),ls[-1].replace('$','|'))
     #else:
     #	return None
@@ -30,7 +30,7 @@ def get_cat_map(line):
 def get_item(cat_dict, line):
     lv = []
     ls = line.strip().split('\t')
-    if len(ls)<24:
+    if len(ls) < 24:
         return None
     key = ls[14].replace('-', '|')
     import re
@@ -38,7 +38,7 @@ def get_item(cat_dict, line):
         key='|'.join(key.split('|')[:-2])
     if key in cat_dict:
         url_key = ls[3].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]#url规范化方法
-        flag = "1"
+        flag = "1"  #item表的flag为1
         lv.append(valid_jsontxt(ls[2]))
         lv.append(valid_jsontxt(ls[14]))
         lv.append(valid_jsontxt(cat_dict[key]))
@@ -93,9 +93,9 @@ def get_pageview(line):
         if ls[13] == "NULL":
             srch_url = valid_jsontxt(get_sousuo(ls[12])[1]).split('&')[0]
             srch_word = urllib.unquote(srch_url) #+ "***"
-        #if valid_jsontxt(srch_word).isdigit(): #去掉纯数字
-            #return None
-        flag = "2"
+        if valid_jsontxt(srch_word).isdigit(): #去掉纯数字
+            return None
+        flag = "2"  #用户行为表的flag为2
         lv.append(valid_jsontxt(srch_word))
         lv.append(valid_jsontxt(ls[0]))
         lv.append(valid_jsontxt(ls[11]))
@@ -105,23 +105,23 @@ def get_pageview(line):
         #匹配关键词 , 搜索词 网站名 商品页url 搜索引擎页url
     else:
         return None
+#用户行为表与item表关联成一张表，x为关联的key，y为集成了flag=1与2的列表
 def heti(x,y):
-    flag = "0"
     lv = []
+    v1 = "0"
+    y = list(set(y))   #将列表去重
+    for i in range(len(y)):
+        ss = y[i].split('\t')
+        if ss[4] == '1':
+            v1 = y[i]
+            y.remove(y[i])
+    #将v1的值提出来，并且只保留一个值
+    if v1 == "0" or y == []:
+        return [None]
     for ln in y:
-        ss = ln.split('\t')
-        if len(lv) < 2:
-            if flag != ss[4]:
-                flag = ss[4]
-                #sum += 1
-                lv.append(ln)
-        else:
-            if valid_jsontxt(lv[0][-1]) == "2":
-                return "\t".join((lv[0], lv[1], x))
-            if valid_jsontxt(lv[0][-1]) == "1":
-                return "\t".join((lv[1], lv[0], x))
-    if len(lv) < 2:
-        return None
+        lv.append("\t".join((ln, v1, x)))
+    #把每个v2与之前的v1和x一起作为结果
+    return lv
 
 if __name__ == "__main__":
     sc=SparkContext(appName="pyspark baifendian pre_process")
@@ -132,14 +132,14 @@ if __name__ == "__main__":
         .repartition(1).collectAsMap())
     #item.data运算
     rdd_item = sc.textFile(sys.argv[2]).map(lambda x: get_item(cat_dict.value, x)).filter(lambda x:x!=None)
-        #.groupByKey().mapValues(list).map(lambda (x,y): (x,y[0]))
+        #.groupByKey().mapValues(list).map(lambda (x, y): (x, y[0]))
     #广播item_dict
     #item_dict = sc.broadcast(rdd_item.map(lambda x:get_item_dict(x)).filter(lambda x:x!=None).collectAsMap())
     #pageview.data运算
     rdd_pageview = sc.textFile(sys.argv[3]).map(lambda x:get_pageview(x)).filter(lambda x:x!=None)
         #.groupByKey().mapValues(list).map(lambda (x,y): (x,y[0]))
     #rdd_item.saveAsTextFile(sys.argv[4])
-    rdd = rdd_pageview.union(rdd_item).groupByKey().mapValues(list).map(lambda (x, y): heti(x, y)).filter(lambda x:x!=None)
+    rdd = rdd_pageview.union(rdd_item).groupByKey().mapValues(list).flatMap(lambda (x, y): heti(x, y)).filter(lambda x:x!=None)
     rdd.saveAsTextFile(sys.argv[4])
     sc.stop()
     #for line in sys.stdin:
