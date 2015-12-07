@@ -169,7 +169,6 @@ def tcount(lv):
         re.append((i,lv.count(i)))
     return re
 
-import itertools
 
 # 最后合并
 # [ (word,tfidf) .....]
@@ -190,9 +189,9 @@ def groupvalue(y):
                 break
         if flag==0:s1[k]=s2[k]
 
-    lv=[(k,v) for k,v in s1.iteritems()]
-    for key, group in itertools.groupby(y, lambda item: item[0]):
-        lv.append((key, sum([item[1] for item in group])))
+    lv=[(k.split('-')[0],v) for k,v in s1.iteritems()]
+    # for key, group in itertools.groupby(y, lambda item: item[0]):
+    #     lv.append((key, sum([item[1] for item in group])))
     return lv
 def valid_jsontxt(content):
     if type(content) == type(u""):
