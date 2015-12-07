@@ -1,13 +1,15 @@
-# encoding: utf-8
+#coding:utf-8
 __author__ = 'zlj'
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 from pyspark import SparkContext
 
 from pyspark.sql import *
 from pyspark.sql.types import *
 from itertools import groupby
 
-sc = SparkContext(appName="hmm")
+sc = SparkContext(appName="term weight")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
@@ -79,7 +81,7 @@ def join1(x,dict,worddic):
         tfidf=tfidf*1.5
         word=word.replace('_E1','')
     elif(word.endswith('_E2')):
-        tfidf=tfidf*1.1
+        tfidf=tfidf*1.3
         word=word.replace('_E2','')
 
     return (doc_id,(word,tfidf))
@@ -167,7 +169,6 @@ def tcount(lv):
         re.append((i,lv.count(i)))
     return re
 
-import itertools
 
 # 最后合并
 # [ (word,tfidf) .....]
@@ -188,9 +189,9 @@ def groupvalue(y):
                 break
         if flag==0:s1[k]=s2[k]
 
-    lv=[(k,v) for k,v in s1.iteritems()]
-    for key, group in itertools.groupby(y, lambda item: item[0]):
-        lv.append((key, sum([item[1] for item in group])))
+    lv=[(k.split('-')[0],v) for k,v in s1.iteritems()]
+    # for key, group in itertools.groupby(y, lambda item: item[0]):
+    #     lv.append((key, sum([item[1] for item in group])))
     return lv
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -221,11 +222,12 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 #     words_rdd_max=words_rdd_min.filter(lambda x:x[1]<max)
 #     words_rdd_max.saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
 #     words=set(words_rdd_max.map(lambda x:x[0]).collect())
-    top_freq=124706*2
-    min_freq=10
+    top_freq=int(124706*2.5)
+    min_freq=5
 
     wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
-        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq and (x[1].find('其他')<0))
+        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq )
+    # and (x[1].find('其他')<0)
     words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
     broadcastVar = sc.broadcast(words)
     worddic = broadcastVar.value
