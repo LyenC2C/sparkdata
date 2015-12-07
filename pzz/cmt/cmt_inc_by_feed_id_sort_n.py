@@ -19,6 +19,7 @@ def gen_item_feedid(line):
             tmpls = ['0']
             tmpls += mission_feed_ls
             mission_feed_ls = tmpls
+        int(ls[0])
         return ls[0]+'\t'+str(len(ls)-1)+'\t'+'\001'.join(mission_feed_ls)
     except:
         return None
