@@ -14,7 +14,7 @@ def valid_jsontxt(content):
 def gen_item_feedid(line):
     ls = line.strip().split("\001")
     try:
-        mission_feed_ls = map(lambda x:str(x),sorted(map(lambda x: int(x), ls))[-20:])
+        mission_feed_ls = map(lambda x:str(x),sorted(map(lambda x: int(x), ls[1:]))[-20:])
         if len(mission_feed_ls) < 20:
             tmpls = ['0']
             tmpls += mission_feed_ls
