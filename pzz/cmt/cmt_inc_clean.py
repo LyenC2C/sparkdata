@@ -123,7 +123,8 @@ if __name__ == "__main__":
             .filter(lambda x: x != None)\
             .flatMap(lambda x:x)\
             .groupByKey()\
-            .map(lambda (x,y):[x,[1,uniq_cmt(y)]])
+            .map(lambda (x,y):[x,[1,y]])
+            #.map(lambda (x,y):[x,[1,uniq_cmt(y)]])
 
             #groupByKey(120) before setting some oom error
 
@@ -133,7 +134,7 @@ if __name__ == "__main__":
 
         rdd_all_feedid = rdd_res.map(lambda x:x[1])\
                     .map(lambda x:"\001".join(x))\
-                    .coalesce(200)
+                    .coalesce(300)
 
         rdd_inc_feedid_num = rdd_res.map(lambda (x,y,z):(y,z))\
                     .map(lambda (y,z):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1))\
@@ -141,7 +142,7 @@ if __name__ == "__main__":
 
         rdd_data = rdd_res.map(lambda x:x[0])\
                     .flatMap(lambda x:x)\
-                    .coalesce(min(rdd_res.getNumPartitions(),300))
+                    .coalesce(min(rdd_res.getNumPartitions(),500))
 
         rdd_all_feedid.saveAsTextFile(sys.argv[4])
         rdd_inc_feedid_num.saveAsTextFile(sys.argv[5])

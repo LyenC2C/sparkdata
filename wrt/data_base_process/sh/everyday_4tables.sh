@@ -2,8 +2,8 @@
 source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 today=$(date +%Y%m%d)
-#zuotian=$(date -d '1 days ago' +%Y%m%d)
-#qiantian=$(date -d '2 days ago' +%Y%m%d)
+zuotian=$(date -d '1 days ago' +%Y%m%d)
+qiantian=$(date -d '2 days ago' +%Y%m%d)
 zuotian='20151205'
 qiantian='20151204'
 
@@ -18,4 +18,4 @@ spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 
 $pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
 /commit/iteminfo/$zuotian/*  $qiantian $zuotian
 
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql $zuotian $qiantian $zuotian $zuotian
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql $qiantian $zuotian $zuotian
