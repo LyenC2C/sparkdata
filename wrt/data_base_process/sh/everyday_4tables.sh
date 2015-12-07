@@ -1,3 +1,5 @@
+#!/bin/sh
+source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 today=$(date +%Y%m%d)
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
