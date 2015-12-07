@@ -202,7 +202,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 #     words_rdd_max=words_rdd_min.filter(lambda x:x[1]<max)
 #     words_rdd_max.saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
 #     words=set(words_rdd_max.map(lambda x:x[0]).collect())
-    top_freq=124706
+    top_freq=124706*2
     min_freq=10
     wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq)
