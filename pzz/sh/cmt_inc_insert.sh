@@ -48,6 +48,7 @@ hadoop fs -put ${local_tmp_new_feed} ${new_feed_output}/
 
 hadoop fs -rmr ${tmp_data}/part* > ${local_tmp_inc_data}
 hadoop fs -rmr ${tmp_data}/part*
+hadoop fs -put ${local_tmp_inc_data} ${new_data_input}/
 
 hadoop fs -rmr ${tmp_data}.test
 hadoop fs -cp $tmp_data ${tmp_data}.test
