@@ -1,13 +1,15 @@
 #coding:utf-8
 __author__ = 'zlj'
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 from pyspark import SparkContext
 
 from pyspark.sql import *
 from pyspark.sql.types import *
 from itertools import groupby
 
-sc = SparkContext(appName="hmm")
+sc = SparkContext(appName="term weight")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
@@ -225,7 +227,8 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     min_freq=5
 
     wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
-        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq and (x[1].find('其他')<0))
+        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq )
+    # and (x[1].find('其他')<0)
     words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
     broadcastVar = sc.broadcast(words)
     worddic = broadcastVar.value
