@@ -13,9 +13,9 @@ def valid_jsontxt(content):
 
 def gen_item_feedid(line):
     ls = line.strip().split("\001")
-    mission_feed_ls = sorted(ls[1:])[-20:]
+    mission_feed_ls = map(lambda x:str(x),sorted(map(lambda x: int(x), ls))[-20:])
     if len(mission_feed_ls) < 20:
-        tmpls = [0]
+        tmpls = ['0']
         tmpls += mission_feed_ls
         mission_feed_ls = tmpls
     return ls[0]+'\t'+str(len(ls)-1)+'\t'+'\001'.join(mission_feed_ls)
@@ -105,12 +105,11 @@ def clean_data_by_hisfeedid_sorted(y):
                     feedid_dic[feedid] = None
                     all_feed_num += 1
 
-    mission_feed_ls = sorted(map(lambda x: int(x), feedid_dic.keys()))[-20:]
+    mission_feed_ls = map(lambda x:str(x),sorted(map(lambda x: int(x), feedid_dic.keys()))[-20:])
     if len(mission_feed_ls) < 20:
-        ls = [0]
-        ls += mission_feed_ls
-        mission_feed_ls = ls
-
+        tmpls = ['0']
+        tmpls += mission_feed_ls
+        mission_feed_ls = tmpls
     #return [itemid,新增数据ls，任务产出feedid ls，所有feed数量，新增feed数量]
     return [rls, mission_feed_ls, all_feed_num, len(new_item_feedid_ls)]
 
