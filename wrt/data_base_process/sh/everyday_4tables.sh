@@ -1,9 +1,11 @@
+#!/bin/sh
+source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 today=$(date +%Y%m%d)
-#zuotian=$(date -d '1 days ago' +%Y%m%d)
-#qiantian=$(date -d '2 days ago' +%Y%m%d)
-#zuotian='20151205'
-#qiantian='20151204'
+zuotian=$(date -d '1 days ago' +%Y%m%d)
+qiantian=$(date -d '2 days ago' +%Y%m%d)
+zuotian='20151205'
+qiantian='20151204'
 
 spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
 $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py $zuotian $qiantian
