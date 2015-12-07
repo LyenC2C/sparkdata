@@ -46,7 +46,7 @@ hadoop fs -cat ${new_feed_output}/part* > ${local_tmp_new_feed}
 hadoop fs -rmr ${new_feed_output}/part*
 hadoop fs -put ${local_tmp_new_feed} ${new_feed_output}/
 
-hadoop fs -rmr ${tmp_data}/part* > ${local_tmp_inc_data}
+hadoop fs -cat ${tmp_data}/part* > ${local_tmp_inc_data}
 hadoop fs -rmr ${tmp_data}/part*
 hadoop fs -put ${local_tmp_inc_data} ${new_data_input}/
 
