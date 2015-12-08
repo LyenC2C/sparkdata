@@ -25,4 +25,4 @@
 #1111_add
 #sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh $last_feedid_1111_add/part* $data_dir_1111_add $all_feedid_1111_add $new_feedid_1111_add $inc_data_dir_1111_add
 
-sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh /commit/comments/20151126/* 20151126 20151124
+sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh /commit/comments/20151127/* 20151127 20151126
