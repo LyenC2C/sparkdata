@@ -35,7 +35,7 @@ def get_item(cat_dict, line):
     key = ls[14].replace('-', '|')
     import re
     if re.findall(r'\d+',key):
-        key='|'.join(key.split('|')[:-2])
+        key = '|'.join(key.split('|')[:-2])
     if key in cat_dict:
         url_key = ls[3].split('/')[-1].split('=')[-1].split('?')[0].split('.')[0]#url规范化方法
         flag = "1"  #item表的flag为1
@@ -148,8 +148,8 @@ if __name__ == "__main__":
     sc.stop()
     #for line in sys.stdin:
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
-
-# spark-submit  --executor-memory 4G  --driver-memory 10G  --total-executor-cores 40 pre_process_spark.py \
-# /user/wrt/cat_map.txt /user/wrt/test/item_家居家纺.dat /user/wrt/test/pageview_家居家纺.dat \
-# /user/zlj/wrt/test/jiaju_keyword_itemtitle7
-
+'''
+spark-submit  --executor-memory 4G  --driver-memory 10G  --total-executor-cores 40 pre_process_spark.py \
+/user/wrt/cat_map.txt /user/wrt/item_pageview/item_wenhuayule.dat /user/wrt/item_pageview/pageview_文化娱乐.dat \
+/user/zlj/wrt/search/wenhua
+'''
