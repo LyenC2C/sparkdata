@@ -7,7 +7,7 @@ from pyspark import SparkContext
 def f(x):
     ss = x.split('\t')
     u = ss[0]
-    b = ss[1]
+    b = ss[5]
     a = ""
     #u = u.decode('UTF-8')
     for uchar in u:
