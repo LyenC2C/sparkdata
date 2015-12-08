@@ -24,5 +24,5 @@ def f(x):
 if __name__ == "__main__":
     sc=SparkContext(appName="keyword_title")
     rdd = sc.textFile(sys.argv[1])
-    rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/zlj/temp/seachfile/'+sys.argv[2])
+    rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/zlj/wrt/test/'+sys.argv[2])
 
