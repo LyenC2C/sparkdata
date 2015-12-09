@@ -209,35 +209,21 @@ import math
 支持大规模数据集
 需要自定义word词表
 '''
-def tfidf(rdd_pre,top_freq,min_freq,limit):
-    # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
-    # doc_num = rdd_pre.map(lambda x:x[0]).count()
-    # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
-#     words_rdd = rdd_pre.coalesce(20).map(lambda x: tcount(x[1]))\
-#                 .flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
-# # str(f_coding(valid_jsontxt(x[0])))+"\t"+str(x[1])
-#     words_rdd.saveAsTextFile('/user/zlj/word_count')
-#     words_rdd_min=words_rdd.filter(lambda x: (x[1] > min_freq ))
-#     words_rdd_min.cache()
-#     words_rdd_min.saveAsTextFile('/user/zlj/word_count_filter_min')
-#
-#     # filter more words
-#     max=math.sqrt(words_rdd_min.map(lambda x: x[1]).max())
-#     words_rdd_max=words_rdd_min.filter(lambda x:x[1]<max)
-#     words_rdd_max.saveAsTextFile('/user/zlj/word_count_filter_min_max'+" "+str(max))
-#     words=set(words_rdd_max.map(lambda x:x[0]).collect())
-    top_freq=int(124706*2.5)
-    min_freq=5
+def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
+    # top_freq=int(124706*2.5)
+    # min_freq=5
 
     wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq  and (x[1].find('-c')<0))
-    words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
+    # words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
+    words=wordrdd.map(lambda  x:(int(x[0]))).collect()
     broadcastVar = sc.broadcast(words)
     worddic = broadcastVar.value
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     doc_num = 50000000
     # {}.get()
-    rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
+    # rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
+    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in  worddic]))
 
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
@@ -256,7 +242,6 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
-    rdd.saveAsTextFile()
     rst=joinrs.groupByKey().map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
@@ -301,6 +286,17 @@ def title_clean(x):
     # ls=[i for i in rs if i.find('_n') and  len(i.split('_'))>1]
     return rs
 
+def title_clean_ali(x):
+    def f(w,n):
+        ls=[]
+        for i in xrange(n):
+            ls.append(int(w))
+        return ls
+    lv=[]
+    for i in x.split('\003'):
+        w,n=i.split('\002')
+        lv.extend(w,int(n))
+    return lv
 
 import sys
 if __name__ == "__main__":
@@ -325,21 +321,42 @@ if __name__ == "__main__":
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
     elif sys.argv[1]=='-usertfidf_brand':
         i=1
+        top_freq=int(124706*2.5)
         min_freq=int(sys.argv[i+1])
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
+        index_file='/user/zlj/need/vocab_index'
         # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
         rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0901 limit 1000').map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
         # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
 
-        rst=tfidf(rdd_pre,top_freq=1000,min_freq=min_freq,limit=limit)
+        rst=tfidf(rdd_pre,top_freq=top_freq,min_freq=min_freq,limit=limit,index_file=index_file)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
         # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+    elif sys.argv[1]=='-aliseg':
+        i=1
+        top_freq=int(3981121)
+        min_freq=int(sys.argv[i+1])
+        limit=int(sys.argv[i+2])
+        feed_ds=sys.argv[i+3]
+        output_talbe=sys.argv[i+4]
+        # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
+        rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0701_ali limit 1000').map(lambda x: (x.user_id, title_clean_ali(x[1]))).coalesce(100)
+        # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
+        index_file='/user/zlj/project/termweight/init_word_index_count'
+        rst=tfidf(rdd_pre,top_freq=top_freq,min_freq=min_freq,limit=limit,index_file=index_file)
+        df=hiveContext.createDataFrame(rst,schema)
+        hiveContext.registerDataFrameAsTable(df, 'tmptable')
+        # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
+        # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
+        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+
     elif sys.argv[1]=='-item':
         i=1
         min_freq=int(sys.argv[i+1])
