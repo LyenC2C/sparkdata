@@ -27,4 +27,4 @@ def tcount(ls):
     for i in s:
         re.append(str(i)+"\002"+str(lv.count(i)))
     return '\003'.join(re)
-rdd.map(lambda (x,y):(y[0],y[1])).groupByKey().map(lambda (x,y):x+"\001"+tcount(y)).saveAsTextFile('/user/zlj/project/termweight/joininfo')
+rdd.map(lambda (x,y):(y[0],y[1])).groupByKey().map(lambda (x,y):str(x)+"\001"+tcount(y)).saveAsTextFile('/user/zlj/project/termweight/joininfo')
