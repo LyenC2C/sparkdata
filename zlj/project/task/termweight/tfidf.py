@@ -205,6 +205,10 @@ def f_coding(x):
         return x
 
 import math
+'''
+支持大规模数据集
+需要自定义word词表
+'''
 def tfidf(rdd_pre,top_freq,min_freq,limit):
     # words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).reduceByKey(lambda a,b:a+b).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     # doc_num = rdd_pre.map(lambda x:x[0]).count()
@@ -226,8 +230,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     min_freq=5
 
     wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
-        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq )
-    # and (x[1].find('其他')<0)
+        .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq  and (x[1].find('-c')<0))
     words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
     broadcastVar = sc.broadcast(words)
     worddic = broadcastVar.value
@@ -253,7 +256,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
-
+    rdd.saveAsTextFile()
     rst=joinrs.groupByKey().map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
@@ -261,15 +264,15 @@ def tfidf(rdd_pre,top_freq,min_freq,limit):
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
 '''
 
-def f_coding(x):
-    if type(x) == type(""):
-        return x.decode("utf-8")
-    else:
-        return x
 # word_n word_n  word-c_n
 # add position
-
 def title_clean(x):
+    '''
+    文本内容清理
+    :param x:文本内容 title内部用002 title之间用003
+                    word1\002word2\002\word3\003word1\002word2\002\word3
+    :return: 清理后内容，增加了位置信息
+    '''
     lv=f_coding(x).split('\003')
     rs=[]
     for i in lv:
