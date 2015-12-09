@@ -66,3 +66,4 @@ hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 echo "mission FINISH! "$2
 end_t=`date`
 echo "start at:"${start_t}", end at:"${end_t}
+echo $2 >> /mnt/pzz/workspace/sparkdata/mission_finished
