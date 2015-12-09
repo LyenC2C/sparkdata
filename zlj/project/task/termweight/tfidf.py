@@ -38,7 +38,8 @@ def tf(x, y):
 
 def df(x, y):
     lv = []
-    for i in set(y):
+    s=set(y)
+    for i in s:
         lv.append((i, 1))
     return lv
 
