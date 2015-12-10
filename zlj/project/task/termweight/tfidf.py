@@ -279,16 +279,25 @@ def title_clean(x):
     return rs
 
 def title_clean_ali(x):
-    def f(w,n):
-        ls=[]
-        for i in xrange(n):
-            ls.append(int(w))
-        return ls
-    lv=[]
-    for i in x.split('\003'):
-        w,n=i.split('\002')
-        lv.extend(w,int(n))
-    return lv
+    lv=f_coding(x).split('\003')
+    rs=[]
+    for i in lv:
+        kv=i.split('\002')
+        s=len(kv)
+        for index,v in enumerate(kv,1):
+
+            word=v.split('_')[0]
+            if  len(word)<2:continue
+            if word.replace('.','',1).isdigit(): continue
+            if index==(s-3):
+                rs.append(word+'_E2')
+            elif index==(s-2):
+                rs.append(word+'_E1')
+            elif index==1:
+                rs.append(word+'_B1')
+            else:
+                rs.append(word)
+    return rs
 
 import sys
 if __name__ == "__main__":
@@ -338,7 +347,7 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
-        rdd_pre =sc.textFile('/user/zlj/project/termweight/joininfo/part-00000').map(lambda x:x.split('\001')).map(lambda x: (x[0], title_clean(x[1]))).coalesce(100)
+        rdd_pre =sc.textFile('/user/zlj/project/termweight/joininfo/part-00000').map(lambda x:x.split('\001')).map(lambda x: (x[0], title_clean_ali(x[1]))).coalesce(100)
         # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
         index_file='/user/zlj/project/termweight/init_word_index_count'
         rst=tfidf(rdd_pre,top_freq=top_freq,min_freq=min_freq,limit=limit,index_file=index_file)
