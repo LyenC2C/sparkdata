@@ -65,7 +65,7 @@ def join1(x,dict,worddic):
     doc_id=x[1][0]
     tf=x[1][1]
     tfidf=tf*dict.get(word_index,0.5)
-    word=worddic.get(word_index,'')
+    word=word_index
     if(word.endswith('-b')):
         tfidf=tfidf*1.3
         # word=word.replace('-b','')
@@ -74,17 +74,17 @@ def join1(x,dict,worddic):
         # word=word.replace('-c','')
     elif(word.endswith('_B1')):
         tfidf=tfidf*1.3
-        word=word.replace('_B1','')
+        # word=word.replace('_B1','')
     elif(word.endswith('_B2')):
         tfidf=tfidf*1.2
-        word=word.replace('_B2','')
+        # word=word.replace('_B2','')
     elif(word.endswith('_E1')):
         tfidf=tfidf*1.5
-        word=word.replace('_E1','')
+        # word=word.replace('_E1','')
     elif(word.endswith('_E2')):
         tfidf=tfidf*1.3
-        word=word.replace('_E2','')
-
+        # word=word.replace('_E2','')
+    word=worddic.get(word_index.split('_')[0],'')
     return (doc_id,(word,tfidf))
 
 sql_hmm='''
@@ -213,8 +213,7 @@ import math
 def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
     # top_freq=int(124706*2.5)
     # min_freq=5
-
-    wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
+    wordrdd=sc.textFile(index_file).map(lambda x:x.split('\003'))\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq  and (x[1].find('-c')<0))
     words=wordrdd.map(lambda  x:(x[0],(x[1]))).collectAsMap()
     # words=wordrdd.map(lambda  x:(int(x[0]))).collect()
@@ -223,9 +222,9 @@ def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     doc_num = 50000000
     # {}.get()
+    # {}.has_key()
     # rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i.split('-')[0] in  worddic]))
-
+    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if    worddic.has_key(i.split('_')[0])]))
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
     # word ,len
