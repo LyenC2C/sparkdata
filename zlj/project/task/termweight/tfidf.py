@@ -213,7 +213,7 @@ import math
 def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
     # top_freq=int(124706*2.5)
     # min_freq=5
-    wordrdd=sc.textFile(index_file).map(lambda x:x.split('\003'))\
+    wordrdd=sc.textFile(index_file).map(lambda x:x.split())\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq  and (x[1].find('-c')<0))
     words=wordrdd.map(lambda  x:(x[0],(x[1]))).collectAsMap()
     # words=wordrdd.map(lambda  x:(int(x[0]))).collect()
@@ -224,7 +224,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
     # {}.get()
     # {}.has_key()
     # rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if    worddic.has_key(i.split('_')[0])]))
+    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if    worddic.has_key(i.split('_g')[0])]))
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
     # word ,len
