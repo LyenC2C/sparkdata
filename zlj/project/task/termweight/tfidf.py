@@ -216,15 +216,15 @@ def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
 
     wordrdd=sc.textFile('/user/zlj/need/vocab_index').map(lambda x:x.split('\003'))\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq  and (x[1].find('-c')<0))
-    # words=wordrdd.map(lambda  x:(x[1],int(x[0]))).collectAsMap()
-    words=wordrdd.map(lambda  x:(int(x[0]))).collect()
+    words=wordrdd.map(lambda  x:(x[0],(x[1]))).collectAsMap()
+    # words=wordrdd.map(lambda  x:(int(x[0]))).collect()
     broadcastVar = sc.broadcast(words)
     worddic = broadcastVar.value
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
     doc_num = 50000000
     # {}.get()
     # rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in  worddic]))
+    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i.split('-')[0] in  worddic]))
 
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
@@ -238,8 +238,8 @@ def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
     broadcastVar = sc.broadcast(idfrdd.collectAsMap())
     idfdict = broadcastVar.value
     # rddjoin=idfrdd.join(tfrdd)
-    worddicRs = dict(zip(worddic.values(),worddic.keys()))
-    joinrs=tfrdd.map(lambda  x: join1(x,idfdict,worddicRs))
+    # worddicRs = dict(zip(worddic.values(),worddic.keys()))
+    joinrs=tfrdd.map(lambda  x: join1(x,idfdict,worddic))
     # rddjoin = tfrdd.join(idfrdd)
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
@@ -277,14 +277,6 @@ def title_clean(x):
                 rs.append(word+'_B1')
             else:
                 rs.append(word)
-
-        # rs.append(kv[0]+'_B1')
-        # rs.append(kv[1]+'_B2')
-        # rs.extend(kv[2:length-4])
-        # rs.append(kv[length-3]+'_E2')
-        # rs.append(kv[length-2]+'_E1')
-        # rs.extend(kv[:length-1])
-    # ls=[i for i in rs if i.find('_n') and  len(i.split('_'))>1]
     return rs
 
 def title_clean_ali(x):
@@ -353,8 +345,6 @@ if __name__ == "__main__":
         rst=tfidf(rdd_pre,top_freq=top_freq,min_freq=min_freq,limit=limit,index_file=index_file)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        # hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_tfidf_tags')
-        # hiveContext.sql('create table t_zlj_userbuy_item_tfidf_tags as select * from tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
 
