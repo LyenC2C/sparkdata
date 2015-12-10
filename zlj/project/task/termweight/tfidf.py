@@ -338,7 +338,7 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
-        rdd_pre = hiveContext.sql('select * from t_zlj_feed_tag_0701_ali limit 1000').map(lambda x: (x[0], title_clean(x[1]))).coalesce(100)
+        rdd_pre =sc.textFile('/user/zlj/project/termweight/joininfo/part-00000').map(lambda x:x.split('\001')).map(lambda x: (x[0], title_clean(x[1]))).coalesce(100)
         # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
         index_file='/user/zlj/project/termweight/init_word_index_count'
         rst=tfidf(rdd_pre,top_freq=top_freq,min_freq=min_freq,limit=limit,index_file=index_file)
