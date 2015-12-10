@@ -285,10 +285,7 @@ def title_clean_ali(x):
         kv=i.split('\002')
         s=len(kv)
         for index,v in enumerate(kv,1):
-
             word=v.split('_')[0]
-            if  len(word)<2:continue
-            if word.replace('.','',1).isdigit(): continue
             if index==(s-3):
                 rs.append(word+'_E2')
             elif index==(s-2):
@@ -298,6 +295,7 @@ def title_clean_ali(x):
             else:
                 rs.append(word)
     return rs
+
 
 import sys
 if __name__ == "__main__":
