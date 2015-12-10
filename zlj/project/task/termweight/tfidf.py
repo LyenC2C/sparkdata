@@ -224,7 +224,7 @@ def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
     # {}.get()
     # {}.has_key()
     # rdd = rdd_pre.map(lambda (x, y): (x, [worddic.get(i) for i in y if worddic.has_key(i)]))
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if    worddic.has_key(i.split('_g')[0])]))
+    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if    worddic.has_key(i.split('_')[0])]))
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
     # word ,len
