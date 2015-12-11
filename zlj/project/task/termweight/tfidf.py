@@ -114,7 +114,7 @@ def join1ali(x,idfdict,worddic):
         tfidf=tfidf*1.3
         # word=word.replace('_E2','')
     word=worddic.get(word_index%1200000,'')
-    tfidf=tfidf*math.log(len(word)/2.0+2,2)
+    tfidf=tfidf*math.log(len(word)/2.0+3,3)
     return (doc_id,(word,tfidf))
 
 sql_hmm='''
@@ -326,10 +326,10 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
     # rst=rddjoin.map(lambda (x, y): join(x, y))
     jrdd=joinrs.groupByKey()
 
-    jrdd.map(lambda (x,y):(x," ".join([str(k)+":"+str(v) for k,v in y]))).saveAsTextFile('/user/zlj/temp/joinss')
+    # jrdd.map(lambda (x,y):(x," ".join([str(k)+":"+str(v) for k,v in y]))).saveAsTextFile('/user/zlj/temp/joinss')
     # jrdd.map(lambda (x,y):str(x)+'\001'.join([str(k)+":"+str(v) for k,v in y ])).saveAsTextFile('/user/zlj/project/termweight/jointfidf_rs')
     rst=jrdd.map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[str(x), "\t".join(
-        [str(i[0])+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
+        [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
 '''
 spark-submit  --total-executor-cores  200   --executor-memory  20g  --driver-memory 20g  tfidf.py -item 200   5  20143 t_zlj_corpus_item_seg item_id title_cut  t_zlj_corpus_item_seg_tfidf
