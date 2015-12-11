@@ -430,10 +430,10 @@ if __name__ == "__main__":
         output_talbe=sys.argv[i+4]
         # rdd_pre = hiveContext.sql(sql_tfidfbrand%feed_ds).map(lambda x: (x.user_id, title_clean(x[1]))).coalesce(100)
         rdd_pre =sc.textFile('/user/zlj/project/termweight/joininfo/part-00000').map(lambda x:x.split('\001')).map(lambda x: (x[0], title_clean_ali(x[1]))).coalesce(100)
-        rdd_pre.map(lambda x:x[1]).flatMap(lambda x:x).filter(lambda x: x.find('_')).countByKey()
+        # rdd_pre.map(lambda x:x[1]).flatMap(lambda x:x).filter(lambda x: x.find('_')).countByKey()
         # rdd_pre.map(lambda x:" ".join(x[1])).saveAsTextFile('/user/zlj/corpus')
         index_file='/user/zlj/project/termweight/init_word_index_count'
-        rst=tfidf(rdd_pre,top_freq=top_freq,min_freq=min_freq,limit=limit,index_file=index_file)
+        rst=tfidfali(rdd_pre,top_freq=top_freq,min_freq=min_freq,limit=limit,index_file=index_file)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
