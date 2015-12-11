@@ -248,13 +248,13 @@ def tfidf(rdd_pre,top_freq,min_freq,limit,index_file):
     wordrdd=sc.textFile(index_file).map(lambda x:x.split())\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq  and (x[1].find('-c')<0))
     words=wordrdd.map(lambda  x:(x[0],x[1])).collectAsMap()
-    word_size=sc.textFile(index_file).count()
-    s=rdd_pre.map(lambda (x,y):[ i for i in y if i.find('_')]).flatMap(lambda x:x).distinct()
-    pos_index={}
-    for index,i in enumerate(s,word_size):
-        pos_index[i]=index
+    # word_size=sc.textFile(index_file).count()
+    # s=rdd_pre.map(lambda (x,y):[ i for i in y if i.find('_')]).flatMap(lambda x:x).distinct()
+    # pos_index={}
+    # for index,i in enumerate(s,word_size):
+    #     pos_index[i]=index
 
-    words=wordrdd.map(lambda  x:(int(x[0]))).collect()
+    # words=wordrdd.map(lambda  x:(int(x[0]))).collect()
     broadcastVar = sc.broadcast(words)
     worddic = broadcastVar.value
     # doc_num = hiveContext.sql('select user_id from t_base_ec_item_feed_dev_temp group by user_id').count()
