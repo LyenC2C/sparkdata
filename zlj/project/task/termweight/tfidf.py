@@ -372,6 +372,7 @@ def title_clean_ali(x):
         s=len(kv)
         for index,v in enumerate(kv,1):
             word=v.split('_')[0]
+            if  not word.isdigit():continue
             if index==(s-3):
                 rs.append(word+'_E2')
             elif index==(s-2):
