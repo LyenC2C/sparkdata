@@ -92,9 +92,7 @@ def join1ali(x,dict,worddic):
     word_index=x[0]
     doc_id=x[1][0]
     tf=x[1][1]
-    flag=0
     ff=word_index/120
-
     tfidf=tf*dict.get(word_index,0.5)
     if(ff==5):
         tfidf=tfidf*1.3
@@ -307,6 +305,7 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
             if  'E1' in ls[1]: return 120*4+int(ls[0])
         else :return int(i)
     rdd = rdd_pre.map(lambda (x, y): (int(x), [clean(i) for i in y if    worddic.has_key(i.split('_')[0])]))
+    rdd.saveAsTextFile('/user/zlj/temp/rdd_pre')
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
     # word ,len
@@ -325,6 +324,8 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
     jrdd=joinrs.groupByKey()
+
+    jrdd.saveAsTextFile('/user/zlj/temp/joinss')
     # jrdd.map(lambda (x,y):str(x)+'\001'.join([str(k)+":"+str(v) for k,v in y ])).saveAsTextFile('/user/zlj/project/termweight/jointfidf_rs')
     rst=jrdd.map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[str(x), "\t".join(
         [str(i[0])+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
