@@ -115,7 +115,7 @@ def join1ali(x,idfdict,worddic):
         # word=word.replace('_E2','')
     word=worddic.get(word_index%1200000,'')
     tfidf=tfidf*math.log(len(word)/2.0+3,3)
-    return (doc_id,(word,tfidf))
+    return (doc_id,(word_index,tfidf))
 
 sql_hmm='''
 select
@@ -203,10 +203,12 @@ def tcount(lv):
 
 # 最后合并
 # [ (word,tfidf) .....]
-def groupvalue(y):
+def groupvalue(y,worddic):
     s1={}
     s2={}
     for k,v in y:
+        k=worddic.get(k%1200000,'')
+        if len(k)<1: continue
         if k.endswith('-b') or k.endswith('-c'):
             s1[k]=s1.get(k,0)+v
         else :
@@ -328,7 +330,7 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
 
     # jrdd.map(lambda (x,y):(x," ".join([str(k)+":"+str(v) for k,v in y]))).saveAsTextFile('/user/zlj/temp/joinss')
     # jrdd.map(lambda (x,y):str(x)+'\001'.join([str(k)+":"+str(v) for k,v in y ])).saveAsTextFile('/user/zlj/project/termweight/jointfidf_rs')
-    rst=jrdd.map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[str(x), "\t".join(
+    rst=jrdd.map(lambda (x, y):(x,groupvalue(y,worddic))).map(lambda (x,y):[str(x), "\t".join(
         [i[0]+"_"+str(i[1]) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
     return rst
 '''
