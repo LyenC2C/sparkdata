@@ -89,12 +89,12 @@ def join1(x,dict,worddic):
     tfidf=tfidf*math.log(len(word)/2.0+2,2)
     return (doc_id,(word,tfidf))
 
-def join1ali(x,dict,worddic):
+def join1ali(x,idfdict,worddic):
     word_index=x[0]
     doc_id=x[1][0]
     tf    =x[1][1]
     ff=word_index/1200000
-    tfidf=tf*dict.get(word_index,0.5)
+    tfidf=tf*idfdict.get(word_index,0.5)
     if(ff==5):
         tfidf=tfidf*1.3
         # word=word.replace('-b','')
@@ -291,7 +291,7 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
     # min_freq=5
     wordrdd=sc.textFile(index_file).map(lambda x:x.split())\
         .filter(lambda x:int(x[2])<top_freq and int(x[2])>min_freq  and (x[1].find('-c')<0))
-    words=wordrdd.map(lambda  x:(x[0],x[1])).collectAsMap()
+    words=wordrdd.map(lambda  x:(int(x[0]),x[1])).collectAsMap()
 
     # words=wordrdd.map(lambda  x:(int(x[0]))).collect()
     broadcastVar = sc.broadcast(words)
@@ -305,7 +305,7 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
             if  'E2' in ls[1]: return 1200000*3+int(ls[0])
             if  'E1' in ls[1]: return 1200000*4+int(ls[0])
         else :return int(i)
-    rdd = rdd_pre.map(lambda (x, y): (int(x), [clean(i) for i in y if    worddic.has_key(i.split('_')[0])]))
+    rdd = rdd_pre.map(lambda (x, y): (int(x), [clean(i) for i in y if    worddic.has_key(int(i.split('_')[0]))]))
     # rdd.saveAsTextFile('/user/zlj/temp/rdd_pre')
     # (word,(doc_id,tf))
     tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
