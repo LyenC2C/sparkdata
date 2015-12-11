@@ -46,8 +46,9 @@ def format_dic(f_in):
 
 if __name__ == "__main__":
     data_dic,value_dic = format_dic("time.feedid.sort")
-    feed = sys.argv[1]
-    print str(gen_date(data_dic,value_dic,feed))
+    for line in sys.stdin:
+        feed = line.strip()#sys.argv[1]
+        print str(gen_date(data_dic,value_dic,feed))
 
 '''
 1111    20130101
