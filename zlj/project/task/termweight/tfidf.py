@@ -30,6 +30,7 @@ def join(x, y):
 
 # ['apple', 'banana', 'apple', 'strawberry', 'banana', 'lemon']
 # [('apple', 2), ('banana', 2), ('lemon', 1), ('strawberry', 1)]
+# return (word,(docid,tf))
 def tf(x, y):
     num = len(y)
     lv = [(k, len(list(g)) * 1.0 / num) for k, g in groupby(sorted(y))]
@@ -91,8 +92,8 @@ def join1(x,dict,worddic):
 def join1ali(x,dict,worddic):
     word_index=x[0]
     doc_id=x[1][0]
-    tf=x[1][1]
-    ff=word_index/120
+    tf    =x[1][1]
+    ff=word_index/1200000
     tfidf=tf*dict.get(word_index,0.5)
     if(ff==5):
         tfidf=tfidf*1.3
@@ -112,7 +113,7 @@ def join1ali(x,dict,worddic):
     elif(ff==3):
         tfidf=tfidf*1.3
         # word=word.replace('_E2','')
-    word=worddic.get(word_index%120,'')
+    word=worddic.get(word_index%1200000,'')
     tfidf=tfidf*math.log(len(word)/2.0+2,2)
     return (doc_id,(word,tfidf))
 
@@ -300,9 +301,9 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
     def clean(i):
         ls=i.split('_')
         if len(ls)>1:
-            if  'B1' in ls[1]: return 120*2+int(ls[0])
-            if  'E2' in ls[1]: return 120*3+int(ls[0])
-            if  'E1' in ls[1]: return 120*4+int(ls[0])
+            if  'B1' in ls[1]: return 1200000*2+int(ls[0])
+            if  'E2' in ls[1]: return 1200000*3+int(ls[0])
+            if  'E1' in ls[1]: return 1200000*4+int(ls[0])
         else :return int(i)
     rdd = rdd_pre.map(lambda (x, y): (int(x), [clean(i) for i in y if    worddic.has_key(i.split('_')[0])]))
     # rdd.saveAsTextFile('/user/zlj/temp/rdd_pre')
