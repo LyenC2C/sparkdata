@@ -107,11 +107,13 @@ sc.textFile('/user/zlj/project/termweight/title_corpus_aliseg_1206_clean/')\
 '/user/zlj/project/termweight/title_corpus_aliseg_1206_clean_index'
 )
 
+{}.iteritems()
 
 # step 4
 hiveContext.sql('use wlbase_dev')
 hiveContext.sql('select item_id,user_id  from t_base_ec_item_feed_dev where ds >20150701 group by item_id,user_id')\
     .map(lambda x:x[0]+'\001'+x[1]).saveAsTextFile('/user/zlj/project/termweight/feed_0701')
+rdd.reduceByKey(lambda a,b:a+b).collectAsMap()
 
 
 
