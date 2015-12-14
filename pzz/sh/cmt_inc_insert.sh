@@ -33,7 +33,7 @@ echo "Start spark job."
 hadoop fs -rmr $all_feed_output
 hadoop fs -rmr $new_feed_output
 hadoop fs -rmr $tmp_data
-spark-submit --executor-memory 10g --driver-memory 25g --total-executor-cores 100 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data
+spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 100 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data
 echo "spark job finished."
 
 #本地临时文件
