@@ -135,12 +135,12 @@ if __name__ == "__main__":
         rdd_res.cache()
 
         rdd_all_feedid = rdd_res.map(lambda x:x[1])\
-                    .map(lambda x:"\001".join(x))\
+                    .map(lambda x:"\001".join(x))
                     #            \
                     #.coalesce(300)
 
         rdd_inc_feedid_num = rdd_res.map(lambda (x,y,z):(y,z))\
-                    .map(lambda (y,z):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1))\
+                    .map(lambda (y,z):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1))
                     #            \
                     #.coalesce(100)
 
