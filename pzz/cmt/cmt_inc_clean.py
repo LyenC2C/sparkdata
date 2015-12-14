@@ -8,7 +8,7 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\t"," ")
+    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
 
 
 def gen_item_feedid(line):
@@ -32,13 +32,13 @@ def parse_cmt_new(line_s):
                 itemid = value.get('auctionNumId', '-')
                 int(itemid)
                 l.append(itemid)
-                l.append(value.get('auctionTitle', '-'))
+                l.append(value.get('auctionTitle', '-')).replace("\t"," ")
                 feedid = value.get('id', '-')
                 int(feedid)
                 l.append(feedid)
                 l.append(value.get('userId', '-'))
                 # l.append(data.get('userStar'))
-                feedback = value.get('feedback', '-')
+                feedback = value.get('feedback', '-').replace("\t"," ")
                 l.append(valid_jsontxt(feedback))
                 date = value.get('feedbackDate', '-')
                 l.append(date)
@@ -135,14 +135,12 @@ if __name__ == "__main__":
         rdd_res.cache()
 
         rdd_all_feedid = rdd_res.map(lambda x:x[1])\
-                    .map(lambda x:"\001".join(x))
-                    #            \
-                    #.coalesce(300)
+                    .map(lambda x:"\001".join(x))\
+                    .coalesce(300)
 
         rdd_inc_feedid_num = rdd_res.map(lambda (x,y,z):(y,z))\
-                    .map(lambda (y,z):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1))
-                    #            \
-                    #.coalesce(100)
+                    .map(lambda (y,z):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1))\
+                    .coalesce(100)
 
         rdd_data = rdd_res.map(lambda x:x[0])\
                     .flatMap(lambda x:x)\
