@@ -25,7 +25,7 @@ hiveContext.sql('use wlbase_dev')
 
 sql='''
 
-select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg limit 199
+select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg
 '''
 
 

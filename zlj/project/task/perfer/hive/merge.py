@@ -112,12 +112,12 @@ def brandtag():
 def price():
     sql_price='''
     select
-    uid,avg_price,ulevel
+    uid,buytimes, sum_price,avg_price,ulevel
     from
-    t_zlj_perfer_user_level
+    t_zlj_perfer_user_level_mult
 
     '''
-    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',str(x.ulevel)+"_"+str(x.avg_price))))
+    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level'," ".join(str(i) for i in x[1:]))))
     return rdd_price
     # return ''
 
@@ -246,7 +246,7 @@ def hmm_tag():
     select
     user_id,tfidftags
     from
-    t_zlj_userbuy_item_tfidf_tag_20150901
+    t_zlj_userbuy_item_tfidf_tagbrand_weight15be0701ali_v6
     '''
     rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('tfidftags',x.tfidftags)))
     return rdd
