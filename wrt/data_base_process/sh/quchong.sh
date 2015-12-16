@@ -2,6 +2,22 @@ pre_path='/home/wrt/sparkdata'
 
 spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
 $pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/20151206/*  20151205 20151206
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/20151207/*  20151206 20151207
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/20151208/*  20151207 20151208
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/20151209/*  20151208 20151209
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
 /commit/iteminfo/20151210/*  20151209 20151210
 
 spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
