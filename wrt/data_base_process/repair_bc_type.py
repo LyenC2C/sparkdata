@@ -29,7 +29,7 @@ ds = sys.argv[1]
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=20151215"
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + ds #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_zlj_base_ec_item_sale_dev_day/ds=" + ds #today
-bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).collectAsMap())
+bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
 rdd1 = sc.textFile(s1).map(lambda x:f1(bctype_dict.value, x))
 rdd2 = sc.textFile(s2).map(lambda x:f2(bctype_dict.value, x))
 rdd1.saveAsTextFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=1111")
