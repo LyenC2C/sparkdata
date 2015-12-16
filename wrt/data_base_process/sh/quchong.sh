@@ -1,43 +1,46 @@
 pre_path='/home/wrt/sparkdata'
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+#spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+#$pre_path/wrt/data_base_process/repair_bc_type.py 20151210
+
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151206/*  20151205 20151206
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151207/*  20151206 20151207
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151208/*  20151207 20151208
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151209/*  20151208 20151209
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151210/*  20151209 20151210
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151211/*  20151210 20151211
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151212/*  20151211 20151212
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151213/*  20151212 20151213
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151214/*  20151213 20151214
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
 /commit/iteminfo/20151215/*  20151214 20151215
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
