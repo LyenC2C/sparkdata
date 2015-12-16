@@ -25,13 +25,13 @@ def f2(bctype_dict, x):
     if bctype_dict.has_key(shop_id):
         ss[14] = bctype_dict[shop_id]
     return "\001".join(ss)
-ds = sys.argv[1]
+ds = sys.argv[1] #20151210
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=20151215"
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + ds #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_zlj_base_ec_item_sale_dev_day/ds=" + ds #today
 bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
 rdd1 = sc.textFile(s1).map(lambda x:f1(bctype_dict.value, x))
 rdd2 = sc.textFile(s2).map(lambda x:f2(bctype_dict.value, x))
-rdd1.saveAsTextFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=1111")
-rdd2.saveAsTextFile("/hive/warehouse/wlbase_dev.db/t_zlj_base_ec_item_sale_dev_day/ds=1111")
+rdd1.saveAsTextFile("/hive/warehouse/testhive.db/t_base_ec_item_sale_dev/ds=" + ds)
+rdd2.saveAsTextFile("/hive/warehouse/testhive.db/t_zlj_base_ec_item_sale_dev_day/ds=" + ds)
 sc.stop()
