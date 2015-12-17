@@ -1,4 +1,4 @@
-pre_path='/home/sparkdata'
+pre_path='/home/wrt/sparkdata'
 
 spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151027
 spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151028
