@@ -75,12 +75,14 @@ def clean_data_by_hisfeedid(itemid,y):
     all_feed_ls = [itemid]
     #返回新增评论id ls
     new_item_feedid_ls = [itemid]
+    today_flag = "0"
     for flag,feeds in y:
         if flag == 0:
             for feedid in feeds:
                 feedid_dic[feedid] = None
     for flag,feeds in y:
         if flag == 1:
+            today_flag = "1"
             for feedid,feeddata in feeds:
                 if feedid_dic.has_key(feedid) == False:
                     rls.append(feeddata)
@@ -90,7 +92,7 @@ def clean_data_by_hisfeedid(itemid,y):
     for k in feedid_dic.keys():
         all_feed_ls.append(k)
 
-    return [rls,all_feed_ls,new_item_feedid_ls]
+    return [rls,all_feed_ls,new_item_feedid_ls,today_flag]
 
 if __name__ == "__main__":
     if sys.argv[1] == '-h':
@@ -138,8 +140,8 @@ if __name__ == "__main__":
                     .map(lambda x:"\001".join(x))\
                     .coalesce(300)
 
-        rdd_inc_feedid_num = rdd_res.map(lambda (x,y,z):(y,z))\
-                    .map(lambda (y,z):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1))\
+        rdd_inc_feedid_num = rdd_res.map(lambda (x,y,z,flag):(y,z,flag))\
+                    .map(lambda (y,z,flag):y[0]+'\t'+str(len(y)-len(z))+'\t'+str(len(z)-1)+'\t'+flag)\
                     .coalesce(100)
 
         rdd_data = rdd_res.map(lambda x:x[0])\
