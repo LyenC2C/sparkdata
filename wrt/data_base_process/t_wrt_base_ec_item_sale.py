@@ -55,7 +55,6 @@ def f1(bctype_dict, line):
             return [None]
         itemsArray = ob["data"]["itemsArray"]
         shop_id = ob["data"].get("shopId","-")
-        bc_type = "-"
         bc_type = bctype_dict.get(shop_id,"-")
         for item in itemsArray:
             lv = []
@@ -90,6 +89,8 @@ def f2(line):
     ss[6] = int(ss[6])
     ss[7] = int(ss[7])
     ss[10] = '0'
+    if ss[4] != "B" or ss[4] !="C":
+        ss[4] = '-'
     return ss
 def quchong_1(x, y):
     max = 0
