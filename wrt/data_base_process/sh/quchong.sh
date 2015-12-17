@@ -1,4 +1,5 @@
 pre_path='/home/sparkdata'
+
 spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151026
 spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151027
 spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151028
