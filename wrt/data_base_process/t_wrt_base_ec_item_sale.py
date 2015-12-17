@@ -30,7 +30,10 @@ def float_k(x):
         return 0.0
     else:
         return float(x)
-def f1(line):
+def get_bctype_dict(x):
+    ss = x.split('\001')
+    return (ss[0],ss[7])
+def f1(bctype_dict, line):
     try:
         ss = line.strip().split('\t')
         zhengwen = ""
@@ -52,13 +55,13 @@ def f1(line):
             return [None]
         itemsArray = ob["data"]["itemsArray"]
         shop_id = ob["data"].get("shopId","-")
+        bc_type = bctype_dict.get(shop_id,"-")
         for item in itemsArray:
             lv = []
             item_id = item.get("auctionId","-")
             item_title = item.get("title","-")
             r_price = item.get("reservePrice",0.0)
             s_price = item.get("salePrice",0.0)
-            bc_type = item.get("auctionType","-")
             quantity = item.get("quantity",0)
             total_sold = item.get("totalSoldQuantity",0)
             order_cost = item.get("orderCost",0)
@@ -127,9 +130,11 @@ schema = StructType([
 
 hiveContext.sql('use wlbase_dev')
 ds = sys.argv[1]
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + ds #today's t_base_ec_shop_dev
 s1 = "/commit/shopitem/" + ds #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
-rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
+rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
 rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
@@ -143,4 +148,3 @@ hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' +
 #.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
 #spark-submit  --executor-memory 4G  --driver-memory 20G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
-#/commit/shopitem/20151116/*6
