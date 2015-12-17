@@ -55,6 +55,7 @@ def f1(bctype_dict, line):
             return [None]
         itemsArray = ob["data"]["itemsArray"]
         shop_id = ob["data"].get("shopId","-")
+        bc_type = "-"
         bc_type = bctype_dict.get(shop_id,"-")
         for item in itemsArray:
             lv = []
@@ -130,7 +131,7 @@ schema = StructType([
 
 hiveContext.sql('use wlbase_dev')
 ds = sys.argv[1]
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + ds #today's t_base_ec_shop_dev
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=20151215" #+ ds #today's t_base_ec_shop_dev
 s1 = "/commit/shopitem/" + ds #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
 bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
