@@ -124,26 +124,24 @@ import math
 
 def f(x):
     vs=x.split('\001')
-    if '\N'  in vs[12] and  '\N'  in vs[4] : return None
-    if not ( vs[12].replace('.', '').isdigit() and  vs[4].replace('.', '').isdigit()): return None
-    # price=0.0
-    # if vs[12].replace('.', '',1).isdigit():
-    #
-    price=float(vs[12])
-    # else: return None
-    if price<1.1:return None
-    root_cat_id=vs[8]
-    diff=vs[4] if len(vs[4])>0 else '0'
-    datediff=int(diff)
-    user_id=vs[2]
-    score=round(math.log(price),2)
-    # return (user_id+"_"+root_cat_id,datediff,price)
-    if not a.has_key(root_cat_id):return None
-    tags=a.get(root_cat_id).decode('utf-8')
-    lv=[]
-    for i in tags.split():
-        lv.append((user_id+"_"+i,score))
-    return lv
+    if ( vs[12].replace('.', '').isdigit() and  vs[4].replace('.', '').isdigit()):
+
+        price=float(vs[12])
+        # else: return None
+        if price<1.1:return None
+        root_cat_id=vs[8]
+        diff=vs[4] if len(vs[4])>0 else '0'
+        datediff=int(diff)
+        user_id=vs[2]
+        score=round(math.log(price),2)
+        # return (user_id+"_"+root_cat_id,datediff,price)
+        if not a.has_key(root_cat_id):return None
+        tags=a.get(root_cat_id).decode('utf-8')
+        lv=[]
+        for i in tags.split():
+            lv.append((user_id+"_"+i,score))
+        return lv
+    else :return None
 
 path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo/'
 rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
