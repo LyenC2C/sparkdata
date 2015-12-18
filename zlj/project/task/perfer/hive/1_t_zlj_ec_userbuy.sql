@@ -18,8 +18,8 @@ CREATE TABLE t_zlj_ec_userbuy
       t1.*,
       t2.user_id,
       t2.f_date,
-
-      round(log2(cast(t1.price as FLOAT))*pow(0.5, (datediff)/4.0)*50,4) AS score
+      round(log2(cast((t1.price+1) as FLOAT)),4) AS score
+--      round(log2(cast(t1.price as FLOAT))*pow(0.5, (datediff)/4.0)*50,4) AS score
     FROM
       (
 
