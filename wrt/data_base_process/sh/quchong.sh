@@ -1,49 +1,67 @@
-pre_path='/home/wrt/sparkdata'
+pre_path='/home/sparkdata'
 
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151027
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151028
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151029
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151030
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151102
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151104
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151105
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151106
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151107
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151108
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151109
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151110
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151111
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151112
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151113
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151114
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151115
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151116
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151117
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151118
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151119
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151120
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151121
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151122
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151123
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151124
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151125
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151126
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151127
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151128
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151129
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151130
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151201
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151202
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151203
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151204
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151205
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151206
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151207
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151208
-spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/repair_bc_type.py 20151209
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151212 20151211
+
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151213 20151212
+
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151214 20151213
+
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151215 20151214
+
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151216 20151215
+
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151217 20151216
+
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151027
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151028
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151029
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151030
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151102
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151104
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151105
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151106
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151107
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151108
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151109
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151110
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151111
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151112
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151113
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151114
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151115
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151116
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151117
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151118
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151119
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151120
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151121
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151122
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151123
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151124
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151125
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151126
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151127
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151128
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151129
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151130
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151201
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151202
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151203
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151204
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151205
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151206
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151207
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151208
+#spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memory 16g $pre_path/wrt/data_base_process/ 20151209
 
 #spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-#$pre_path/wrt/data_base_process/repair_bc_type.py 20151210
+#$pre_path/wrt/data_base_process/ 20151210
 
 #spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
 #$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
@@ -86,7 +104,7 @@ spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memor
 #/commit/iteminfo/20151215/*  20151214 20151215
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pyt_wrt_base_ec_item_sale.py 20151204 20151203
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151204 20151203
 #
 #spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
 #$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
@@ -168,19 +186,19 @@ spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memor
 #/commit/iteminfo/20151130/*  20151129 20151130
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pyt_wrt_base_ec_item_sale.py 20151125 20151124
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151125 20151124
 #
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pyt_wrt_base_ec_item_sale.py 20151126 20151125
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151126 20151125
 #
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pyt_wrt_base_ec_item_sale.py 20151127 20151126
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151127 20151126
 #
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pyt_wrt_base_ec_item_sale.py 20151128 20151127
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151128 20151127
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pyt_wrt_base_ec_item_sale.py 20151130 20151129
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151130 20151129
 
 #spark-submit  --total-executor-cores 80 --executor-memory 8g  --driver-memory 8g \
 #$pre_path/zlj/project/base_data_process/hive/item/1_item_inc.py  -inc \
@@ -231,39 +249,39 @@ spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memor
 #/commit/iteminfo/20151125/*  20151124 20151125
 
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151029 20151028
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151029 20151028
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151030 20151029
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151030 20151029
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151102 20151030
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151102 20151030
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151104 20151102
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151104 20151102
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151105 20151104
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151105 20151104
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151106 20151105
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151106 20151105
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151107 20151106
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151107 20151106
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151108 20151107
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151108 20151107
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151109 20151108
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151109 20151108
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151110 20151109
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151110 20151109
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151111 20151110
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151111 20151110
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151112 20151111
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151112 20151111
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151113 20151112
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151113 20151112
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151114 20151113
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151114 20151113
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151115 20151114
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151115 20151114
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151116 20151115
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151116 20151115
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 20 \
-#$pre_path/wrt/data_base_process/repair_bc_type.pytotal_sale_tianbu.py 20151117 20151116
+#$pre_path/wrt/data_base_process/total_sale_tianbu.py 20151117 20151116
 
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151026 20151027 20151112 20151112
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151027 20151028 20151112 20151112
@@ -285,13 +303,13 @@ spark-submit  --total-executor-cores  120  --executor-memory 10g  --driver-memor
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151115 20151116 20151112 20151112
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151116 20151117 20151112 20151112
 
-#sh $pre_path/wrt/data_base_process/repair_bc_type.pyhive/t_wrt_quchong.sql 20151111
-#sh $pre_path/wrt/data_base_process/repair_bc_type.pyhive/t_wrt_quchong.sql 20151112
-#sh $pre_path/wrt/data_base_process/repair_bc_type.pyhive/t_wrt_quchong.sql 20151113
-#sh $pre_path/wrt/data_base_process/repair_bc_type.pyhive/t_wrt_quchong.sql 20151114
-#sh $pre_path/wrt/data_base_process/repair_bc_type.pyhive/t_wrt_quchong.sql 20151115
-#sh $pre_path/wrt/data_base_process/repair_bc_type.pyhive/t_wrt_quchong.sql 20151116
-#sh $pre_path/wrt/data_base_process/repair_bc_type.pyhive/t_wrt_quchong.sql 20151117
+#sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151111
+#sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151112
+#sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151113
+#sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151114
+#sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151115
+#sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151116
+#sh $pre_path/wrt/data_base_process/hive/t_wrt_quchong.sql 20151117
 
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql   20151026 20151027 20151112 20151112
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql   20151027 20151028 20151112 20151112
