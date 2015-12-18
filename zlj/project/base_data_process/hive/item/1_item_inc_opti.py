@@ -249,6 +249,7 @@ if __name__ == "__main__":
       t1.shop_id,
       t1.location,
       t1.ts
+      from
       (
           SELECT
           cate_id,
