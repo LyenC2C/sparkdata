@@ -124,9 +124,12 @@ import math
 
 def f(x):
     vs=x.split('\001')
-    if '\N'  in x[12] and  '\N'  in x[4] : return None
-    if not ( x[12].replace('.', '').isdigit() and  x[4].replace('.', '').isdigit()): return None
-    price=float(vs[12])
+    # if '\N'  in x[12] and  '\N'  in x[4] : return None
+    # if not ( x[12].replace('.', '').isdigit() and  x[4].replace('.', '').isdigit()): return None
+    price=0.0
+    if x[12].replace('.', '',1).isdigit():
+        price=float(vs[12])
+    else: return None
     if price<1.1:return None
     root_cat_id=vs[8]
     diff=vs[4] if len(vs[4])>0 else '0'
