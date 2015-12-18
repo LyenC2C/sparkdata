@@ -270,7 +270,7 @@ if __name__ == "__main__":
         JOIN item_dev t2
         ON t1.user_id =t2.user_id AND t1.ts=t2.ts
       ) t4 ON t4.cat_id = t3.cate_id
-        ''')
+        '''%(ds))
 
         # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         # hiveContext.registerDataFrameAsTable(ddf,'tmptable')
@@ -278,7 +278,7 @@ if __name__ == "__main__":
         # insert overwrite table t_base_ec_item_dev partition(ds=%s)
         # s
         # '''
-        hiveContext.sql(sql_insert%(ds))
+        # hiveContext.sql(sql_insert%(ds))
         # rdd.groupByKey().count()
         # rdd2=rdd.union(rdd1).groupByKey()
         #
