@@ -230,7 +230,7 @@ if __name__ == "__main__":
         hiveContext.sql('''
             INSERT OVERWRITE TABLE t_base_ec_item_dev PARTITION(ds=%s)
     SELECT
-      /*+ mapjoin(t2)*/
+      /*+ mapjoin(t3)*/
       t1.item_id,
       t1.title,
       t1.cat_id,
