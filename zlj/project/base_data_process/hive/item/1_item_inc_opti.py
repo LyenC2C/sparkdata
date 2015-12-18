@@ -137,7 +137,9 @@ def f_coding(x):
 def fun1(x,ds):
     lv=[i for i in x]
     lv.append(ds)
-    return [f_coding(i) for i in lv]
+    rs=[f_coding(i) for i in lv]
+    if len(rs)!=19: return None
+    else: return rs
 
 sql_insert='''
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
@@ -207,17 +209,18 @@ if __name__ == "__main__":
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                          x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         # rdd1=df.map(lambda x:(x.item_id,['\t'.join([ str(i) for i in x]), x.ts]))
-        rdd2=rdd.union(rdd1).map(lambda x:fun1(x,ds))
-        df=hiveContext.createDataFrame(rdd2,schema1)
+        rdd2=rdd.union(rdd1).filter(lambda x:x is not None)
+        rdd=rdd2.map(lambda x:fun1(x[1],ds))
+        df=hiveContext.createDataFrame(rdd,schema1)
         hiveContext.registerDataFrameAsTable(df, 'item_dev')
 
         # rdd2.map(lambda x:(x[0],x[-1])).groupByKey().map(lambda (x,y):fun_sorted(y))
 
         # rdd2=rdd.union(rdd1).groupByKey()
 
-        rdd3=rdd2.map(lambda x:(x[0],long(x[-1])))
+        rdd3=rdd.map(lambda x:[x[0],int(x[-2])])
         schema2 = StructType([
-            StructField("user_id", StringType(), True),
+            StructField("item_id", StringType(), True),
             StructField("ts", IntegerType(), True),
          ])
 
@@ -246,6 +249,7 @@ if __name__ == "__main__":
       t1.shop_id,
       t1.location,
       t1.ts
+      from
       (
           SELECT
           cate_id,
@@ -254,20 +258,20 @@ if __name__ == "__main__":
           cate_level1_name
           FROM
           t_base_ec_dim
-      )                      t3
+      )                      t2
     JOIN
       (
-        SELECT t2.*
+        SELECT tb.*
         FROM
         (
-          SELECT user_id, cast(max(ts) AS STRING)
+          SELECT item_id, cast(max(ts) AS STRING) ts
           FROM
-          user_ts GROUP BY user_id
-        )t1
-        JOIN item_dev t2
-        ON t1.user_id =t2.user_id AND t1.ts=t2.ts
-      ) t4 ON t4.cat_id = t3.cate_id
-        ''')
+          user_ts GROUP BY item_id
+        )ta
+        JOIN item_dev tb
+        ON ta.item_id =tb.item_id AND ta.ts=tb.ts
+      ) t1 ON t1.cat_id = t2.cate_id
+        '''%(ds))
 
         # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
         # hiveContext.registerDataFrameAsTable(ddf,'tmptable')
@@ -275,7 +279,7 @@ if __name__ == "__main__":
         # insert overwrite table t_base_ec_item_dev partition(ds=%s)
         # s
         # '''
-        hiveContext.sql(sql_insert%(ds))
+        # hiveContext.sql(sql_insert%(ds))
         # rdd.groupByKey().count()
         # rdd2=rdd.union(rdd1).groupByKey()
         #
