@@ -149,7 +149,7 @@ if __name__ == "__main__":
     #for line in sys.stdin:
     #print map(lambda line:get_cat_map("日用百货",line),[line for line in sys.stdin])
 '''
-spark-submit  --executor-memory 4G  --driver-memory 10G  --total-executor-cores 40 pre_process_spark.py \
-/user/wrt/cat_map.txt /user/wrt/item_pageview/item_wenhuayule.dat /user/wrt/item_pageview/pageview_文化娱乐.dat \
-/user/zlj/wrt/search/wenhua
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 pre_process_spark.py \
+/user/wrt/cat_map.txt /user/wrt/item_pageview/item_电器.dat /user/wrt/item_pageview/pageview_电器.dat \
+/user/zlj/wrt/search/dianqi
 '''
