@@ -201,7 +201,7 @@ if __name__ == "__main__":
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100).map(lambda x:try_parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
-        df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
+        df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s  limit 1000'%ds_1)
         schema1=df.schema
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                          x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
@@ -224,48 +224,52 @@ if __name__ == "__main__":
         hiveContext.registerDataFrameAsTable(df, 'user_ts')
 
         hiveContext.sql('''
-        insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
-  SELECT  /*+ mapjoin(t2)*/
-t1.item_id,
-t1.title,
-t1.cat_id,
-t2.cate_name as cat_name,
-t2.cate_level1_id as root_cat_id,
-t2.cate_level1_name as root_cat_name,
-t1.brand_id,
-t1.brand_name,
-t1.bc_type,
-t1.price,
-t1.price_zone,
-t1.is_online,
-t1.off_time,
-t1.favor,
-t1.seller_id,
-t1.shop_id,
-t1.location,
-t1.ts
+            INSERT OVERWRITE TABLE t_base_ec_item_dev PARTITION(ds=%s)
+    SELECT
+      /*+ mapjoin(t2)*/
+      t1.item_id,
+      t1.title,
+      t1.cat_id,
+      t2.cate_name        AS cat_name,
+      t2.cate_level1_id   AS root_cat_id,
+      t2.cate_level1_name AS root_cat_name,
+      t1.brand_id,
+      t1.brand_name,
+      t1.bc_type,
+      t1.price,
+      t1.price_zone,
+      t1.is_online,
+      t1.off_time,
+      t1.favor,
+      t1.seller_id,
+      t1.shop_id,
+      t1.location,
+      t1.ts
+      (
+          SELECT
+          cate_id,
+          cate_name,
+          cate_level1_id,
+          cate_level1_name
+          FROM
+          t_base_ec_dim
+      )                      t3
+    JOIN
+      (
+        SELECT t2.*
+        FROM
         (
-        SELECT
-cate_id,
-cate_name,
-cate_level1_id,
-cate_level1_name
-FROM
-t_base_ec_dim
-)t3  join
-(
-        select t2.*
-        from
-        (select user_id ,cast(max(ts) as string) from
-        user_ts group by user_id
+          SELECT user_id, cast(max(ts) AS STRING)
+          FROM
+          user_ts GROUP BY user_id
         )t1
-        join item_dev t2
-        on t1.user_id =t2.user_id and t1.ts=t2.ts
-        ) t4 on  t4.cat_id=t3.cate_id
+        JOIN item_dev t2
+        ON t1.user_id =t2.user_id AND t1.ts=t2.ts
+      ) t4 ON t4.cat_id = t3.cate_id
         ''')
 
-        ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
-        hiveContext.registerDataFrameAsTable(ddf,'tmptable')
+        # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
+        # hiveContext.registerDataFrameAsTable(ddf,'tmptable')
         # sql='''
         # insert overwrite table t_base_ec_item_dev partition(ds=%s)
         # s
