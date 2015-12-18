@@ -10,7 +10,7 @@ from pyspark.sql import *
 from pyspark.sql.types import *
 # import rapidjson as json
 
-sc = SparkContext(appName="cmt")
+sc = SparkContext(appName="user_cattags")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 a = {
@@ -122,10 +122,9 @@ a = {
 import math
 
 
-hiveContext.sql('use wlbase_dev')
 def f(x):
     vs=x.split('\001')
-    if '\N'  in vs[12] or'\N'  in vs[4]: return None
+    if not x[12].replace('.', '').isdigit() or not x[4].replace('.', '').isdigit(): return None
     price=float(vs[12])
     if price<1.1:return None
     root_cat_id=vs[8]
@@ -144,12 +143,13 @@ def f(x):
 path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo/'
 rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+":"+str(score)))
-rdd2=rdd1.groupByKey().map(lambda (x,y):x+"_"+" ".join(y))
+rdd2=rdd1.groupByKey().map(lambda (x,y):(x," ".join(y)))
 schema1 = StructType([
     StructField("user_id", StringType(), True),
     StructField("tags", StringType(), True),
  ])
 
+hiveContext.sql('use wlbase_dev')
 df=hiveContext.createDataFrame(rdd2,schema1)
 hiveContext.registerDataFrameAsTable(df, 'tmptable')
 hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_cattags')
