@@ -124,8 +124,8 @@ import math
 
 def f(x):
     vs=x.split('\001')
-    if '\N'  in x[12] and  '\N'  in x[4] : return None
-    if not ( x[12].replace('.', '').isdigit() and  x[4].replace('.', '').isdigit()): return None
+    if '\N'  in vs[12] and  '\N'  in vs[4] : return None
+    if not ( vs[12].replace('.', '').isdigit() and  vs[4].replace('.', '').isdigit()): return None
     # price=0.0
     # if vs[12].replace('.', '',1).isdigit():
     #
