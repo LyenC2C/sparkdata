@@ -137,7 +137,9 @@ def f_coding(x):
 def fun1(x,ds):
     lv=[i for i in x]
     lv.append(ds)
-    return [f_coding(i) for i in lv]
+    rs=[f_coding(i) for i in lv]
+    if len(rs)!=19: return None
+    else: return rs
 
 sql_insert='''
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
@@ -207,8 +209,8 @@ if __name__ == "__main__":
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                          x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         # rdd1=df.map(lambda x:(x.item_id,['\t'.join([ str(i) for i in x]), x.ts]))
-        rdd2=rdd.union(rdd1).map(lambda x:fun1(x,ds))
-        df=hiveContext.createDataFrame(rdd2,schema1)
+        rdd2=rdd.union(rdd1).filter(lambda x:x is not None)
+        df=hiveContext.createDataFrame(rdd2.map(lambda x:fun1(x,ds)),schema1)
         hiveContext.registerDataFrameAsTable(df, 'item_dev')
 
         # rdd2.map(lambda x:(x[0],x[-1])).groupByKey().map(lambda (x,y):fun_sorted(y))
