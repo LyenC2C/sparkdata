@@ -135,8 +135,9 @@ def f_coding(x):
         return x
 
 def fun1(x,ds):
-    x.append(ds)
-    return [f_coding(i) for i in x]
+    lv=[i for i in x]
+    lv.append(ds)
+    return [f_coding(i) for i in lv]
 
 sql_insert='''
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
