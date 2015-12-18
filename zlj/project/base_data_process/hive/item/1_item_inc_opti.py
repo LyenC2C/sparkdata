@@ -230,7 +230,7 @@ if __name__ == "__main__":
         hiveContext.sql('''
             INSERT OVERWRITE TABLE t_base_ec_item_dev PARTITION(ds=%s)
     SELECT
-      /*+ mapjoin(t3)*/
+      /*+ mapjoin(t2)*/
       t1.item_id,
       t1.title,
       t1.cat_id,
@@ -258,19 +258,19 @@ if __name__ == "__main__":
           cate_level1_name
           FROM
           t_base_ec_dim
-      )                      t3
+      )                      t2
     JOIN
       (
-        SELECT t2.*
+        SELECT tb.*
         FROM
         (
           SELECT item_id, cast(max(ts) AS STRING) ts
           FROM
           user_ts GROUP BY item_id
-        )t4
-        JOIN item_dev t2
-        ON t4.item_id =t2.item_id AND t4.ts=t2.ts
-      ) t1 ON t1.cat_id = t3.cate_id
+        )ta
+        JOIN item_dev tb
+        ON ta.item_id =tb.item_id AND ta.ts=tb.ts
+      ) t1 ON t1.cat_id = t2.cate_id
         '''%(ds))
 
         # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
