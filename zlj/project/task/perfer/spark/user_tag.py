@@ -145,7 +145,7 @@ def f(x):
 
 path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo/'
 rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
-rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+":"+str(score)))
+rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
 rdd2=rdd1.groupByKey().map(lambda (x,y):(x," ".join(y)))
 schema1 = StructType([
     StructField("user_id", StringType(), True),
