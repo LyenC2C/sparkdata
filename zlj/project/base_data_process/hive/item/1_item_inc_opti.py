@@ -210,7 +210,8 @@ if __name__ == "__main__":
                                          x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         # rdd1=df.map(lambda x:(x.item_id,['\t'.join([ str(i) for i in x]), x.ts]))
         rdd2=rdd.union(rdd1).filter(lambda x:x is not None)
-        df=hiveContext.createDataFrame(rdd2.map(lambda x:fun1(x,ds)),schema1)
+        rdd=rdd2.map(lambda x:fun1(x[1],ds))
+        df=hiveContext.createDataFrame(rdd,schema1)
         hiveContext.registerDataFrameAsTable(df, 'item_dev')
 
         # rdd2.map(lambda x:(x[0],x[-1])).groupByKey().map(lambda (x,y):fun_sorted(y))
