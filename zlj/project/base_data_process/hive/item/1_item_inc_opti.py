@@ -270,7 +270,7 @@ if __name__ == "__main__":
         )t4
         JOIN item_dev t2
         ON t4.item_id =t2.item_id AND t4.ts=t2.ts
-      ) t1 ON t4.cat_id = t3.cate_id
+      ) t1 ON t1.cat_id = t3.cate_id
         '''%(ds))
 
         # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
