@@ -89,7 +89,7 @@ def f2(line):
     ss[6] = int(ss[6])
     ss[7] = int(ss[7])
     ss[10] = '0'
-    if ss[4] != "B" or ss[4] !="C":
+    if ss[4] != "B" and ss[4] !="C":
         ss[4] = '-'
     return ss
 def quchong_1(x, y):
@@ -149,4 +149,4 @@ hiveContext.registerDataFrameAsTable(df, 'data')
 hiveContext.sql('insert overwrite table t_base_ec_item_sale_dev PARTITION(ds=' + ds + ') select * from data')
 #.saveAsTextFile("/user/wrt/item_sale")
 sc.stop()
-#spark-submit  --executor-memory 4G  --driver-memory 20G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
+#spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 t_wrt_base_ec_item_sale.py
