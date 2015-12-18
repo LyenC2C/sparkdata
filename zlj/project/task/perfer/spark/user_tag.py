@@ -124,7 +124,7 @@ import math
 
 def f(x):
     vs=x.split('\001')
-    if not x[12].replace('.', '').isdigit() or not x[4].replace('.', '').isdigit(): return None
+    if  not (x[12].replace('.', '').isdigit() and  x[4].replace('.', '').isdigit()): return None
     price=float(vs[12])
     if price<1.1:return None
     root_cat_id=vs[8]
