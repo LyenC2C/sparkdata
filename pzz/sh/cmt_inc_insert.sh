@@ -6,12 +6,12 @@ feed_dir=/data/develop/ec/tb/cmt/feedid
 data_dir=/data/develop/ec/tb/cmt/tmpdata
 commit_dir=/commit/comments
 
-#输入数据
-mission_data=$1
 #任务id
-mission_id=$2
+mission_id=$1
+#输入数据
+mission_data="/commit/comments/"$1"/*"
 #上次任务id
-lastmission_id=$3
+lastmission_id=$2
 
 #获取输入参数
 all_feed_input=${feed_dir}/cmt_allfeedid.${lastmission_id}
