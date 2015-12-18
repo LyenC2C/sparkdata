@@ -14,13 +14,21 @@ sc = SparkContext(appName="cmt")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 a = {
-    '50018222': '理工男	数码发烧友',
+    '50018222': '理工男	数码发烧友	数码控',
     '50007218': '行政	office',
     '50012082': '爱下厨',
+    '124044001': '数码控',
+    '50022703': '数码控',
+    '50008097': '数码控',
+    '50019780': '数码控',
+    '50011972': '数码控',
+    '1512': '数码控',
     '14': '文青	爱摄影',
-    '124242008': '数码发烧友',
+    '124242008': '数码发烧友	数码控',
     '50018004': '学习',
     '20': '游戏达人',
+    '11': '数码控',
+    '1101': '数码控',
     '33': '爱读书',
     '34': '爱音乐	爱生活',
     '50017300': '音乐	品质',
@@ -114,7 +122,7 @@ a = {
 import math
 
 
-
+hiveContext.sql('use wlbase_dev')
 def f(x):
     vs=x.split('\001')
     if '\N'  in vs[12] or'\N'  in vs[4]: return None
@@ -133,7 +141,7 @@ def f(x):
         lv.append((user_id+"_"+i,score))
     return lv
 
-path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo/000000_0'
+path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo/'
 rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+":"+str(score)))
 rdd2=rdd1.groupByKey().map(lambda (x,y):x+"_"+" ".join(y))
@@ -141,6 +149,7 @@ schema1 = StructType([
     StructField("user_id", StringType(), True),
     StructField("tags", StringType(), True),
  ])
+
 df=hiveContext.createDataFrame(rdd2,schema1)
 hiveContext.registerDataFrameAsTable(df, 'tmptable')
 hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_cattags')
