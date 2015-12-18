@@ -264,9 +264,9 @@ if __name__ == "__main__":
         SELECT t2.*
         FROM
         (
-          SELECT user_id, cast(max(ts) AS STRING) ts
+          SELECT item_id, cast(max(ts) AS STRING) ts
           FROM
-          user_ts GROUP BY user_id
+          user_ts GROUP BY item_id
         )t1
         JOIN item_dev t2
         ON t1.item_id =t2.item_id AND t1.ts=t2.ts
