@@ -206,7 +206,7 @@ if __name__ == "__main__":
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                          x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         # rdd1=df.map(lambda x:(x.item_id,['\t'.join([ str(i) for i in x]), x.ts]))
-        rdd2=rdd.union(rdd1)
+        rdd2=rdd.union(rdd1).map(lambda x:fun1(x,ds))
         df=hiveContext.createDataFrame(rdd2,schema1)
         hiveContext.registerDataFrameAsTable(df, 'item_dev')
 
