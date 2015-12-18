@@ -113,6 +113,8 @@ a = {
 }
 import math
 
+
+
 def f(x):
     vs=x.split('\001')
     if '\N'  in vs[12] or'\N'  in vs[4]: return None
