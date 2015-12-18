@@ -218,7 +218,7 @@ if __name__ == "__main__":
 
         # rdd2=rdd.union(rdd1).groupByKey()
 
-        rdd3=rdd2.map(lambda x:[x[0],int(x[-1])])
+        rdd3=rdd.map(lambda x:[x[0],int(x[-2])])
         schema2 = StructType([
             StructField("user_id", StringType(), True),
             StructField("ts", IntegerType(), True),
