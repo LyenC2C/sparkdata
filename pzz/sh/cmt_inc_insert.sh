@@ -15,7 +15,7 @@ lastmission_id=$2
 
 #获取输入参数
 all_feed_input=${feed_dir}/cmt_allfeedid.${lastmission_id}
-new_data_input=$1
+new_data_input=$mission_data
 all_feed_output=${feed_dir}/cmt_allfeedid.${mission_id}
 new_feed_output=${feed_dir}/cmt_newfeedid.${mission_id}
 tmp_data=${data_dir}/cmt_inc_data.${mission_id}
@@ -63,7 +63,7 @@ echo "feed back item feed inc number to commit.."
 hadoop fs -rmr /commit_feedbck/cmt/cmt_newfeedid.${mission_id}
 hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 
-echo "mission FINISH! "$2
+echo "mission FINISH! "$1
 end_t=`date`
 echo "start at:"${start_t}", end at:"${end_t}
-echo $2 >> /mnt/pzz/workspace/sparkdata/mission_finished
+echo $1 >> /mnt/pzz/workspace/sparkdata/mission_finished
