@@ -267,10 +267,10 @@ if __name__ == "__main__":
           SELECT item_id, cast(max(ts) AS STRING) ts
           FROM
           user_ts GROUP BY item_id
-        )t1
+        )t4
         JOIN item_dev t2
-        ON t1.item_id =t2.item_id AND t1.ts=t2.ts
-      ) t4 ON t4.cat_id = t3.cate_id
+        ON t4.item_id =t2.item_id AND t4.ts=t2.ts
+      ) t1 ON t4.cat_id = t3.cate_id
         '''%(ds))
 
         # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
