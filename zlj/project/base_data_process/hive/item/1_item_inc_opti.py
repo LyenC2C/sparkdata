@@ -221,7 +221,7 @@ if __name__ == "__main__":
             StructField("ts", IntegerType(), True),
          ])
 
-        df=hiveContext.createDataFrame(rdd3,schema1)
+        df=hiveContext.createDataFrame(rdd3,schema2)
         hiveContext.registerDataFrameAsTable(df, 'user_ts')
 
         hiveContext.sql('''
