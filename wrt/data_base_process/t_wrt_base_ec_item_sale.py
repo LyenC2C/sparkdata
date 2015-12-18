@@ -118,8 +118,8 @@ def quchong_2(x, y):
 
 schema = StructType([
     StructField("item_id",StringType(), True),
-	StructField("item_title",StringType(), True),
-	StructField("r_price",FloatType(), True),
+    StructField("item_title",StringType(), True),
+    StructField("r_price",FloatType(), True),
     StructField("s_price",FloatType(), True),
     StructField("bc_type",StringType(), True),
     StructField("quantity",IntegerType(), True),
