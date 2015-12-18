@@ -220,7 +220,7 @@ if __name__ == "__main__":
 
         rdd3=rdd.map(lambda x:[x[0],int(x[-2])])
         schema2 = StructType([
-            StructField("user_id", StringType(), True),
+            StructField("item_id", StringType(), True),
             StructField("ts", IntegerType(), True),
          ])
 
@@ -264,12 +264,12 @@ if __name__ == "__main__":
         SELECT t2.*
         FROM
         (
-          SELECT user_id, cast(max(ts) AS STRING)
+          SELECT user_id, cast(max(ts) AS STRING) ts
           FROM
           user_ts GROUP BY user_id
         )t1
         JOIN item_dev t2
-        ON t1.user_id =t2.user_id AND t1.ts=t2.ts
+        ON t1.item_id =t2.item_id AND t1.ts=t2.ts
       ) t4 ON t4.cat_id = t3.cate_id
         '''%(ds))
 
