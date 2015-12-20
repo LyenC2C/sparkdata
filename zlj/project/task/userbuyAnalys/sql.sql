@@ -8,24 +8,26 @@
  select item_id ,feed_id,user_id ,ds, datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date)  AS datediff,
   ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY f_date DESC) AS rn   from t_base_ec_item_feed_dev where ds>20150101 ;
 
+
+
 # SELECT * ,ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY f_date DESC) AS rn
 # FROM (select * FROM t_zlj_t_base_ec_item_feed_dev_2015 limit 1000)t  ;
 
-select count(1) from t_zlj_t_base_ec_item_feed_dev_2015 where length(user_id)<2 ;
-select * from t_zlj_t_base_ec_item_feed_dev_2015 where item_id=524652527985 ;
+# select count(1) from t_zlj_t_base_ec_item_feed_dev_2015 where length(user_id)<2 ;
+# select * from t_zlj_t_base_ec_item_feed_dev_2015 where item_id=524652527985 ;
 
-SELECT *
-FROM (SELECT item_id , count(1) as num from t_zlj_t_base_ec_item_feed_dev_2015 group by item_id ) t ORDER BY  num desc limit 100;
-
-
-SELECT *
-FROM (SELECT user_id , count(1) as num from t_zlj_t_base_ec_item_feed_dev_2015 group by user_id ) t ORDER BY  num desc limit 100;
+# SELECT *
+# FROM (SELECT item_id , count(1) as num from t_zlj_t_base_ec_item_feed_dev_2015 group by item_id ) t ORDER BY  num desc limit 100;
+#
+#
+# SELECT *
+# FROM (SELECT user_id , count(1) as num from t_zlj_t_base_ec_item_feed_dev_2015 group by user_id ) t ORDER BY  num desc limit 100;
 
 
 # 2758157467
 # 3009060480
 create table t_zlj_t_base_ec_item_feed_dev_2015_iteminfo as
-select  t2.* ,t1.title,cat_id,root_cat_id,brand_id,brand_name,bc_type,price,location
+select  t2.* ,t1.title,cat_id,root_cat_id,root_cat_name,brand_id,brand_name,bc_type,price,location
  from t_base_ec_item_dev t1
 join t_zlj_t_base_ec_item_feed_dev_2015 t2 on  t1.item_id =t2.item_id and t1.ds=20151211 and
 t2.user_id not in (
