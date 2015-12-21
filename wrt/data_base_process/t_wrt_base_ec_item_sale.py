@@ -132,7 +132,7 @@ schema = StructType([
 
 hiveContext.sql('use wlbase_dev')
 ds = sys.argv[1]
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=20151217" #+ ds #today's t_base_ec_shop_dev
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + ds #today's t_base_ec_shop_dev
 s1 = "/commit/shopitem/" + ds #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
 bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
