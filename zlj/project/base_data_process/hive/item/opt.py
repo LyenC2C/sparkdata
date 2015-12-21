@@ -7,7 +7,6 @@ __author__ = 'zlj'
 from pyspark.sql import *
 import sys
 from pyspark import SparkContext
-from pyspark.sql.types import *
 
 import rapidjson as json
 
@@ -35,8 +34,10 @@ def parse_price(price_dic):
     for value in price_dic:
         tmp=value['price']
         v=0
-        if '-' in tmp:     v=float(tmp.split('-')[0])
-        else :             v=float(tmp)
+        if '-' in tmp:     
+            v=(float(tmp.split('-')[0])+float(tmp.split('-')[1]))/2.0
+        else :           
+            v=float(tmp)
         if min>v:
             min=v
             price=v
@@ -46,7 +47,8 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+        return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    else: return res
 def try_parse(line,flag):
     try:
         return parse(line,flag)
@@ -76,7 +78,8 @@ def parse(line,flag):
     cat_name='-'
     root_cat_id='-'
     root_cat_name='-'
-    favor=itemInfoModel.get('favcount','-')
+    favor=itemInfoModel.get('favcount','0')
+    if not favor.isdigit(): favor='0'
     trackParams=ob['trackParams']
     BC_type=trackParams.get('BC_type','-')
     brandId=trackParams.get('brandId','-')
@@ -105,15 +108,15 @@ def parse(line,flag):
     list.append(brand_name)
     list.append(BC_type)
     list.append(str(price))
-    list.append(price_zone)
-    list.append(is_online)
+    list.append((price_zone))
+    list.append((is_online))
     list.append(off_time)
     list.append(int(favor))
     list.append(seller_id)
     list.append(shopId)
     list.append(location)
     # list.append(str(int(time.time())))
-    list.append(ts)
+    list.append((ts))
     strlist=[]
     if flag=='insert':
         # for i in list:
@@ -135,11 +138,8 @@ def f_coding(x):
         return x
 
 def fun1(x,ds):
-    lv=[i for i in x]
-    lv.append(ds)
-    rs=[f_coding(i) for i in lv]
-    if len(rs)!=19: return None
-    else: return rs
+    x.append(ds)
+    return [f_coding(i) for i in x]
 
 sql_insert='''
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds=%s)
@@ -204,93 +204,36 @@ if __name__ == "__main__":
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100).map(lambda x:try_parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
-        df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s '%ds_1)
+        df=hiveContext.sql('select * from wlbase_dev.t_base_ec_item_dev where ds=%s limit 100'%ds_1)
+        #df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s '%ds_1)
         schema1=df.schema
+        # rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
+        #                              x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
-                                         x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
-        # rdd1=df.map(lambda x:(x.item_id,['\t'.join([ str(i) for i in x]), x.ts]))
-        rdd2=rdd.union(rdd1).filter(lambda x:x is not None)
-        rdd_dev=rdd2.map(lambda x:fun1(x[1],ds))
-        df=hiveContext.createDataFrame(rdd_dev,schema1)
-        hiveContext.registerDataFrameAsTable(df, 'item_dev')
+                                     x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
+        rdd_dev=rdd1.filter(lambda x: x[0].isdigit()).map(lambda (x,y):(int(x),y))
+        rdd_in=rdd.map(lambda (x,y):(int(x),y)).groupByKey().map(lambda (x,y):(x,[i for i in y][0]))
+        rddjoin=rdd_in.fullOuterJoin(rdd_dev)
+        def fun(x,y):
+            lv=[]
+            ts=[]
+            t1,t2=y
+            if t1 is None:ts=t2
+            elif t2 is None:ts=t1
+            if t1 is not None and t2 is not None:
+                if int(t1[-1])>int(t2[-1]): ts=t1 
+                else: ts=t2
+            ts.append(ds)
+            return ts 
+        
+        rdd3=rddjoin.map(lambda (x,y):fun(x,y)).filter(lambda x:x is not  None).coalesce(100)
+        rdd3.map(lambda x:'\001'.join([str(valid_jsontxt(i)) for i in  x])).saveAsTextFile('/user/zlj/data/temp/t_base_ec_item_dev_tmp')
+        #hiveContext.sql('use wlbase_dev')
+        #ddf=hiveContext.createDataFrame(rdd3,schema1)
+        #ddf.saveAsTable('t_base_ec_item_dev',mode='overwrite',partitionBy='2015')
+        #hiveContext.registerDataFrameAsTable(ddf,'tmptable')
+        #hiveContext.sql(sql_insert%(ds))
 
-        # rdd2.map(lambda x:(x[0],x[-1])).groupByKey().map(lambda (x,y):fun_sorted(y))
-
-        # rdd2=rdd.union(rdd1).groupByKey()
-
-        rdd3=rdd_dev.filter(lambda x:x[-2] is not None).map(lambda x:[x[0],int(x[-2])])
-        schema2 = StructType([
-            StructField("item_id", StringType(), True),
-            StructField("ts", IntegerType(), True),
-         ])
-
-        df=hiveContext.createDataFrame(rdd3,schema2)
-        hiveContext.registerDataFrameAsTable(df, 'user_ts')
-        hiveContext.sql('''
-            INSERT OVERWRITE TABLE t_base_ec_item_dev PARTITION(ds=%s)
-    SELECT
-      /*+ mapjoin(t2)*/
-      t1.item_id,
-      t1.title,
-      t1.cat_id,
-      t2.cate_name        AS cat_name,
-      t2.cate_level1_id   AS root_cat_id,
-      t2.cate_level1_name AS root_cat_name,
-      t1.brand_id,
-      t1.brand_name,
-      t1.bc_type,
-      t1.price,
-      t1.price_zone,
-      t1.is_online,
-      t1.off_time,
-      t1.favor,
-      t1.seller_id,
-      t1.shop_id,
-      t1.location,
-      t1.ts
-      from
-      (
-          SELECT
-          cate_id,
-          cate_name,
-          cate_level1_id,
-          cate_level1_name
-          FROM
-          t_base_ec_dim
-      )                      t2
-   right JOIN
-      (
-        SELECT tb.*
-        FROM
-        (
-          SELECT item_id, cast(max(ts) AS STRING) ts
-          FROM
-          user_ts GROUP BY item_id
-        )ta
-        JOIN item_dev tb
-        ON ta.item_id =tb.item_id AND ta.ts=tb.ts
-      ) t1 ON t1.cat_id = t2.cate_id
-        '''%(ds))
-
-        # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
-        # hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        # sql='''
-        # insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        # s
-        # '''
-        # hiveContext.sql(sql_insert%(ds))
-        # rdd.groupByKey().count()
-        # rdd2=rdd.union(rdd1).groupByKey()
-        #
-        # rdd3=rdd2.map(lambda (x,y):fun_sorted(y)).coalesce(40)
-        # ddf=hiveContext.createDataFrame(rdd3.map(lambda x:fun1(x,ds)),schema1)
-        # hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        # # sql='''
-        # # insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        # # s
-        # # '''
-        # hiveContext.sql(sql_insert%(ds))
-        # rdd.groupByKey().count()
 
 
 # hiveContext.sql('use wlbase_dev')
