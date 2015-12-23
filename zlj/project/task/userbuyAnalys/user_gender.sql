@@ -2,12 +2,19 @@
 
 
 
+
 create table t_zlj_gender_traindata_userbuy as
 select
  /*+ mapjoin(t3)*/
- t2.root_cat_id ,t2.user_id,brand_id,cat_id,gender_id,bc_type,price,annoy,content_length
+ t2.root_cat_id ,t2.user_id, brand_id,cat_id,bc_type,price,annoy,content_length,
+
+ t1.years,t1.gender_id
  FROM
-(select gender_id,tbuid as user_id  from t_zlj_tmp_qqlink_info where gender_id is not null and LENGTH(birthday)>8 and LENGTH(birthday)>6)t1
+(select gender_id,tbuid as user_id ,
+   year(from_unixtime(unix_timestamp(),'yyyy-MM-dd'))-year(birthday) as years
+
+  from t_zlj_tmp_qqlink_info where gender_id is not null and LENGTH(birthday)>8 and LENGTH(birthday)>6
+  )t1
 join
 
 t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t t2
@@ -56,25 +63,17 @@ FROM t_zlj_t_base_ec_item_feed_dev_2015_iteminfo group by  user_id,root_cat_id
 )t group by user_id ;
 
 
--- create table t_zlj_gender_traindata_userbuy_info_rootcat_brand as
--- select gender_id,concat_ws(' ', collect_set(tag)) as tags ,
---
--- cast(sum(sump) as int)as sump,
--- cast(avg(avgp) as int) as avgp
--- from
--- (
--- SELECT
---   user_id,
---   gender_id,
---   concat( root_cat_id,":",cast(count(1) as string)) tag,sum(price) sump,avg(price) avgp
--- FROM t_zlj_gender_traindata_userbuy group by  user_id,root_cat_id ,gender_id
---
--- union all
---
--- SELECT
---   user_id,
---   gender_id,
---   concat( brand_id,":",cast(count(1) as string)) tag,sum(price) sump,avg(price) avgp
--- FROM t_zlj_gender_traindata_userbuy group by  user_id,brand_id ,gender_id
---
--- )t group by user_id,gender_id ;
+
+-- age
+
+
+create table t_zlj_gender_traindata_userbuy_info_age as
+select years,concat_ws(' ', collect_set(tag)) as tags
+from
+(
+SELECT
+  user_id,
+  years,
+  concat( cat_id,":",cast(count(1) as string)) tag
+FROM t_zlj_gender_traindata_userbuy group by  user_id,cat_id ,years
+)t group by user_id,years;
