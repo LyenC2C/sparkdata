@@ -33,7 +33,7 @@ select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg
 rdd1=hiveContext.sql(sql).map(lambda x:[x[0],1.0*x[1],1.0*x[2],1.0*x[3]])
 rdd=rdd1.map(lambda x: x[1:]).repartition(100)
 
-data=rdd.filter(lambda x:x[-1]<15000).sample(False,0.8,100).map(lambda x:array(x))
+data=rdd.filter(lambda x:x[-1]<1000).sample(False,0.8,100).map(lambda x:array(x))
 model = KMeans.train( data, 5, maxIterations=20, runs=50, initializationMode="random",seed=50, initializationSteps=5, epsilon=1e-4)
 
 model.centers=sorted(model.centers,key=lambda t:t[-2])
