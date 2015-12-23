@@ -1,8 +1,8 @@
 pre_path='/home/wrt/sparkdata'
 
-sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151219  20151220
-sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151220  20151221
-sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151221  20151222
+#sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151219  20151220
+#sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151220  20151221
+#sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151221  20151222
 
 hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp
 spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 10g \
