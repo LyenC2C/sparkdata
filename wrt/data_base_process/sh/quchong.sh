@@ -9,6 +9,16 @@ spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-mem
 $pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$2/*  20151219  20151220
 sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql 20151220
 
+hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp
+spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$2/*  20151220  20151221
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql 20151221
+
+hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp
+spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$2/*  20151221  20151222
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql 20151222
+
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
 #$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151218 20151217
 #
