@@ -21,8 +21,8 @@ ts STRING COMMENT '采集时间戳'
 )
 COMMENT '电商商品基础信息表'
 PARTITIONED BY  (ds STRING )
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
--- stored as textfile location '/hive/external/wlbase_dev/t_base_ec_item_dev/';
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
+stored as textfile location '/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/';
 
 
 -- INSERT overwrite table t_base_ec_item_dev partition(ds) select * from t_base_ec_item_dev_back where ds=20151101
