@@ -28,14 +28,14 @@ sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql 20151222
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
 #$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151220 20151219
 
-spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151221 20151220
-
-spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151222 20151221
-
-spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151223 20151222
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151221 20151220
+#
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151222 20151221
+#
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151223 20151222
 
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151216 20151217 20151212 20151212
 
