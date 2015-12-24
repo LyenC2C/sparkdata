@@ -1,8 +1,6 @@
 
 
-
-
-
+-- 元数据
 create table t_zlj_gender_traindata_userbuy as
 select
  /*+ mapjoin(t3)*/
@@ -19,6 +17,23 @@ join
 
 t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t t2
 on t1.user_id =t2.user_id;
+
+-- 训练数据
+create table t_zlj_gender_traindata_userbuy_info_root_cat_id as
+select gender_id,concat_ws(' ', collect_set(tag)) as tags
+from
+(
+SELECT
+  user_id,
+  gender_id,
+  concat( root_cat_id,":",cast(count(1) as string)) tag
+
+FROM t_zlj_gender_traindata_userbuy
+
+group by  user_id,root_cat_id ,gender_id
+)t group by user_id,gender_id ;
+
+
 
 
 
@@ -49,17 +64,13 @@ FROM t_zlj_gender_traindata_userbuy group by  user_id,cat_id ,gender_id
 
 
 create table t_zlj_gender_predict_data_userbuy_info as
-select user_id,concat_ws(' ', collect_set(tag)) as tags ,
-cast(sum(sump) as int) as sump,
-cast(avg(avgp) as int) as avgp,
-cast(max(maxp) as int) as maxp,
-cast(min(minp) as int) as minp
+select user_id,concat_ws(' ', collect_set(tag)) as tags
 from
 (
 SELECT
   user_id,
-  concat( root_cat_id,":",cast(count(1) as string)) tag,sum(price) sump,avg(price) avgp,cast(max(price) as int) maxp ,cast(min(price) as int) minp
-FROM t_zlj_t_base_ec_item_feed_dev_2015_iteminfo group by  user_id,root_cat_id
+  concat( root_cat_id,":",cast(count(1) as string)) tag
+FROM t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t group by  user_id,root_cat_id
 )t group by user_id ;
 
 
@@ -74,6 +85,6 @@ from
 SELECT
   user_id,
   years,
-  concat( cat_id,":",cast(count(1) as string)) tag
-FROM t_zlj_gender_traindata_userbuy group by  user_id,cat_id ,years
+  concat( root_cat_id,":",cast(count(1) as string)) tag
+FROM t_zlj_gender_traindata_userbuy group by  user_id,root_cat_id ,years
 )t group by user_id,years;
