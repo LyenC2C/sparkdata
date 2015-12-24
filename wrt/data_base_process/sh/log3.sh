@@ -2,7 +2,7 @@
 pre_path='/home/wrt/sparkdata'
 
 hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp
-spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 10g \
+spark-submit  --total-executor-cores  60   --executor-memory  6g  --driver-memory 10g \
 $pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/20151220/*  20151219  20151220
 sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql 20151220
 
