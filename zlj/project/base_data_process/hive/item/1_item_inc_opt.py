@@ -204,8 +204,8 @@ if __name__ == "__main__":
         ds=sys.argv[4]
         rdd=sc.textFile(filepath,100).map(lambda x:try_parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
-        df=hiveContext.sql('select * from wlbase_dev.t_base_ec_item_dev where ds=%s'%ds_1)
-        #df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s '%ds_1)
+        # df=hiveContext.sql('select * from wlbase_dev.t_base_ec_item_dev where ds=%s limit 100'%ds_1)
+        df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s '%ds_1)
         schema1=df.schema
         # rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
         #                              x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
