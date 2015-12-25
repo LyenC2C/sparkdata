@@ -3,7 +3,7 @@
 item_ds=$1
 
 
-/home/hadoop/hive/bin/hive<<EOF
+/home/wrt/hive/bin/hive<<EOF
 
 
 use wlbase_dev;
