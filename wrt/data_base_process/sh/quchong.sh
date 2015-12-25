@@ -15,6 +15,7 @@ spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores
 $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151222 20151221
 $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20151222
 
+
 #spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
 #$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
 #/commit/iteminfo/20151223/*  20151222 20151223
