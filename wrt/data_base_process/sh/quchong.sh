@@ -1,12 +1,23 @@
 pre_path='/home/wrt/sparkdata'
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
-/commit/iteminfo/20151223/*  20151222 20151223
+#spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+#$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+#/commit/iteminfo/20151223/*  20151222 20151223
+#
+#spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+#$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+#/commit/iteminfo/20151224/*  20151223 20151224
 
-spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
-$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
-/commit/iteminfo/20151224/*  20151223 20151224
+hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp
+spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/20151223/*  20151222  20151223
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql 20151223
+
+hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp
+spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/20151224/*  20151223  20151224
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql 20151224
+
 
 #sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151219  20151220
 #sh $pre_path/zlj/project/base_data_process/hive/item/step.sh 20151220  20151221
