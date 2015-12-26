@@ -106,7 +106,7 @@ def tfidf(corpus,limit):
 
 import sys
 if __name__ == "__main__":
-
+    hiveContext.sql('use wlbase_dev')
     if len(sys.argv)<4:
         print ' py -usertfidf  min_freq limit feed_ds outputtable'
         print ' py -item min_freq limit feed_ds input_table input_docid, input_talbe_title  output_table'
@@ -127,7 +127,7 @@ if __name__ == "__main__":
         broadcastVal=sc.broadcast(word_set_rdd.collect())
         word_set=broadcastVal.value
         corpus=hiveContext.sql('select user_id,title_cut from t_zlj_item_feed_title_cut_20151226')\
-            .filter(lambda x:x[0] is not None ).map(lambda x:(x[0],clean(x[1]))).groupByKey().map(lambda (x,y):(x,join(y)))
+            .map(lambda x:(x[0],clean(x[1]))).filter(lambda x:x[0] is not None ).groupByKey().map(lambda (x,y):(x,join(y)))
         rst=tfidf(corpus,limit)
         df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
