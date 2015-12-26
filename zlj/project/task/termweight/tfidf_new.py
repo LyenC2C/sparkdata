@@ -127,10 +127,16 @@ if __name__ == "__main__":
             .filter(lambda x:x[1]>1).sortBy(lambda x: x[1],ascending=False).zipWithIndex().filter(lambda x:x[1]>top_freq).map(lambda x:x[0][0])
         broadcastVal=sc.broadcast(word_set_rdd.collect())
         word_set=broadcastVal.value
-        corpus=hiveContext.sql('select user_id,title_cut from t_zlj_item_feed_title_cut_20151226 100000')\
-            .map(lambda x:(x[0],clean(x[1],word_set))).filter(lambda x:x[0] is not None ).groupByKey().map(lambda (x,y):(x,join(y))).coalesce(120)
-        rst=tfidf(corpus,limit)
-        df=hiveContext.createDataFrame(rst,schema)
+        corpus=hiveContext.sql('select user_id,title_cut from t_zlj_item_feed_title_cut_20151226 limit 100000')\
+            .map(lambda x:(x[0],clean(x[1],word_set))).filter(lambda x:x[0] is not None )
+        df=hiveContext.createDataFrame(corpus,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+
+            # .groupByKey().map(lambda (x,y):(x,join(y))).coalesce(120)
+        # rst=tfidf(corpus,limit)
+        # df=hiveContext.createDataFrame(rst,schema)
+        # hiveContext.registerDataFrameAsTable(df, 'tmptable')
+        # hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
