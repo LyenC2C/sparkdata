@@ -121,6 +121,7 @@ if __name__ == "__main__":
         index_rdd=hiveContext.sql('select word,num from t_zlj_item_feed_title_cut_20151226_word_count')
         count=index_rdd.count()
         top_freq=count-top_freq
+
         word_set_rdd=index_rdd.map(lambda x:(x[0],x[1]))\
             .filter(lambda x:x[1]>1).sortBy(lambda x: x[1],ascending=False).zipWithIndex().filter(lambda x:x[1]<top_freq).map(lambda x:x[0][0])
         broadcastVal=sc.broadcast(word_set_rdd.collect())
