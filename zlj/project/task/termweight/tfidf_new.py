@@ -70,6 +70,7 @@ def groupvalue(y):
 def clean(x,word_set):
             lv=x.split()
             return " ".join([i for i in lv if i in  word_set ])
+            # return " ".join(lv)
 def join(y):
     rs=[]
     for i in y:
@@ -119,7 +120,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        index_rdd=hiveContext.sql('select word,num from t_zlj_item_feed_title_cut_20151226_word_count limit 10000 ')
+        index_rdd=hiveContext.sql('select word,num from t_zlj_item_feed_title_cut_20151226_word_count  ')
         count=index_rdd.count()
         # top_freq=count-top_freq
 
@@ -128,7 +129,7 @@ if __name__ == "__main__":
         broadcastVal=sc.broadcast(word_set_rdd.collect())
         word_set=set(broadcastVal.value)
         corpus=hiveContext.sql('select user_id,title_cut from t_zlj_item_feed_title_cut_20151226 limit 100000')\
-            .map(lambda x:(x[0],clean(x[1],word_set))).filter(lambda x:x[0] is not None ).saveAsTextFile('/user/zlj/tmp/data/ds')
+            .map(lambda x:x[0]+"\001"+clean(x[1],word_set)).filter(lambda x:x[0] is not None ).saveAsTextFile('/user/zlj/tmp/data/ds')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s like t_zlj_item_feed_title_cut_20151226'%output_talbe)
         hiveContext.sql("LOAD DATA  INPATH '/user/zlj/tmp/data/ds' OVERWRITE INTO TABLE %s "%output_talbe)
