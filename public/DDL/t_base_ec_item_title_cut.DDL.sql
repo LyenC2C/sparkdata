@@ -1,7 +1,7 @@
 CREATE  TABLE  if not exists t_base_ec_item_title_cut (
 item_id   String COMMENT '',
 title_cut   String COMMENT '',
-title_cut_Stag   String COMMENT ''
+title_cut_Stag   String COMMENT '带词性'
 )
 COMMENT ''
 PARTITIONED BY  (ds STRING )

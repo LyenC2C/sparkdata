@@ -303,9 +303,9 @@ def tfidfali(rdd_pre,top_freq,min_freq,limit,index_file):
     def clean(i):
         ls=i.split('_')
         if len(ls)>1:
-            if  'B1' in ls[1]: return 1200000*2+int(ls[0])
-            if  'E2' in ls[1]: return 1200000*3+int(ls[0])
-            if  'E1' in ls[1]: return 1200000*4+int(ls[0])
+            if  'B1' in ls[1]: return 1200000*4+int(ls[0])
+            if  'E2' in ls[1]: return 1200000*8+int(ls[0])
+            if  'E1' in ls[1]: return 1200000*12+int(ls[0])
         else :return int(i)
     rdd = rdd_pre.map(lambda (x, y): (int(x), [clean(i) for i in y if    worddic.has_key(int(i.split('_')[0]))]))
     # rdd.saveAsTextFile('/user/zlj/temp/rdd_pre')
@@ -443,6 +443,67 @@ if __name__ == "__main__":
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+    elif sys.argv[1]=='-new':
+        i=1
+        top_freq=2000
+        min_freq=1
+        limit=int(sys.argv[i+2])
+        feed_ds=sys.argv[i+3]
+        output_talbe=sys.argv[i+4]
+        index_rdd=hiveContext.sql('select word,num from t_zlj_item_feed_title_cut_20151226_word_count')
+        count=index_rdd.count()
+        top_freq=count-top_freq
+        word_set_rdd=index_rdd.map(lambda x:(x[0],x[1]))\
+            .filter(lambda x:x[1]>1).sortBy(lambda x: x[1],ascending=False).zipWithIndex().filter(lambda x:x[1]<top_freq).map(lambda x:x[0][0])
+        broadcastVal=sc.broadcast(word_set_rdd.collect())
+        word_set=broadcastVal.value
+        def clean(x):
+            lv=x.split()
+            return " ".join([i for i in lv if i in  word_set ])
+        def join(y):
+            rs=[]
+            for i in y:
+                kv=i.split()
+                s=len(kv)
+                for index,v in enumerate(kv,1):
+                    if  not v.find('_n'):continue
+                    word=v.split('_')[0]
+                    if  len(word)<2:continue
+                    if word.replace('.','',1).isdigit(): continue
+                    if index==(s-3):
+                        rs.append(word+'_E2')
+                    elif index==(s-2):
+                        rs.append(word+'_E1')
+                    elif index==1:
+                        rs.append(word+'_B1')
+                    else:
+                        rs.append(word)
+            return rs
+        def tfidf(corpus):
+            doc_num=50000000
+            tfrdd = corpus.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
+            # word ,len
+            # dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
+            dfrdd = corpus.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
+            # word idf
+            idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
+            # idfrdd.collectAsMap()
+            # idfrdd.join()
+            broadcastVar = sc.broadcast(idfrdd.collectAsMap())
+            idfdict = broadcastVar.value
+            # rddjoin=idfrdd.join(tfrdd)
+            # worddicRs = dict(zip(worddic.values(),worddic.keys()))
+            joinrs=tfrdd.map(lambda  x: join1(x,idfdict,worddic))
+            # rddjoin = tfrdd.join(idfrdd)
+            # sorted(a,key=a[1],reverse=True)
+            # rst=rddjoin.map(lambda (x, y): join(x, y))
+            jrdd=joinrs.groupByKey()
+            # jrdd.map(lambda (x,y):str(x)+'\001'.join([str(k)+":"+str(v) for k,v in y ])).saveAsTextFile('/user/zlj/project/termweight/jointfidf_rs')
+            rst=jrdd.map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
+                [i[0].replace('_',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
+            return rst
+        corpus=hiveContext.sql().map(lambda x:(x[0],clean(x[1]))).groupByKey(lambda (x,y):(x,join(y)))
+
 
     elif sys.argv[1]=='-item':
         i=1
