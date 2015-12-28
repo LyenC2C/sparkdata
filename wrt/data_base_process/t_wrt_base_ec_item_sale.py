@@ -5,7 +5,9 @@ import sys
 import rapidjson as json
 import time
 from pyspark import SparkContext
-sc = SparkContext(appName="spark item_sale")
+today = sys.argv[1]
+yesterday = sys.argv[2]
+sc = SparkContext(appName="spark item_sale_" + today)
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -112,11 +114,9 @@ def quchong_2(x, y):
                 y = ln
     return [x] + y
 
-
-ds = sys.argv[1]
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + ds #today's t_base_ec_shop_dev
-s1 = "/commit/shopitem/" + ds #today
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + sys.argv[2] #yesterday
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + today #today's t_base_ec_shop_dev
+s1 = "/commit/shopitem/" + today #today
+s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #yesterday
 bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
