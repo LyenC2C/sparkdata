@@ -122,6 +122,7 @@ def tfidf(corpus,limit):
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
         jrdd=joinrs.coalesce(60).filter(lambda x:x[1][1]>0.01).groupByKey()
         rd=jrdd.map(lambda (x, y):(x,groupvalue(y))).filter(lambda (x,y):x is None and y is not None)
+
         rst=rd.map(lambda (x,y):[x, "\t".join(
             [i[0].replace('_',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
         return rst
