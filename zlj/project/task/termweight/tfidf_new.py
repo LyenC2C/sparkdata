@@ -64,6 +64,7 @@ def join1(x,dict):
 def groupvalue(y):
     s1={}
     for k,v in y:
+        k=k.split('_')[0]
         s1[k]=s1.get(k,0)+v
 
     lv=[(k,v) for k,v in s1.iteritems()]
@@ -120,7 +121,7 @@ def tfidf(corpus,limit):
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
         jrdd=joinrs.coalesce(60).filter(lambda x:x[1][1]>0.01).groupByKey()
-        rd=jrdd.map(lambda (x, y):(x,groupvalue(y)))
+        rd=jrdd.map(lambda (x, y):(x,groupvalue(y))).filter(lambda (x,y):x is None and y is not None)
         rst=rd.map(lambda (x,y):[x, "\t".join(
             [i[0].replace('_',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
         return rst
@@ -161,7 +162,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/000000_0"
+        # path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/000000_0"
         path="/user/zlj/temp/data1"
         corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
         rst=tfidf(corpus,limit)
