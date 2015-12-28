@@ -1,7 +1,7 @@
 pre_path='/home/wrt/sparkdata'
 
 hadoop fs -rm -r /user/wrt/sale_tmp
-spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 120 \
+spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 \
 $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20151222 20151221
 sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20151222
 
