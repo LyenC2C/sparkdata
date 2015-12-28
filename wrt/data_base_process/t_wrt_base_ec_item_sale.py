@@ -118,7 +118,7 @@ def quchong_2(x, y):
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + today #today's t_base_ec_shop_dev
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=20151030" #+ today #today's t_base_ec_shop_dev
 s1 = "/commit/shopitem/" + today #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #yesterday
 bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
