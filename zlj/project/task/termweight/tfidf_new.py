@@ -97,9 +97,8 @@ def index_weight(y):
     for i in y.split('\003'):
         kv=i.split()
         s=len(kv)
-        for index,v in enumerate(kv,1):
-            if  not v.find('_n'):continue
-            word=v.split('_')[0]
+        for index,word in enumerate(kv,1):
+            # word=v.split('_')[0]
             if  len(word)<2:continue
             if word.replace('.','',1).isdigit(): continue
             if index==(s-3):
