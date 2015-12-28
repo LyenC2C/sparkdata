@@ -167,7 +167,7 @@ if __name__ == "__main__":
         path="/user/zlj/temp/data1"
         corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
         rst=tfidf(corpus,limit)
-        df=hiveContext.createDataFrame(rst,schema).aggregateByKey
+        df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
