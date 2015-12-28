@@ -120,7 +120,8 @@ def tfidf(corpus,limit):
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
         jrdd=joinrs.coalesce(60).filter(lambda x:x[1][1]>0.01).groupByKey()
-        rst=jrdd.map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
+        rd=jrdd.map(lambda (x, y):(x,groupvalue(y)))
+        rst=rd.map(lambda (x,y):[x, "\t".join(
             [i[0].replace('_',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
         return rst
 
