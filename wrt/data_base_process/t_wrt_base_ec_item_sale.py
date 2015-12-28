@@ -115,7 +115,7 @@ def quchong_2(x, y):
     result = [x] + y
     rt = []
     for ln in result:
-        rt.append(valid_jsontxt(str(ln)))
+        rt.append(str(valid_jsontxt(ln)))
     return "\001".join(result)
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + today #today's t_base_ec_shop_dev
