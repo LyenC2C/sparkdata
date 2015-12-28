@@ -5,13 +5,14 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from pyspark import *
+from pyspark import SparkContext
 from pyspark.sql import *
 from pyspark.sql.types import *
 
-
 import  math
-
+sc = SparkContext(appName="3_clean_fliter_corpus")
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
 
 from itertools import groupby
 
@@ -129,16 +130,6 @@ def tfidf(corpus,limit):
 
 import sys
 if __name__ == "__main__":
-    conf = SparkConf()
-    conf.set("spark.kryoserializer.buffer.mb","512")
-    conf.set("spark.broadcast.compress","true")
-    conf.set("spark.driver.maxResultSize","4g")
-    conf.set("spark.akka.timeout", "300")
-    conf.set("spark.shuffle.memoryFraction", "0.5")
-    conf.set("spark.core.connection.ack.wait.timeout", "1800")
-    sc = SparkContext(appName="term weight",conf=conf)
-    sqlContext = SQLContext(sc)
-    hiveContext = HiveContext(sc)
     hiveContext.sql('use wlbase_dev')
 
     if len(sys.argv)<4:
@@ -165,34 +156,3 @@ if __name__ == "__main__":
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s like t_zlj_item_feed_title_cut_20151226'%output_talbe)
         hiveContext.sql("LOAD DATA  INPATH '/user/zlj/tmp/data/ds' OVERWRITE INTO TABLE %s "%output_talbe)
-    elif sys.argv[1]=='-new':
-        i=1
-
-        top_freq=2000
-        min_freq=sys.argv[i+1]
-        limit=int(sys.argv[i+2])
-        feed_ds=sys.argv[i+3]
-        output_talbe=sys.argv[i+4]
-        # path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/000000_0"
-        path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/*"
-        # path="/user/zlj/temp/data1"
-        corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
-        rst=tfidf(corpus,limit)
-        rst.map(lambda x:'\001'.join(x)).saveAsTextFile('/user/zlj/temp/termweight1228')
-        # df=hiveContext.createDataFrame(rst,schema)
-        # hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
-        hiveContext.sql("LOAD DATA  INPATH '/user/zlj/temp/termweight1228' OVERWRITE INTO TABLE %s "%output_talbe)
-        # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
-
-        # df=hiveContext.createDataFrame(corpus,schema)
-        # hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        # hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
-        # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
-
-        # .groupByKey().map(lambda (x,y):(x,join(y))).coalesce(120)
-        # rst=tfidf(corpus,limit)
-        # df=hiveContext.createDataFrame(rst,schema)
-        # hiveContext.registerDataFrameAsTable(df, 'tmptable')
-        # hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
-        # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
