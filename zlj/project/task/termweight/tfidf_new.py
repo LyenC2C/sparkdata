@@ -127,8 +127,7 @@ def tfidf(corpus,limit):
 import sys
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
-    hiveContext.sql('select * from t_zlj_userbuy_item_tfidf_tagbrand_weight15be0701_v6')\
-        .map(lambda x:x[1].split()).flatMap(lambda x:x).map(lambda x:float(x.split('_')[1])).min()
+
     if len(sys.argv)<4:
         print ' py -usertfidf  min_freq limit feed_ds outputtable'
         print ' py -item min_freq limit feed_ds input_table input_docid, input_talbe_title  output_table'
