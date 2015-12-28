@@ -5,8 +5,8 @@ import sys
 import rapidjson as json
 import time
 from pyspark import SparkContext
-today = sys.argv[1]
-yesterday = sys.argv[2]
+yesterday = sys.argv[1]
+today = sys.argv[2]
 sc = SparkContext(appName="spark item_sale_" + today)
 def valid_jsontxt(content):
     if type(content) == type(u""):
