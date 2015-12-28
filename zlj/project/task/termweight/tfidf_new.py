@@ -119,7 +119,7 @@ def tfidf(corpus,limit):
         broadcastVar = sc.broadcast(idfrdd.collectAsMap())
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
-        jrdd=joinrs.groupByKey()
+        jrdd=joinrs.coalesce(60).filter(lambda x:x[1][1]>0.01).groupByKey()
         rst=jrdd.map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
             [i[0].replace('_',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
         return rst
@@ -127,6 +127,8 @@ def tfidf(corpus,limit):
 import sys
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
+    hiveContext.sql('select * from t_zlj_userbuy_item_tfidf_tagbrand_weight15be0701_v6')\
+        .map(lambda x:x[1].split()).flatMap(lambda x:x).map(lambda x:float(x.split('_')[1])).min()
     if len(sys.argv)<4:
         print ' py -usertfidf  min_freq limit feed_ds outputtable'
         print ' py -item min_freq limit feed_ds input_table input_docid, input_talbe_title  output_table'
@@ -153,6 +155,7 @@ if __name__ == "__main__":
         hiveContext.sql("LOAD DATA  INPATH '/user/zlj/tmp/data/ds' OVERWRITE INTO TABLE %s "%output_talbe)
     elif sys.argv[1]=='-new':
         i=1
+
         top_freq=2000
         min_freq=sys.argv[1]
         limit=int(sys.argv[i+2])
@@ -161,7 +164,7 @@ if __name__ == "__main__":
         path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/000000_0"
         corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
         rst=tfidf(corpus,limit)
-        df=hiveContext.createDataFrame(rst,schema)
+        df=hiveContext.createDataFrame(rst,schema).aggregateByKey
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
