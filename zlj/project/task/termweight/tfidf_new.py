@@ -66,8 +66,9 @@ def groupvalue(y):
     for k,v in y:
         k=k.split('_')[0]
         s1[k]=s1.get(k,0)+v
-
     lv=[(k,v) for k,v in s1.iteritems()]
+    return lv
+
 def clean(x,word_set):
             lv=x.split()
             return " ".join([i for i in lv if i in  word_set ])
@@ -126,6 +127,7 @@ def tfidf(corpus,limit):
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
         # joinrs.map(lambda x: " ".join([x[0],x[1][0],str(x[1][1])])).saveAsTextFile('/user/zlj/temp/1228data')
         jrdd=joinrs.filter(lambda x:x[1][1]>0.1).groupByKey()
+        jrdd.map(lambda (x,y):[i for i in y][0])
         rd=jrdd.map(lambda (x, y):(x,groupvalue(y))).filter(lambda (x,y):x is None and y is not None)
 
         rst=rd.map(lambda (x,y):[x, "\t".join(
