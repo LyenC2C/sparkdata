@@ -113,10 +113,10 @@ def quchong_2(x, y):
                 max = int(ln[8])
                 y = ln
     result = [x] + y
-    rt = []
+    lv = []
     for ln in result:
-        rt.append(str(valid_jsontxt(ln)))
-    return "\001".join(result)
+        lv.append(str(valid_jsontxt(ln)))
+    return "\001".join(lv)
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + today #today's t_base_ec_shop_dev
 s1 = "/commit/shopitem/" + today #today
