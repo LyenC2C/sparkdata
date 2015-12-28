@@ -57,7 +57,8 @@ def join1(x,dict):
     elif(word.endswith('_E2')):
         tfidf=tfidf*1.3
         word=word.replace('_E2','')
-    tfidf=tfidf*math.log(len(word)/2.0+2,2)
+    # tfidf=tfidf*math.log(len(word)/2.0+2,2)
+    tfidf=tfidf*math.log(len(word),2)
     return (doc_id,(word,tfidf))
 
 def groupvalue(y):
@@ -130,6 +131,7 @@ def tfidf(corpus,limit):
 import sys
 if __name__ == "__main__":
     conf = SparkConf()
+    conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
     conf.set("spark.kryoserializer.buffer.mb","512")
     conf.set("spark.broadcast.compress","true")
     conf.set("spark.driver.maxResultSize","4g")
