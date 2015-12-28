@@ -91,7 +91,25 @@ def join(y):
                 rs.append(word)
     return rs
 
-
+def index_weight(y):
+    rs=[]
+    for i in y.split('\003'):
+        kv=i.split()
+        s=len(kv)
+        for index,v in enumerate(kv,1):
+            if  not v.find('_n'):continue
+            word=v.split('_')[0]
+            if  len(word)<2:continue
+            if word.replace('.','',1).isdigit(): continue
+            if index==(s-3):
+                rs.append(word+'_E2')
+            elif index==(s-2):
+                rs.append(word+'_E1')
+            elif index==1:
+                rs.append(word+'_B1')
+            else:
+                rs.append(word)
+    return rs
 def tfidf(corpus,limit):
         doc_num=50000000
         tfrdd = corpus.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
@@ -101,7 +119,7 @@ def tfidf(corpus,limit):
         broadcastVar = sc.broadcast(idfrdd.collectAsMap())
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
-        jrdd=joinrs.groupByKey()
+        jrdd=joinrs.coalesce(60).filter(lambda x:x[1][1]>0.01).groupByKey()
         rst=jrdd.map(lambda (x, y):(x,groupvalue(y))).map(lambda (x,y):[x, "\t".join(
             [i[0].replace('_',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
         return rst
@@ -109,11 +127,12 @@ def tfidf(corpus,limit):
 import sys
 if __name__ == "__main__":
     hiveContext.sql('use wlbase_dev')
+
     if len(sys.argv)<4:
         print ' py -usertfidf  min_freq limit feed_ds outputtable'
         print ' py -item min_freq limit feed_ds input_table input_docid, input_talbe_title  output_table'
         sys.exit(0)
-    elif sys.argv[1]=='-new':
+    elif sys.argv[1]=='-cleandata':
         i=1
         top_freq=2000
         min_freq=sys.argv[1]
@@ -133,12 +152,28 @@ if __name__ == "__main__":
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s like t_zlj_item_feed_title_cut_20151226'%output_talbe)
         hiveContext.sql("LOAD DATA  INPATH '/user/zlj/tmp/data/ds' OVERWRITE INTO TABLE %s "%output_talbe)
+    elif sys.argv[1]=='-new':
+        i=1
+
+        top_freq=2000
+        min_freq=sys.argv[1]
+        limit=int(sys.argv[i+2])
+        feed_ds=sys.argv[i+3]
+        output_talbe=sys.argv[i+4]
+        path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/000000_0"
+        corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
+        rst=tfidf(corpus,limit)
+        df=hiveContext.createDataFrame(rst,schema).aggregateByKey
+        hiveContext.registerDataFrameAsTable(df, 'tmptable')
+        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
+        hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
+
         # df=hiveContext.createDataFrame(corpus,schema)
         # hiveContext.registerDataFrameAsTable(df, 'tmptable')
         # hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
 
-            # .groupByKey().map(lambda (x,y):(x,join(y))).coalesce(120)
+        # .groupByKey().map(lambda (x,y):(x,join(y))).coalesce(120)
         # rst=tfidf(corpus,limit)
         # df=hiveContext.createDataFrame(rst,schema)
         # hiveContext.registerDataFrameAsTable(df, 'tmptable')
