@@ -87,7 +87,7 @@ def f2(line):
     ss[6] = int(ss[6])
     ss[7] = int(ss[7])
     ss[10] = '0'
-    if ss[4] != "B" and ss[4] !="C":
+    if ss[4] != "B" and ss[4] != "C":
         ss[4] = '-'
     return ss
 def quchong_1(x, y):
@@ -112,7 +112,8 @@ def quchong_2(x, y):
             if int(ln[8]) > max:
                 max = int(ln[8])
                 y = ln
-    return [x] + y
+    result = [x] + y
+    return "\001".join(result)
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + today #today's t_base_ec_shop_dev
 s1 = "/commit/shopitem/" + today #today
@@ -120,7 +121,7 @@ s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #ye
 bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
-rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y)).coalesce(200)
 rdd.saveAsTextFile('/user/wrt/sale_tmp')
 #st = s.find('2015')
