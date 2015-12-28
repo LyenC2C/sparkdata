@@ -68,7 +68,6 @@ def groupvalue(y):
         s1[k]=s1.get(k,0)+v
     lv=[(k,v) for k,v in s1.iteritems()]
     return lv
-
 def clean(x,word_set):
             lv=x.split()
             return " ".join([i for i in lv if i in  word_set ])
@@ -92,14 +91,9 @@ def join(y):
             else:
                 rs.append(word)
     return rs
-
 def index_weight(y):
     rs=[]
     lv=y.split('\003')
-    ls=[]
-    if len(lv)>1000:
-        ls=lv[:1000]
-    else: ls=lv
     for i in lv:
         kv=i.split()
         s=len(kv)
@@ -127,11 +121,11 @@ def tfidf(corpus,limit):
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
         # joinrs.map(lambda x: " ".join([x[0],x[1][0],str(x[1][1])])).saveAsTextFile('/user/zlj/temp/1228data')
         jrdd=joinrs.filter(lambda x:x[1][1]>0.1).groupByKey()
-        jrdd.map(lambda (x,y):[i for i in y][0])
-        rd=jrdd.map(lambda (x, y):(x,groupvalue(y))).filter(lambda (x,y):x is None and y is not None)
-
-        rst=rd.map(lambda (x,y):[x, "\t".join(
-            [i[0].replace('_',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
+        # jrdd.map(lambda (x,y):[i for i in y][0])
+        rd=jrdd.map(lambda (x, y):(x,groupvalue(y)))
+        rst=rd.map(lambda (x,y):[x, "|".join(
+            [i[0].replace('_',"").replace('|',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
+        # rst.saveAsTextFil
         return rst
 
 import sys
@@ -166,12 +160,13 @@ if __name__ == "__main__":
         i=1
 
         top_freq=2000
-        min_freq=sys.argv[1]
+        min_freq=sys.argv[i+1]
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         # path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/000000_0"
-        path="/user/zlj/temp/data1"
+        path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/*"
+        # path="/user/zlj/temp/data1"
         corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
         rst=tfidf(corpus,limit)
         df=hiveContext.createDataFrame(rst,schema)
