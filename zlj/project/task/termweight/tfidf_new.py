@@ -66,8 +66,9 @@ def groupvalue(y):
     for k,v in y:
         k=k.split('_')[0]
         s1[k]=s1.get(k,0)+v
-
     lv=[(k,v) for k,v in s1.iteritems()]
+    return lv
+
 def clean(x,word_set):
             lv=x.split()
             return " ".join([i for i in lv if i in  word_set ])
@@ -94,12 +95,16 @@ def join(y):
 
 def index_weight(y):
     rs=[]
-    for i in y.split('\003'):
+    lv=y.split('\003')
+    ls=[]
+    if len(lv)>1000:
+        ls=lv[:1000]
+    else: ls=lv
+    for i in lv:
         kv=i.split()
         s=len(kv)
-        for index,v in enumerate(kv,1):
-            if  not v.find('_n'):continue
-            word=v.split('_')[0]
+        for index,word in enumerate(kv,1):
+            # word=v.split('_')[0]
             if  len(word)<2:continue
             if word.replace('.','',1).isdigit(): continue
             if index==(s-3):
@@ -120,7 +125,9 @@ def tfidf(corpus,limit):
         broadcastVar = sc.broadcast(idfrdd.collectAsMap())
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
-        jrdd=joinrs.coalesce(60).filter(lambda x:x[1][1]>0.01).groupByKey()
+        # joinrs.map(lambda x: " ".join([x[0],x[1][0],str(x[1][1])])).saveAsTextFile('/user/zlj/temp/1228data')
+        jrdd=joinrs.filter(lambda x:x[1][1]>0.1).groupByKey()
+        jrdd.map(lambda (x,y):[i for i in y][0])
         rd=jrdd.map(lambda (x, y):(x,groupvalue(y))).filter(lambda (x,y):x is None and y is not None)
 
         rst=rd.map(lambda (x,y):[x, "\t".join(
@@ -167,7 +174,7 @@ if __name__ == "__main__":
         path="/user/zlj/temp/data1"
         corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
         rst=tfidf(corpus,limit)
-        df=hiveContext.createDataFrame(rst,schema).aggregateByKey
+        df=hiveContext.createDataFrame(rst,schema)
         hiveContext.registerDataFrameAsTable(df, 'tmptable')
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
