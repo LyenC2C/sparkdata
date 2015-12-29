@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 pre_path='/home/wrt/sparkdata'
-
-echo "haha"
+zuotian=$(date -d '1 days ago' +%Y%m%d)
+echo "haha" >> "./log_date/" + $zuotian 2>&1
 
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151216 20151217 20151224 20151224
 #
