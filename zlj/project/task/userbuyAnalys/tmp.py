@@ -14,6 +14,32 @@ sys.setdefaultencoding('utf8')
 # sc = SparkContext(appName="cmt")
 # sqlContext = SQLContext(sc)
 # hiveContext = HiveContext(sc)
+segmentor = Segmentor()
+segmentor.load(os.path.join(MODELDIR, "cws.model"))
+postagger = Postagger()
+postagger.load(os.path.join(MODELDIR, "pos.model"))
+parser = Parser()
+parser.load(os.path.join(MODELDIR, "parser.model"))
+def fun(line):
+    words = line.split()
+    print "\t".join("%d:%s"%(index,i) for index, i in enumerate(words,1))
+    postags = postagger.postag(words)
+    # list-of-string parameter is support in 0.1.5
+    #postags = postagger.postag(["中国","进出口","银行","与","中国银行","加强","合作"])
+    print "\t".join(postags)
+    mp={}
+    for index, i in enumerate(postags,1):mp[index]=i
+    mp[0]='HEAD'
+    arcs = parser.parse(words, postags)
+    m={}
+    for index, i in enumerate(words,1):m[index]=i
+    m[0]='HEAD'
+    #print "\t".join("%d:%s" % (arc.head, arc.relation) for index,arc in enumerate(arcs)
+    for index,arc in enumerate(arcs,1):
+        print index,m[index],mp[index], m[arc.head],mp[arc.head],arc.relation
+
+
+# for line in open(''):
 
 
 for line in open('E:\work\\tag'):

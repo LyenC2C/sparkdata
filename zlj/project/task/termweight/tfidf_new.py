@@ -15,10 +15,32 @@ import  math
 
 from itertools import groupby
 
+
+def update_w(word,tfidf):
+    if(word.endswith('-b')):
+        tfidf=tfidf*1.3
+        # word=word.replace('-b','')
+    elif(word.endswith('-c')):
+        tfidf=tfidf*1.2
+        # word=word.replace('-c','')
+    elif(word.endswith('_B1')):
+        tfidf=tfidf*1.3
+        word=word.replace('_B1','')
+    elif(word.endswith('_B2')):
+        tfidf=tfidf*1.2
+        word=word.replace('_B2','')
+    elif(word.endswith('_E1')):
+        tfidf=tfidf*1.5
+        word=word.replace('_E1','')
+    elif(word.endswith('_E2')):
+        tfidf=tfidf*1.3
+        word=word.replace('_E2','')
+    tfidf=tfidf*math.log(len(word)/2.0+2,2)
+    return tfidf
 def tf(x, y):
     num = len(y)
     lv = [(k, len(list(g)) * 1.0 / num) for k, g in groupby(sorted(y))]
-    return [(i[0], (x, i[1])) for i in lv] #word ,id tf
+    return [(i[0].split('_')[0], (x, update_w(i[0],i[1]))) for i in lv] #word ,id tf
 
 
 def df(x, y):
@@ -39,26 +61,8 @@ def join1(x,dict):
     doc_id=x[1][0]
     tf=x[1][1]
     tfidf=tf*dict.get(word,0.5)
-    if(word.endswith('-b')):
-        tfidf=tfidf*1.3
-        # word=word.replace('-b','')
-    elif(word.endswith('-c')):
-        tfidf=tfidf*1.2
-        # word=word.replace('-c','')
-    elif(word.endswith('_B1')):
-        tfidf=tfidf*1.3
-        word=word.replace('_B1','')
-    elif(word.endswith('_B2')):
-        tfidf=tfidf*1.2
-        word=word.replace('_B2','')
-    elif(word.endswith('_E1')):
-        tfidf=tfidf*1.5
-        word=word.replace('_E1','')
-    elif(word.endswith('_E2')):
-        tfidf=tfidf*1.3
-        word=word.replace('_E2','')
-    # tfidf=tfidf*math.log(len(word)/2.0+2,2)
-    tfidf=tfidf*math.log(len(word),2)
+
+    # tfidf=tfidf*math.log(len(word),2)
     return (doc_id,(word,tfidf))
 
 def groupvalue(y):
@@ -115,7 +119,7 @@ def tfidf(corpus,limit):
         tfrdd = corpus.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
         dfrdd = corpus.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
         # word idf
-        idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
+        idfrdd = dfrdd.map(lambda (x, y): (x.split('_')[0], math.log((doc_num + 1) * 1.0 / (y + 1)))).reduceByKey(lambda a,b:a+b)
         broadcastVar = sc.broadcast(idfrdd.collectAsMap())
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
@@ -138,6 +142,7 @@ if __name__ == "__main__":
     conf.set("spark.akka.timeout", "300")
     conf.set("spark.shuffle.memoryFraction", "0.5")
     conf.set("spark.core.connection.ack.wait.timeout", "1800")
+    conf.set("spark.hadoop.validateOutputSpecs", "false")
     sc = SparkContext(appName="term weight",conf=conf)
     sqlContext = SQLContext(sc)
     hiveContext = HiveContext(sc)
