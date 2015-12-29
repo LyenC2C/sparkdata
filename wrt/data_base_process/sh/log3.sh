@@ -1,23 +1,25 @@
 #!/usr/bin/env bash
 pre_path='/home/wrt/sparkdata'
 
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151216 20151217 20151224 20151224
+echo "haha"
 
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151217 20151218 20151224 20151224
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151218 20151219 20151224 20151224
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151219 20151220 20151224 20151224
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151220 20151221 20151224 20151224
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151221 20151222 20151224 20151224
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151222 20151223 20151224 20151224
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151223 20151224 20151224 20151224
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151224 20151225 20151224 20151224
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151216 20151217 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151217 20151218 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151218 20151219 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151219 20151220 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151220 20151221 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151221 20151222 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151222 20151223 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151223 20151224 20151224 20151224
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151224 20151225 20151224 20151224
 
 
 #spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
