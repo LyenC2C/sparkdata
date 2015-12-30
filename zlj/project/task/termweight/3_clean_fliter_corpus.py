@@ -151,7 +151,7 @@ if __name__ == "__main__":
     elif sys.argv[1]=='-cleandata':
         i=1
         top_freq=2000
-        min_freq=sys.argv[1]
+        min_freq=sys.argv[i+1]
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
