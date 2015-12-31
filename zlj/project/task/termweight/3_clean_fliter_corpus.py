@@ -5,14 +5,14 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from pyspark import SparkContext
+from pyspark import *
 from pyspark.sql import *
 from pyspark.sql.types import *
 
 import  math
-sc = SparkContext(appName="3_clean_fliter_corpus")
-sqlContext = SQLContext(sc)
-hiveContext = HiveContext(sc)
+# sc = SparkContext(appName="3_clean_fliter_corpus")
+# sqlContext = SQLContext(sc)
+# hiveContext = HiveContext(sc)
 
 from itertools import groupby
 
@@ -130,6 +130,18 @@ def tfidf(corpus,limit):
 
 import sys
 if __name__ == "__main__":
+    conf = SparkConf()
+    conf.set("spark.serializer","org.apache.spark.serializer.KryoSerializer")
+    conf.set("spark.kryoserializer.buffer.mb","512")
+    conf.set("spark.broadcast.compress","true")
+    conf.set("spark.driver.maxResultSize","4g")
+    conf.set("spark.akka.timeout", "300")
+    conf.set("spark.shuffle.memoryFraction", "0.5")
+    conf.set("spark.core.connection.ack.wait.timeout", "1800")
+    conf.set("spark.hadoop.validateOutputSpecs", "false")
+    sc = SparkContext(appName="3_clean_fliter_corpus",conf=conf)
+    sqlContext = SQLContext(sc)
+    hiveContext = HiveContext(sc)
     hiveContext.sql('use wlbase_dev')
 
     if len(sys.argv)<4:
@@ -139,7 +151,7 @@ if __name__ == "__main__":
     elif sys.argv[1]=='-cleandata':
         i=1
         top_freq=2000
-        min_freq=sys.argv[1]
+        min_freq=sys.argv[i+1]
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
@@ -148,7 +160,7 @@ if __name__ == "__main__":
         # top_freq=count-top_freq
 
         word_set_rdd=index_rdd.map(lambda x:(x[0],x[1]))\
-            .filter(lambda x:x[1]>1).sortBy(lambda x: x[1],ascending=False).zipWithIndex().filter(lambda x:x[1]>top_freq).map(lambda x:x[0][0])
+            .filter(lambda x:x[1]>int(min_freq)).sortBy(lambda x: x[1],ascending=False).zipWithIndex().filter(lambda x:x[1]>top_freq).map(lambda x:x[0][0])
         broadcastVal=sc.broadcast(word_set_rdd.collect())
         word_set=set(broadcastVal.value)
         corpus=hiveContext.sql('select user_id,title_cut from t_zlj_item_feed_title_cut_20151226')\
