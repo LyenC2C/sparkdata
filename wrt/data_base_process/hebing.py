@@ -3,7 +3,7 @@ __author__ = 'hadoop'
 import sys
 from pyspark import SparkContext
 ds = sys.argv[1]
-sc = SparkContext(appName="hebing item_sale_" + ds)
+sc = SparkContext(appName="hebing feed")
 
 
 s = "/hive/warehouse/wlbase_dev.db/t_wrt_tmp_20151230" #+ ds
