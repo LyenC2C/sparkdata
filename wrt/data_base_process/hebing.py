@@ -2,7 +2,7 @@ __author__ = 'hadoop'
 
 import sys
 from pyspark import SparkContext
-ds = sys.argv[1]
+#ds = sys.argv[1]
 sc = SparkContext(appName="hebing feed")
 
 
