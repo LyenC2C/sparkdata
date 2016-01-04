@@ -6,7 +6,7 @@ from pyspark import SparkContext
 sc = SparkContext(appName="hebing feed")
 
 
-s = "/hive/warehouse/wlbase_dev.db/t_wrt_tmp_20151230/*" #+ ds
+s = "/hive/warehouse/testhive.db/t_wrt_feed_filter/*" #+ ds
 rdd = sc.textFile(s).coalesce(16)
 rdd.saveAsTextFile("/user/wrt/feed_2015/")
 
