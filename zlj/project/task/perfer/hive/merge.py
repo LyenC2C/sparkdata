@@ -117,7 +117,7 @@ def price():
     t_zlj_perfer_user_level_mult
 
     '''
-    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level'," ".join(str(i) for i in x[1:]))))
+    rdd_price=hiveContext.sql(sql_price).map(lambda x:(x.uid,('price_level',"_".join(str(i) for i in x[1:]))))
     return rdd_price
     # return ''
 

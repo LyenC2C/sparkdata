@@ -25,7 +25,7 @@ def get_sousuo(ss):
     if "q=" in ss:
         p = True
         srch_word = ss.split('q=')[-1]
-    if "word=" in ss:
+    if "word=" in ss and not "sword=" in ss:
         p = True
         srch_word = ss.split('word=')[-1]
     if "wd=" in ss:

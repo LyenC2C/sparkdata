@@ -33,7 +33,16 @@ select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg
 rdd1=hiveContext.sql(sql).map(lambda x:[x[0],1.0*x[1],1.0*x[2],1.0*x[3]])
 rdd=rdd1.map(lambda x: x[1:]).repartition(100)
 
-data=rdd.filter(lambda x:x[-1]<30000).map(lambda x:array(x))
+# rdd1.map(lambda x:x[3]).histogram(100)
+def level(x):
+    if x<4:return 1
+    if 4<x<=6:return 2
+    if 6<x<=10:return 3
+    if 10<x<12:return 4
+    if 12<x:return 5
+import  math
+userlevel_rdd=rdd1.map(lambda x: [x[0],x[1],x[2], x[3],level(math.log(x[2],2))])
+data=rdd.filter(lambda x:x[-1]<1000).sample(False,0.8,100).map(lambda x:array(x))
 model = KMeans.train( data, 5, maxIterations=20, runs=50, initializationMode="random",seed=50, initializationSteps=5, epsilon=1e-4)
 
 model.centers=sorted(model.centers,key=lambda t:t[-2])
@@ -54,5 +63,5 @@ df=hiveContext.createDataFrame(userlevel_rdd,schema)
 
 # 保存
 hiveContext.registerDataFrameAsTable(df,'userlevel')
-hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level_mult ')
-hiveContext.sql('create table t_zlj_perfer_user_level_mult as select * from userlevel')
+hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level_mult_t_20151225 ')
+hiveContext.sql('create table t_zlj_perfer_user_level_mult_t_20151225 as select * from userlevel')
