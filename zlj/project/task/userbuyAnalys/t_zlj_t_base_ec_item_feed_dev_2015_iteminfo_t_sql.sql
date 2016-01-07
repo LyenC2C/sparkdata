@@ -59,7 +59,7 @@ CREATE TABLE t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
       price,
       location
           FROM t_base_ec_item_dev
-          WHERE ds = 20151217 ) t1
+          WHERE ds = 20160105 ) t1
       JOIN (
      SELECT
        cast( item_id as bigint )item_id,
