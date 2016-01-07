@@ -12,10 +12,7 @@ USE wlbase_dev;
 
 
 
-LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.$ds/" OVERWRITE INTO TABLE t_base_ec_item_feed_dev_inc PARTITION (ds='ds=$1');
-
--- CREATE TABLE t_base_ec_item_feed_dev_inc
---   LIKE t_base_ec_item_feed_dev;
+LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.$ds/"  INTO TABLE t_base_ec_item_feed_dev_inc PARTITION (ds='$1');
 
 
 DROP  TABLE  IF EXISTS   t_base_ec_item_feed_dev_inc_tmp;
@@ -63,3 +60,5 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
 
 
 EOF
+
+hadoop fs -cat /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_inc_tmp/* >cmt_inc_data_$ds
