@@ -3,8 +3,8 @@ source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
-zuotian='20160106'
-qiantian='20160105'
+zuotian='20160107'
+qiantian='20160106'
 
 spark-submit  --total-executor-cores  120  --executor-memory 12g  --driver-memory 20g \
 $pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
