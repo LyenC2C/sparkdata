@@ -140,6 +140,7 @@ if __name__ == "__main__":
     conf.set("spark.core.connection.ack.wait.timeout", "1800")
     conf.set("spark.hadoop.validateOutputSpecs", "false")
     sc = SparkContext(appName="3_clean_fliter_corpus",conf=conf)
+
     sqlContext = SQLContext(sc)
     hiveContext = HiveContext(sc)
     hiveContext.sql('use wlbase_dev')
