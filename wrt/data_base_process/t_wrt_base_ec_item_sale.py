@@ -7,6 +7,7 @@ import time
 from pyspark import SparkContext
 yesterday = sys.argv[1]
 today = sys.argv[2]
+iteminfo_day = sys.argv[3]
 sc = SparkContext(appName="spark item_sale_" + today)
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -118,7 +119,7 @@ def quchong_2(x, y):
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + today #today's t_base_ec_shop_dev
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + iteminfo_day #today's t_base_ec_shop_dev
 s1 = "/commit/shopitem/" + today #today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #yesterday
 bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
