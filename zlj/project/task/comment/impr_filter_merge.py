@@ -99,6 +99,7 @@ def pos_neg(words):
     if neg==0 and pos_emo>0: return 1
     if neg==0 and neg_emo>0: return -1
     if neg==0 and pos_emo==0 and neg_emo==0 :return 0
+    else :return 0
 
 
 path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
