@@ -52,13 +52,13 @@ def merge(k,v):
         v='好'
     return k,v
 
-def clean(x):
-    ls=''.split()
-    for i in ls:
-        if i in dic_filter:
-            continue
-        if dic_merge.has_key(i):
-            i=dic_merge[i]
+# def clean(x):
+#     ls=''.split()
+#     for i in ls:
+#         if i in dic_filter:
+#             continue
+#         if dic_merge.has_key(i):
+#             i=dic_merge[i]
 
 def getfield(x):
     lv=x.split()
@@ -114,5 +114,5 @@ def pos_neg(words):
 
 path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 
-rdd=sc.textFile(path).map(lambda x:getfield(x)).filter(lambda x:x is None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
+rdd=sc.textFile(path).map(lambda x:getfield(x)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
 rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
