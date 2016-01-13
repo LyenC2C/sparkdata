@@ -74,20 +74,21 @@ def getfield(x):
     ls=[]
     if len(lv)!=5: return None
     else:
-        item_id,feed_id,user_id,feed,impr=lv
-        neg=0 #默认中评
+        try:
+            item_id,feed_id,user_id,feed,impr=lv
+            neg=0 #默认中评
 
-        for i in impr.split('|'):
-            ts=i.split(',')
-            flag,scores=pos_neg(ts[0])
-            ls.append(i+'_'+scores)
-            neg+=flag
-            if ":" in i:
-                k,v=ts[-1].split(':')
-                k1,v1=merge(k,v)
-
-                rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag))
-    return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
+            for i in impr.split('|'):
+                ts=i.split(',')
+                flag,scores=pos_neg(ts[0])
+                ls.append(i+'_'+scores)
+                neg+=flag
+                if ":" in i:
+                    k,v=ts[-1].split(':')
+                    k1,v1=merge(k,v)
+                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag))
+            return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
+        except:return None
     # return feed+'\t'+'|'.join(ls)
 
 
