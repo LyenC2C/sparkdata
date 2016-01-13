@@ -63,18 +63,22 @@ def merge(k,v):
 def getfield(x):
     lv=x.split()
     rs=[]
+    ls=[]
     if len(lv)!=5: return None
     else:
         item_id,feed_id,user_id,feed,impr=lv
         neg=1 #默认好评
+
         for i in impr.split('|'):
             ts=i.split(',')
-            neg+=pos_neg(ts[0])
+            flag,scores=pos_neg(ts[0])
+            ls.append(i+'_'+scores)
+            neg=neg+flag
             if ":" in i:
                 k,v=ts[-1].split(':')
                 k1,v1=merge(k,v)
                 rs.append(k1+":"+v1)
-    return [item_id,feed_id,user_id,feed,impr,str(neg),'|'.join(rs)]
+    return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
     # return feed+'\t'+'|'.join(ls)
 
 def valid_jsontxt(content):
@@ -104,12 +108,14 @@ def pos_neg(words):
     neg_emo = len(neg_emo_set&words_set)
     pos_emo = len(pos_emo_set&words_set)
     # return '_'.join(str(i) for i in [neg,neg_emo,pos_emo])
-    if neg>0 and pos_emo>0:return -1
-    if neg>0 and neg_emo>0: return 1
-    if neg==0 and pos_emo>0: return 1
-    if neg==0 and neg_emo>0: return -1
-    if neg==0 and pos_emo==0 and neg_emo==0 :return 0
-    else :return 0
+    flag=0
+    if neg>0 and pos_emo>0:flag= -1
+    if neg>0 and neg_emo>0: flag= 1
+    if neg==0 and pos_emo>0: flag= 1
+    if neg==0 and neg_emo>0: flag= -1
+    if neg==0 and pos_emo==0 and neg_emo==0 :flag= 0
+    else :flag= 0
+    return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo])
 
 
 path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
