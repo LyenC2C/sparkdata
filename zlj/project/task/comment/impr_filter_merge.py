@@ -104,5 +104,5 @@ def pos_neg(words):
 
 path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 
-rdd=sc.textFile(path).map(lambda x:getfield(x))
+rdd=sc.textFile(path).map(lambda x:getfield(x)).map(lambda x: '\t'.join([ str(i) for i in x]))
 rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
