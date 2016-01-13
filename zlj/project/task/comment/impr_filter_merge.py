@@ -85,7 +85,7 @@ def getfield(x):
             if ":" in i:
                 k,v=ts[-1].split(':')
                 k1,v1=merge(k,v)
-                rs.append(f_coding(k1)+":"+f_coding(v1))
+                rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag))
     return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
     # return feed+'\t'+'|'.join(ls)
 
@@ -105,7 +105,6 @@ def pos_neg(words):
     neg = len(neg_set&words_set)
     neg_emo = len(neg_emo_set&words_set)
     pos_emo = len(pos_emo_set&words_set)
-    # return '_'.join(str(i) for i in [neg,neg_emo,pos_emo])
     flag=0
     if neg>0 and pos_emo>0:flag= -1
     if neg>0 and neg_emo>0: flag= 1
@@ -116,6 +115,7 @@ def pos_neg(words):
 
 
 path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
+# path='/user/zlj/data/feed_2015_alicut_parse/*'
 
 rdd=sc.textFile(path).map(lambda x:getfield(x)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
 rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
