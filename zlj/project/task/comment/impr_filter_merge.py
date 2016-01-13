@@ -37,9 +37,9 @@ hiveContext = HiveContext(sc)
 from collections import defaultdict
 
 f_map = defaultdict(set)
-f_map['good'].union('好  很好 不错  挺好  棒'.split())
-f_map['wuliu'].union('快  很快  速度  神速'.split())
-f_map['fuwu'].union('热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split())
+f_map['good'].union([i.strip().decode('utf-8') for  i in '好  很好 不错  挺好  棒'.split()])
+f_map['wuliu'].union([i.strip().decode('utf-8') for  i in '快  很快  速度  神速'.split()])
+f_map['fuwu'].union([i.strip().decode('utf-8') for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split()])
 
 def merge(k,v):
     if v in f_map['good']:
@@ -52,13 +52,6 @@ def merge(k,v):
         v='好'
     return k,v
 
-# def clean(x):
-#     ls=''.split()
-#     for i in ls:
-#         if i in dic_filter:
-#             continue
-#         if dic_merge.has_key(i):
-#             i=dic_merge[i]
 
 def getfield(x):
     lv=x.split()
