@@ -126,7 +126,7 @@ filter_path='/user/zlj/data/feed_2015_alicut_parse_rank/part-00000'
 filter_impr_dic=sc.textFile(filter_path).map(lambda x:(x.split()[-1],1)).collectAsMap()
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
-rdd=sc.textFile(path).map(lambda x:getfield(x)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
+rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
 rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
 
 
