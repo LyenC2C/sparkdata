@@ -118,8 +118,8 @@ def pos_neg(words):
     return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo])
 
 
-# path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-path='/user/zlj/data/feed_2015_alicut_parse/*'
+path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
+# path='/user/zlj/data/feed_2015_alicut_parse/*'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank/part-00000'
 
