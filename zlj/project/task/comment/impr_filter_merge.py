@@ -37,10 +37,14 @@ hiveContext = HiveContext(sc)
 from collections import defaultdict
 
 f_map = defaultdict(set)
-f_map['good'].union([i.strip().decode('utf-8') for  i in '好  很好 不错  挺好  棒'.split()])
-f_map['wuliu'].union([i.strip().decode('utf-8') for  i in '快  很快  速度  神速'.split()])
-f_map['fuwu'].union([i.strip().decode('utf-8') for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split()])
+# f_map['good'].union([i.strip().decode('utf-8') for  i in '好  很好 不错  挺好  棒'.split()])
+# f_map['wuliu'].union([i.strip().decode('utf-8') for  i in '快  很快  速度  神速'.split()])
+# f_map['fuwu'].union([i.strip().decode('utf-8') for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split()])
 
+
+for  i in '好  很好 不错  挺好  棒'.split():f_map['good'].add(i.strip().decode('utf-8'))
+for  i in '快  很快  速度  神速'.split():f_map['wuliu'].add(i.strip().decode('utf-8'))
+for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务':f_map['fuwu'].add(i.strip().decode('utf-8'))
 def merge(k,v):
     if v in f_map['good']:
         v='好'
@@ -60,7 +64,7 @@ def getfield(x):
     if len(lv)!=5: return None
     else:
         item_id,feed_id,user_id,feed,impr=lv
-        neg=1 #默认好评
+        neg=0 #默认中评
 
         for i in impr.split('|'):
             ts=i.split(',')
