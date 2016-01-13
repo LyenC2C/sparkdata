@@ -114,7 +114,6 @@ def pos_neg(words):
     if neg==0 and pos_emo>0: flag= 1
     if neg==0 and neg_emo>0: flag= -1
     if neg==0 and pos_emo==0 and neg_emo==0 :flag= 0
-    else :flag= 0
     return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo])
 
 
