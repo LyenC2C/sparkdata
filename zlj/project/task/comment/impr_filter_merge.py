@@ -44,7 +44,7 @@ f_map = defaultdict(set)
 
 for  i in '好  很好 不错  挺好  棒'.split():f_map['good'].add(i.strip().decode('utf-8'))
 for  i in '快  很快  速度  神速'.split():f_map['wuliu'].add(i.strip().decode('utf-8'))
-for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务':f_map['fuwu'].add(i.strip().decode('utf-8'))
+for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu'].add(i.strip().decode('utf-8'))
 def merge(k,v):
     if v in f_map['good']:
         v='好'
