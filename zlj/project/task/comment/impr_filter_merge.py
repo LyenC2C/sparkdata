@@ -15,6 +15,7 @@ conf.set("spark.hadoop.validateOutputSpecs", "false")
 sc = SparkContext(appName="cmt",conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
+
 '''
 错误标签过滤 以及 相似标签合并
 '''
@@ -68,7 +69,7 @@ def merge(k,v):
     return k,v
 
 
-def getfield(x):
+def getfield(x,dic):
     lv=x.split()
     rs=[]
     ls=[]
@@ -84,13 +85,14 @@ def getfield(x):
                 ls.append(i+'_'+scores)
                 neg+=flag
                 if ":" in i:
+
                     k,v=ts[-1].split(':')
                     k1,v1=merge(k,v)
+                    if not dic.has_key(k1+":"+v1):continue
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag))
             return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
         except:return None
     # return feed+'\t'+'|'.join(ls)
-
 
 
 neg_line="不是 不太 不能 不可以 没有 沒有 木有 没 未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
@@ -119,5 +121,30 @@ def pos_neg(words):
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 path='/user/zlj/data/feed_2015_alicut_parse/*'
 
+filter_path='/user/zlj/data/feed_2015_alicut_parse_rank/part-00000'
+
+filter_impr_dic=sc.textFile(filter_path).map(lambda x:(x.split()[-1],1)).collectAsMap()
+
+filter_impr_dic=sc.broadcast(filter_impr_dic)
 rdd=sc.textFile(path).map(lambda x:getfield(x)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
 rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
+
+
+# schema1 = StructType([
+#     StructField("item_id", StringType(), True),
+#     StructField("feed_id", StringType(), True),
+#     StructField("user_id", StringType(), True),
+#     StructField("feed", StringType(), True),
+#     StructField("impr", StringType(), True),
+#     StructField("neg_pos", StringType(), True),
+#     StructField("impr_c", StringType(), True)
+#     ])
+#
+#
+# hiveContext.sql('use wlbase_dev')
+# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+# df=hiveContext.createDataFrame(rdd,schema1)
+# hiveContext.registerDataFrameAsTable(df,'temp_zlj')
+# hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
+# hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
+# sc.textFile('/user/zlj/data/feed_2015_alicut_parse_emo_test').map(lambda x:x.split()[-2]).histogram(3)
