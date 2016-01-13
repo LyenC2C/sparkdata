@@ -7,7 +7,7 @@ sys.setdefaultencoding('utf8')
 
 from pyspark import *
 from pyspark.sql import *
-
+from pyspark.sql.types import *
 
 
 conf = SparkConf()
@@ -85,7 +85,6 @@ def getfield(x,dic):
                 ls.append(i+'_'+scores)
                 neg+=flag
                 if ":" in i:
-
                     k,v=ts[-1].split(':')
                     k1,v1=merge(k,v)
                     if not dic.has_key(k1+":"+v1):continue
@@ -118,33 +117,38 @@ def pos_neg(words):
     return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo])
 
 
-path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-# path='/user/zlj/data/feed_2015_alicut_parse/*'
+# path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
+path='/user/zlj/data/feed_2015_alicut_parse/*'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank/part-00000'
 
 filter_impr_dic=sc.textFile(filter_path).map(lambda x:(x.split()[-1],1)).collectAsMap()
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
-rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
-rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
 
 
-# schema1 = StructType([
-#     StructField("item_id", StringType(), True),
-#     StructField("feed_id", StringType(), True),
-#     StructField("user_id", StringType(), True),
-#     StructField("feed", StringType(), True),
-#     StructField("impr", StringType(), True),
-#     StructField("neg_pos", StringType(), True),
-#     StructField("impr_c", StringType(), True)
-#     ])
-#
-#
-# hiveContext.sql('use wlbase_dev')
-# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
-# df=hiveContext.createDataFrame(rdd,schema1)
-# hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-# hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
-# hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
+# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
+# rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
+
+
+schema1 = StructType([
+    StructField("item_id", StringType(), True),
+    StructField("feed_id", StringType(), True),
+    StructField("user_id", StringType(), True),
+    StructField("feed", StringType(), True),
+    StructField("impr", StringType(), True),
+    StructField("neg_pos", StringType(), True),
+    StructField("impr_c", StringType(), True)
+    ])
+
+
+hiveContext.sql('use wlbase_dev')
+rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+df=hiveContext.createDataFrame(rdd,schema1)
+hiveContext.registerDataFrameAsTable(df,'temp_zlj')
+hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
+hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
+
+
+
 # sc.textFile('/user/zlj/data/feed_2015_alicut_parse_emo_test').map(lambda x:x.split()[-2]).histogram(3)
