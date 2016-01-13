@@ -73,7 +73,7 @@ def getfield(x):
             ts=i.split(',')
             flag,scores=pos_neg(ts[0])
             ls.append(i+'_'+scores)
-            neg=neg+flag
+            neg+=flag
             if ":" in i:
                 k,v=ts[-1].split(':')
                 k1,v1=merge(k,v)
