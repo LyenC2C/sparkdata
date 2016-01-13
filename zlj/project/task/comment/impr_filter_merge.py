@@ -32,21 +32,14 @@ hiveContext = HiveContext(sc)
 
 价格： 棒 好
 
-
 '''
-# 低频词
 
-dic_filter={}
-
-# 语义合并词
-
-dic_merge={}
 from collections import defaultdict
 
 f_map = defaultdict(set)
-f_map['good'].add('好  很好 不错  挺好  棒'.split())
-f_map['wuliu'].add('快  很快  速度  神速'.split())
-f_map['fuwu'].add('热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split())
+f_map['good'].union('好  很好 不错  挺好  棒'.split())
+f_map['wuliu'].union('快  很快  速度  神速'.split())
+f_map['fuwu'].union('热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split())
 
 def merge(k,v):
     if v in f_map['good']:
