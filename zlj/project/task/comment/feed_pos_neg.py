@@ -5,91 +5,12 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from pyspark import *
+from pyspark import SparkContext
 from pyspark.sql import *
 
-
-
-conf = SparkConf()
-conf.set("spark.hadoop.validateOutputSpecs", "false")
-sc = SparkContext(appName="cmt",conf=conf)
+sc = SparkContext(appName="cmt")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
-'''
-错误标签过滤 以及 相似标签合并
-'''
-
-'''
-卖家服务 :热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务
-
----服务好
-
-物流   :快  很快  速度  神速
-
-质量:  好  很好 不错  挺好
-
-商品:  好 很好  不错
-
-价格： 棒 好
-
-'''
-def valid_jsontxt(content):
-    if type(content) == type(u""):
-        return content.encode("utf-8")
-    else :
-        return content
-
-def f_coding(x):
-    if type(x) == type(""):
-        return x.decode("utf-8")
-    else:
-        return x
-
-from collections import defaultdict
-
-f_map = defaultdict(set)
-# f_map['good'].union([i.strip().decode('utf-8') for  i in '好  很好 不错  挺好  棒'.split()])
-# f_map['wuliu'].union([i.strip().decode('utf-8') for  i in '快  很快  速度  神速'.split()])
-# f_map['fuwu'].union([i.strip().decode('utf-8') for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split()])
-
-
-for  i in '好  很好 不错  挺好  棒'.split():f_map['good'].add(i.strip().decode('utf-8'))
-for  i in '快  很快  速度  神速'.split():f_map['wuliu'].add(i.strip().decode('utf-8'))
-for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu'].add(i.strip().decode('utf-8'))
-def merge(k,v):
-    if v in f_map['good']:
-        v='好'
-    if v in f_map['wuliu']:#如果是物流的数据 直接返回物流
-        k='物流'
-        v='快'
-    if v in  f_map['taidu'] or k in f_map['taidu']:
-        k='服务'
-        v='好'
-    return k,v
-
-
-def getfield(x):
-    lv=x.split()
-    rs=[]
-    ls=[]
-    if len(lv)!=5: return None
-    else:
-        item_id,feed_id,user_id,feed,impr=lv
-        neg=0 #默认中评
-
-        for i in impr.split('|'):
-            ts=i.split(',')
-            flag,scores=pos_neg(ts[0])
-            ls.append(i+'_'+scores)
-            neg+=flag
-            if ":" in i:
-                k,v=ts[-1].split(':')
-                k1,v1=merge(k,v)
-
-                rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag))
-    return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
-    # return feed+'\t'+'|'.join(ls)
-
 
 
 neg_line="不是 不太 不能 不可以 没有 沒有 木有 没 未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
@@ -113,10 +34,3 @@ def pos_neg(words):
     if neg==0 and neg_emo>0: flag= -1
     if neg==0 and pos_emo==0 and neg_emo==0 :flag= 0
     return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo])
-
-
-path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-# path='/user/zlj/data/feed_2015_alicut_parse/*'
-
-rdd=sc.textFile(path).map(lambda x:getfield(x)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
-rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
