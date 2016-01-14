@@ -36,7 +36,10 @@ def parse_cmt_new(line_s):
                 feedid = value.get('id', '-')
                 int(feedid)
                 l.append(feedid)
-                l.append(value.get('userId', '-'))
+                userid = value.get('userId', '-')
+                int(userid)
+                l.append(userid)
+
                 # l.append(data.get('userStar'))
                 feedback = value.get('feedback', '-').replace('\t', '')
                 l.append(valid_jsontxt(feedback))

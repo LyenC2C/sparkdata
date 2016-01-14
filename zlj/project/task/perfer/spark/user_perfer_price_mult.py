@@ -63,5 +63,5 @@ df=hiveContext.createDataFrame(userlevel_rdd,schema)
 
 # 保存
 hiveContext.registerDataFrameAsTable(df,'userlevel')
-hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level_mult_t_20151225 ')
-hiveContext.sql('create table t_zlj_perfer_user_level_mult_t_20151225 as select * from userlevel')
+hiveContext.sql('drop table if EXISTS t_zlj_perfer_user_level_mult ')
+hiveContext.sql('create table t_zlj_perfer_user_level_mult as select * from userlevel')

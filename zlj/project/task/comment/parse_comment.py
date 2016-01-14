@@ -19,13 +19,16 @@ def getfield(x):
     if len(lv)!=5: return None
     else:
         item_id,feed_id,user_id,feed,impr=lv
+        neg=1 #默认好评
         for i in impr.split('|'):
+            ts=i.split(',')
+            neg=neg+int(ts[-2])
             if ":" in i:
-                rs.append(i.split(',')[-1])
-    return [item_id,feed_id,user_id,feed,impr,'|'.join(rs)]
+                rs.append([-1])
+    return [item_id,feed_id,user_id,feed,impr,neg,'|'.join(rs)]
 
 
-
+# open().readlines()
 
 
 def valid_jsontxt(content):
@@ -43,15 +46,9 @@ schema1 = StructType([
     StructField("user_id", StringType(), True),
     StructField("feed", StringType(), True),
     StructField("impr", StringType(), True),
+    StructField("neg_pos", IntegerType(), True),
     StructField("impr_c", StringType(), True)
     ])
-
-# '' is None
-#
-# for i in ls:
-#     if i is None: print 'dsfd'
-#     for j in i:
-#         if j is None:print i
 
 hiveContext.sql('use wlbase_dev')
 rdd=sc.textFile(path).map(lambda x:getfield(x)).filter(lambda x:x is not None)

@@ -246,7 +246,7 @@ def hmm_tag():
     select
     user_id,tfidftags
     from
-    t_zlj_userbuy_item_tfidf_tagbrand_weight15be0701ali_v6
+    t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v4
     '''
     rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('tfidftags',x.tfidftags)))
     return rdd

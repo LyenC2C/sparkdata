@@ -7,7 +7,7 @@ sh   2_perfer_dim.sql
 #sh   2_1_perfer_dim_tag.sql
 
 sh  3_perfer_brand.sql
-sh  4_perfer_shop.sql   20151117
+#sh  4_perfer_shop.sql   20151117
 
 sh  5.2_perfer_price.sh
 
