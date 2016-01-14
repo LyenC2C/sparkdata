@@ -9,11 +9,8 @@ __author__ = 'zlj'
 
 
 from pyspark.sql import *
-from pyspark.mllib.clustering import *
 from pyspark.sql.types import *
 from pyspark import SparkContext
-
-from numpy import array
 
 sc=SparkContext(appName="user_price")
 sqlContext = SQLContext(sc)
@@ -42,12 +39,12 @@ def level(x):
     if 12<x:return 5
 import  math
 userlevel_rdd=rdd1.map(lambda x: [x[0],x[1],x[2], x[3],level(math.log(x[2],2))])
-data=rdd.filter(lambda x:x[-1]<1000).sample(False,0.8,100).map(lambda x:array(x))
-model = KMeans.train( data, 5, maxIterations=20, runs=50, initializationMode="random",seed=50, initializationSteps=5, epsilon=1e-4)
-
-model.centers=sorted(model.centers,key=lambda t:t[-2])
-
-userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],x[2], x[3],model.predict(array(x[1:]))))
+# data=rdd.filter(lambda x:x[-1]<1000).sample(False,0.8,100).map(lambda x:array(x))
+# model = KMeans.train( data, 5, maxIterations=20, runs=50, initializationMode="random",seed=50, initializationSteps=5, epsilon=1e-4)
+#
+# model.centers=sorted(model.centers,key=lambda t:t[-2])
+#
+# userlevel_rdd=rdd1.map(lambda  x: (x[0],x[1],x[2], x[3],model.predict(array(x[1:]))))
 
 
 # rdd1.map(lambda  x: model.predict(array([x[1]]))).take(10)

@@ -309,7 +309,7 @@ if __name__ == "__main__":
             .union(rdd_house).union(rdd_tag)\
             # .union(rdd_qq)
         # rdd=rdd_dim.union(rdd_brand)
-        rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y))
+        rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y)).coalesce(1000)
         ddf=hiveContext.createDataFrame(rdd1,schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
         hiveContext.sql('drop table if exists t_zlj_user_tag_join')
