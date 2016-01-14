@@ -20,13 +20,33 @@ def cut(x):
     if len(lv)==6:return lv[-1]
     else:return None
 
+from collections import defaultdict
+f_map = defaultdict(set)
+for  i in '好  很好 不错  挺好  棒'.split():f_map['good'].add(i.strip().decode('utf-8'))
+for  i in '快  很快  速度  神速'.split():f_map['wuliu'].add(i.strip().decode('utf-8'))
+for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu'].add(i.strip().decode('utf-8'))
+def merge(k,v):
+    if v in f_map['good']:
+        v='好'
+    if v in f_map['wuliu']:#如果是物流的数据 直接返回物流
+        k='物流'
+        v='快'
+    if v in  f_map['taidu'] or k in f_map['taidu']:
+        k='服务'
+        v='好'
+    return k,v
+
 def cut_1(x):
-    lv=x.split()[-1].split('|')
-    rs=[]
-    for i in lv:
-        if ':' in i:
-            rs.append(i.split(',')[-1])
-    return rs
+    try:
+        lv=x.split()[-1].split('|')
+        rs=[]
+        for i in lv:
+            if ':' in i:
+                k,v=i.split(',')[-1].split(':')
+                k1,v1=merge(k,v)
+                rs.append(k1+":"+v1)
+        return rs
+    except: return None
 
 rdd=sc.textFile(path).map(lambda x: cut_1(x)).filter(lambda x:x is not None).flatMap(lambda x:x).map(lambda x:(x,1))\
     .reduceByKey(lambda a,b:a+b).map(lambda x:(x[1],x[0])).sortByKey(ascending=False,numPartitions=10)
