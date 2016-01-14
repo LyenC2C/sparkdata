@@ -122,8 +122,8 @@ def getfield(x,dic):
                 neg+=flag
                 if ":" in i:
                     k,v=ts[-1].split(':')
-                    flag,k1,v1=merge(k,v)
-                    if float==False and  (not dic.has_key(k1+":"+v1)):continue #没有改变并且不再字典里面
+                    change,k1,v1=merge(k,v)
+                    if change==False and  (not dic.has_key(k1+":"+v1)):continue #没有改变并且不再字典里面
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
             return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
         except:return None
