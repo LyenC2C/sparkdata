@@ -8,6 +8,8 @@ sys.setdefaultencoding('utf8')
 from pyspark import *
 from pyspark.sql import *
 
+from pyspark.sql.types import *
+
 conf = SparkConf()
 conf.set("spark.hadoop.validateOutputSpecs", "false")
 sc = SparkContext(appName="cmt",conf=conf)
@@ -120,39 +122,45 @@ def pos_neg(words):
     return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo]),neg_word
 
 
-path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-# path='/user/zlj/data/feed_2015_alicut_parse/*'
+# path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
+path='/user/zlj/data/feed_2015_alicut_parse/*'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
+
 
 
 filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
 
+# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
+# rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
 
 
-rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
-rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
 
 
-# schema1 = StructType([
-#     StructField("item_id", StringType(), True),
-#     StructField("feed_id", StringType(), True),
-#     StructField("user_id", StringType(), True),
-#     StructField("feed", StringType(), True),
-#     StructField("impr", StringType(), True),
-#     StructField("neg_pos", StringType(), True),
-#     StructField("impr_c", StringType(), True)
-#     ])
-#
-#
-# hiveContext.sql('use wlbase_dev')
-# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
-# df=hiveContext.createDataFrame(rdd,schema1)
-# hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-# hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
-# hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
+'''数据格式
+impr_0_0_1 记录否定词 正面词 反面词个数，拥于调试, 每个分句进行判断
+neg_pos  每个分句打分累加
+impr_c  修改后的属性情感词 商品:柔软:正负面:否定词
+'''
+schema1 = StructType([
+    StructField("item_id", StringType(), True),
+    StructField("feed_id", StringType(), True),
+    StructField("user_id", StringType(), True),
+    StructField("feed", StringType(), True),
+    StructField("impr", StringType(), True),
+    StructField("neg_pos", StringType(), True),
+    StructField("impr_c", StringType(), True)
+    ])
+
+
+hiveContext.sql('use wlbase_dev')
+rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+df=hiveContext.createDataFrame(rdd,schema1)
+hiveContext.registerDataFrameAsTable(df,'temp_zlj')
+hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
+hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
 
 
 
