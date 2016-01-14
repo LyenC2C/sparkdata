@@ -110,10 +110,10 @@ def getfield(x,dic):
                     change,k1,v1=merge(k,v)
                     if change==False and  (not dic.has_key(k1+":"+v1)):continue #没有改变并且不再字典里面
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
-            if flag>0:flag=1
-            elif flag==0:flag=0
-            else: flag=-1
-            return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
+            if neg>0:neg=1
+            elif neg==0:neg=0
+            else: neg=-1
+            return [item_id,feed_id,user_id,feed,'|'.join(ls),neg,'|'.join(rs)]
         except:return None
     # return feed+'\t'+'|'.join(ls)
 
