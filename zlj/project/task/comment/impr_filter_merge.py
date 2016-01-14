@@ -68,6 +68,8 @@ for  i in '实惠 便宜  物超所值 超值'.split():f_map['jiage_pos'].add(i.
 
 
 def merge(k,v):
+    k1=k
+    v1=v
     k=f_coding(k)
     v=f_coding(v)
     if v in f_map['good_pos']:
@@ -96,8 +98,14 @@ def merge(k,v):
         k='价钱'
         v='实惠'
     if k in ('价款','价格'): k='价钱'
-    return k,v
+    if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
+    else: return False,k,v
 
+# def f(x,y):
+#     x1,y1=x,y
+#     x='a'
+#     y='b'
+#     if  (x==y)==False or (x==y1)==False:return 1
 def getfield(x,dic):
     lv=x.split()
     rs=[]
@@ -114,11 +122,8 @@ def getfield(x,dic):
                 neg+=flag
                 if ":" in i:
                     k,v=ts[-1].split(':')
-                    if feed_id=='257393629511':
-                        print impr.split('|')
-                        print f_map['wuliu_pos']
-                    k1,v1=merge(k,v)
-                    # if not dic.has_key(k1+":"+v1):continue
+                    flag,k1,v1=merge(k,v)
+                    if float==False and  (not dic.has_key(k1+":"+v1)):continue #没有改变并且不再字典里面
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
             return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
         except:return None
@@ -164,6 +169,7 @@ filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 # rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
 
 filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
+
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
 
