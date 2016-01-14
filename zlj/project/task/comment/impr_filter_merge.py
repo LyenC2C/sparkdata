@@ -52,20 +52,19 @@ f_map = defaultdict(set)
 # f_map['fuwu'].union([i.strip().decode('utf-8') for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split()])
 
 
-for  i in '好  很好 不错  挺好  棒'.split():f_map['good'].add(i.strip().decode('utf-8'))
+for  i in '好  很好 不错  挺好  棒 给力'.split():f_map['good'].add(i.strip().decode('utf-8'))
 for  i in '快  很快  速度  神速'.split():f_map['wuliu'].add(i.strip().decode('utf-8'))
 for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu'].add(i.strip().decode('utf-8'))
 def merge(k,v):
     if v in f_map['good']:
         v='好'
-    if v in f_map['wuliu']:#如果是物流的数据 直接返回物流
+    if (v in f_map['wuliu']) or (k=='快递' and v=='好'):#如果是物流的数据 直接返回物流
         k='物流'
         v='快'
     if v in  f_map['taidu'] or k in f_map['taidu']:
         k='服务'
         v='好'
     return k,v
-
 
 def getfield(x,dic):
     lv=x.split()
@@ -79,14 +78,14 @@ def getfield(x,dic):
 
             for i in impr.split('|'):
                 ts=i.split(',')
-                flag,scores=pos_neg(ts[0])
+                flag,scores,neg_word=pos_neg(ts[0])
                 ls.append(i+'_'+scores)
                 neg+=flag
                 if ":" in i:
                     k,v=ts[-1].split(':')
                     k1,v1=merge(k,v)
                     if not dic.has_key(k1+":"+v1):continue
-                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag))
+                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
             return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
         except:return None
     # return feed+'\t'+'|'.join(ls)
@@ -116,16 +115,18 @@ def pos_neg(words):
     if neg==0 and pos_emo>0: flag= 1
     if neg==0 and neg_emo>0: flag= -1
     if neg==0 and pos_emo==0 and neg_emo==0 :flag= 0
-    return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo])
+    neg_word=""
+    if neg>0:neg_word=(neg_emo_set&words_set)[0]
+    return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo]),neg_word
 
 
 path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parse/*'
 
-filter_path='/user/zlj/data/feed_2015_alicut_parse_rank/part-00000'
+filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
 
-filter_impr_dic=sc.textFile(filter_path).map(lambda x:(x.split()[-1],1)).collectAsMap()
+filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
 
