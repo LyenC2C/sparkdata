@@ -95,7 +95,7 @@ def getfield(x,dic):
 neg_line="不是 不太 不能 不可以 没有 沒有 木有 没 未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
 
 neg_path='/user/zlj/data/neg'
-pos_path='/user/zlj/data/neg'
+pos_path='/user/zlj/data/pos'
 neg_list=sc.textFile(neg_path).map(lambda x:x.strip()).collect()
 neg_set=sc.broadcast(neg_list)
 
