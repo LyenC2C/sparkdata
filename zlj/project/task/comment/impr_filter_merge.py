@@ -64,7 +64,7 @@ for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['ba
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
 
 
-for  i in '实惠 便宜  物超所值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
+for  i in '实惠 便宜  物超所值 超值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
 
 
 def merge(k,v):
@@ -118,7 +118,7 @@ def getfield(x,dic):
                         print impr.split('|')
                         print f_map['wuliu_pos']
                     k1,v1=merge(k,v)
-                    if not dic.has_key(k1+":"+v1):continue
+                    # if not dic.has_key(k1+":"+v1):continue
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
             return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
         except:return None
