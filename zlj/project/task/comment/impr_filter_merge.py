@@ -94,7 +94,6 @@ def merge(k,v):
         k='价钱'
         v='实惠'
     if k in ('价款','价格'): k='价钱'
-
     return k,v
 
 def getfield(x,dic):
@@ -106,7 +105,6 @@ def getfield(x,dic):
         try:
             item_id,feed_id,user_id,feed,impr=lv
             neg=0 #默认中评
-
             for i in impr.split('|'):
                 ts=i.split(',')
                 flag,scores,neg_word=pos_neg(ts[0])
@@ -114,6 +112,9 @@ def getfield(x,dic):
                 neg+=flag
                 if ":" in i:
                     k,v=ts[-1].split(':')
+                    if feed_id=='257393629511':
+                        print impr.split('|')
+                        print f_map['wuliu_pos']
                     k1,v1=merge(k,v)
                     if not dic.has_key(k1+":"+v1):continue
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
@@ -156,7 +157,9 @@ path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_000
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
+# test
 
+# rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
 
 filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
 
