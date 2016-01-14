@@ -46,27 +46,15 @@ def f_coding(x):
         return x
 
 from collections import defaultdict
-
 f_map = defaultdict(set)
-# f_map['good'].union([i.strip().decode('utf-8') for  i in '好  很好 不错  挺好  棒'.split()])
-# f_map['wuliu'].union([i.strip().decode('utf-8') for  i in '快  很快  速度  神速'.split()])
-# f_map['fuwu'].union([i.strip().decode('utf-8') for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split()])
-
-
 for  i in '好  很好 不错  挺好  棒 给力'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
 for  i in '差劲 垃圾 差'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
-
 for  i in '快  很快  速度  神速'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
-
 for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
-
 for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
-
-
 for  i in '实惠 便宜  物超所值 超值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
-
 
 def merge(k,v):
     k1=k
@@ -102,11 +90,7 @@ def merge(k,v):
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
 
-# def f(x,y):
-#     x1,y1=x,y
-#     x='a'
-#     y='b'
-#     if  (x==y)==False or (x==y1)==False:return 1
+
 def getfield(x,dic):
     lv=x.split()
     rs=[]
@@ -126,12 +110,15 @@ def getfield(x,dic):
                     change,k1,v1=merge(k,v)
                     if change==False and  (not dic.has_key(k1+":"+v1)):continue #没有改变并且不再字典里面
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
+            if flag>0:flag=1
+            elif flag==0:flag=0
+            else: flag=-1
             return [item_id,feed_id,user_id,feed,'|'.join(ls),str(neg),'|'.join(rs)]
         except:return None
     # return feed+'\t'+'|'.join(ls)
 
 
-neg_line="不是 不太 不能 不可以 没有 沒有 木有 没 未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
+neg_line="不是 不太 不能 不可以 没有  木有 没 未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
 
 neg_path='/user/zlj/data/neg'
 pos_path='/user/zlj/data/pos'
@@ -193,7 +180,7 @@ schema1 = StructType([
     StructField("user_id", StringType(), True),
     StructField("feed", StringType(), True),
     StructField("impr", StringType(), True),
-    StructField("neg_pos", StringType(), True),
+    StructField("neg_pos", IntegerType(), True),
     StructField("impr_c", StringType(), True)
     ])
 
