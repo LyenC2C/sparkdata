@@ -8,8 +8,6 @@ sys.setdefaultencoding('utf8')
 from pyspark import *
 from pyspark.sql import *
 
-from pyspark.sql.types import *
-
 conf = SparkConf()
 conf.set("spark.hadoop.validateOutputSpecs", "false")
 sc = SparkContext(appName="cmt",conf=conf)
@@ -54,18 +52,49 @@ f_map = defaultdict(set)
 # f_map['fuwu'].union([i.strip().decode('utf-8') for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split()])
 
 
-for  i in '好  很好 不错  挺好  棒 给力'.split():f_map['good'].add(i.strip().decode('utf-8'))
-for  i in '快  很快  速度  神速'.split():f_map['wuliu'].add(i.strip().decode('utf-8'))
-for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu'].add(i.strip().decode('utf-8'))
+for  i in '好  很好 不错  挺好  棒 给力'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
+for  i in '差劲 垃圾 差'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
+
+for  i in '快  很快  速度  神速'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
+for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
+
+for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
+
+for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
+for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
+
+
+for  i in '实惠 便宜  物超所值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
+
+
 def merge(k,v):
-    if v in f_map['good']:
+    if v in f_map['good_pos']:
         v='好'
-    if (v in f_map['wuliu']) or (k=='快递' and v=='好'):#如果是物流的数据 直接返回物流
+    if v in f_map['good_neg']:
+        v='好'
+    if (v in f_map['wuliu_pos']) or (k=='快递' and v=='好'):#如果是物流的数据 直接返回物流
         k='物流'
         v='快'
-    if v in  f_map['taidu'] or k in f_map['taidu']:
+    if v in f_map['wuliu_neg']:#如果是物流的数据 直接返回物流
+        k='物流'
+        v='慢'
+    if v in  f_map['fuwu_pos'] or k in f_map['fuwu_pos']:
         k='服务'
         v='好'
+    if v in f_map['baozhuang_pos']:
+        k='包装',
+        v='完好'
+    if v in f_map['baozhuang_neg']:
+        k='包装',
+        v='差'
+    if v in f_map['jiage_pos']:
+        k='价钱'
+        v='实惠'
+    if k+":"+v in('物:超','物:值'):
+        k='价钱'
+        v='实惠'
+    if k in ('价款','价格'): k='价钱'
+
     return k,v
 
 def getfield(x,dic):
@@ -122,8 +151,8 @@ def pos_neg(words):
     return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo]),neg_word
 
 
-# path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-path='/user/zlj/data/feed_2015_alicut_parse/*'
+path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
+# path='/user/zlj/data/feed_2015_alicut_parse/*'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
@@ -133,8 +162,8 @@ filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
 
-# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
-# rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
+rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
+rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
 
 
 
@@ -144,23 +173,23 @@ impr_0_0_1 记录否定词 正面词 反面词个数，拥于调试, 每个分�
 neg_pos  每个分句打分累加
 impr_c  修改后的属性情感词 商品:柔软:正负面:否定词
 '''
-schema1 = StructType([
-    StructField("item_id", StringType(), True),
-    StructField("feed_id", StringType(), True),
-    StructField("user_id", StringType(), True),
-    StructField("feed", StringType(), True),
-    StructField("impr", StringType(), True),
-    StructField("neg_pos", StringType(), True),
-    StructField("impr_c", StringType(), True)
-    ])
-
-
-hiveContext.sql('use wlbase_dev')
-rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
-df=hiveContext.createDataFrame(rdd,schema1)
-hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
-hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
+# schema1 = StructType([
+#     StructField("item_id", StringType(), True),
+#     StructField("feed_id", StringType(), True),
+#     StructField("user_id", StringType(), True),
+#     StructField("feed", StringType(), True),
+#     StructField("impr", StringType(), True),
+#     StructField("neg_pos", StringType(), True),
+#     StructField("impr_c", StringType(), True)
+#     ])
+#
+#
+# hiveContext.sql('use wlbase_dev')
+# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+# df=hiveContext.createDataFrame(rdd,schema1)
+# hiveContext.registerDataFrameAsTable(df,'temp_zlj')
+# hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
+# hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
 
 
 
