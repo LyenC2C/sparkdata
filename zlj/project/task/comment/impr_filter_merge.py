@@ -10,7 +10,7 @@ from pyspark.sql import *
 
 conf = SparkConf()
 conf.set("spark.hadoop.validateOutputSpecs", "false")
-sc = SparkContext(appName="cmt",conf=conf)
+sc = SparkContext(appName="impr",conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
@@ -68,6 +68,8 @@ for  i in '实惠 便宜  物超所值'.split():f_map['jiage_pos'].add(i.strip()
 
 
 def merge(k,v):
+    k=f_coding(k)
+    v=f_coding(v)
     if v in f_map['good_pos']:
         v='好'
     if v in f_map['good_neg']:
