@@ -150,7 +150,7 @@ rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.spl
 rdd2=rdd1.groupByKey().map(lambda (x,y):(x," ".join(y)))
 schema1 = StructType([
     StructField("user_id", StringType(), True),
-    StructField("tags", StringType(), True),
+    StructField("cat_tags", StringType(), True),
  ])
 
 hiveContext.sql('use wlbase_dev')

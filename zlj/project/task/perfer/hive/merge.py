@@ -251,7 +251,15 @@ def hmm_tag():
     rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('tfidftags',x.tfidftags)))
     return rdd
 
-
+def cat_tags():
+    sql_tag='''
+    select
+    user_id,cat_tags
+    from
+    t_zlj_userbuy_item_cattags
+    '''
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('cat_tags',x.cat_tags)))
+    return rdd
 schema1 = StructType([
     StructField("uid", StringType(), True),
     StructField("dim", StringType(), True),
@@ -262,6 +270,7 @@ schema1 = StructType([
     StructField("car", StringType(), True),
     StructField("house", StringType(), True),
     StructField("tfidftags", StringType(), True),
+    StructField("cat_tags", StringType(), True),
     StructField("qq", StringType(), True)
         ])
 def mergeinfo(uid,info):
@@ -279,6 +288,7 @@ def mergeinfo(uid,info):
     lv.append(m.get('car',''))
     lv.append(m.get('house',''))
     lv.append(m.get('tfidftags',''))
+    lv.append(m.get('cat_tags',''))
     lv.append(m.get('qq',''))
     return lv
 
@@ -304,9 +314,10 @@ if __name__ == "__main__":
         rdd_car=car()
         rdd_house=house()
         rdd_tag=hmm_tag()
+        rdd_cat_tags=cat_tags()
         # rdd_qq=qq()
         rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).union(rdd_tag)\
+            .union(rdd_house).union(rdd_tag).union(rdd_cat_tags)\
             # .union(rdd_qq)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y)).coalesce(1000)

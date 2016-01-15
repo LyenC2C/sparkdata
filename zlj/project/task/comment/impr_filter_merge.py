@@ -33,6 +33,23 @@ hiveContext = HiveContext(sc)
 价格： 棒 好
 
 '''
+
+'''数据格式
+impr_0_0_1 记录否定词 正面词 反面词个数，拥于调试, 每个分句进行判断
+neg_pos  每个分句打分累加
+impr_c  修改后的属性情感词 商品:柔软:正负面:否定词
+'''
+schema1 = StructType([
+    StructField("item_id", StringType(), True),
+    StructField("feed_id", StringType(), True),
+    StructField("user_id", StringType(), True),
+    StructField("feed", StringType(), True),
+    StructField("impr", StringType(), True),
+    StructField("neg_pos", IntegerType(), True),
+    StructField("impr_c", StringType(), True)
+    ])
+
+
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -47,14 +64,20 @@ def f_coding(x):
 
 from collections import defaultdict
 f_map = defaultdict(set)
-for  i in '好  很好 不错  挺好  棒 给力'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
+
+for  i in '好  很好 不错  挺好  棒 给力 好看'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
 for  i in '差劲 垃圾 差'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
 for  i in '快  很快  速度  神速'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
 for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
 for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
-for  i in '实惠 便宜  物超所值 超值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
+for  i in '实惠 便宜  物超所值 超值 值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
+for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
+
+filter_words='商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  数:合适 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 数:标准 质量:如何 不知道:是 回头率:高 '
+
+for i in filter_words.split():f_map['filter'].add(i.strip().decode('utf-8'))
 
 def merge(k,v):
     k1=k
@@ -81,14 +104,18 @@ def merge(k,v):
         k='包装',
         v='差'
     if v in f_map['jiage_pos']:
-        k='价钱'
+        k='价格'
         v='实惠'
+    if v in f_map['jiage_neg']:
+        k='价格'
+        v='贵'
     if k+":"+v in('物:超','物:值'):
         k='价钱'
         v='实惠'
-    if k in ('价款','价格'): k='价钱'
+    if k in ('价款','价钱'): k='价格'
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
+
 
 
 def getfield(x,dic):
@@ -105,6 +132,7 @@ def getfield(x,dic):
                 flag,scores,neg_word=pos_neg(ts[0])
                 ls.append(i+'_'+scores)
                 neg+=flag
+                if ts[-1] in f_map['filter']:continue
                 if ":" in i:
                     k,v=ts[-1].split(':')
                     change,k1,v1=merge(k,v)
@@ -116,6 +144,7 @@ def getfield(x,dic):
             return [item_id,feed_id,user_id,feed,'|'.join(ls),neg,'|'.join(rs)]
         except:return None
     # return feed+'\t'+'|'.join(ls)
+
 
 
 neg_line="不是 不太 不能 不可以 没有  木有 没 未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
@@ -166,23 +195,6 @@ filter_impr_dic=sc.broadcast(filter_impr_dic)
 # rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
 # rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
 
-
-
-
-'''数据格式
-impr_0_0_1 记录否定词 正面词 反面词个数，拥于调试, 每个分句进行判断
-neg_pos  每个分句打分累加
-impr_c  修改后的属性情感词 商品:柔软:正负面:否定词
-'''
-schema1 = StructType([
-    StructField("item_id", StringType(), True),
-    StructField("feed_id", StringType(), True),
-    StructField("user_id", StringType(), True),
-    StructField("feed", StringType(), True),
-    StructField("impr", StringType(), True),
-    StructField("neg_pos", IntegerType(), True),
-    StructField("impr_c", StringType(), True)
-    ])
 
 
 hiveContext.sql('use wlbase_dev')

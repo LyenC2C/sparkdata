@@ -14,7 +14,7 @@ CREATE TABLE t_zlj_ec_perfer_priceavg
     SELECT
       user_id,
       count(1)      buytimes,
-      round(sum(price),4) AS sum_price,
+      sum(price) AS sum_price,
       round(avg(price),4) AS avg_price
     FROM
       t_zlj_ec_userbuy
