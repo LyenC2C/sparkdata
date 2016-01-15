@@ -123,10 +123,10 @@ import math
 
 
 def f(x):
-    if ( x['price'].replace('.', '').isdigit()):
-        price=float(x['price'])
-        root_cat_id=x['root_cat_id']
-        user_id=x['user_id']
+    if ( x.price.replace('.', '').isdigit()):
+        price=float(x.price)
+        root_cat_id=x.root_cat_id
+        user_id=x.user_id
         if price<1.1:return None
         score=round(math.log(price),2)
         if not a.has_key(root_cat_id):return None
