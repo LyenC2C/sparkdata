@@ -69,7 +69,7 @@ for  i in '好  很好 不错  挺好  棒 给力 好看'.split():f_map['good_po
 for  i in '差劲 垃圾 差'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
 for  i in '快  很快  速度  神速'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
-for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
+for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
 for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
 for  i in '实惠 便宜  物超所值 超值 值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
@@ -78,6 +78,8 @@ for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
 filter_words='商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  数:合适 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 数:标准 质量:如何 不知道:是 回头率:高 '
 
 for i in filter_words.split():f_map['filter'].add(i.strip().decode('utf-8'))
+
+
 
 def merge(k,v):
     k1=k
@@ -130,14 +132,19 @@ def getfield(x,dic):
             for i in impr.split('|'):
                 ts=i.split(',')
                 flag,scores,neg_word=pos_neg(ts[0])
-                ls.append(i+'_'+scores)
                 neg+=flag
-                if ts[-1] in f_map['filter']:continue
+                if ts[-1] in f_map['filter']:# filter  dic 两者并不相同
+                    ls.append(i+'_'+scores)
+                    continue
                 if ":" in i:
                     k,v=ts[-1].split(':')
                     change,k1,v1=merge(k,v)
-                    if change==False and  (not dic.has_key(k1+":"+v1)):continue #没有改变并且不再字典里面
+                    if change==False and  (not dic.has_key(k1+":"+v1)):
+                        ls.append(i+'_'+scores)
+                        continue #没有改变并且不再字典里面
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
+                    ts[-1]=k+":"+v
+                    ls.append(",".join(ts)+'_'+scores) #改写写回
             if neg>0:neg=1
             elif neg==0:neg=0
             else: neg=-1
@@ -177,7 +184,7 @@ def pos_neg(words):
 
 
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-path='/user/zlj/data/feed_2015_alicut_parse/*'
+path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
@@ -201,7 +208,7 @@ hiveContext.sql('use wlbase_dev')
 rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v2')
-hiveContext.sql('create table t_zlj_feed2015_parse_v2 as select * from temp_zlj')
+hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v3')
+hiveContext.sql('create table t_zlj_feed2015_parse_v3 as select * from temp_zlj')
 
 
