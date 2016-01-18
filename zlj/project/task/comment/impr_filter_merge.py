@@ -72,7 +72,7 @@ for  i in '真是  是 就是 必须 怎样 帮 哦 哇 仙 岁 说 覺 包 家 
           '7 M'.split():f_map['v_bad'].add(i.strip().decode('utf-8'))
 for  i in '穿 不知道 件 款 以后 后 儿 天 装 处 放  掉 根 \' 易 这'.split():f_map['k_bad'].add(i.strip().decode('utf-8'))
 
-for  i in '商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  ' \
+for  i in '评价:晚 商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  ' \
           '商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  ' \
           ' 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 ' \
           '效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 ' \
@@ -80,15 +80,18 @@ for  i in '商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真
           '商品:不知道 商品:高兴 商品:润 商品:重要 商品:闪 小:多 商品:年 商品:啦啦啦 商品:元 商品:穿 商品:那种 我:在 我:给 商品:有 感:覺 己:经 之前:买 商品:送 亲:下' \
           '商品:财源广进 我:给 亲:买 商品:好孩子 孩子:岁 第一次:是 商品:家 玩:开心 性:强 不知道:长'.split():f_map['kv_bad'].add(i.strip().decode('utf-8'))
 
-for  i in '好  很好 不错  挺好  棒 给力 好看'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
+#分是五分。 句法分析分析不出来的
+for  i in '好  很好 不错  挺好  棒 给力 好看 分 棒棒'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
 for  i in '差劲 垃圾 差'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
-for  i in '快  很快  速度  神速 飞快'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
+for  i in '快  很快  速度  神速 飞快 迅速 块'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
 for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
 for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
 for  i in '实惠 便宜  物超所值 超值 值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
 for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
+
+#数:正  需要修改
 #
 # filter_words=' '
 #

@@ -80,6 +80,7 @@ sc.textFile(path).map(lambda x:x.split('\001')).repartition(1)\
 
 
 hc=HiveContext(sc)
+hc.sql('use wlbase_dev')
 rdd=hc.sql('select impr_c from t_zlj_feed2015_parse_v3 where impr_c is not NULL ')\
     .map(lambda x:x.impr_c.split('|')).flatMap(lambda x:x).map(lambda x:(x,1))
 
