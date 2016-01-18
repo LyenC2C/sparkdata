@@ -65,19 +65,34 @@ def f_coding(x):
 from collections import defaultdict
 f_map = defaultdict(set)
 
+
+# for  i in '数—码数  行-还行 快递-物流'.split():f_map['k_bad'].add(i.strip().decode('utf-8'))
+for  i in '真是  是 就是 必须 怎样 帮 哦 哇 仙 岁 说 覺 包 家 米 它 什么 还 放 经 带 做 下 够 想 断 嗯 斤 像 算 嘿 要 让' \
+          '寄 也 人 写 哒 5   11 g 问 巴 太 1 片 儿 搞 打 9 O 6 请 歡 哈 利 身 你 匀 连 为 \' 滿  此 2 20 需 75 占 我' \
+          '7 M'.split():f_map['v_bad'].add(i.strip().decode('utf-8'))
+for  i in '穿 不知道 件 款 以后 后 儿 天 装 处 放  掉 根 \' 易 这'.split():f_map['k_bad'].add(i.strip().decode('utf-8'))
+
+for  i in '商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  ' \
+          '商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  ' \
+          ' 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 ' \
+          '效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 ' \
+          '质量:如何 不知道:是 回头率:高' \
+          '商品:不知道 商品:高兴 商品:润 商品:重要 商品:闪 小:多 商品:年 商品:啦啦啦 商品:元 商品:穿 商品:那种 我:在 我:给 商品:有 感:覺 己:经 之前:买 商品:送 亲:下' \
+          '商品:财源广进 我:给 亲:买 商品:好孩子 孩子:岁 第一次:是 商品:家 玩:开心 性:强 不知道:长'.split():f_map['kv_bad'].add(i.strip().decode('utf-8'))
+
 for  i in '好  很好 不错  挺好  棒 给力 好看'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
 for  i in '差劲 垃圾 差'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
-for  i in '快  很快  速度  神速'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
+for  i in '快  很快  速度  神速 飞快'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
 for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
 for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
 for  i in '实惠 便宜  物超所值 超值 值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
 for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
-
-filter_words='商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  数:合适 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 数:标准 质量:如何 不知道:是 回头率:高 '
-
-for i in filter_words.split():f_map['filter'].add(i.strip().decode('utf-8'))
+#
+# filter_words=' '
+#
+# for i in filter_words.split():f_map['filter'].add(i.strip().decode('utf-8'))
 
 
 
@@ -89,7 +104,7 @@ def merge(k,v):
     if v in f_map['good_pos']:
         v='好'
     if v in f_map['good_neg']:
-        v='好'
+        v='差'
     if (v in f_map['wuliu_pos']) or (k=='快递' and v=='好'):#如果是物流的数据 直接返回物流
         k='物流'
         v='快'
@@ -133,15 +148,16 @@ def getfield(x,dic):
                 ts=i.split(',')
                 flag,scores,neg_word=pos_neg(ts[0])
                 neg+=flag
-                if ts[-1] in f_map['filter']:# filter  dic 两者并不相同
+                if ts[-1] in f_map['kv_bad']:# filter  dic 两者并不相同
                     ls.append(i+'_'+scores)
                     continue
                 if ":" in i:
                     k,v=ts[-1].split(':')
+                    if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
+                    if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
                     change,k1,v1=merge(k,v)
                     if change==False and  (not dic.has_key(k1+":"+v1)):
-                        ls.append(i+'_'+scores)
-                        continue #没有改变并且不再字典里面
+                        ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
                     ts[-1]=k+":"+v
                     ls.append(",".join(ts)+'_'+scores) #改写写回
@@ -207,7 +223,7 @@ filter_impr_dic=sc.broadcast(filter_impr_dic)
 
 
 hiveContext.sql('use wlbase_dev')
-rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).coalesce(100)
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
 hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v3')
