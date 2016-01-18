@@ -145,6 +145,8 @@ def getfield(x,dic):
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
                     ts[-1]=k+":"+v
                     ls.append(",".join(ts)+'_'+scores) #改写写回
+                else:
+                    ls.append(i+'_'+scores)
             if neg>0:neg=1
             elif neg==0:neg=0
             else: neg=-1
