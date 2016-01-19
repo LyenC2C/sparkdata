@@ -123,19 +123,12 @@ import math
 
 
 def f(x):
-    vs=x.split('\001')
-    if (len(vs)<15):return None
-    if ( vs[-2].replace('.', '').isdigit() and  vs[-10].replace('.', '').isdigit()):
-
-        price=float(vs[-2])
-        # else: return None
+    if ( x.price.replace('.', '').isdigit()):
+        price=float(x.price)
+        root_cat_id=x.root_cat_id
+        user_id=x.user_id
         if price<1.1:return None
-        root_cat_id=vs[-7]
-        diff=vs[4] if len(vs[4])>0 else '0'
-        datediff=int(diff)
-        user_id=vs[2]
         score=round(math.log(price),2)
-        # return (user_id+"_"+root_cat_id,datediff,price)
         if not a.has_key(root_cat_id):return None
         tags=a.get(root_cat_id).decode('utf-8')
         lv=[]
@@ -144,13 +137,16 @@ def f(x):
         return lv
     else :return None
 
-path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t/'
-rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
+# path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t/'
+# rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
+hiveContext.sql('use wlbase_dev')
+rdd=hiveContext.sql('select user_id,root_cat_id,price, ds from t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t')\
+    .map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
 rdd2=rdd1.groupByKey().map(lambda (x,y):(x," ".join(y)))
 schema1 = StructType([
     StructField("user_id", StringType(), True),
-    StructField("tags", StringType(), True),
+    StructField("cat_tags", StringType(), True),
  ])
 
 hiveContext.sql('use wlbase_dev')

@@ -32,10 +32,10 @@ rdd=rdd1.map(lambda x: x[1:]).repartition(100)
 
 # rdd1.map(lambda x:x[3]).histogram(100)
 def level(x):
-    if x<4:return 1
+    if x<=4:return 1
     if 4<x<=6:return 2
     if 6<x<=10:return 3
-    if 10<x<12:return 4
+    if 10<x<=12:return 4
     if 12<x:return 5
 import  math
 userlevel_rdd=rdd1.map(lambda x: [x[0],x[1],x[2], x[3],level(math.log(x[2],2))])
