@@ -81,8 +81,8 @@ for  i in '评价:晚 商品:哈哈 商品:不好意思 商品:呵呵 商品:买
           '商品:财源广进 我:给 亲:买 商品:好孩子 孩子:岁 第一次:是 商品:家 玩:开心 性:强 不知道:长'.split():f_map['kv_bad'].add(i.strip().decode('utf-8'))
 
 #分是五分。 句法分析分析不出来的
-for  i in '好  很好 不错  挺好  棒 给力 好看 分 棒棒'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
-for  i in '差劲 垃圾 差'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
+for  i in '好  很好 不错  挺好  棒 给力 好看 分 棒棒 一如既往'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
+for  i in '差劲 垃圾 差 烂'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
 for  i in '快  很快  速度  神速 飞快 迅速 块'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
 for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
@@ -92,7 +92,9 @@ for  i in '实惠 便宜  物超所值 超值 值'.split():f_map['jiage_pos'].ad
 for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
 
 #数:正  需要修改
-#
+#物美价廉:来:
+# 数:合身
+# 质量:错:-1:
 # filter_words=' '
 #
 # for i in filter_words.split():f_map['filter'].add(i.strip().decode('utf-8'))
