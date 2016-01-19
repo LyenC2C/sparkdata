@@ -1,7 +1,7 @@
 pre_path='/home/wrt/sparkdata'
 
 zuotian='20160112'
-qiantian='20160111'
+qiantian='20160108'
 
 
 hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
