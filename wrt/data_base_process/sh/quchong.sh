@@ -3,6 +3,7 @@ pre_path='/home/wrt/sparkdata'
 zuotian='20160112'
 qiantian='20160111'
 
+
 hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
 spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
 $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160111 >> ./log_date/log_$zuotian 2>&1
