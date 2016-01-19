@@ -8,7 +8,7 @@ from pyspark import SparkContext
 yesterday = sys.argv[1]
 today = sys.argv[2]
 iteminfo_day = sys.argv[3]
-sc = SparkContext(appName="spark item_sale_" + today)
+sc = SparkContext(appName="spark item_sale_new_" + today)
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
