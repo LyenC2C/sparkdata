@@ -14,7 +14,9 @@ conf.set("spark.hadoop.validateOutputSpecs", "false")
 sc = SparkContext(appName="impr",conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
-
+'''
+http://www.cnblogs.com/siegfang/p/3455160.html
+'''
 '''
 错误标签过滤 以及 相似标签合并
 '''
@@ -65,32 +67,48 @@ def f_coding(x):
 from collections import defaultdict
 f_map = defaultdict(set)
 
-
+# 分---.5分
 # for  i in '数—码数  行-还行 快递-物流'.split():f_map['k_bad'].add(i.strip().decode('utf-8'))
-for  i in '真是  是 就是 必须 怎样 帮 哦 哇 仙 岁 说 覺 包 家 米 它 什么 还 放 经 带 做 下 够 想 断 嗯 斤 像 算 嘿 要 让' \
+for  i in '真是  嘎嘎 嘎 嘎嘎嘎 哈 哈哈 哈哈哈 呵呵  呵 唉 是 就是 必须 怎样 帮 哦 哇 仙 岁 说 覺 包 家 米 它 什么 还 放 经 带 做 下 够 想 断 嗯 斤 像 算 嘿 要 让' \
           '寄 也 人 写 哒 5   11 g 问 巴 太 1 片 儿 搞 打 9 O 6 请 歡 哈 利 身 你 匀 连 为 \' 滿  此 2 20 需 75 占 我' \
           '7 M'.split():f_map['v_bad'].add(i.strip().decode('utf-8'))
 for  i in '穿 不知道 件 款 以后 后 儿 天 装 处 放  掉 根 \' 易 这'.split():f_map['k_bad'].add(i.strip().decode('utf-8'))
 
-for  i in '评价:晚 商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  ' \
-          '商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  ' \
-          ' 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 ' \
-          '效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 ' \
-          '质量:如何 不知道:是 回头率:高' \
-          '商品:不知道 商品:高兴 商品:润 商品:重要 商品:闪 小:多 商品:年 商品:啦啦啦 商品:元 商品:穿 商品:那种 我:在 我:给 商品:有 感:覺 己:经 之前:买 商品:送 亲:下' \
-          '商品:财源广进 我:给 亲:买 商品:好孩子 孩子:岁 第一次:是 商品:家 玩:开心 性:强 不知道:长'.split():f_map['kv_bad'].add(i.strip().decode('utf-8'))
+# for  i in '商品:* 质量:嘎嘎  商品:嘎嘎 第一次:买  一个:吃  一个:掉 一个:送  里面:个 评价:晚 商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  ' \
+#           '商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  ' \
+#           ' 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 ' \
+#           '效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 ' \
+#           '质量:如何 不知道:是 回头率:高' \
+#           '商品:不知道 商品:高兴 商品:润 商品:重要 商品:闪 小:多 商品:年 商品:啦啦啦 商品:元 商品:穿 商品:那种 我:在 我:给 商品:有 感:覺 己:经 之前:买 商品:送 亲:下' \
+#           '商品:财源广进 我:给 亲:买 商品:好孩子 孩子:岁 第一次:是 商品:家 玩:开心 性:强 不知道:长'.split():f_map['kv_bad'].add(i.strip().decode('utf-8'))
+
+bad_kv_path='/user/zlj/data/bad_kv_0120'
+bad_kv_list=sc.textFile(bad_kv_path).map(lambda x:x.strip()).collect()
+bad_kv_set=sc.broadcast(bad_kv_list)
+for i in bad_kv_set.value:f_map['kv_bad'].add(i.strip())
+
 
 #分是五分。 句法分析分析不出来的
 for  i in '好  很好 不错  挺好  棒 给力 好看 分 棒棒 一如既往'.split():f_map['good_pos'].add(i.strip().decode('utf-8'))
-for  i in '差劲 垃圾 差 烂'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
+for  i in '差劲 垃圾 差 烂 孬'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
 for  i in '快  很快  速度  神速 飞快 迅速 块'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
-for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
+for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答' \
+          '热心 热忱 热心肠 好客 满腔热忱 古道热肠 有求必应 来者不拒 急人之难 急人所急 满腔热情 满怀深情 热情洋溢'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
 for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
-for  i in '实惠 便宜  物超所值 超值 值'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
+for  i in '实惠 便宜  物超所值 超值 值 物美价廉 低廉 廉价 公道 惠而不费 价廉物美 物美价廉 最低价 价廉 质优价廉 价廉质优 低价'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
 for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
 
+a=[(['好  很好 不错  挺好  棒 给力 好看 分 棒棒 一如既往'],'好'),
+   (['差劲 垃圾 差 烂 孬'],'差'),
+   (['快  很快  速度  神速 飞快 迅速 块'],''),
+   (['慢慢 慢 蜗牛','慢']),
+   (['热情 周到 耐心  解答 回答  讲解  细心 有问必答'],),
+   (),
+   (),
+   ()
+]
 #数:正  需要修改
 #物美价廉:来:
 # 数:合身
@@ -99,13 +117,18 @@ for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
 #
 # for i in filter_words.split():f_map['filter'].add(i.strip().decode('utf-8'))
 
-
+modify_map={'数':'码数',
+            '分':'5分'}
 
 def merge(k,v):
     k1=k
     v1=v
     k=f_coding(k)
     v=f_coding(v)
+    if modify_map.has_key(v):
+        v=modify_map.get(v)
+    if modify_map.has_key(k):
+        k=modify_map.get(k)
     if v in f_map['good_pos']:
         v='好'
     if v in f_map['good_neg']:
