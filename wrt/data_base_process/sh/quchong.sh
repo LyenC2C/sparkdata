@@ -1,46 +1,58 @@
 pre_path='/home/wrt/sparkdata'
 
-hadoop fs -rm -r /user/wrt/sale_tmp
+zuotian='20160112'
+qiantian='20160108'
+
+
+hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
 spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20150131 20160101 20160106
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160101
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160111 >> ./log_date/log_$zuotian 2>&1
+sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20150131 20160101 20160106 20160106
+sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql $qiantian $zuotian 20160111 20160111 >> ./log_date/log_$zuotian 2>&1
 
-hadoop fs -rm -r /user/wrt/sale_tmp
-spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160101 20160102 20160106
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160102
 
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160101 20160102 20160106 20160106
-
-hadoop fs -rm -r /user/wrt/sale_tmp
-spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160102 20160103 20160106
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160103
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160102 20160103 20160106 20160106
-
-hadoop fs -rm -r /user/wrt/sale_tmp
-spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160103 20160104 20160106
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160104
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160103 20160104 20160106 20160106
-
-hadoop fs -rm -r /user/wrt/sale_tmp
-spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160104 20160105 20160106
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160105
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160104 20160105 20160106 20160106
-
-hadoop fs -rm -r /user/wrt/sale_tmp
-spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160105 20160106 20160106
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160106
-
-sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160105 20160106 20160106 20160106
+#hadoop fs -rm -r /user/wrt/sale_tmp
+#spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20150131 20160101 20160106
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160101
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20150131 20160101 20160106 20160106
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp
+#spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160101 20160102 20160106
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160102
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160101 20160102 20160106 20160106
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp
+#spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160102 20160103 20160106
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160103
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160102 20160103 20160106 20160106
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp
+#spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160103 20160104 20160106
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160104
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160103 20160104 20160106 20160106
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp
+#spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160104 20160105 20160106
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160105
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160104 20160105 20160106 20160106
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp
+#spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.py 20160105 20160106 20160106
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160106
+#
+#sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql 20160105 20160106 20160106 20160106
 
 #spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
 #$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc  \
