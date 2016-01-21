@@ -36,7 +36,7 @@ def f1(line):
     try:
         ss = line.strip().split('\t',3)
         #zhengwen = ""
-        # ts = ss[0]
+        ts = ss[0]
         # for ln in ss[3:]:
         #     zhengwen += ln
         # l = len(zhengwen)
@@ -157,10 +157,11 @@ s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #ye
 #rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
-rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+#rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
-rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
+# rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
+# rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
+rdd_final = rdd1.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
 rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
 #st = s.find('2015')
 #ds2 = s[st:st+4] + s[st+5:st+7] + s[st+8:st+10]
