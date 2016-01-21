@@ -133,14 +133,15 @@ def quchong_2(x, y):
         lv = []
         for ln in result:
             lv.append(str(valid_jsontxt(ln)))
-        return "\001".join(lv)
+        return "hehe" + "\001" + "hehe"#"\001".join(lv)
         #return (x, y)
     elif len(item_list[0]) > 2:
         result = [x] + y
         lv = []
         for ln in result:
             lv.append(str(valid_jsontxt(ln)))
-        return "\001".join(lv)
+        return "haha" + "\001" + "haha"
+        #return "\001".join(lv)
         #return (x, y)
     else:
         return None
@@ -174,7 +175,7 @@ rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(la
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
 rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 #rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y)).filter(lambda x:x!=None)
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): quchong_2(x, y)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/sale_tmp')
 #rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
 #rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
