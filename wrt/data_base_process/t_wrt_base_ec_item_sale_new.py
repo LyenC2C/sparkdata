@@ -40,7 +40,7 @@ def f1(line):
         # for ln in ss[3:]:
         #     zhengwen += ln
         # l = len(zhengwen)
-        # result = []
+        result = []
         zhengwen = ss[3]
         ob = json.loads(valid_jsontxt(zhengwen))
         # ob = json.loads(valid_jsontxt(zhengwen[zhengwen.find("({") + 1:l-1]))
