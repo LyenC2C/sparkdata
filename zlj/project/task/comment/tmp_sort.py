@@ -84,6 +84,8 @@ hc.sql('use wlbase_dev')
 rdd=hc.sql('select impr_c from t_zlj_feed2015_parse_v3 where impr_c is not NULL ')\
     .map(lambda x:x.impr_c.split('|')).flatMap(lambda x:x).map(lambda x:(x,1))
 
+hc.sql('select impr_c from t_zlj_feed2015_parse_v3 where impr_c is not NULL ').sample
+
 
 rdd.reduceByKey(lambda a,b:a+b).map(lambda x:(x[1],x[0])).sortByKey(ascending=False,numPartitions=10)\
     .map(lambda x:str(x[0])+'\t'+x[1]).saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_rank_v3')
