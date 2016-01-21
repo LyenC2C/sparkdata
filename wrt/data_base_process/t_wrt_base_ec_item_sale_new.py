@@ -8,7 +8,7 @@ from pyspark import SparkContext
 yesterday = sys.argv[1]
 today = sys.argv[2]
 iteminfo_day = sys.argv[3]
-sc = SparkContext(appName="spark item_sale_new_" + today)
+sc = SparkContext(appName="spark item_sale_new" + today)
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -115,12 +115,7 @@ def quchong_1(x, y):
             y = ln
     flag = '0'
     y.append(flag)
-    result = [x] + y
-    lv = []
-    for ln in result:
-        lv.append(str(valid_jsontxt(ln)))
-    return "\001".join(lv)
-    #return (x, y)
+    return (x, y)
 
 def quchong_2(x, y):
     item_list = y
@@ -159,16 +154,13 @@ s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=" + iteminfo_day #toda
 s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #yesterday
 
 # bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
-#rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
-#rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-# rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-# rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
-# rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
-# rdd_final = rdd1.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
-# rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
-rdd1.saveAsTextFile('/user/wrt/sale_tmp')
+rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
+rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
+rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
 #st = s.find('2015')
 #ds2 = s[st:st+4] + s[st+5:st+7] + s[st+8:st+10]
 #l = len(s1)
