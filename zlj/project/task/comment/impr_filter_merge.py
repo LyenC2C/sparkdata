@@ -200,14 +200,21 @@ def getfield(x,dic):
 
 
 
-neg_line="不是 不太 不能 不可以 没有  木有 没 不 未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
+neg_line="不是 不太 不能 不可以 没有 不 不行 木有 没  未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
 
 neg_path='/user/zlj/data/neg'
 pos_path='/user/zlj/data/pos'
 neg_list=sc.textFile(neg_path).map(lambda x:x.strip()).collect()
+neg_add='不靠谱 '
+for word in neg_add.split():
+    neg_list.append(word.strip().decode('utf-8'))
 neg_set=sc.broadcast(neg_list)
 
+
+pos_add='快 很快 好吃 高 实惠 可以'
 pos_list=sc.textFile(pos_path).map(lambda x:x.strip()).collect()
+for word in pos_add.split():
+    pos_list.append(word.strip().decode('utf-8'))
 pos_set=sc.broadcast(pos_list)
 
 pos_emo_set=set(pos_set.value)
@@ -216,6 +223,8 @@ neg_set    =set([i.strip().decode('utf-8') for  i in neg_line.split()])
 def pos_neg(words):
     words_set=set(words.split('\002'))
     neg = len(neg_set&words_set)
+    if neg%2==0: neg=0
+    else :neg=1
     neg_emo = len(neg_emo_set&words_set)
     pos_emo = len(pos_emo_set&words_set)
     flag=0
