@@ -71,7 +71,7 @@ def f1(line):
             total_sold = item.get("totalSoldQuantity",0)
             #order_cost = item.get("orderCost",0)
             #flag = "0"
-            lv.append(valid_jsontxt(item_id))
+            lv.append(str(valid_jsontxt(item_id)))
             lv.append(f_coding(item_title))
             lv.append(float_k(r_price))
             lv.append(float_k(s_price))
@@ -90,7 +90,7 @@ def f1(line):
 def f2(line):
     ss = line.strip().split('\001')
     # ss[9] = float(ss[9])
-    item_id = int(ss[0])
+    item_id = ss[0]
     s_price = float(ss[9])
     bc_type = valid_jsontxt(ss[8])
     lv = []
