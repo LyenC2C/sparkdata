@@ -145,6 +145,7 @@ def quchong_2(x, y):
         #return (x, y)
     elif len(item_list[0]) > 2:
         result = [x] + y
+        y = item_list[0]
         lv = []
         for ln in result:
             lv.append(str(valid_jsontxt(ln)))
