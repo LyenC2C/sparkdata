@@ -52,6 +52,7 @@ hadoop fs -put ${local_tmp_inc_data} ${tmp_data}/
 
 hadoop fs -rmr ${tmp_data}.test
 hadoop fs -cp $tmp_data ${tmp_data}.test
+hadoop fs -chmod -R 775 $tmp_data
 
 echo "insert hive"
 sh  /mnt/pzz/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
