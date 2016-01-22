@@ -14,6 +14,18 @@ t_zlj_user_tag_join_cat ;
 
 
 
+
+
+create table t_zlj_user_tag_join_cat_online as
+  select
+uid,price_level, tfidftags, t2.tags as cat_tags
+from
+ t_zlj_user_tag_join  t1
+join t_zlj_userbuy_item_cattags1 t2 on t1.uid =t2.user_id;
+
+
+
+
 create table t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t_test as
   SELECT * from t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t limit 10 ;
 

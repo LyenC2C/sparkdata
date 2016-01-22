@@ -5,24 +5,26 @@ SELECT
 FROM
   (
     SELECT
-     word,
-     count(1) AS num
-   FROM
-     (
-       SELECT word
-       from
-              (
-                  SELECT impr_c
-                  FROM t_zlj_feed2015_parse_v1 WHERE item_id=522035124540 AND LENGTH(impr_c)>0
+      word,
+      count(1) AS num
+    FROM
+      (
+        SELECT word
+        FROM
+          (
+            SELECT impr_c
+            FROM t_zlj_feed2015_parse_v1
+            WHERE item_id = 522035124540 AND LENGTH(impr_c) > 0
 
-              ) t3
-       LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
+          ) t3
+        LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
 
-     ) t
-   group by word
+      ) t
+    GROUP BY word
 
   ) t1
-ORDER BY num  DESC LIMIT 1000 ;
+ORDER BY num DESC
+LIMIT 1000;
 
 
 --加入 类目 品牌和店铺信息
@@ -60,17 +62,34 @@ SELECT
 FROM
   (
     SELECT
-     word,
-     count(1) AS num
-   FROM
-     (
-       SELECT word
-       from
-             t_zlj_temp
-       LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
+      word,
+      count(1) AS num
+    FROM
+      (
+        SELECT word
+        FROM
+          t_zlj_temp
+          LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
 
-     ) t
-   group by word
+      ) t
+    GROUP BY word
 
   ) t1
-ORDER BY num  DESC LIMIT 1000 ;
+ORDER BY num DESC
+LIMIT 1000;
+
+
+# 找个 最大的用户看看
+
+
+SELECT item_id,num
+FROM
+  (
+    SELECT
+      item_id,
+      count(1) AS num
+    FROM t_zlj_feed2015_parse_v2
+    GROUP BY item_id
+  ) t
+ORDER BY num DESC
+LIMIT 10;
