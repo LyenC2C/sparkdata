@@ -140,18 +140,17 @@ def quchong_2(x, y):
         lv = []
         for ln in result:
             lv.append(str(valid_jsontxt(ln)))
-        return str(x) + "\001" + str(len(item_list)) + '\001' + str(type(y)) + "\001" + str(len(lv))
+        return "\001".join(lv)
+        #return str(x) + "\001" + str(len(item_list)) + '\001' + str(type(y)) + "\001" + str(len(lv))
         #return (x, y)
     elif len(item_list[0]) > 2:
         result = [x] + y
         lv = []
         for ln in result:
             lv.append(str(valid_jsontxt(ln)))
-        return str(type(x)) + "\001" + str(len(item_list)) + "\001" + str(len(item_list[0]))
-        #return "\001".join(lv)
+        # return str(type(x)) + "\001" + str(len(item_list)) + "\001" + str(len(item_list[0]))
+        return "\001".join(lv)
         #return (x, y)
-    elif len(item_list[0]) == 2:
-        return str(type(x)) + "\001" + str(len(item_list)) + "\001" + str(len(item_list[0]))
     else:
         return None
 
