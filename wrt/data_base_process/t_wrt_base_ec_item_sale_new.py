@@ -92,12 +92,12 @@ def f2(line):
     item_id = valid_jsontxt(ss[0])
     s_price = float(ss[9])
     bc_type = valid_jsontxt(ss[8])
-    lv = []
-    lv.append(item_id)
-    lv.append(s_price)
-    lv.append(bc_type)
-    #return [item_id,s_price,bc_type]
-    return lv
+    # lv = []
+    # lv.append(item_id)
+    # lv.append(s_price)
+    # lv.append(bc_type)
+    return [item_id,s_price,bc_type]
+    # return lv
 
 def f3(line):
     ss = line.strip().split('\001')
@@ -134,18 +134,18 @@ def quchong_2(x, y):
             item_list[0][2] = item_list[1][0]
             item_list[0][3] = item_list[1][1]
             y = item_list[0]
-        # result = [x] + y
-        # lv = []
-        # for ln in result:
-        #     lv.append(str(valid_jsontxt(ln)))
-        return x + "\001" + str(len(item_list)) #"\001".join(lv)
+        result = [x] + y
+        lv = []
+        for ln in result:
+            lv.append(str(valid_jsontxt(ln)))
+        return x + "\001" + str(len(item_list))
         #return (x, y)
     elif len(item_list[0]) > 2:
         result = [x] + y
         lv = []
         for ln in result:
             lv.append(str(valid_jsontxt(ln)))
-        return x + "\001" + str(len(item_list)) + "\001" + str(len(item_list[0]))
+        return x + "\001" + str(len(item_list)) + "\001" + str(len(item_list))
         #return "\001".join(lv)
         #return (x, y)
     else:
