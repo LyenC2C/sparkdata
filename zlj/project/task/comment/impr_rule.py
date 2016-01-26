@@ -135,6 +135,7 @@ def rule_extract(x):
     tags=[]
     for index,kv in enumerate(title.split()):
         if '_' not in kv:continue
+        if len(kv.split('_'))!=2:continue
         word,tag=kv.split('_')
         if not filter(tag[0]):continue
         if word in people:continue
