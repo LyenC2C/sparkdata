@@ -375,7 +375,7 @@ def pos_neg(words):
     if neg==0 and neg_emo>0: flag= -1
     if neg==0 and pos_emo==0 and neg_emo==0 :flag= 0
     neg_word=""
-    if neg>0:neg_word=(neg_emo_set&words_set)[0]
+    if neg>0:neg_word=list((neg_emo_set&words_set))[0]
     return flag,'_'.join(str(i) for i in [neg*degree,neg_emo,pos_emo]),neg_word
 
 
