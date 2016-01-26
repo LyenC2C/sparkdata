@@ -81,7 +81,7 @@ for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
 #
 # for i in filter_words.split():f_map['filter'].add(i.strip().decode('utf-8'))
 
-mapline='数_码数 分_5分 行_还行 错_不错 价款_价格 价钱_价格'
+mapline=u'数_码数 分_5分 行_还行 错_不错 价款_价格 价钱_价格'
 modify_map={}
 for kv  in mapline.split():
     k,v =kv.split('_')
@@ -97,33 +97,33 @@ def merge(k,v):
     if modify_map.has_key(k):
         k=modify_map.get(k)
     if v in f_map['good_pos']:
-        v='好'
+        v=u'好'
     if v in f_map['good_neg']:
-        v='差'
+        v=u'差'
     if (v in f_map['wuliu_pos']) or(k in f_map['wuliu_pos']) or (k=='快递' and v=='好'):#如果是物流的数据 直接返回物流
-        k='物流'
-        v='快'
+        k=u'物流'
+        v=u'快'
     if v in f_map['wuliu_neg']:#如果是物流的数据 直接返回物流
-        k='物流'
-        v='慢'
+        k=u'物流'
+        v=u'慢'
     if v in  f_map['fuwu_pos'] or k in f_map['fuwu_pos']:
-        k='服务'
-        v='好'
+        k=u'服务'
+        v=u'好'
     if v in f_map['baozhuang_pos']:
-        k='包装',
-        v='完好'
+        k=u'包装',
+        v=u'完好'
     if v in f_map['baozhuang_neg']:
-        k='包装',
-        v='差'
+        k=u'包装',
+        v=u'差'
     if v in f_map['jiage_pos']:
-        k='价格'
-        v='实惠'
+        k=u'价格'
+        v=u'实惠'
     if v in f_map['jiage_neg']:
-        k='价格'
-        v='贵'
-    if k+":"+v in('物:超','物:值'):
-        k='价格'
-        v='实惠'
+        k=u'价格'
+        v=u'贵'
+    if k+":"+v in(u'物:超',u'物:值'):
+        k=u'价格'
+        v=u'实惠'
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
 
@@ -371,8 +371,8 @@ def pos_neg(words):
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
-path='/user/zlj/data/feed_2015_alicut_parsev4/*'
-# path='/user/zlj/data/1'
+# path='/user/zlj/data/feed_2015_alicut_parsev4/*'
+path='/user/zlj/data/1'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
