@@ -26,9 +26,7 @@ impr_c  修改后的属性情感词 商品:柔软:正负面:否定词
 '''
 schema1 = StructType([
     StructField("item_id", StringType(), True),
-    StructField("feed_id", StringType(), True),
     StructField("user_id", StringType(), True),
-    StructField("feed", StringType(), True),
     StructField("impr", StringType(), True),
     StructField("neg_pos", IntegerType(), True),
     StructField("impr_c", StringType(), True)
