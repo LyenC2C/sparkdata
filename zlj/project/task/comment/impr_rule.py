@@ -111,15 +111,13 @@ neg_line=u"不是 不太 不能 不可以 没有 不 不行 木有 没  未 别 
 
 for k in neg_line.split():neg_set.add(k)
 
-# emo_rdd=sc.textFile('/user/zlj/data/emo_1').collect()
-# neg_set_bc=sc.broadcast(emo_rdd)
-# emo_set=set(neg_set_bc.value)
 
 
+emo_set=None
 
-emo_set=set()
-for line in open('D:\\data-emo_1'):
-    emo_set.add(line.strip().decode('utf-8'))
+# emo_set=set()
+# for line in open('D:\\data-emo_1'):
+#     emo_set.add(line.strip().decode('utf-8'))
 
 
 people = ["宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
@@ -237,17 +235,22 @@ def f(x):
 
 
 
-feed=u'态度_n 好_a '
-print '\t'.join(fenju(feed))
+# feed=u'态度_n 好_a '
+# print '\t'.join(fenju(feed))
 
-# conf = SparkConf()
-# conf.set("spark.hadoop.validateOutputSpecs", "false")
-# sc = SparkContext(appName="impr",conf=conf)
-# sqlContext = SQLContext(sc)
-# hiveContext = HiveContext(sc)
-# rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
-#
-# rdd.map(lambda x:f(x)).saveAsTextFile('/user/zlj/temp/parse')
+conf = SparkConf()
+conf.set("spark.hadoop.validateOutputSpecs", "false")
+sc = SparkContext(appName="impr",conf=conf)
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
+
+emo_rdd=sc.textFile('/user/zlj/data/emo_1').collect()
+neg_set_bc=sc.broadcast(emo_rdd)
+emo_set=set(neg_set_bc.value)
+
+rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
+
+rdd.map(lambda x:f(x)).saveAsTextFile('/user/zlj/temp/parse')
 
 
 
