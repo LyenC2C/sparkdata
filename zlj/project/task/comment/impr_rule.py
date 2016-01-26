@@ -217,7 +217,7 @@ def fenju(feed):
     result = []
     for ln in ss:
         rs=rule_extract(ln.strip())
-        if len(rs)>0:result.append(ln.strip()+"_"+'\t'.join(rs))
+        if len(rs)>0:result.append(ln.strip()+"|"+'\t'.join(rs))
     return result
 
 
@@ -226,7 +226,7 @@ def f(x):
 
     id1,id2,feed=x.replace('(,','').replace(')','').split('\001')
     rs=fenju(feed)
-    return "\t\t".join([id1,id2,' '.join(rs)])
+    return "\t\t".join([id1,id2,'\t'.join(rs)])
 
 
 rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
