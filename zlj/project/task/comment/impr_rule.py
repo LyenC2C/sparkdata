@@ -225,7 +225,7 @@ def f(x):
 
     id1,id2,feed=x.replace('(,','').replace(')','').split('\001')
     rs=fenju(feed)
-    return "\t\t".join([id1,id2,rs])
+    return "\t\t".join([id1,id2,' '.join(rs)])
 
 
 rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
