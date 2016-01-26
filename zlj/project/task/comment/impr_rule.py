@@ -213,10 +213,13 @@ import  re
 fuhao = '[,.!~;:?，。！～；：？…— \t]'.decode('utf-8')
 fuhao_seg = '_x_w'.decode('utf-8')
 def fenju(feed):
-    sentence = re.sub(fuhao_seg,'@@@@',feed)
+    sentence = feed.split('_w')
     # print sentence
     # sentence=feed
-    ss = sentence.split("@@@@")
+    ss = []
+    for line in sentence:
+        for k in line.split('_x'):
+            ss.append(k)
     #ss = re.split('[,.!~;:?，。！～；：？…— \t]', line.strip())
     #sss = []
     result = []
