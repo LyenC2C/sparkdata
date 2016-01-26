@@ -7,11 +7,7 @@ from pyspark import *
 from pyspark.sql import *
 from pyspark.sql.types import *
 
-conf = SparkConf()
-conf.set("spark.hadoop.validateOutputSpecs", "false")
-sc = SparkContext(appName="impr",conf=conf)
-sqlContext = SQLContext(sc)
-hiveContext = HiveContext(sc)
+
 '''
 http://www.cnblogs.com/siegfang/p/3455160.html
 '''
@@ -94,7 +90,7 @@ very_3
 不是一般_3
 '''
 
-tag_f=set(u'mbceopquyzrw')
+tag_f=set(u'mbceopquyrw')
 
 
 def filter(tag):
@@ -118,7 +114,10 @@ for k in neg_line.split():neg_set.add(k)
 emo_rdd=sc.textFile('/user/zlj/data/emo_1').collect()
 neg_set_bc=sc.broadcast(emo_rdd)
 emo_set=set(neg_set_bc.value)
-# for v in neg_set_bc:emo_set.add(v)
+
+
+
+# emo_set=set()
 # for line in open('D:\\data-emo_1'):
 #     emo_set.add(line.strip().decode('utf-8'))
 
@@ -230,12 +229,20 @@ def fenju(feed):
 
 
 def f(x):
-
     id1,id2,feed=x.replace('(,','').replace(')','').split('\001')
     rs=fenju(feed)
     return "\t\t".join([id1,id2,'\t'.join(rs)])
 
 
+
+# feed=u'看着_v 好_a 粉嫩_z'
+# print '\t'.join(fenju(feed))
+
+conf = SparkConf()
+conf.set("spark.hadoop.validateOutputSpecs", "false")
+sc = SparkContext(appName="impr",conf=conf)
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
 rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
 
 rdd.map(lambda x:f(x)).saveAsTextFile('/user/zlj/temp/parse')
