@@ -298,7 +298,7 @@ filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
 # rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
 
-filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
+filter_impr_dic=sc.parallelize(sc.textFile(filter_path).take(10000)).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
 
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
@@ -309,7 +309,7 @@ filter_impr_dic=sc.broadcast(filter_impr_dic)
 
 hiveContext.sql('use wlbase_dev')
 rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
-rdd.fold()
+# rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
 hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v3')
