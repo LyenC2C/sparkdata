@@ -177,17 +177,19 @@ def rule_extract(x):
     if len(emo)>0:
         if len(property)>0:
             pairs.append([' '.join(property[::-1]),degree,neg,emo])
-        # else:
-        #     pairs.append([u'商品',degree,neg,emo]) # 前面没哟属性词，再看后面 ，在最后处理只有情感词的情况
+        else:
+            pairs.append([u'商品',degree,neg,emo]) # 前面没哟属性词，再看后面 ，在最后处理只有情感词的情况
         back_find=1
     property=[]
+    find=-1
     if back_find==-1:#不错的宝贝
         if len(emo)>0:
             for k,v in tag_index[index:]:
                 if k =='n':
                     pairs.append([words[v],degree,neg,emo])
+                    find=1
                     break
-            if back_find==-1:
+            if find==-1:
                 pairs.append([u'商品',degree,neg,emo])
     return [ ":".join(i) for i in pairs]
 
