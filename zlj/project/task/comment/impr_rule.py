@@ -222,7 +222,8 @@ def fenju(feed):
 
 
 def f(x):
-    id1,id2,feed=x.split()
+
+    id1,id2,feed=x.replace('(,','').replace(')','').split('\001')
     rs=fenju(feed)
     return "\t\t".join([id1,id2,rs])
 
