@@ -330,7 +330,11 @@ def getfield(x,dic):
                 if len(find_kv)>0:
                     ts.append(find_kv)#重新加入rule捕获的tag
             if ":" in ts[-1]:
-                k,v=ts[-1].split('_')[0].split(':')
+                try:
+                    k,v=ts[-1].split('_')[0].split(':')
+                except:
+                    print i
+                    continue
                 if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
                 if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
                 change,k1,v1=merge(k,v)
