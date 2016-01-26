@@ -244,7 +244,7 @@ sc = SparkContext(appName="impr",conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-emo_rdd=sc.textFile('/user/zlj/data/emo_1').collect()
+emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
 neg_set_bc=sc.broadcast(emo_rdd)
 emo_set=set(neg_set_bc.value)
 
@@ -254,3 +254,10 @@ rdd.map(lambda x:f(x)).saveAsTextFile('/user/zlj/temp/parse')
 
 
 
+
+# rdd=sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v3/').map(lambda x:x.split('\001')[-1])\
+#     .filter(lambda x:len(x)>2).map(lambda x:x.split('|')).flatMap(lambda x:x).map(lambda x:(x.split(':')[1],1))
+#
+# rdd1=rdd.reduceByKey(lambda a,b:a+b).repartition(1).map(lambda x:(x[1],x[0])).sortByKey(ascending=False)
+#
+# rdd1.map(lambda x:str(x[0])+'\t'+x[1]).saveAsTextFile('/user/zlj/temp/emo_count')
