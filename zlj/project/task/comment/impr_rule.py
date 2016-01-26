@@ -150,9 +150,8 @@ def rule_extract(x):
     emo_list=[]# 优化  一句话里有几个情感
     tag_index=zip(tags,xrange(len(tags)))
     words_index=zip(tags,xrange(len(words)))
+    pairs=[]
     for index,word in enumerate(words):#find  degree neg emo
-        pairs=[]
-
         if word in neg_set:neg=word
         if word in degree_set:degree=word
         back_find=-1
