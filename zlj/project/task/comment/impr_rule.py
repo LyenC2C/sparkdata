@@ -122,6 +122,17 @@ emo_set=None
 
 people = ["宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
 
+conf = SparkConf()
+conf.set("spark.hadoop.validateOutputSpecs", "false")
+sc = SparkContext(appName="impr",conf=conf)
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
+
+
+emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
+neg_set_bc=sc.broadcast(emo_rdd)
+emo_set=set(neg_set_bc.value)
+emo_set=emo_set-neg_set-degree_set
 
 
 def rule_extract(x):
@@ -241,16 +252,9 @@ def f(x):
 feed=u'很_d 牢固_a'
 print '\t'.join(fenju(feed))
 
-conf = SparkConf()
-conf.set("spark.hadoop.validateOutputSpecs", "false")
-sc = SparkContext(appName="impr",conf=conf)
-sqlContext = SQLContext(sc)
-hiveContext = HiveContext(sc)
 
-emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
-neg_set_bc=sc.broadcast(emo_rdd)
-emo_set=set(neg_set_bc.value)
-emo_set=emo_set-neg_set-degree_set
+
+
 
 rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
 
