@@ -28,7 +28,7 @@ LIMIT 1000;
 
 
 --加入 类目 品牌和店铺信息
-CREATE TABLE t_zlj_feed2015_parse_v1_jion_cat_brand_shop
+CREATE TABLE t_zlj_feed2015_parse_v3_jion_cat_brand_shop
   AS
     SELECT
       t1.*,
@@ -39,7 +39,7 @@ CREATE TABLE t_zlj_feed2015_parse_v1_jion_cat_brand_shop
       brand_id,
       brand_name,
       shop_id
-    FROM t_zlj_feed2015_parse_v1 t1 JOIN
+    FROM t_zlj_feed2015_parse_v3 t1 JOIN
       (SELECT
          item_id,
          cat_id,
@@ -51,38 +51,55 @@ CREATE TABLE t_zlj_feed2015_parse_v1_jion_cat_brand_shop
          shop_id
        FROM t_base_ec_item_dev
        WHERE ds = 20160105) t2
-
         ON t1.item_id = t2.item_id;
 
 
-SELECT
-
-  word,
-  num
-FROM
-  (
+CREATE TABLE t_zlj_user_feed_tags
+  AS
     SELECT
-      word,
-      count(1) AS num
+      user_id,
+      concat_ws(' ',collect_set(concat_ws('_', word, CAST(num AS STRING)))) AS feed_tags
     FROM
       (
-        SELECT word
-        FROM
-          t_zlj_temp
-          LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
+        select user_id,word,num,ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY num DESC) AS rn
+        from
 
-      ) t
-    GROUP BY word
+          (
+          SELECT
+             user_id,
+             word,
+             count(1) AS num
+           FROM
+             (
+               SELECT
+                 user_id,
+                 word
+               FROM
+                 (
+                   SELECT
+                     user_id,
+                     impr_c
+                   FROM
+                     t_zlj_feed2015_parse_v3_jion_cat_brand_shop
+                   WHERE LENGTH(impr_c) > 1
+                 ) t5
+               LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
+             ) t
+           GROUP BY user_id, word
+          )t3
+      ) t1
 
-  ) t1
-ORDER BY num DESC
-LIMIT 1000;
+      where rn <20
+    GROUP BY user_id
+
 
 
 # 找个 最大的用户看看
 
 
-SELECT item_id,num
+SELECT
+  item_id,
+  num
 FROM
   (
     SELECT
@@ -93,3 +110,5 @@ FROM
   ) t
 ORDER BY num DESC
 LIMIT 10;
+
+

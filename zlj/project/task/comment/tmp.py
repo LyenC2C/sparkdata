@@ -32,3 +32,14 @@ def count(x):
 
 
 for i in  imprs.collect(): print i[0],i[1]
+
+from pyspark.sql import *
+hc = HiveContext(sc)
+hc.sql('use wlbase_dev')
+rdd=hc.sql('select user_id ,impr_c  from t_zlj_feed2015_parse_v3 where LENGTH (impr_c)>1')
+rdd.map(lambda x:(x.user_id,len(x.impr_c.strip().split(u'|')))).reduceByKey(lambda a,b:a+b)\
+    .map(lambda x:x[1]).filter(lambda x:x<50).histogram([i for i in xrange(50)])
+
+
+
+sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed_parse_corpus_2015/*').coalesce(16).saveAsTextFile('/user/zlj/data/t_zlj_feed_parse_corpus_2015')

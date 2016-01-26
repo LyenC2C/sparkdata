@@ -1,10 +1,8 @@
 #coding:utf-8
 __author__ = 'zlj'
 import sys
-
 reload(sys)
 sys.setdefaultencoding('utf8')
-
 from pyspark import *
 from pyspark.sql import *
 from pyspark.sql.types import *
@@ -19,21 +17,6 @@ http://www.cnblogs.com/siegfang/p/3455160.html
 '''
 '''
 错误标签过滤 以及 相似标签合并
-'''
-
-'''
-卖家服务 :热情 周到 耐心  解答 回答  讲解  细心 有问必答  服务
-
----服务好
-
-物流   :快  很快  速度  神速
-
-质量:  好  很好 不错  挺好
-
-商品:  好 很好  不错
-
-价格： 棒 好
-
 '''
 
 '''数据格式
@@ -74,14 +57,6 @@ for  i in '真是  嘎嘎 嘎 嘎嘎嘎 哈 哈哈 哈哈哈 呵呵  呵 唉 是
           '7 M'.split():f_map['v_bad'].add(i.strip().decode('utf-8'))
 for  i in '穿 不知道 件 款 以后 后 儿 天 装 处 放  掉 根 \' 易 这'.split():f_map['k_bad'].add(i.strip().decode('utf-8'))
 
-# for  i in '商品:* 质量:嘎嘎  商品:嘎嘎 第一次:买  一个:吃  一个:掉 一个:送  里面:个 评价:晚 商品:哈哈 商品:不好意思 商品:呵呵 商品:买 商品:真是 商品:就是 商品:购买 商品:懒 商品:还是 商品:亲 以后:需要 商品:透 商品:嘿嘿 商品:热情 商品:耐心  ' \
-#           '商品:斤 商品:唉 差:多 商品:嘻嘻  商品:哈哈哈 效果:怎么样 亲:下手 不知道:是不是 质量:怎么样 商品:这样 时尚:大方 效果:如何  数:小 商品:怎么样 商品:錯  ' \
-#           ' 商品:抱歉 数:大 商品:温和 商品:忙 商品:想象 商品:个 商品:犹豫 天:冷 商品:想 不知道:起 好评:好 品:那种 商品:说实话 颜色:没 不知道:用  商品:用  商品:极 ' \
-#           '效果:怎样 商品:伤心 商品:郁闷 商品:累 商品:好贴 质量:还是 商品:仙 里面:还有 亲:犹豫 棒:极 上:好看 商品:件  天气:冷 体重:斤  亲:放心 我:用  商品:滑滑 ' \
-#           '质量:如何 不知道:是 回头率:高' \
-#           '商品:不知道 商品:高兴 商品:润 商品:重要 商品:闪 小:多 商品:年 商品:啦啦啦 商品:元 商品:穿 商品:那种 我:在 我:给 商品:有 感:覺 己:经 之前:买 商品:送 亲:下' \
-#           '商品:财源广进 我:给 亲:买 商品:好孩子 孩子:岁 第一次:是 商品:家 玩:开心 性:强 不知道:长'.split():f_map['kv_bad'].add(i.strip().decode('utf-8'))
-
 bad_kv_path='/user/zlj/data/bad_kv_0120'
 bad_kv_list=sc.textFile(bad_kv_path).map(lambda x:x.strip()).collect()
 bad_kv_set=sc.broadcast(bad_kv_list)
@@ -93,22 +68,13 @@ for  i in '好  很好 不错  挺好  棒 给力 好看 分 棒棒 一如既往
 for  i in '差劲 垃圾 差 烂 孬'.split():f_map['good_neg'].add(i.strip().decode('utf-8'))
 for  i in '快  很快  速度  神速 飞快 迅速 块'.split():f_map['wuliu_pos'].add(i.strip().decode('utf-8'))
 for  i in '慢慢 慢 蜗牛'.split():f_map['wuliu_neg'].add(i.strip().decode('utf-8'))
-for  i in '热情 周到 耐心  解答 回答  讲解  细心 有问必答' \
+for  i in '贴心 热情 周到 耐心  解答 回答  讲解  细心 有问必答' \
           '热心 热忱 热心肠 好客 满腔热忱 古道热肠 有求必应 来者不拒 急人之难 急人所急 满腔热情 满怀深情 热情洋溢'.split():f_map['fuwu_pos'].add(i.strip().decode('utf-8'))
 for  i in '严实  完好 严密 扎实 完好无损   完整'.split():f_map['baozhuang_pos'].add(i.strip().decode('utf-8'))
 for  i in '损坏  破损  碰损  毁损 损毁'.split():f_map['baozhuang_neg'].add(i.strip().decode('utf-8'))
 for  i in '实惠 便宜  物超所值 超值 值 物美价廉 低廉 廉价 公道 惠而不费 价廉物美 物美价廉 最低价 价廉 质优价廉 价廉质优 低价'.split():f_map['jiage_pos'].add(i.strip().decode('utf-8'))
 for  i in '贵'.split():f_map['jiage_neg'].add(i.strip().decode('utf-8'))
 
-a=[(['好  很好 不错  挺好  棒 给力 好看 分 棒棒 一如既往'],'好'),
-   (['差劲 垃圾 差 烂 孬'],'差'),
-   (['快  很快  速度  神速 飞快 迅速 块'],''),
-   (['慢慢 慢 蜗牛','慢']),
-   (['热情 周到 耐心  解答 回答  讲解  细心 有问必答'],),
-   (),
-   (),
-   ()
-]
 #数:正  需要修改
 #物美价廉:来:
 # 数:合身
@@ -163,6 +129,26 @@ def merge(k,v):
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
 
+
+# 规则重新整理标签
+'''
+有 情感，往前找否定词 和名字 否定+情感   d+情感
+
+或者情感往后缀   情感词-否定词
+
+'''
+
+emo_set=set()
+def parse_rule_again(impr):
+    words=[]
+    tags=[]
+    for kv in impr.split(',').split('\002'):
+        k,v=kv.split('_')
+        words.append(k)
+        tags.append(v)
+
+
+
 def getfield(x,dic):
     lv=x.split()
     rs=[]
@@ -210,8 +196,8 @@ for word in neg_add.split():
     neg_list.append(word.strip().decode('utf-8'))
 neg_set=sc.broadcast(neg_list)
 
-
-pos_add='快 很快 好吃 高 实惠 可以'
+# 极
+pos_add='快 很快 好吃 高 实惠 可以 超高'
 pos_list=sc.textFile(pos_path).map(lambda x:x.strip()).collect()
 for word in pos_add.split():
     pos_list.append(word.strip().decode('utf-8'))
@@ -220,8 +206,73 @@ pos_set=sc.broadcast(pos_list)
 pos_emo_set=set(pos_set.value)
 neg_emo_set=set(neg_set.value)
 neg_set    =set([i.strip().decode('utf-8') for  i in neg_line.split()])
+
+
+degree=u'''
+更_2
+更加_2
+很_2
+极_2
+几乎_2
+蛮_2
+太_2
+挺_2
+越_2
+越发_2
+非常_2
+灰常_2
+倍儿_2_
+有些_1
+略微_1
+过于_1
+或许_1
+了点_1
+略微_1
+偏_1
+稍_1
+稍微_1
+免强_1
+勉强_1
+也许_1
+有点_1
+有点儿_1
+有一点_1
+有一点点_1_
+十足_3
+一如既往_3
+very_3
+超_3
+超常_3
+超乎寻常_3
+超级_3
+彻底_3
+出乎寻常_3
+非比寻常_3
+非常_3
+非同寻常_3
+分外_3
+格外_3
+极其_3
+绝对_3
+十分_3
+特别_3
+完全_3
+尤其_3
+最_3
+不是一般_3
+'''
+degree_map={}
+for kv in degree.split():
+    if len(kv)<1:continue
+    k,v=kv.split('_')
+    degree_map[k]=int(v)
 def pos_neg(words):
+
     words_set=set(words.split('\002'))
+    lv=[]
+    for word in words_set: #加入程度
+        if degree_map.has_key(word):lv.append(degree_map.get(word))
+    degree=max(lv)
     neg = len(neg_set&words_set)
     if neg%2==0: neg=0
     else :neg=1
@@ -235,7 +286,7 @@ def pos_neg(words):
     if neg==0 and pos_emo==0 and neg_emo==0 :flag= 0
     neg_word=""
     if neg>0:neg_word=(neg_emo_set&words_set)[0]
-    return flag,'_'.join(str(i) for i in [neg,neg_emo,pos_emo]),neg_word
+    return flag,'_'.join(str(i) for i in [neg*degree,neg_emo,pos_emo]),neg_word
 
 
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
@@ -253,14 +304,12 @@ filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x
 filter_impr_dic=sc.broadcast(filter_impr_dic)
 
 
-
 # rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
 # rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
 
-
-
 hiveContext.sql('use wlbase_dev')
 rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
 hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v3')
