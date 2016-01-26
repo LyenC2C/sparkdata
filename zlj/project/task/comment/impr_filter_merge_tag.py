@@ -323,7 +323,7 @@ def getfield(x,dic):
                 #     if len(find_kv)>0:
                 #         ts.append(find_kv)#重新加入rule捕获的tag
                 if ":" in ts[-1]:
-                    k,v=ts[-1].split(':')
+                    k,v=ts[-1].split('_')[1].split(':')
                     if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
                     if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
                     change,k1,v1=merge(k,v)
@@ -379,7 +379,7 @@ filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
 # rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
 
-filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
+filter_impr_dic=sc.parallelize(sc.textFile(filter_path).take(10000)).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
 
 
 filter_impr_dic=sc.broadcast(filter_impr_dic)
