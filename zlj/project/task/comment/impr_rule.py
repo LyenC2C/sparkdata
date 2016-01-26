@@ -120,7 +120,7 @@ emo_set=None
 #     emo_set.add(line.strip().decode('utf-8'))
 # emo_set=emo_set-neg_set-degree_set
 
-people = ["宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
+people = ["朋友","宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
 
 conf = SparkConf()
 conf.set("spark.hadoop.validateOutputSpecs", "false")
@@ -154,8 +154,6 @@ def rule_extract(x):
     emo=''
     find_index=-1
     back_find=-1
-
-
     emo_list=[]# 优化  一句话里有几个情感
     tag_index=zip(tags,xrange(len(tags)))
     words_index=zip(tags,xrange(len(words)))
@@ -188,7 +186,6 @@ def rule_extract(x):
             back_find=1
         # else:
         #     pairs.append([u'商品',degree,neg,emo]) # 前面没哟属性词，再看后面 ，在最后处理只有情感词的情况
-
     property=[]
     find=-1
     if back_find==-1:#不错的宝贝
@@ -201,7 +198,7 @@ def rule_extract(x):
                         break
             if find==-1:
                 pairs.append([u'商品',degree,neg,emo])
-    return [ ":".join(i) for i in pairs]
+    return "@@".join([ ":".join(i) for i in pairs])
 
 
 

@@ -137,78 +137,7 @@ def merge(k,v):
 或者情感往后缀   情感词-否定词
 
 '''
-
-emo_set=set()
-def parse_rule_again(impr):
-    words=[]
-    tags=[]
-    for kv in impr.split(',').split('\002'):
-        k,v=kv.split('_')
-        words.append(k)
-        tags.append(v)
-
-
-
-def getfield(x,dic):
-    lv=x.split()
-    rs=[]
-    ls=[]
-    if len(lv)!=5: return None
-    else:
-        try:
-            item_id,feed_id,user_id,feed,impr=lv
-            neg=0 #默认中评
-            for i in impr.split('|'):
-                ts=i.split(',')
-                flag,scores,neg_word=pos_neg(ts[0])
-                neg+=flag
-                if ts[-1] in f_map['kv_bad']:# filter  dic 两者并不相同
-                    ls.append(i+'_'+scores)
-                    continue
-                if ":" in i:
-                    k,v=ts[-1].split(':')
-                    if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
-                    if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
-                    change,k1,v1=merge(k,v)
-                    if change==False and  (not dic.has_key(k1+":"+v1)):
-                        ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
-                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
-                    ts[-1]=k+":"+v
-                    ls.append(",".join(ts)+'_'+scores) #改写写回
-                else:
-                    ls.append(i+'_'+scores)
-            if neg>0:neg=1
-            elif neg==0:neg=0
-            else: neg=-1
-            return [item_id,feed_id,user_id,feed,'|'.join(ls),neg,'|'.join(rs)]
-        except:return None
-    # return feed+'\t'+'|'.join(ls)
-
-
-
-neg_line="不是 不太 不能 不可以 没有 不 不行 木有 没  未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
-
-neg_path='/user/zlj/data/neg'
-pos_path='/user/zlj/data/pos'
-neg_list=sc.textFile(neg_path).map(lambda x:x.strip()).collect()
-neg_add='不靠谱 '
-for word in neg_add.split():
-    neg_list.append(word.strip().decode('utf-8'))
-neg_set=sc.broadcast(neg_list)
-
-# 极
-pos_add='快 很快 好吃 高 实惠 可以 超高'
-pos_list=sc.textFile(pos_path).map(lambda x:x.strip()).collect()
-for word in pos_add.split():
-    pos_list.append(word.strip().decode('utf-8'))
-pos_set=sc.broadcast(pos_list)
-
-pos_emo_set=set(pos_set.value)
-neg_emo_set=set(neg_set.value)
-neg_set    =set([i.strip().decode('utf-8') for  i in neg_line.split()])
-
-
-degree=u'''
+degree_line=u'''
 更_2
 更加_2
 很_2
@@ -262,13 +191,166 @@ very_3
 不是一般_3
 '''
 degree_map={}
-for kv in degree.split():
+for kv in degree_line.split():
     if len(kv)<1:continue
     k,v=kv.split('_')
     degree_map[k]=int(v)
 
+degree_set=set()
+
+for kv in degree_line.split():
+    lv=kv.strip().split('_')
+    if len(lv)!=2:continue
+    k,v =lv
+    degree_set.add(k)
+
+
+
+neg_line="不是 不太 不能 不可以 没有 不 不行 木有 没  未 别 莫 勿 不够 不必 甭 不曾 不怎么 不如 无 不是 并未 不太 绝不 谈不上 看不出 达不到 并非 从不 从没 毫不 不肯 有待 无法 没法 毫无 没有什么 没什么"
+
+neg_path='/user/zlj/data/neg'
+pos_path='/user/zlj/data/pos'
+neg_list=sc.textFile(neg_path).map(lambda x:x.strip()).collect()
+neg_add='不靠谱 '
+for word in neg_add.split():
+    neg_list.append(word.strip().decode('utf-8'))
+neg_set_bc=sc.broadcast(neg_list)
+
+# 极
+pos_add='快 很快 好吃 高 实惠 可以 超高'
+pos_list=sc.textFile(pos_path).map(lambda x:x.strip()).collect()
+for word in pos_add.split():
+    pos_list.append(word.strip().decode('utf-8'))
+pos_set_bc=sc.broadcast(pos_list)
+
+pos_emo_set=set(pos_set_bc.value)
+neg_emo_set=set(neg_set_bc.value)
+
+neg_set    =set([i.strip().decode('utf-8') for  i in neg_line.split()])
+
+
+
+emo_set=set()
+emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
+neg_set_bc=sc.broadcast(emo_rdd)
+emo_set=set(neg_set_bc.value)
+emo_set=emo_set-neg_set-degree_set
+
+people = ["朋友","宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
+
+def rule_extract(x):
+    # item_id,tmp=x.replace('(','').replace(')','').split(',')
+    # user_id,title=tmp.split('\001')
+    title=x
+    words=[]
+    tags=[]
+    for index,kv in enumerate(title.split('\002')):
+        if '_' not in kv:continue
+        if len(kv.split('_'))!=2:continue
+        word,tag=kv.split('_')
+        if not filter(tag[0]):continue
+        if word in people:continue
+        words.append(word)
+        tags.append(tag)
+    neg=''
+    degree=''
+    emo=''
+    find_index=-1
+    back_find=-1
+    emo_list=[]# 优化  一句话里有几个情感
+    tag_index=zip(tags,xrange(len(tags)))
+    words_index=zip(tags,xrange(len(words)))
+    pairs=[]
+    for index,word in enumerate(words):#find  degree neg emo
+        if word in neg_set:neg=word
+        if word in degree_set:degree=word
+        back_find=-1
+        if word in emo_set:
+            emo=word
+            find_index=index
+            break
+    index=find_index
+    tag_back=tag_index[:index][::-1]
+    property=[]
+    for k,v in tag_back: #东西保湿  gobakck
+        if k[0] =='n':
+            if neg=='':
+                for id,word in enumerate(words[index:]):
+                    if word in degree:degree=word
+                    if word in neg_set:
+                        neg=word
+                        if id<len(words):neg=word+words[id+1]#东西保湿不太好
+                        break
+            property.append(words[v])
+
+    if len(emo)>0:
+        if len(property)>0:
+            pairs.append([' '.join(property[::-1]),degree,neg,emo])
+            back_find=1
+        # else:
+        #     pairs.append([u'商品',degree,neg,emo]) # 前面没哟属性词，再看后面 ，在最后处理只有情感词的情况
+    property=[]
+    find=-1
+    if back_find==-1:#不错的宝贝
+        if len(emo)>0:
+            for k,v in tag_index[index:]:
+                if k[0] =='n':
+                    if emo!=words[v]: #好评=好评
+                        pairs.append([words[v],degree,neg,emo])
+                        find=1
+                        break
+            if find==-1:
+                pairs.append([u'商品',degree,neg,emo])
+    return "@@".join([ ":".join(i) for i in pairs])
+
+
+# 有词性
+def getfield(x,dic):
+    lv=x.split()
+    rs=[]
+    ls=[]
+    if len(lv)!=3: return None
+    else:
+        try:
+            item_id,user_id,impr=lv
+            neg=0 #默认中评
+            for i in impr.split('|'):
+                ts=i.split(',')
+                flag,scores,neg_word=pos_neg(ts[0])
+                neg+=flag
+                if ts[-1] in f_map['kv_bad']:# filter  dic 两者并不相同
+                    ls.append(i+'_'+scores)
+                    continue
+                # if ":" not  in ts[-1]:
+                #     find_kv=rule_extract(ts[0])
+                #     if len(find_kv)>0:
+                #         ts.append(find_kv)#重新加入rule捕获的tag
+                if ":" in ts[-1]:
+                    k,v=ts[-1].split(':')
+                    if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
+                    if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
+                    change,k1,v1=merge(k,v)
+                    if change==False and  (not dic.has_key(k1+":"+v1)):
+                        ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
+                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
+                    ts[-1]=k+":"+v
+                    ls.append(",".join(ts)+'_'+scores) #改写写回
+                else:
+                    ls.append(i+'_'+scores)
+            if neg>0:neg=1
+            elif neg==0:neg=0
+            else: neg=-1
+            return [item_id,user_id,'|'.join(ls),neg,'|'.join(rs)]
+        except:return None
+    # return feed+'\t'+'|'.join(ls)
+
+
+
+
+
 def pos_neg(words):
-    words_set=set(words.split('\002'))
+
+    words_set=set([i.split('_')[0] for i in words.split('\002')]) #鱼轮_n很_d好_a
     lv=[]
     for word in words_set: #加入程度
         if degree_map.has_key(word):lv.append(degree_map.get(word))
