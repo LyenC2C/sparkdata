@@ -111,15 +111,15 @@ neg_line=u"不是 不太 不能 不可以 没有 不 不行 木有 没  未 别 
 
 for k in neg_line.split():neg_set.add(k)
 
-emo_rdd=sc.textFile('/user/zlj/data/emo_1').collect()
-neg_set_bc=sc.broadcast(emo_rdd)
-emo_set=set(neg_set_bc.value)
+# emo_rdd=sc.textFile('/user/zlj/data/emo_1').collect()
+# neg_set_bc=sc.broadcast(emo_rdd)
+# emo_set=set(neg_set_bc.value)
 
 
 
-# emo_set=set()
-# for line in open('D:\\data-emo_1'):
-#     emo_set.add(line.strip().decode('utf-8'))
+emo_set=set()
+for line in open('D:\\data-emo_1'):
+    emo_set.add(line.strip().decode('utf-8'))
 
 
 people = ["宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
@@ -186,9 +186,10 @@ def rule_extract(x):
         if len(emo)>0:
             for k,v in tag_index[index:]:
                 if k =='n':
-                    pairs.append([words[v],degree,neg,emo])
-                    find=1
-                    break
+                    if emo!=words[v]: #好评=好评
+                        pairs.append([words[v],degree,neg,emo])
+                        find=1
+                        break
             if find==-1:
                 pairs.append([u'商品',degree,neg,emo])
     return [ ":".join(i) for i in pairs]
@@ -212,11 +213,12 @@ def rule_extract(x):
 import  re
 
 fuhao = '[,.!~;:?，。！～；：？…— \t]'.decode('utf-8')
+fuhao_seg = '_x_w'.decode('utf-8')
 def fenju(feed):
-    # sentence = re.sub(fuhao,' ',feed)
+    sentence = re.sub(fuhao,' ',feed)
     # print sentence
-    sentence=feed
-    ss = sentence.split("_w")
+    # sentence=feed
+    ss = sentence.split("  ")
     #ss = re.split('[,.!~;:?，。！～；：？…— \t]', line.strip())
     #sss = []
     result = []
@@ -235,17 +237,17 @@ def f(x):
 
 
 
-# feed=u'看着_v 好_a 粉嫩_z'
-# print '\t'.join(fenju(feed))
+feed=u'态度_n 好_a '
+print '\t'.join(fenju(feed))
 
-conf = SparkConf()
-conf.set("spark.hadoop.validateOutputSpecs", "false")
-sc = SparkContext(appName="impr",conf=conf)
-sqlContext = SQLContext(sc)
-hiveContext = HiveContext(sc)
-rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
-
-rdd.map(lambda x:f(x)).saveAsTextFile('/user/zlj/temp/parse')
+# conf = SparkConf()
+# conf.set("spark.hadoop.validateOutputSpecs", "false")
+# sc = SparkContext(appName="impr",conf=conf)
+# sqlContext = SQLContext(sc)
+# hiveContext = HiveContext(sc)
+# rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
+#
+# rdd.map(lambda x:f(x)).saveAsTextFile('/user/zlj/temp/parse')
 
 
 
