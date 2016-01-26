@@ -372,7 +372,9 @@ def pos_neg(words):
 
 
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-path='/user/zlj/data/feed_2015_alicut_parsev3/*'
+# path='/user/zlj/data/feed_2015_alicut_parsev3/*'
+
+path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
@@ -394,7 +396,7 @@ rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lam
 rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v3')
-hiveContext.sql('create table t_zlj_feed2015_parse_v3 as select * from temp_zlj')
+hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v4')
+hiveContext.sql('create table t_zlj_feed2015_parse_v4 as select * from temp_zlj')
 
 
