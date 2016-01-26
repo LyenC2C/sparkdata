@@ -58,7 +58,7 @@ for  i in '穿 不知道 件 款 以后 后 儿 天 装 处 放  掉 根 \' 易 
 bad_kv_path='/user/zlj/data/bad_kv_0120'
 bad_kv_list=sc.textFile(bad_kv_path).map(lambda x:x.strip()).collect()
 bad_kv_set=sc.broadcast(bad_kv_list)
-for i in bad_kv_set.value:f_map['kv_bad'].add(i.strip())
+# for i in bad_kv_set.value:f_map['kv_bad'].add(i.strip())
 
 
 #分是五分。 句法分析分析不出来的
@@ -398,3 +398,6 @@ hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v4')
 hiveContext.sql('create table t_zlj_feed2015_parse_v4 as select * from temp_zlj')
 
 
+
+
+# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4/').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).filter(lambda x:x is not None).count()
