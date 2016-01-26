@@ -36,11 +36,11 @@ def f1(line):
     try:
         ss = line.strip().split('\t',3)
         #zhengwen = ""
-        # ts = ss[0]
+        ts = ss[0]
         # for ln in ss[3:]:
         #     zhengwen += ln
         # l = len(zhengwen)
-        # result = []
+        result = []
         zhengwen = ss[3]
         ob = json.loads(valid_jsontxt(zhengwen))
         # ob = json.loads(valid_jsontxt(zhengwen[zhengwen.find("({") + 1:l-1]))
@@ -71,7 +71,7 @@ def f1(line):
             total_sold = item.get("totalSoldQuantity",0)
             #order_cost = item.get("orderCost",0)
             #flag = "0"
-            lv.append(valid_jsontxt(item_id))
+            lv.append(str(valid_jsontxt(item_id)))
             lv.append(f_coding(item_title))
             lv.append(float_k(r_price))
             lv.append(float_k(s_price))
@@ -89,10 +89,17 @@ def f1(line):
 
 def f2(line):
     ss = line.strip().split('\001')
+    # ss[9] = float(ss[9])
     item_id = ss[0]
     s_price = float(ss[9])
     bc_type = valid_jsontxt(ss[8])
-    return [item_id,s_price,bc_type]
+    lv = []
+    lv.append(item_id)
+    lv.append(s_price)
+    lv.append(bc_type)
+    #return [item_id,s_price,bc_type]
+    # return lv
+    return lv
 
 def f3(line):
     ss = line.strip().split('\001')
@@ -119,7 +126,8 @@ def quchong_1(x, y):
 
 def quchong_2(x, y):
     item_list = y
-    if len(item_list) > 1:
+    #lv = []
+    if len(item_list) == 2:
         if len(item_list[0]) == 2:
             item_list[1][2] = item_list[0][0]
             item_list[1][3] = item_list[0][1]
@@ -128,7 +136,24 @@ def quchong_2(x, y):
             item_list[0][2] = item_list[1][0]
             item_list[0][3] = item_list[1][1]
             y = item_list[0]
-    return (x, y)
+        # result = [x] + y
+        # lv = []
+        # for ln in result:
+        #     lv.append(str(valid_jsontxt(ln)))
+        # return "\001".join(lv)
+        #return str(x) + "\001" + str(len(item_list)) + '\001' + str(type(y)) + "\001" + str(len(lv))
+        return (x, y)
+    elif len(item_list[0]) > 2:
+        y = item_list[0]
+        # result = [x] + y
+        # lv = []
+        # for ln in result:
+        #     lv.append(str(valid_jsontxt(ln)))
+        # # return str(type(x)) + "\001" + str(len(item_list)) + "\001" + str(len(item_list[0]))
+        # return "\001".join(lv)
+        return (x, y)
+    else:
+        return None
 
 def quchong_3(x, y):
     max = 0
@@ -149,17 +174,18 @@ def quchong_3(x, y):
     return "\001".join(lv)
 
 #s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + iteminfo_day #today's t_base_ec_shop_dev
-s1 = "/commit/shopitem2/" + today #today
+# s1 = "/commit/shopitem2/" + today #today
+s1 = "/commit/shopitem2/20160112/shop.item.crawler171.2016-01-12"
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=" + iteminfo_day #today's t_base_ec_item_dev
 s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #yesterday
 
 # bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filter(lambda x:x!=None).collectAsMap())
-#rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
 rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): quchong_2(x, y)).filter(lambda x:x!=None)
+# rdd.saveAsTextFile('/user/wrt/sale_tmp')
 rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
 rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
 #st = s.find('2015')
