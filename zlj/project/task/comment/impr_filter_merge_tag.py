@@ -333,7 +333,7 @@ def getfield(x,dic):
                 try:
                     k,v=ts[-1].split('_')[0].split(':')
                 except:
-                    print i
+                    print f_coding(i)
                     continue
                 if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
                 if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
