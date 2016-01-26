@@ -235,6 +235,13 @@ emo_set=emo_set-neg_set-degree_set
 
 people = ["朋友","宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
 
+
+tag_f=set(u'mbceopquyrw')
+def filter_t(tag):
+    if tag in tag_f:
+        return False
+    else: return True
+
 def rule_extract(x):
     # item_id,tmp=x.replace('(','').replace(')','').split(',')
     # user_id,title=tmp.split('\001')
@@ -245,7 +252,7 @@ def rule_extract(x):
         if '_' not in kv:continue
         if len(kv.split('_'))!=2:continue
         word,tag=kv.split('_')
-        if not filter(tag[0]):continue
+        if not filter_t(tag[0]):continue
         if word in people:continue
         words.append(word)
         tags.append(tag)
