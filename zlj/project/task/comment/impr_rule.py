@@ -213,7 +213,7 @@ import  re
 fuhao = '[,.!~;:?，。！～；：？…— \t]'.decode('utf-8')
 fuhao_seg = '_x_w'.decode('utf-8')
 def fenju(feed):
-    sentence = re.sub(fuhao,' ',feed)
+    sentence = re.sub(fuhao_seg,' ',feed)
     # print sentence
     # sentence=feed
     ss = sentence.split("  ")
