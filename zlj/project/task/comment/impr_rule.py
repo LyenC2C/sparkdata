@@ -116,9 +116,9 @@ for k in neg_line.split():neg_set.add(k)
 emo_set=None
 
 # emo_set=set()
-# for line in open('D:\\data-emo_1'):
+# for line in open('D:\\emo_all'):
 #     emo_set.add(line.strip().decode('utf-8'))
-
+# emo_set=emo_set-neg_set-degree_set
 
 people = ["宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
 
@@ -161,7 +161,7 @@ def rule_extract(x):
     tag_back=tag_index[:index][::-1]
     property=[]
     for k,v in tag_back: #东西保湿  gobakck
-        if k =='n':
+        if k[0] =='n':
             if neg=='':
                 for id,word in enumerate(words[index:]):
                     if word in degree:degree=word
@@ -183,7 +183,7 @@ def rule_extract(x):
     if back_find==-1:#不错的宝贝
         if len(emo)>0:
             for k,v in tag_index[index:]:
-                if k =='n':
+                if k[0] =='n':
                     if emo!=words[v]: #好评=好评
                         pairs.append([words[v],degree,neg,emo])
                         find=1
@@ -238,8 +238,8 @@ def f(x):
 
 
 
-# feed=u'态度_n 好_a '
-# print '\t'.join(fenju(feed))
+feed=u'很_d 牢固_a'
+print '\t'.join(fenju(feed))
 
 conf = SparkConf()
 conf.set("spark.hadoop.validateOutputSpecs", "false")
@@ -250,6 +250,7 @@ hiveContext = HiveContext(sc)
 emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
 neg_set_bc=sc.broadcast(emo_rdd)
 emo_set=set(neg_set_bc.value)
+emo_set=emo_set-neg_set-degree_set
 
 rdd=sc.parallelize(sc.textFile('/user/zlj/temp/table_t_zlj_feed_parse_corpus_2015_seg/part-00000').take(10000))
 

@@ -45,9 +45,17 @@ from pyspark.sql import *
 # sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed_parse_corpus_2015/*').coalesce(16).saveAsTextFile('/user/zlj/data/t_zlj_feed_parse_corpus_2015')
 
 
-fw=open('D:\\emo_all','w')
-kv=set()
-for line in open('D:\\data-emo_1'):
-    kv.add(line.split()[-1])
-for i in kv:
-    fw.write(i+'\n')
+# fw=open('D:\\emo_all','w')
+# kv=set()
+# for index,line in enumerate(open('D:\\data-emo_1')):
+#     if index>7450:break
+#     kv.add(line.split()[-1])
+# ##  for i in kv:
+# #     fw.write(i+'\n')
+# print len(kv)
+
+for line in open('E:\\tttt'):
+    kv =line.split()
+    print kv[1]
+    # if kv[0]=='0':
+    #     print kv[2]
