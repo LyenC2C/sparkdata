@@ -174,19 +174,21 @@ def rule_extract(x):
                         break
             property.append(words[v])
 
-    if len(property)>0:
-        pairs.append([' '.join(property[::-1]),degree,neg,emo])
-    else:
-        pairs.append([u'商品',degree,neg,emo])
+    if len(emo)>0:
+        if len(property)>0:
+            pairs.append([' '.join(property[::-1]),degree,neg,emo])
+        else:
+            pairs.append([u'商品',degree,neg,emo])
     back_find=1
     property=[]
     if back_find==-1:#不错的宝贝
-        for k,v in tag_index[index:]:
-            if k =='n':
-                pairs.append([words[v],degree,neg,emo])
-                break
-        if back_find==-1:
-            pairs.append([u'商品',degree,neg,emo])
+        if len(emo)>0:
+            for k,v in tag_index[index:]:
+                if k =='n':
+                    pairs.append([words[v],degree,neg,emo])
+                    break
+            if back_find==-1:
+                pairs.append([u'商品',degree,neg,emo])
     return [ " ".join(i) for i in pairs]
 
 
@@ -209,9 +211,10 @@ import  re
 
 fuhao = '[,.!~;:?，。！～；：？…— \t]'.decode('utf-8')
 def fenju(feed):
-    sentence = re.sub(fuhao,' ',feed)
+    # sentence = re.sub(fuhao,' ',feed)
     # print sentence
-    ss = sentence.split("   ")
+    sentence=feed
+    ss = sentence.split("_w")
     #ss = re.split('[,.!~;:?，。！～；：？…— \t]', line.strip())
     #sss = []
     result = []
