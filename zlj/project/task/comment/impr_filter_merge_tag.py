@@ -351,7 +351,7 @@ def pos_neg(words):
     lv=[]
     for word in words_set: #加入程度
         if degree_map.has_key(word):lv.append(degree_map.get(word))
-    degree=max(lv)
+    degree=0 if len(lv)==0 else max(lv)
     neg = len(neg_set&words_set)
     if neg%2==0: neg=0
     else :neg=1
