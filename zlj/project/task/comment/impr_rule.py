@@ -221,6 +221,7 @@ def fenju(feed):
     for ln in ss:
         rs=rule_extract(ln.strip())
         if len(rs)>0:result.append("".join(ln.strip())+"|"+'\t'.join(rs))
+        else:result.append("".join(ln.strip()))
     return result
 
 
