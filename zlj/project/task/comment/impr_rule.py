@@ -117,7 +117,7 @@ for k in neg_line.split():neg_set.add(k)
 
 emo_rdd=sc.textFile('/user/zlj/data/emo_1').collect()
 neg_set_bc=sc.broadcast(emo_rdd)
-emo_set=set(neg_set_bc)
+emo_set=set(neg_set_bc.value)
 # for v in neg_set_bc:emo_set.add(v)
 # for line in open('D:\\data-emo_1'):
 #     emo_set.add(line.strip().decode('utf-8'))
