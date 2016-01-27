@@ -391,8 +391,8 @@ def pos_neg(words):
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
-# path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
-path='/user/zlj/data/1'
+path='/user/zlj/data/feed_2015_alicut_parsev4/*'
+# path='/user/zlj/data/1'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
