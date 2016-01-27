@@ -121,9 +121,9 @@ def merge(k,v):
     if v in f_map['jiage_neg']:
         k=u'价格'
         v=u'贵'
-    if k+":"+v in (u'物:超',u'物:值',):
-        k=u'价格'
-        v=u'实惠'
+    # if k+":"+v in (u'物:超',u'物:值',):
+    #     k=u'价格'
+    #     v=u'实惠'
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
 
