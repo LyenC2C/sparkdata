@@ -412,6 +412,7 @@ filter_impr_dic=sc.broadcast(filter_impr_dic)
 
 hiveContext.sql('use wlbase_dev')
 
+
 # def try_getfield(x,dic):
 #     try:
 #         return getfield(x,dic)
