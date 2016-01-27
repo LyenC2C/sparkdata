@@ -121,6 +121,7 @@ def merge(k,v):
     if v in f_map['jiage_neg']:
         k=u'价格'
         v=u'贵'
+    print type(k),type(v),k,v
     # if k+":"+v in (u'物:超',u'物:值',):
     #     k=u'价格'
     #     v=u'实惠'
