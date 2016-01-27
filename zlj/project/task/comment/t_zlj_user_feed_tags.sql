@@ -5,10 +5,10 @@ CREATE TABLE t_zlj_user_feed_tags
   AS
     SELECT
       user_id,
-      concat_ws(' ',collect_set(concat_ws('_', word, CAST(num AS STRING)))) AS feed_tags
+      concat_ws(' ',collect_set(concat_ws('_', word, CAST(num AS STRING),CAST(rn AS STRING)))) AS feed_tags
     FROM
       (
-        select user_id,word,num,ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY num DESC) AS rn
+        select user_id,word ,num,ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY num DESC) AS rn
         from
 
           (
@@ -27,7 +27,7 @@ CREATE TABLE t_zlj_user_feed_tags
                      user_id,
                      impr_c
                    FROM
-                     t_zlj_feed2015_parse_v4
+                     t_zlj_test
                    WHERE LENGTH(impr_c) > 1
                  ) t5
                LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
@@ -38,3 +38,9 @@ CREATE TABLE t_zlj_user_feed_tags
 
       where rn <30
     GROUP BY user_id
+;
+
+
+
+
+select count(1) from  (select user_id from t_zlj_user_feed_tags group by user_id)t
