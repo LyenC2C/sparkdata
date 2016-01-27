@@ -390,7 +390,8 @@ def pos_neg(words):
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
 # path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
-path='/user/zlj/data/feed_2015_alicut_parsev4/*'
+# path='/user/zlj/data/feed_2015_alicut_parsev4/*'
+path='/user/zlj/data/feed_2015_alicut_parsev5_re'
 # path='/user/zlj/data/1'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
@@ -420,8 +421,8 @@ rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lam
 # rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v4_1')
-hiveContext.sql('create table t_zlj_feed2015_parse_v4_1 as select * from temp_zlj')
+hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v5')
+hiveContext.sql('create table t_zlj_feed2015_parse_v5 as select * from temp_zlj')
 
 
 
@@ -433,3 +434,4 @@ hiveContext.sql('create table t_zlj_feed2015_parse_v4_1 as select * from temp_zl
 # sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4_1').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).filter(lambda x:len(x)>0).count()
 
 
+# sc.textFile('/user/zlj/data/feed_2015_alicut_parsev5').repartition(200).saveAsTextFile('/user/zlj/data/feed_2015_alicut_parsev5_re')

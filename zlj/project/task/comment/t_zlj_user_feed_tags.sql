@@ -27,7 +27,7 @@ CREATE TABLE t_zlj_user_feed_tags
                      user_id,
                      impr_c
                    FROM
-                     t_zlj_test
+                     t_zlj_feed2015_parse_v4_1
                    WHERE LENGTH(impr_c) > 1
                  ) t5
                LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
@@ -43,4 +43,3 @@ CREATE TABLE t_zlj_user_feed_tags
 
 
 
-select count(1) from  (select user_id from t_zlj_user_feed_tags group by user_id)t
