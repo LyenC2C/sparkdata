@@ -340,7 +340,7 @@ def getfield(x,dic):
                     if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
                     if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
                     change,k1,v1=merge(k,v)
-                    if change==False and  (f_coding(v1) not in emo_set) or (not dic.has_key(f_coding(k1+":"+v1))):
+                    if change==False and  ((f_coding(v1) not in emo_set) or (not dic.has_key(f_coding(k1+":"+v1)))):
                         ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
                     # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
@@ -430,6 +430,7 @@ hiveContext.sql('create table t_zlj_feed2015_parse_v4_1 as select * from temp_zl
 # sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4/').map(lambda x:x.split('\001')[-1].split('|')).\
 #     flatMap(lambda x:x).filter(lambda x:len(x)>0).count().filter(lambda x:len(x)>0).count()
 
-# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).count()
+# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4_1').map(lambda x:x.split('\001')[-1].split('|')).\
+#     flatMap(lambda x:x).filter(lambda x:len(x)>0).count()
 
 
