@@ -317,44 +317,44 @@ def getfield(x,dic):
     ls=[]
     if len(lv)!=3: return None
     else:
-        try:
-            item_id,user_id,impr=lv
-            neg=0 #默认中评
-            for i in impr.split('|'):
-                ts=i.split(',')
-                flag,scores,neg_word=pos_neg(ts[0])
-                neg+=flag
-                if ts[-1].split('_')[0] in f_map['kv_bad']:# filter  dic 两者并不相同
-                    ls.append(i+'_'+scores)
+        # try:
+        item_id,user_id,impr=lv
+        neg=0 #默认中评
+        for i in impr.split('|'):
+            ts=i.split(',')
+            flag,scores,neg_word=pos_neg(ts[0])
+            neg+=flag
+            if ts[-1].split('_')[0] in f_map['kv_bad']:# filter  dic 两者并不相同
+                ls.append(i+'_'+scores)
+                continue
+            # if ":" not  in ts[-1]:
+                # find_kv=rule_extract(ts[0])
+                # if len(find_kv)>0:
+                #     ts.append(find_kv)#重新加入rule捕获的tag
+            if ":" in ts[-1]:
+                try:
+                    k,v=ts[-1].split('_')[0].split(':')
+                except:
+                    # print f_coding(i)
                     continue
-                # if ":" not  in ts[-1]:
-                    # find_kv=rule_extract(ts[0])
-                    # if len(find_kv)>0:
-                    #     ts.append(find_kv)#重新加入rule捕获的tag
-                if ":" in ts[-1]:
-                    try:
-                        k,v=ts[-1].split('_')[0].split(':')
-                    except:
-                        # print f_coding(i)
-                        continue
-                    if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
-                    if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
-                    change,k1,v1=merge(k,v)
-                    if change==False and  (not dic.has_key(k1+":"+v1)):
-                        ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
-                    # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
-                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
-                    ts[-1]=k+":"+v
-                    ls.append(",".join(ts)+'_'+scores) #改写写回
-                else:
-                    ls.append(i+'_'+scores)
-            if neg>0:neg=1
-            elif neg==0:neg=0
-            else: neg=-1
+                if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
+                if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
+                change,k1,v1=merge(k,v)
+                if change==False and  (not dic.has_key(k1+":"+v1)):
+                    ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
+                # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
+                rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
+                ts[-1]=k+":"+v
+                ls.append(",".join(ts)+'_'+scores) #改写写回
+            else:
+                ls.append(i+'_'+scores)
+        if neg>0:neg=1
+        elif neg==0:neg=0
+        else: neg=-1
 
-            if(len(ls<1)):ls.append(i)
-            return [item_id,user_id,'|'.join(ls),neg,'|'.join(rs)]
-        except:return None
+        if(len(ls<1)):ls.append(i)
+        return [item_id,user_id,'|'.join(ls),neg,'|'.join(rs)]
+        # except:return None
     # return feed+'\t'+'|'.join(ls)
 
 
