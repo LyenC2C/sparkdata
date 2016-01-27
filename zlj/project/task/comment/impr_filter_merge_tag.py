@@ -328,9 +328,9 @@ def getfield(x,dic):
                 ls.append(i+'_'+scores)
                 continue
             if ":" not  in ts[-1]:
-                find_kv=rule_extract(ts[0])
-                if len(find_kv)>0:
-                    ts.append(find_kv)#重新加入rule捕获的tag
+                # find_kv=rule_extract(ts[0])
+                # if len(find_kv)>0:
+                #     ts.append(find_kv)#重新加入rule捕获的tag
             if ":" in ts[-1]:
                 try:
                     k,v=ts[-1].split('_')[0].split(':')
@@ -351,6 +351,7 @@ def getfield(x,dic):
         if neg>0:neg=1
         elif neg==0:neg=0
         else: neg=-1
+        if(len(ls<1)):ls.append(i)
         return [item_id,user_id,'|'.join(ls),neg,'|'.join(rs)]
         # except:return None
     # return feed+'\t'+'|'.join(ls)
