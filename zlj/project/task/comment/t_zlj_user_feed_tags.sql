@@ -27,7 +27,7 @@ CREATE TABLE t_zlj_user_feed_tags
                      user_id,
                      impr_c
                    FROM
-                     t_zlj_feed2015_parse_v3_jion_cat_brand_shop
+                     t_zlj_feed2015_parse_v4
                    WHERE LENGTH(impr_c) > 1
                  ) t5
                LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
@@ -36,5 +36,5 @@ CREATE TABLE t_zlj_user_feed_tags
           )t3
       ) t1
 
-      where rn <20
+      where rn <30
     GROUP BY user_id

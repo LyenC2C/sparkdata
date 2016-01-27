@@ -340,7 +340,7 @@ def getfield(x,dic):
                     if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
                     if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
                     change,k1,v1=merge(k,v)
-                    if change==False and  (not dic.has_key(k1+":"+v1)):
+                    if change==False and  (f_coding(v1) not in emo_set) or (not dic.has_key(f_coding(k1+":"+v1))):
                         ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
                     # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
                     rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
@@ -391,8 +391,9 @@ def pos_neg(words):
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
-path='/user/zlj/data/feed_2015_alicut_parsev4/*'
-# path='/user/zlj/data/1'
+# path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
+# path='/user/zlj/data/feed_2015_alicut_parsev4/*'
+path='/user/zlj/data/1'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
 
@@ -420,12 +421,12 @@ rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lam
 # rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v4')
-hiveContext.sql('create table t_zlj_feed2015_parse_v4 as select * from temp_zlj')
+hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v4_1')
+hiveContext.sql('create table t_zlj_feed2015_parse_v4_1 as select * from temp_zlj')
 
 
 
 
 
-# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4/').map(lambda x:x.split('\001')[-1]).filter(lambda x:len(x)>0).count().flatMap(lambda x:x)\
-#     .filter(lambda x:len(x)>0).count()
+# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4/').map(lambda x:x.split('\001')[-1].split('|')).\
+#     flatMap(lambda x:x).filter(lambda x:len(x)>0).count().filter(lambda x:len(x)>0).count()
