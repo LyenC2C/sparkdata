@@ -351,6 +351,7 @@ def getfield(x,dic):
         if neg>0:neg=1
         elif neg==0:neg=0
         else: neg=-1
+
         if(len(ls<1)):ls.append(i)
         return [item_id,user_id,'|'.join(ls),neg,'|'.join(rs)]
         # except:return None
@@ -413,7 +414,7 @@ def try_getfield(x,dic):
     try:
         return getfield(x,dic)
     except:
-        return None
+        pass
 rdd=sc.textFile(path).map(lambda x:try_getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
 # rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
