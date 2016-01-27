@@ -122,9 +122,9 @@ def merge(k,v):
         k='价格'
         v='贵'
     # print type(k),type(v),k,v
-    if k+":"+v in ('物:超','物:值',):
-        k='价格'
-        v='实惠'
+    # if k+":"+v in ('物:超','物:值',):
+    #     k='价格'
+    #     v='实惠'
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
 
