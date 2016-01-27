@@ -327,10 +327,10 @@ def getfield(x,dic):
                 if ts[-1].split('_')[0] in f_map['kv_bad']:# filter  dic 两者并不相同
                     ls.append(i+'_'+scores)
                     continue
-                # if ":" not  in ts[-1]:
-                    # find_kv=rule_extract(ts[0])
-                    # if len(find_kv)>0:
-                    #     ts.append(find_kv)#重新加入rule捕获的tag
+                if ":" not  in ts[-1]:
+                    find_kv=rule_extract(ts[0])
+                    if len(find_kv)>0:
+                        ts.append(find_kv)#重新加入rule捕获的tag
                 if ":" in ts[-1]:
                     try:
                         k,v=ts[-1].split('_')[0].split(':')
@@ -359,6 +359,7 @@ def getfield(x,dic):
 
 
 
+sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).count()
 
 
 def pos_neg(words):
