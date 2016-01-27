@@ -110,10 +110,10 @@ def merge(k,v):
         k='服务'
         v='好'
     if v in f_map['baozhuang_pos']:
-        k='包装',
+        k='包装'
         v='完好'
     if v in f_map['baozhuang_neg']:
-        k='包装',
+        k='包装'
         v='差'
     if v in f_map['jiage_pos']:
         k='价格'
@@ -122,9 +122,9 @@ def merge(k,v):
         k='价格'
         v='贵'
     # print type(k),type(v),k,v
-    # if k+":"+v in ('物:超','物:值',):
-    #     k='价格'
-    #     v='实惠'
+    if k+":"+v in ('物:超','物:值'):
+        k='价格'
+        v='实惠'
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
 
@@ -341,7 +341,7 @@ def getfield(x,dic):
                 change,k1,v1=merge(k,v)
                 if change==False and  (not dic.has_key(k1+":"+v1)):
                     ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
-                print [f_coding(k1),f_coding(v1),str(flag),neg_word]
+                # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
                 rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
                 ts[-1]=k+":"+v
                 ls.append(",".join(ts)+'_'+scores) #改写写回
