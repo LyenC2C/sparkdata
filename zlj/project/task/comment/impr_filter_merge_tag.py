@@ -408,7 +408,12 @@ filter_impr_dic=sc.broadcast(filter_impr_dic)
 
 hiveContext.sql('use wlbase_dev')
 
-rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+def try_getfield(x,dic):
+    try:
+        return getfield(x,dic)
+    except:
+        return None
+rdd=sc.textFile(path).map(lambda x:try_getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
 # rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
