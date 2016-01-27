@@ -253,6 +253,7 @@ def rule_extract(x):
         if '_' not in kv:continue
         if len(kv.split('_'))!=2:continue
         word,tag=kv.split('_')
+        if len(tag)<1:continue
         if not filter_t(tag[0]):continue
         if word in people:continue
         words.append(word)
