@@ -327,7 +327,7 @@ def getfield(x,dic):
             if ts[-1].split('_')[0] in f_map['kv_bad']:# filter  dic 两者并不相同
                 ls.append(i+'_'+scores)
                 continue
-            if ":" not  in ts[-1]:
+            # if ":" not  in ts[-1]:
                 # find_kv=rule_extract(ts[0])
                 # if len(find_kv)>0:
                 #     ts.append(find_kv)#重新加入rule捕获的tag
