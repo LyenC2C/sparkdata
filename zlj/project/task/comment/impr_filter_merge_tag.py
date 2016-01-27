@@ -97,34 +97,34 @@ def merge(k,v):
     if modify_map.has_key(k):
         k=modify_map.get(k)
     if v in f_map['good_pos']:
-        v=u'好'
+        v='好'
     if v in f_map['good_neg']:
-        v=u'差'
+        v='差'
     if (v in f_map['wuliu_pos']) or(k in f_map['wuliu_pos']) or (k=='快递' and v=='好'):#如果是物流的数据 直接返回物流
-        k=u'物流'
-        v=u'快'
+        k='物流'
+        v='快'
     if v in f_map['wuliu_neg']:#如果是物流的数据 直接返回物流
-        k=u'物流'
-        v=u'慢'
+        k='物流'
+        v='慢'
     if v in  f_map['fuwu_pos'] or k in f_map['fuwu_pos']:
-        k=u'服务'
-        v=u'好'
+        k='服务'
+        v='好'
     if v in f_map['baozhuang_pos']:
-        k=u'包装',
-        v=u'完好'
+        k='包装',
+        v='完好'
     if v in f_map['baozhuang_neg']:
-        k=u'包装',
-        v=u'差'
+        k='包装',
+        v='差'
     if v in f_map['jiage_pos']:
-        k=u'价格'
-        v=u'实惠'
+        k='价格'
+        v='实惠'
     if v in f_map['jiage_neg']:
-        k=u'价格'
-        v=u'贵'
-    print type(k),type(v),k,v
-    # if k+":"+v in (u'物:超',u'物:值',):
-    #     k=u'价格'
-    #     v=u'实惠'
+        k='价格'
+        v='贵'
+    # print type(k),type(v),k,v
+    if k+":"+v in ('物:超','物:值',):
+        k='价格'
+        v='实惠'
     if  (k1==k)==False or (v1==v)==False:return True,k,v  #发生改变
     else: return False,k,v
 
