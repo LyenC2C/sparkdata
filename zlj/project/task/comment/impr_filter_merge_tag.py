@@ -307,7 +307,7 @@ def rule_extract(x):
                         break
             if find==-1:
                 pairs.append([u'商品',degree,neg,emo])
-    return "@@".join([ ":".join(i) for i in pairs])
+    return "@@".join([ i[0]+":"+i[3]+"_"+i[2]+"_"+i[1] for i in pairs])
 
 
 # 有词性
