@@ -1,7 +1,7 @@
 
 drop table if EXISTS  t_zlj_user_feed_tags;
 
-CREATE TABLE t_zlj_user_feed_tags
+CREATE TABLE t_zlj_user_feed_tags_v5
   AS
     SELECT
       user_id,
@@ -10,7 +10,6 @@ CREATE TABLE t_zlj_user_feed_tags
       (
         select user_id,word ,num,ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY num DESC) AS rn
         from
-
           (
           SELECT
              user_id,
@@ -27,7 +26,7 @@ CREATE TABLE t_zlj_user_feed_tags
                      user_id,
                      impr_c
                    FROM
-                     t_zlj_feed2015_parse_v4_1
+                     t_zlj_feed2015_parse_v5
                    WHERE LENGTH(impr_c) > 1
                  ) t5
                LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word

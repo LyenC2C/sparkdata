@@ -307,10 +307,10 @@ def rule_extract(x):
                         break
             if find==-1:
                 pairs.append([u'商品',degree,neg,emo])
-    return "@@".join([ i[0]+":"+i[3]+"_"+i[2]+"_"+i[1] for i in pairs])
+    return [ i[0]+":"+i[3]+"_"+i[2]+"_"+i[1] for i in pairs]
 
 
-# 有词性
+#
 def getfield(x,dic):
     lv=x.split()
     rs=[]
@@ -322,32 +322,35 @@ def getfield(x,dic):
             neg=0 #默认中评
             for i in impr.split('|'):
                 ts=i.split(',')
+                tags=ts[3:]
                 flag,scores,neg_word=pos_neg(ts[0])
                 neg+=flag
                 if ts[-1].split('_')[0] in f_map['kv_bad']:# filter  dic 两者并不相同
                     ls.append(i+'_'+scores)
                     continue
-                if ":" not  in ts[-1]:
-                    find_kv=rule_extract(ts[0])
-                    if len(find_kv)>0:
-                        ts.append(find_kv)#重新加入rule捕获的tag
-                if ":" in ts[-1]:
-                    try:
-                        k,v=ts[-1].split('_')[0].split(':')
-                    except:
-                        # print f_coding(i)
-                        continue
-                    if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
-                    if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
-                    change,k1,v1=merge(k,v)
-                    if change==False and  ((f_coding(v1) not in emo_set) or (not dic.has_key(f_coding(k1+":"+v1)))):
-                        ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
-                    # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
-                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
-                    ts[-1]=k+":"+v
-                    ls.append(",".join(ts)+'_'+scores) #改写写回
-                else:
-                    ls.append(i+'_'+scores)
+                # if ":" not  in ts[-1]:
+                find_kv=rule_extract(ts[0])
+                if len(find_kv)>0:
+                    tags.extend(find_kv)#依存句法分析的标签也通过rule过滤一遍  这需要优化
+                tag_v=set([tag.split('_')[0] for tag in  tags])
+                for tag in tag_v:
+                    if ":" in tag:
+                        try:
+                            k,v=tag.split(':')
+                        except:
+                            # print f_coding(i)
+                            continue
+                        if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
+                        if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
+                        change,k1,v1=merge(k,v)
+                        if change==False and  ((f_coding(v1) not in emo_set) or (not dic.has_key(f_coding(k1+":"+v1)))):
+                            ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
+                        # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
+                        rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
+                        ts[-1]=k+":"+v
+                        ls.append(",".join(ts)+'_'+scores) #改写写回
+                    else:
+                        ls.append(i+'_'+scores)
             if neg>0:neg=1
             elif neg==0:neg=0
             else: neg=-1
@@ -359,9 +362,8 @@ def getfield(x,dic):
 
 
 
-
+# 分句正负面
 def pos_neg(words):
-
     words_set=set([i.split('_')[0] for i in words.split('\002')]) #鱼轮_n很_d好_a
     lv=[]
     for word in words_set: #加入程度
@@ -391,7 +393,8 @@ def pos_neg(words):
 
 # path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
 # path='/user/zlj/data/feed_2015_alicut_parsev4/*'
-path='/user/zlj/data/feed_2015_alicut_parsev5_re'
+# path='/user/zlj/data/feed_2015_alicut_parsev5_re'
+path='/user/zlj/data/feed_2015_alicut_parsev5_re/part-00000'
 # path='/user/zlj/data/1'
 
 filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
@@ -421,8 +424,8 @@ rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lam
 # rdd.fold()
 df=hiveContext.createDataFrame(rdd,schema1)
 hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v5')
-hiveContext.sql('create table t_zlj_feed2015_parse_v5 as select * from temp_zlj')
+hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v5_1')
+hiveContext.sql('create table t_zlj_feed2015_parse_v5_1 as select * from temp_zlj')
 
 
 
@@ -431,7 +434,7 @@ hiveContext.sql('create table t_zlj_feed2015_parse_v5 as select * from temp_zlj'
 # sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4/').map(lambda x:x.split('\001')[-1].split('|')).\
 #     flatMap(lambda x:x).filter(lambda x:len(x)>0).count().filter(lambda x:len(x)>0).count()
 
-# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4_1').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).filter(lambda x:len(x)>0).count()
+# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v5').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).filter(lambda x:len(x)>0).count()
 
 
 # sc.textFile('/user/zlj/data/feed_2015_alicut_parsev5').repartition(200).saveAsTextFile('/user/zlj/data/feed_2015_alicut_parsev5_re')
