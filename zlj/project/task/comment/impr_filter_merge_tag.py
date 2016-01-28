@@ -307,7 +307,7 @@ def rule_extract(x):
                         break
             if find==-1:
                 pairs.append([u'商品',degree,neg,emo])
-    return "@@".join([ i[0]+":"+i[3]+"_"+i[2]+"_"+i[1] for i in pairs])
+    return [ i[0]+":"+i[3]+"_"+i[2]+"_"+i[1] for i in pairs]
 
 
 # 有词性
@@ -322,32 +322,34 @@ def getfield(x,dic):
             neg=0 #默认中评
             for i in impr.split('|'):
                 ts=i.split(',')
+                tags=ts[3:]
                 flag,scores,neg_word=pos_neg(ts[0])
                 neg+=flag
                 if ts[-1].split('_')[0] in f_map['kv_bad']:# filter  dic 两者并不相同
                     ls.append(i+'_'+scores)
                     continue
-                if ":" not  in ts[-1]:
-                    find_kv=rule_extract(ts[0])
-                    if len(find_kv)>0:
-                        ts.append(find_kv)#重新加入rule捕获的tag
-                if ":" in ts[-1]:
-                    try:
-                        k,v=ts[-1].split('_')[0].split(':')
-                    except:
-                        # print f_coding(i)
-                        continue
-                    if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
-                    if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
-                    change,k1,v1=merge(k,v)
-                    if change==False and  ((f_coding(v1) not in emo_set) or (not dic.has_key(f_coding(k1+":"+v1)))):
-                        ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
-                    # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
-                    rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
-                    ts[-1]=k+":"+v
-                    ls.append(",".join(ts)+'_'+scores) #改写写回
-                else:
-                    ls.append(i+'_'+scores)
+                # if ":" not  in ts[-1]:
+                find_kv=rule_extract(ts[0])
+                if len(find_kv)>0:
+                    tags.extend(find_kv)#重新加入rule捕获的tag  所有标签先通过rule过滤一遍
+                for tag in tags:
+                    if ":" in tag:
+                        try:
+                            k,v=tag.split('_')[0].split(':')
+                        except:
+                            # print f_coding(i)
+                            continue
+                        if k in f_map['k_bad']:ls.append(i+'_'+scores); continue
+                        if v in f_map['v_bad']:ls.append(i+'_'+scores); continue
+                        change,k1,v1=merge(k,v)
+                        if change==False and  ((f_coding(v1) not in emo_set) or (not dic.has_key(f_coding(k1+":"+v1)))):
+                            ls.append(i+'_'+scores) ; continue #没有改变并且不再字典里面
+                        # print [f_coding(k1),f_coding(v1),str(flag),neg_word]
+                        rs.append(f_coding(k1)+":"+f_coding(v1)+":"+str(flag)+":"+neg_word)
+                        ts[-1]=k+":"+v
+                        ls.append(",".join(ts)+'_'+scores) #改写写回
+                    else:
+                        ls.append(i+'_'+scores)
             if neg>0:neg=1
             elif neg==0:neg=0
             else: neg=-1
