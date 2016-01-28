@@ -4,10 +4,10 @@ drop table if EXISTS  t_zlj_user_brand_feed_tags;
 CREATE TABLE t_zlj_user_brand_feed_tags
   AS
   SELECT
-      user_id ,concat_ws(' ',collect_set(concat_ws('$',brand_id,brand_name,feed_tags))) brand_feed_tags
-      from
-  (
-    SELECT
+--       user_id ,concat_ws(' ',collect_set(concat_ws('$',brand_id,brand_name,feed_tags))) brand_feed_tags
+--       from
+--   (
+--     SELECT
       user_id,brand_id,brand_name ,
       concat_ws(':',collect_set(concat_ws('_', word, CAST(num AS STRING)))) AS feed_tags
     FROM
@@ -42,5 +42,5 @@ CREATE TABLE t_zlj_user_brand_feed_tags
 
       where rn <20
     GROUP BY user_id,brand_id,brand_name
-    )t4 group by user_id
+--     )t4 group by user_id
     ;
