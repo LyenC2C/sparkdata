@@ -332,10 +332,11 @@ def getfield(x,dic):
                 find_kv=rule_extract(ts[0])
                 if len(find_kv)>0:
                     tags.extend(find_kv)#依存句法分析的标签也通过rule过滤一遍  这需要优化
-                for tag in tags:
+                tag_v=set([tag.split('_')[0] for tag in  tags])
+                for tag in tag_v:
                     if ":" in tag:
                         try:
-                            k,v=tag.split('_')[0].split(':')
+                            k,v=tag.split(':')
                         except:
                             # print f_coding(i)
                             continue
