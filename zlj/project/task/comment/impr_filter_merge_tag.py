@@ -431,7 +431,7 @@ hiveContext.sql('create table t_zlj_feed2015_parse_v5 as select * from temp_zlj'
 # sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4/').map(lambda x:x.split('\001')[-1].split('|')).\
 #     flatMap(lambda x:x).filter(lambda x:len(x)>0).count().filter(lambda x:len(x)>0).count()
 
-# sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v4_1').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).filter(lambda x:len(x)>0).count()
+sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v5').map(lambda x:x.split('\001')[-1].split('|')).flatMap(lambda x:x).filter(lambda x:len(x)>0).count()
 
 
 # sc.textFile('/user/zlj/data/feed_2015_alicut_parsev5').repartition(200).saveAsTextFile('/user/zlj/data/feed_2015_alicut_parsev5_re')
