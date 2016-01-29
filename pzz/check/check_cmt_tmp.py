@@ -22,6 +22,7 @@ def parse_cmt_new(line_s):
     # ts=str(time.mktime(datetime.datetime.now().timetuple()))
     json_txt = line.strip()[line.find('2(') + 2:-1]
     ob = json.loads(json_txt)
+    print ob
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
         data = ob['data']
         list = []
