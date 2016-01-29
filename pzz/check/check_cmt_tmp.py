@@ -1,5 +1,5 @@
 #coding:utf-8
-
+import time
 import rapidjson as json
 import sys
 
@@ -21,6 +21,8 @@ def parse_cmt_new(line_s):
     # ts ='1445270400'
     # ts=str(time.mktime(datetime.datetime.now().timetuple()))
     json_txt = line.strip()[line.find('2(') + 2:-1]
+    print json_txt
+    time.sleep(1)
     ob = json.loads(json_txt)
     print ob
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
