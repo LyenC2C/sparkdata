@@ -7,7 +7,7 @@ qiantian='20160108'
 hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
 spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
 $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160111 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160113 >> ./log_date/log_$zuotian 2>&1
+sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql 20160112 >> ./log_date/log_$zuotian 2>&1
 
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql $qiantian $zuotian 20160111 20160111 >> ./log_date/log_$zuotian 2>&1
 

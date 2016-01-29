@@ -79,6 +79,9 @@ def parse(line,flag):
     root_cat_id='-'
     root_cat_name='-'
     favor=itemInfoModel.get('favcount','0')
+    picsPath=""
+    picsPath="|".join([i for i in itemInfoModel.get('picsPath',[''])])
+
     if not favor.isdigit(): favor='0'
     trackParams=ob['trackParams']
     BC_type=trackParams.get('BC_type','-')
@@ -117,6 +120,7 @@ def parse(line,flag):
     list.append(location)
     # list.append(str(int(time.time())))
     list.append((ts))
+    # list.append('')
     strlist=[]
     if flag=='insert':
         # for i in list:
@@ -202,7 +206,7 @@ if __name__ == "__main__":
         filepath=sys.argv[2]
         ds_1=sys.argv[3]
         ds=sys.argv[4]
-        rdd=sc.textFile(filepath,100).map(lambda x:try_parse(x,'inc')).filter(lambda x: x is not None)
+        rdd=sc.textFile(filepath,100).map(lambda x:parse(x,'inc')).filter(lambda x: x is not None)
         hiveContext.sql('use wlbase_dev')
         # df=hiveContext.sql('select * from wlbase_dev.t_base_ec_item_dev where ds=%s limit 100'%ds_1)
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s '%ds_1)
