@@ -62,7 +62,9 @@ if __name__ == '__main__':
     for line in sys.stdin:
         ls = parse_cmt_new(line)
         if ls == None:
+            print 'ls , none'
             continue
         for each in ls:
+            print each
             if each != None:
                 print each
