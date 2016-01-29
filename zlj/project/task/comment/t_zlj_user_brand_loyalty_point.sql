@@ -1,5 +1,6 @@
 -- loyalty_points
 
+# 稀疏
 
 drop table  if EXISTS  t_zlj_user_brand_loyalty_point;
 
@@ -12,7 +13,7 @@ FROM
   (
     SELECT
       user_id,
-      sum(score) AS f,
+      round(sum(score),2) AS f,
       concat_ws(' ', collect_set(concat_ws('_', brand_id, brand_name, cast(round(score, 2) AS STRING))))  as brand_loyalty_t
     FROM
       (
@@ -25,7 +26,7 @@ FROM
         FROM
 
           t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
-        WHERE LENGTH(brand_id) > 0
+        WHERE LENGTH(brand_id) > 0    and  user_id rlike   '^\\\\d+$'  and brand_id  rlike   '^\\\\d+$'
         GROUP BY user_id, cat_id, brand_id,brand_name
 
       ) t
