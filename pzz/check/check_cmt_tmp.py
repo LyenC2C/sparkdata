@@ -21,7 +21,7 @@ def parse_cmt_new(line_s):
     # ts ='1445270400'
     # ts=str(time.mktime(datetime.datetime.now().timetuple()))
     json_txt = line.strip()[line.find('3(') + 2:-1]
-    time.sleep(1)
+    #time.sleep(1)
     ob = json.loads(json_txt)
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
         data = ob['data']
