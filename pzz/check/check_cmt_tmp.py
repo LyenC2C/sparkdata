@@ -60,5 +60,9 @@ def parse_cmt_new(line_s):
 
 if __name__ == '__main__':
     for line in sys.stdin:
-        for each in parse_cmt_new(line):
-            print each
+        ls = parse_cmt_new(line)
+        if ls == None:
+            continue
+        for each in ls:
+            if each != None:
+                print each
