@@ -20,8 +20,8 @@ def parse_cmt_new(line_s):
     ts = line[:line.find('\t')]
     # ts ='1445270400'
     # ts=str(time.mktime(datetime.datetime.now().timetuple()))
-    json_txt = line.strip()[line.find('2(') + 2:-1]
-    print json_txt
+    json_txt = line.strip()[line.find('3(') + 2:-1]
+    #print json_txt
     time.sleep(1)
     ob = json.loads(json_txt)
     print ob
