@@ -1,6 +1,9 @@
 
 drop table if EXISTS  t_zlj_user_brand_feed_tags;
 
+
+set hive.exec.reducers.bytes.per.reducer=500000000;
+
 CREATE TABLE t_zlj_user_brand_feed_tags
   AS
   SELECT
@@ -32,15 +35,15 @@ CREATE TABLE t_zlj_user_brand_feed_tags
                      impr_c
                    FROM
                      t_zlj_feed2015_parse_jion_cat_brand_shop
-                   WHERE LENGTH(impr_c) > 1  and LENGTH(brand_id)>0
-                 ) t5
+                   WHERE LENGTH(impr_c) > 1  and LENGTH(brand_id)>2  and LENGTH(user_id)>2
+                   ) t5
                LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
              ) t
            GROUP BY user_id,brand_id,brand_name , word
           )t3
       ) t1
 
-      where rn <20
+      where rn <6
     GROUP BY user_id,brand_id,brand_name
 --     )t4 group by user_id
     ;
