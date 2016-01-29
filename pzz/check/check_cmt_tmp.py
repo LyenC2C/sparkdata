@@ -21,10 +21,8 @@ def parse_cmt_new(line_s):
     # ts ='1445270400'
     # ts=str(time.mktime(datetime.datetime.now().timetuple()))
     json_txt = line.strip()[line.find('3(') + 2:-1]
-    #print json_txt
     time.sleep(1)
     ob = json.loads(json_txt)
-    print ob
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
         data = ob['data']
         list = []
@@ -54,8 +52,9 @@ def parse_cmt_new(line_s):
                 if len(date) != 8:
                     print "date is wrong,now is "+date
                     continue
-                # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
-                list.append(feedid)
+                #l.append(str(time.mktime(datetime.datetime.now().timetuple())))
+                list.append([itemid, [feedid,"\001".join(l)]])
+                #list.append(feedid)
             except Exception,e:
                 print e,line
         return list
@@ -69,5 +68,3 @@ if __name__ == '__main__':
             continue
         for each in ls:
             print each
-            if each != None:
-                print each
