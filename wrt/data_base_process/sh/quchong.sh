@@ -4,7 +4,7 @@ zuotian='20160122'
 qiantian='20160121'
 
 hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
+spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 18g \
 $pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
 >> ./log_date/log_$zuotian 2>&1
 sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
