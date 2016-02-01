@@ -10,8 +10,6 @@ ds=$1
 
 USE wlbase_dev;
 
-
-
 LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.$ds/"  INTO TABLE t_base_ec_item_feed_dev_inc PARTITION (ds='$1');
 
 
