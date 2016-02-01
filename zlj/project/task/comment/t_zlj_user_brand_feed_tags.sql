@@ -12,10 +12,10 @@ CREATE TABLE t_zlj_user_brand_feed_tags
 --   (
 --     SELECT
       user_id,brand_id,brand_name ,
-      concat_ws(':',collect_set(concat_ws('_', word, CAST(num AS STRING)))) AS feed_tags
+      concat_ws(':',collect_set(word_num)) AS feed_tags
     FROM
       (
-        select user_id,brand_id,brand_name ,word,num,ROW_NUMBER() OVER(PARTITION BY brand_id  ORDER BY num DESC) AS rn
+        select user_id,brand_id,brand_name ,concat_ws('_', word, CAST(num AS STRING)) as word_num ,ROW_NUMBER() OVER(PARTITION BY user_id  ORDER BY num DESC) AS rn
         from
 
           (
