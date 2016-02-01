@@ -101,6 +101,8 @@ def parse(line,flag):
     shopId=seller.get('shopId','-')
     # ts=time.time()
     list=[]
+    if not item_id.isdigit():return None
+
     list.append(item_id)
     list.append(title)
     list.append(categoryId)
@@ -213,9 +215,13 @@ if __name__ == "__main__":
         schema1=df.schema
         # rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
         #                              x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
-        rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
+        # rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
+        #                              x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
+
+        rdd_table=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                      x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
-        rdd_dev=rdd1.filter(lambda x: x[0].isdigit()).map(lambda (x,y):(int(x),y))
+        rdd_dev=rdd_table.filter(lambda x: x[0].isdigit()).map(lambda (x,y):(int(x),y))
+
         rdd_in=rdd.map(lambda (x,y):(int(x),y)).groupByKey().map(lambda (x,y):(x,[i for i in y][0]))
         rddjoin=rdd_in.fullOuterJoin(rdd_dev)
         def fun(x,y):
