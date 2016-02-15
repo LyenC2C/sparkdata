@@ -7,15 +7,15 @@ set hive.exec.reducers.bytes.per.reducer=500000000;
 CREATE TABLE t_zlj_user_brand_feed_tags
   AS
   SELECT
---       user_id ,concat_ws(' ',collect_set(concat_ws('$',brand_id,brand_name,feed_tags))) brand_feed_tags
---       from
---   (
---     SELECT
+      user_id ,concat_ws(' ',collect_set(concat_ws('$',brand_id,brand_name,feed_tags))) brand_feed_tags
+      from
+  (
+    SELECT
       user_id,brand_id,brand_name ,
-      concat_ws(':',collect_set(concat_ws('_', word, CAST(num AS STRING)))) AS feed_tags
+      concat_ws(':',collect_set(word_num)) AS feed_tags
     FROM
       (
-        select user_id,brand_id,brand_name ,word,num,ROW_NUMBER() OVER(PARTITION BY brand_id  ORDER BY num DESC) AS rn
+        select user_id,brand_id,brand_name ,concat_ws('_', word, CAST(num AS STRING)) as word_num ,ROW_NUMBER() OVER(PARTITION BY user_id  ORDER BY num DESC) AS rn
         from
 
           (
@@ -45,5 +45,5 @@ CREATE TABLE t_zlj_user_brand_feed_tags
 
       where rn <6
     GROUP BY user_id,brand_id,brand_name
---     )t4 group by user_id
+    )t4 group by user_id
     ;

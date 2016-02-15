@@ -33,3 +33,29 @@ where ds=20151107
 on t1.item_id =t2.item_id
 '''
 hiveContext.sql(sql).map(lambda x: '\t'.join([x.item_id,str(x.price)])).saveAsTextFile('indb.itemid.uniq.price')
+
+
+file_blk={}
+blk_path={}
+
+for line in open():
+	file ,id=line.split()
+	file_blk[id]=file
+
+for line in open():
+	path ,id=line.split()
+	file_blk[id]=path
+
+
+d1="sed -i '1d'  %s"
+dend="sed -i '$d' %s"
+
+import  os
+os.system(d1%'')
+fw=open('w','w')
+for k,v in file_blk.iteritems():
+	ids=v.split()
+	for index,id in enumerate(ids):
+		if id in blk_path:
+			fw.write('\t'.join([k,id,blk_path[id]]))
+		# else

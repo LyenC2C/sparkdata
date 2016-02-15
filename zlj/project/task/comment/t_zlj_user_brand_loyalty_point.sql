@@ -26,7 +26,7 @@ FROM
         FROM
 
           t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
-        WHERE LENGTH(brand_id) > 0    and  user_id rlike   '^\\\\d+$'  and brand_id  rlike   '^\\\\d+$'
+        WHERE LENGTH(brand_id) > 0    and  user_id rlike   '^\\d+$'  and brand_id  rlike   '^\\d+$'
         GROUP BY user_id, cat_id, brand_id,brand_name
 
       ) t

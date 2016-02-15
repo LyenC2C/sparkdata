@@ -50,3 +50,34 @@ line='商品:* 质量:嘎嘎  商品:嘎嘎 第一次:买  一个:吃  一个:�
           '商品:财源广进 我:给 亲:买 商品:好孩子 孩子:岁 第一次:是 商品:家 玩:开心 性:强 不知道:长'
 
 for ls in line.split():print ls
+
+
+import os
+
+def fun(line):
+    lv=line.strip().split()
+    path=lv[0]
+    tmps=path.split('/')
+    filename=tmps[-1]
+    mvpath='/mnt/hdfs/data1/hdfsbck/feed/'+'/'.join(tmps[3:-1])
+    blks=lv[1:]
+    size=len(blks)
+    for index,blk in enumerate(blks):
+        if os.path.isfile(blk):
+            if  index <(size-1) and not os.path.isfile(blks[index+1]):
+                os.popen('sed -i $d '+blk)
+            if index>0 and  not os.path.isfile(blks[index-1]):
+                os.popen('sed -i  1d '+blk)
+            os.popen('cp '+blk +' ../tmp/')
+    os.popen('cat ../tmp/* >../tmp/'+filename)
+    os.popen('mv ../tmp/'+filename+" "+mvpath)
+    os.popen('rm ../tmp/*')
+
+for line in open('./fs_0201_dirs_tree_name_blk.file.csv.feed'):
+    fun(line)
+
+# line='/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=20150629/20151231-0000	1075832949	1075832950	1075832951	1075832952	1075832953	1075832954 1075832955	1075832956	1075832957'
+
+
+
+
