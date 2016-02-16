@@ -123,7 +123,7 @@ import math
 
 
 def f(x):
-    if ( x.price.replace('.', '').isdigit()):
+    if ( str(x.price).replace('.', '').isdigit()):
         price=float(x.price)
         root_cat_id=x.root_cat_id
         user_id=x.user_id
