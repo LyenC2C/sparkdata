@@ -18,7 +18,6 @@ CREATE TABLE t_zlj_ec_perfer_shop
       t2.shop_id,
       shop_name,
       f,
-
       row_number() OVER (PARTITION BY user_id ORDER BY f DESC) AS rn
 
 FROM
