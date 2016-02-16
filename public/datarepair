@@ -1,0 +1,22 @@
+ 已拉回
+feedparse(164)
+itemdata(164,最近一天商品表)
+itemsale(164)
+corpus2015seg(163)
+iteminfoorg(163)
+itemtagweight(163)
+t_zlj_user_tag_join(163)
+
+
+
+ 已放入hdfs (/commit/)
+t_base_ec_dim
+feed_2015_alicut_parse_rank_1
+
+
+
+
+ 已重入hive
+feed
+record
+t_zlj_feed2015_parse_v5
