@@ -6,6 +6,8 @@ iteminfoorg(163)
 t_zlj_user_tag_join(163)
 t_base_qq_user_dev(163)
 t_base_ec_item_title_cut(163)
+qqinfo.total.distinct.valid(163)
+
 
  已放入hdfs (/commit/)
 t_base_ec_dim
@@ -13,14 +15,16 @@ feed_2015_alicut_parse_rank_1
 itemtagweight
 t_zlj_feed_parse_corpus_2015_seg
 t_base_ec_shop_dev(最近一天店铺表)
-
+stopwords.txt
 
 
  已重入hive
 feed
 record
 t_zlj_feed2015_parse_v5
-
+neg
+pos
+emo_all
 
 --zlj
 itemtagweight-->
