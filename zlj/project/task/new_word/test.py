@@ -88,7 +88,7 @@ def fun(line):
     path=lv[0]
     tmps=path.split('/')
     filename=tmps[-1]
-    mvpath='/mnt/hdfs/data1/hdfsbck/t_zlj_feed2015_parse_v5/t_zlj_feed2015_parse_v5'
+    mvpath='/mnt/hdfs/data1/hdfsbck/t_base_ec_item_title_cut/t_base_ec_item_title_cut'
     blks=lv[1:]
     size=len(blks)
     for index,blk in enumerate(blks):
@@ -97,10 +97,10 @@ def fun(line):
                 os.popen('sed -i $d '+blk)
             if index>0 and  not os.path.isfile(blks[index-1]):
                 os.popen('sed -i  1d '+blk)
-            os.popen('cp '+blk +' ../tmp1/')
-    os.popen('cat ../tmp1/* >../tmp1/'+filename)
-    os.popen('mv ../tmp1/'+filename+" "+mvpath)
-    os.popen('rm ../tmp1/*')
+            os.popen('cp '+blk +' ../tmp/')
+    os.popen('cat ../tmp/* >../tmp/'+filename)
+    os.popen('mv ../tmp/'+filename+" "+mvpath)
+    os.popen('rm ../tmp/*')
 
 def fun1(line):
     lv=line.strip().split()
@@ -112,7 +112,7 @@ def fun1(line):
     size=len(blks)
     os.popen('cat '+' '.join(blks)+' >'+mvpath+filename)
 
-for line in open('./fs_0201_dirs_tree_name_blk.file.csv.t_zlj_feed2015_parse_v5'):
+for line in open('./fs_0201_dirs_tree_name_blk.file.csv.t_base_ec_item_title_cut'):
     fun(line)
 # line='/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=20150629/20151231-0000	1075832949	1075832950	1075832951	1075832952	1075832953	1075832954 1075832955	1075832956	1075832957'
 
