@@ -5,15 +5,19 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-# from pyspark import SparkContext
-# from pyspark.sql import *
-# from pyspark.sql.types import *
-# import time
-# import rapidjson as json
-#
-# sc = SparkContext(appName="cmt")
-# sqlContext = SQLContext(sc)
-# hiveContext = HiveContext(sc)
+from pyspark import SparkContext
+from pyspark.sql import *
+from pyspark.sql.types import *
+import time
+import rapidjson as json
+
+sc = SparkContext(appName="cmt")
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
+
+
+sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_feed2015_parse_v5/*').map(lambda x:x.split('\001'))
+
 
 import argparse
 
@@ -53,13 +57,12 @@ for ls in line.split():print ls
 
 
 import os
-
 def fun(line):
     lv=line.strip().split()
     path=lv[0]
     tmps=path.split('/')
     filename=tmps[-1]
-    mvpath='/mnt/hdfs/data1/hdfsbck/feed/'+'/'.join(tmps[3:-1])
+    mvpath='/mnt/hdfs/data1/hdfsbck/record/record/'
     blks=lv[1:]
     size=len(blks)
     for index,blk in enumerate(blks):
@@ -73,11 +76,47 @@ def fun(line):
     os.popen('mv ../tmp/'+filename+" "+mvpath)
     os.popen('rm ../tmp/*')
 
-for line in open('./fs_0201_dirs_tree_name_blk.file.csv.feed'):
+for line in open('./fs_0201_dirs_tree_name_blk.file.csv.record'):
     fun(line)
 
+
+
+
+import os
+def fun(line):
+    lv=line.strip().split()
+    path=lv[0]
+    tmps=path.split('/')
+    filename=tmps[-1]
+    mvpath='/mnt/hdfs/data1/hdfsbck/t_zlj_feed2015_parse_v5/t_zlj_feed2015_parse_v5'
+    blks=lv[1:]
+    size=len(blks)
+    for index,blk in enumerate(blks):
+        if os.path.isfile(blk):
+            if  index <(size-1) and not os.path.isfile(blks[index+1]):
+                os.popen('sed -i $d '+blk)
+            if index>0 and  not os.path.isfile(blks[index-1]):
+                os.popen('sed -i  1d '+blk)
+            os.popen('cp '+blk +' ../tmp1/')
+    os.popen('cat ../tmp1/* >../tmp1/'+filename)
+    os.popen('mv ../tmp1/'+filename+" "+mvpath)
+    os.popen('rm ../tmp1/*')
+
+def fun1(line):
+    lv=line.strip().split()
+    path=lv[0]
+    tmps=path.split('/')
+    filename='/'.join(tmps[-2:])
+    mvpath='/mnt/hdfs/data1/hdfsbck/itemsale/itemsale/'
+    blks=lv[1:]
+    size=len(blks)
+    os.popen('cat '+' '.join(blks)+' >'+mvpath+filename)
+
+for line in open('./fs_0201_dirs_tree_name_blk.file.csv.t_zlj_feed2015_parse_v5'):
+    fun(line)
 # line='/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=20150629/20151231-0000	1075832949	1075832950	1075832951	1075832952	1075832953	1075832954 1075832955	1075832956	1075832957'
 
 
 
 
+# /hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=20160117/part-00050    1076430135      1076430268

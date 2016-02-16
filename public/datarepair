@@ -20,3 +20,10 @@ t_base_ec_shop_dev(最近一天店铺表)
 feed
 record
 t_zlj_feed2015_parse_v5
+
+
+--zlj
+itemtagweight-->
+t_base_ec_item_dev
+t_base_ec_dim
+t_base_ec_shop_dev

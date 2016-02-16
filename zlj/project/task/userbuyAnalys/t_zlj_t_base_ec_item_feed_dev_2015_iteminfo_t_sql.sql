@@ -49,7 +49,7 @@ CREATE TABLE t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
       location
     FROM (SELECT
        cast( item_id as bigint )item_id,
-     title,
+      title,
       cat_id,
       root_cat_id,
       root_cat_name,
