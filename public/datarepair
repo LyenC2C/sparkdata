@@ -5,11 +5,11 @@ feedparse(164)
 iteminfoorg(163)
 t_zlj_user_tag_join(163)
 t_base_qq_user_dev(163)
-t_base_ec_item_title_cut(163)
+---t_base_ec_item_title_cut(163)
 qqinfo.total.distinct.valid(163)
 tag_csv_hbase.dir.20160115(163)
-t_zlj_ec_perfer_shop(163)
-t_zlj_user_tag_join_cat_online(163)
+---t_zlj_ec_perfer_shop(163)
+---t_zlj_user_tag_join_cat_online(163)
 bad_kv_0120(163)
 
  已放入hdfs (/commit/)
@@ -22,7 +22,7 @@ stopwords.txt
 neg
 pos
 emo_all
-
+t_zlj_ec_perfer_shop
 
 
  已重入hive
@@ -44,3 +44,7 @@ t_base_ec_item_title_cut
 itemsale
 
 iteminfoorg
+
+t_zlj_ec_perfer_shop
+
+t_zlj_user_tag_join_cat_online
