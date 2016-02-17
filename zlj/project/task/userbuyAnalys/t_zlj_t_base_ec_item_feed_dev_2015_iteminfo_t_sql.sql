@@ -60,9 +60,8 @@
         price,
         shop_id,
         location
-            FROM t_base_ec_item_dev
-            WHERE ds = 20162016
-            and item_id  rlike   '^\\\\d+$' ) t1
+            FROM t_base_ec_item_dev  WHERE ds=20160216
+           ) t1
         JOIN (
        SELECT
          item_id,
@@ -73,7 +72,7 @@
          ds,
          datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date) AS datediff
        FROM t_base_ec_item_feed_dev
-       WHERE ds > 20150101 and user_id is not NULL  and item_id is not null and item_id  rlike   '^\\\\d+$' and  user_id  rlike   '^\\\\d+$'
+       WHERE ds>20150101 and user_id is not NULL  and item_id is not null
              AND user_id NOT IN (
          21786683,
          2428807140,
