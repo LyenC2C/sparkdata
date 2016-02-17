@@ -35,3 +35,7 @@ t_base_ec_shop_dev(ds=20160216)
 neg  pos  stopwords.txt(done)
 
 t_base_ec_item_title_cut
+
+itemsale
+
+iteminfoorg
