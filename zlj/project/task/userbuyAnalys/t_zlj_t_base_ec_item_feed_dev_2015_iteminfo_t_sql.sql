@@ -38,7 +38,7 @@ CREATE TABLE t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
   AS
     SELECT
       t2.*,
-      t1.title,
+--       t1.title,
       cat_id,
       root_cat_id,
       root_cat_name,
@@ -46,10 +46,11 @@ CREATE TABLE t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
       brand_name,
       bc_type,
       price,
+      shop_id,
       location
     FROM (SELECT
-       cast( item_id as bigint )item_id,
-      title,
+     item_id,
+--       title,
       cat_id,
       root_cat_id,
       root_cat_name,
@@ -57,12 +58,14 @@ CREATE TABLE t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
       brand_name,
       bc_type,
       price,
+      shop_id,
       location
           FROM t_base_ec_item_dev
-          WHERE ds = 20160105 ) t1
+          WHERE ds = 20162016
+          and item_id  rlike   '^\\d+$' ) t1
       JOIN (
      SELECT
-       cast( item_id as bigint )item_id,
+       item_id,
        feed_id,
        user_id,
        length(content) content_length,
@@ -70,7 +73,7 @@ CREATE TABLE t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
        ds,
        datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date) AS datediff
      FROM t_base_ec_item_feed_dev
-     WHERE ds > 20151212 and user_id is not NULL  and item_id is not null
+     WHERE ds > 20150101 and user_id is not NULL  and item_id is not null and item_id  rlike   '^\\d+$' and  user_id  rlike   '^\\d+$'
            AND user_id NOT IN (
        21786683,
        2428807140,
