@@ -12,7 +12,7 @@ select user_id,title_cut
 from
 (
 
-select item_id,title_cut from t_zlj_base_ec_item_title_cut where ds=20151225
+select item_id,title_cut from t_zlj_base_ec_item_title_cut where ds=20160216
 
 )t1
 join

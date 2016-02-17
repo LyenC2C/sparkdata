@@ -264,7 +264,7 @@ schema1 = StructType([
     StructField("uid", StringType(), True),
     StructField("dim", StringType(), True),
     StructField("brand", StringType(), True),
-    StructField("brandtag", StringType(), True),
+    # StructField("brandtag", StringType(), True),
     StructField("shop", StringType(), True),
     StructField("price_level", StringType(), True),
     StructField("car", StringType(), True),
@@ -282,7 +282,7 @@ def mergeinfo(uid,info):
     # if 'dim' in key:
     lv.append(m.get('dim',''))
     lv.append(m.get('brand',''))
-    lv.append(m.get('brandtag',''))
+    # lv.append(m.get('brandtag',''))
     lv.append(m.get('shop',''))
     lv.append(m.get('price_level',''))
     lv.append(m.get('car',''))
@@ -308,7 +308,7 @@ if __name__ == "__main__":
     elif sys.argv[1]=='-merge':
         rdd_dim=dim()
         rdd_brand=brand()
-        rdd_brandtag=brandtag()
+        # rdd_brandtag=brandtag()
         rdd_price=price()
         rdd_shop=shop()
         rdd_car=car()
@@ -316,9 +316,9 @@ if __name__ == "__main__":
         rdd_tag=hmm_tag()
         rdd_cat_tags=cat_tags()
         # rdd_qq=qq()
-        rdd=rdd_dim.union(rdd_brand).union(rdd_brandtag).union(rdd_price).union(rdd_shop).union(rdd_car)\
+        rdd=rdd_dim.union(rdd_brand).union(rdd_price).union(rdd_shop).union(rdd_car)\
             .union(rdd_house).union(rdd_tag).union(rdd_cat_tags)\
-            # .union(rdd_qq)
+            # .union(rdd_qq).union(rdd_brandtag)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y)).coalesce(1000)
         ddf=hiveContext.createDataFrame(rdd1,schema1)
