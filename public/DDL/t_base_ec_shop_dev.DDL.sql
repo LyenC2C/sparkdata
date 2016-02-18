@@ -21,3 +21,4 @@ COMMENT '电商店铺基础信息表'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'  LINES TERMINATED BY '\n';
 -- stored as textfile location '/hive/external/wlbase_dev/t_base_ec_shop_dev' ;
+-- LOAD DATA  INPATH '/commit/t_base_ec_shop_dev' OVERWRITE INTO TABLE t_base_ec_shop_dev PARTITION (ds='20160216') ;
