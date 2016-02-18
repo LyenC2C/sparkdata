@@ -23,6 +23,6 @@ CREATE TABLE t_zlj_feed2015_parse_jion_cat_brand_shop
           brand_name,
           shop_id
         FROM t_base_ec_item_dev
-        WHERE ds = 20160120
+        WHERE ds = 20160216
       ) t2
         ON t1.item_id = t2.item_id;

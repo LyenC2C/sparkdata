@@ -317,7 +317,7 @@ if __name__ == "__main__":
         rdd_cat_tags=cat_tags()
         # rdd_qq=qq()
         rdd=rdd_dim.union(rdd_brand).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).union(rdd_tag).union(rdd_cat_tags)\
+            .union(rdd_house).union(rdd_tag).union(rdd_cat_tags).coalesce(2000)\
             # .union(rdd_qq).union(rdd_brandtag)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y)).coalesce(1000)
