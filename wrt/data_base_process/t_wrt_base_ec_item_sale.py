@@ -74,7 +74,7 @@ def f1(bctype_dict, line):
             lv.append(int_k(total_sold))
             lv.append(int_k(order_cost))
             lv.append(valid_jsontxt(shop_id))
-            lv.append(ts)
+            lv.append(ts)   
             result.append(lv)
         return result
     except Exception,e:
