@@ -19,4 +19,4 @@ rdd2 = rdd.groupByKey().mapValues(list).map(lambda (x,y):x)
 print "original" + str(rdd.count())
 print "new" + str(rdd2.count())
 
-rdd2.saveAsTextFile('/user/wrt/iteminfo_history' + today)
+rdd2.saveAsTextFile('/user/wrt/iteminfo_history')
