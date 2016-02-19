@@ -15,7 +15,7 @@ def f(line):
         ss = line.strip().split('\t',2)
         ob = json.loads(valid_jsontxt(ss[2]))
         result = []
-        item_id = ss[1]
+        item_id = valid_jsontxt(ss[1])
         title = ob.get("itemInfoModel").get("title")
         price = ob.get("itemInfoModel").get("price")
         picurl_list = ob.get("itemInfoModel").get("picsPath")
