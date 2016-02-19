@@ -150,7 +150,8 @@ def sort_limit(y):
         lv.append(i.split('_'))
     ts=[i for index, i in enumerate(sorted(y, key=lambda t: float(t[-1]), reverse=True)) if index < 11]
     return ['_'.join(i) for i in ts]
-rdd2=rdd1.groupByKey().map(lambda (x,y):(x," ".join(y))).repartition(100)
+
+rdd2=rdd1.groupByKey().map(lambda (x,y):(x,sort_limit(y))).repartition(100)
 schema1 = StructType([
     StructField("user_id", StringType(), True),
     StructField("cat_tags", StringType(), True),
