@@ -27,7 +27,7 @@ where root_cat_id=50008141 ;
 -- ÏúÊÛ¶î
 
 
-create table sale_ds as
+create table t_zlj_wine_sale_ds as
 
 select
 sum(price) as sale,
