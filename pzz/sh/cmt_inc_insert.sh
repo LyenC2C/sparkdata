@@ -37,8 +37,10 @@ spark-submit --executor-memory 12g --driver-memory 20g --total-executor-cores 10
 echo "spark job finished."
 
 #本地临时文件
-local_tmp_new_feed=/mnt/hdfs/data4/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.partall
-local_tmp_inc_data=/mnt/hdfs/data4/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
+#local_tmp_new_feed=/mnt/hdfs/data4/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.partall
+#local_tmp_inc_data=/mnt/hdfs/data4/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
+local_tmp_new_feed=/home/yarn/workspace/sparkdata/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.partall
+local_tmp_inc_data=/home/yarn/workspace/sparkdata/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
 
 #hive 入库
 echo "cat and put result data  dir.."$tmp_data" to "${tmp_data}.test
@@ -68,4 +70,4 @@ hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 echo "mission FINISH! "$1
 end_t=`date`
 echo "start at:"${start_t}", end at:"${end_t}
-echo $1 >> /mnt/pzz/workspace/sparkdata/mission_finished
+echo $1 >> /home/yarn/workspace/sparkdata/pzz/cmt/mission_finished
