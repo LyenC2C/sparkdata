@@ -16,7 +16,4 @@ def f(line):
 rdd = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x!=None)
 #print rdd.count()
 rdd2 = rdd.groupByKey().mapValues(list).map(lambda (x,y):x)
-print "original" + str(rdd.count())
-print "new" + str(rdd2.count())
-
 rdd2.saveAsTextFile('/user/wrt/iteminfo_history')
