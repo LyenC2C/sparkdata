@@ -50,7 +50,7 @@ def parse_cmt_new(line_s):
                 l.append(date)
                 l.append(value.get('annoy', '-'))
                 l.append(ts)
-                date = date.replace('-', '')
+                date = date[:10].replace('-', '').replace('.', '')
                 int(date)
                 if len(date) != 8:
                     print "date is wrong,now is "+date

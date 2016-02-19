@@ -1,9 +1,9 @@
 
 
-source /home/hadoop/.bashrc
+source /home/yarn/.bashrc
 path=$1
 
-/home/hadoop/hive/bin/hive<<EOF
+/home/yarn/hive/bin/hive<<EOF
 
 SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
