@@ -30,7 +30,7 @@ content,
 f_date ,
 annoy  ,
 ts ,
-regexp_replace(f_date,'-','') ds
+SUBSTRING (regexp_replace(f_date,'-',''),0,8) ds
 FROM t_base_ec_item_feed_dev_tmp where ds=20000001
 ;
 

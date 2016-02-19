@@ -46,11 +46,12 @@ def parse_cmt_new(line_s):
                 # l.append(data.get('userStar'))
                 feedback = value.get('feedback', '-').replace('\t', '')
                 l.append(valid_jsontxt(feedback))
-                date = value.get('feedbackDate', '-')
+                date = value.get('feedbackDate', '-').replace(".","-")
                 l.append(date)
-                l.append(value.get('annoy', '-'))
+                annoy = value.get('annoy', '-')
+                l.append(annoy)
                 l.append(ts)
-                date = date[:10].replace('-', '').replace('.', '')
+                date = date[:10].replace('-', '')
                 int(date)
                 if len(date) != 8:
                     print "date is wrong,now is "+date
