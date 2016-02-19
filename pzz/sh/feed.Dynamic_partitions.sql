@@ -7,7 +7,7 @@ path=$1
 
 SET hive.exec.dynamic.partition=true;
 SET hive.exec.dynamic.partition.mode=nonstrict;
-SET hive.exec.max.dynamic.partitions.pernode = 1000;
+SET hive.exec.max.dynamic.partitions.pernode = 2000;
 SET hive.exec.max.dynamic.partitions=2000;
 
 set hive.exec.reducers.bytes.per.reducer=500000000;
@@ -30,7 +30,7 @@ content,
 f_date ,
 annoy  ,
 ts ,
-regexp_replace(f_date,'-','') ds
+SUBSTRING (regexp_replace(f_date,'-',''),0,8) ds
 FROM t_base_ec_item_feed_dev_tmp where ds=20000001
 ;
 
