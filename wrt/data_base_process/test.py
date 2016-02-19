@@ -36,8 +36,8 @@ def f(line):
         value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
         price = value[0]
         picurl_list = ob.get("itemInfoModel").get("picsPath")
-        picurl = picurl_list[0]
-        picurl.decode('utf-8').replace("img.alicdn.com","gw.alicdn.com").encode('utf-8')
+        picurl_y = picurl_list[0]
+        picurl = picurl_y.decode('utf-8').replace("img.alicdn.com","gw.alicdn.com").encode('utf-8')
         result.append(title)
         result.append(price)
         result.append(picurl)
