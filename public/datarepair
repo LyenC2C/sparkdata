@@ -3,15 +3,15 @@ feedparse(164)
 ----itemdata(164,最近一天商品表)
 ----itemsale(164)
 iteminfoorg(163)
-t_zlj_user_tag_join(163)
+---t_zlj_user_tag_join(163)
 t_base_qq_user_dev(163)
 ---t_base_ec_item_title_cut(163)
 qqinfo.total.distinct.valid(163)
 tag_csv_hbase.dir.20160115(163)
 ---t_zlj_ec_perfer_shop(163)
 ---t_zlj_user_tag_join_cat_online(163)
-bad_kv_0120(163)
-feed_2015_alicut_parsev5_re(163)
+---bad_kv_0120(163)
+---feed_2015_alicut_parsev5_re(163)
 shopitem2.20160125(163)
 shopitem2.20160126(163)
 shopitem2.20160127(163)
@@ -45,14 +45,16 @@ t_base_ec_item_dev(ds=20160216)
 t_base_ec_dim
 t_base_ec_shop_dev(ds=20160216)
 
+t_zlj_user_tag_join_cat_online---hive
+
+
+
 neg  pos  stopwords.txt(done)
 
-t_base_ec_item_title_cut
+t_base_ec_item_title_cut-->t_zlj_base_ec_item_title_cut
 
 itemsale
 
 iteminfoorg
 
 t_zlj_ec_perfer_shop
-
-t_zlj_user_tag_join_cat_online

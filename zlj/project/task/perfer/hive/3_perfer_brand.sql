@@ -19,7 +19,7 @@ row_number()  OVER (PARTITION BY user_id ORDER BY f desc) as rn
 from
 (
 select
- user_id, brand_id ,brand_name,sum(score) as f
+ user_id, brand_id ,brand_name,round(sum(score),2) as f
 from
 
 t_zlj_ec_userbuy
