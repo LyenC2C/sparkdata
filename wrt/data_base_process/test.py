@@ -37,7 +37,7 @@ def f(line):
         price = value[0]
         picurl_list = ob.get("itemInfoModel").get("picsPath")
         picurl_y = picurl_list[0]
-        picurl = picurl_y.decode('utf-8').replace("img.alicdn.com","gw.alicdn.com").encode('utf-8')
+        picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
         result.append(title)
         result.append(price)
         result.append(picurl)
