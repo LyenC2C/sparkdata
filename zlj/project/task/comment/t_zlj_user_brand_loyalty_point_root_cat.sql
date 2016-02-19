@@ -23,12 +23,14 @@ FROM
           brand_name,
           round(SUM(log2(price)),2) AS score
         FROM
-          t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
+          t_base_ec_record_dev
         WHERE LENGTH(brand_id) > 0
-                   and  user_id rlike   '^\\d+$'  and brand_id  rlike   '^\\d+$'
+
         GROUP BY user_id, root_cat_id, brand_id,brand_name
 
       ) t
     GROUP BY user_id, root_cat_id
 
   ) t1  GROUP BY  user_id ;
+
+

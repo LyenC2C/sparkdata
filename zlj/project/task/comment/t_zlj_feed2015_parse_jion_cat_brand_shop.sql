@@ -3,9 +3,11 @@ DROP TABLE IF EXISTS t_zlj_feed2015_parse_jion_cat_brand_shop;
 CREATE TABLE t_zlj_feed2015_parse_jion_cat_brand_shop
   AS
     SELECT
-      t1.*,
+      t1.item_id,
+      t1.user_id,
+      t1.pos_neg,
+      t1.parse_info_s,
       cat_id,
-      cat_name,
       root_cat_id,
       root_cat_name,
       brand_id,
@@ -16,7 +18,7 @@ CREATE TABLE t_zlj_feed2015_parse_jion_cat_brand_shop
         SELECT
           item_id,
           cat_id,
-          cat_name,
+
           root_cat_id,
           root_cat_name,
           brand_id,

@@ -143,6 +143,13 @@ hiveContext.sql('use wlbase_dev')
 rdd=hiveContext.sql('select user_id,root_cat_id,price, ds from t_base_ec_record_dev')\
     .map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
+
+def sort_limit(y):
+    lv=[]
+    for i in lv:
+        lv.append(i.split('_'))
+    ts=[i for index, i in enumerate(sorted(y, key=lambda t: float(t[-1]), reverse=True)) if index < 11]
+    return ['_'.join(i) for i in ts]
 rdd2=rdd1.groupByKey().map(lambda (x,y):(x," ".join(y))).repartition(100)
 schema1 = StructType([
     StructField("user_id", StringType(), True),

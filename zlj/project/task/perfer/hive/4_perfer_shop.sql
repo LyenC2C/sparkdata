@@ -30,7 +30,7 @@ FROM
 JOIN
   (
 
-  SELECT user_id, shop_id, sum(score) AS f
+  SELECT user_id, shop_id, round(sum(score),2) AS f
   FROM
 
   t_zlj_ec_userbuy
