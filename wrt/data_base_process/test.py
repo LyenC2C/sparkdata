@@ -2,7 +2,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-sc = SparkContext(appName="iteminfo_history")
+sc = SparkContext(appName="title_price_picurl")
 s1 = "/commit/iteminfoorg/item.info.crawler171.2016-01-04"
 def valid_jsontxt(content):
     if type(content) == type(u""):
