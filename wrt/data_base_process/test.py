@@ -9,6 +9,22 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else:
         return content
+def parse_price(price_dic):
+    min=1000000000.0
+    price='0'
+    price_range='-'
+    for value in price_dic:
+        tmp=value['price']
+        v=0
+        if '-' in tmp:
+            v=(float(tmp.split('-')[0])+float(tmp.split('-')[1]))/2.0
+        else :
+            v=float(tmp)
+        if min>v:
+            min=v
+            price=v
+            if '-' in tmp: price_range=tmp
+    return [price,price_range]
 
 def f(line):
     try:
@@ -17,7 +33,8 @@ def f(line):
         result = []
         item_id = valid_jsontxt(ss[1])
         title = ob.get("itemInfoModel").get("title")
-        price = ob.get("itemInfoModel").get("price")
+        value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+        price = value[0]
         picurl_list = ob.get("itemInfoModel").get("picsPath")
         picurl = picurl_list[0]
         picurl.replace("img.alicdn.com","gw.alicdn.com")
@@ -31,8 +48,8 @@ def f(line):
         return None
 def quchong(x,y):
     # if len(y) == 1:
-    if len(y) != 1:
-        y = y[0]
+    # if len(y) != 1:
+    y = y[0]
     result = [x] + y
     lv = []
     for ln in result:
