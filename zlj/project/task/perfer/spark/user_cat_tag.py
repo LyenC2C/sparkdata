@@ -146,7 +146,7 @@ rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.spl
 
 def sort_limit(y):
     lv=[]
-    for i in lv:
+    for i in y:
         lv.append(i.split('_'))
     ts=[i for index, i in enumerate(sorted(lv, key=lambda t: float(t[-1]), reverse=True)) if index < 11]
     return [i[0]+'_'+i[1] for i in ts]
