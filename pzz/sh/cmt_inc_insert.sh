@@ -1,4 +1,4 @@
-source  /home/hadoop/.bashrc
+source  /home/yarn/.bashrc
 
 #eg: sh /mnt/pzz/workspace/sparkdata/pzz/sh/cmt_inc_insert.sh /data/develop/ec/tb/cmt_dbfeedid.20151103/part* /commit/comments/*2015-11-05 /data/develop/ec/tb/cmt_allfeedid.20151105 /data/develop/ec/tb/cmt_newfeedid.20151105 /data/develop/ec/tb/cmt_tmpdata.20151105
 
@@ -33,12 +33,12 @@ echo "Start spark job."
 hadoop fs -rmr $all_feed_output
 hadoop fs -rmr $new_feed_output
 hadoop fs -rmr $tmp_data
-spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 100 /mnt/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data
+spark-submit --executor-memory 12g --driver-memory 20g --total-executor-cores 100 /home/yarn/workspace/sparkdata/pzz/cmt/cmt_inc_clean.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data
 echo "spark job finished."
 
 #本地临时文件
-local_tmp_new_feed=/mnt/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.partall
-local_tmp_inc_data=/mnt/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
+local_tmp_new_feed=/mnt/hdfs/data4/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.partall
+local_tmp_inc_data=/mnt/hdfs/data4/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
 
 #hive 入库
 echo "cat and put result data  dir.."$tmp_data" to "${tmp_data}.test
@@ -55,7 +55,8 @@ hadoop fs -cp $tmp_data ${tmp_data}.test
 hadoop fs -chmod -R 775 $tmp_data
 
 echo "insert hive"
-sh  /mnt/pzz/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
+#sh  /mnt/pzz/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
+sh /home/yarn/workspace/sparkdata/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
 
 echo "completed insertting "$tmp_data
 

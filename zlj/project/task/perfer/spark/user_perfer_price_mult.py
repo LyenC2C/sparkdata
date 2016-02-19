@@ -26,7 +26,7 @@ select user_id,buytimes,sum_price,avg_price from t_zlj_ec_perfer_priceavg
 
 
 
-rdd1=hiveContext.sql(sql).map(lambda x:[x[0],1.0*x[1],1.0*x[2],1.0*x[3]])
+rdd1=hiveContext.sql(sql).map(lambda x:[x[0],1.0*x[1],round(1.0*x[2],2),round(1.0*x[3],2)])
 rdd=rdd1.map(lambda x: x[1:]).repartition(100)
 
 # rdd1.map(lambda x:x[3]).histogram(100)
