@@ -60,4 +60,4 @@ def quchong(x,y):
 rdd = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x!=None)
 #print rdd.count()
 rdd2 = rdd.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
-rdd2.saveAsTextFile('/user/wrt/title_price_url')
+rdd2.saveAsTextFile('/user/wrt/item_info_old')
