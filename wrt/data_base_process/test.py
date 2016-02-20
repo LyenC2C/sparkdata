@@ -3,8 +3,8 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 sc = SparkContext(appName="title_price_picurl")
-s1 = "/user/wrt/item_info_new"
-s2 = "/commit/iteminfoorg"
+s1 = "/user/wrt/item_info_new/part-00000"
+s2 = "/comment/iteminfoorg/cover.itemid.sort.id.aj.info.2016-01-28"
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -86,4 +86,4 @@ rdd1 = sc.textFile(s1).map(lambda x: f_new(x)).filter(lambda x:x!=None)
 rdd2 = sc.textFile(s2).map(lambda x: f_old(x)).filter(lambda x:x!=None)
 #print rdd.count()
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
-rdd.saveAsTextFile('/user/wrt/item_info_old')
+rdd.saveAsTextFile('/user/wrt/id_title_price_url')
