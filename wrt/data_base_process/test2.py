@@ -3,7 +3,7 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 sc = SparkContext(appName="item_info_new")
-s1 = "/commit/iteminfo"
+s1 = "/commit/iteminfo/*/*"
 def f(line):
     try:
         ss = line.strip().split('\t',2)
