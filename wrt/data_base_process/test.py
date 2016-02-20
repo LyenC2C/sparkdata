@@ -3,7 +3,8 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 sc = SparkContext(appName="title_price_picurl")
-s1 = "/commit/iteminfoorg"
+s1 = "/user/wrt/item_info_new"
+s2 = "/commit/iteminfoorg"
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -26,7 +27,7 @@ def parse_price(price_dic):
             if '-' in tmp: price_range=tmp
     return [price,price_range]
 
-def f(line):
+def f_new(line):
     try:
         ss = line.strip().split('\t',2)
         ob = json.loads(valid_jsontxt(ss[2]))
@@ -41,15 +42,39 @@ def f(line):
         result.append(title)
         result.append(price)
         result.append(picurl)
+        result.append("new")
         return (item_id,result)
-
+    except Exception,e:
+        print e
+        return None
+def f_old(line):
+    try:
+        ss = line.strip().split('\t',2)
+        ob = json.loads(valid_jsontxt(ss[2]))
+        result = []
+        item_id = valid_jsontxt(ss[1])
+        title = ob.get("itemInfoModel").get("title")
+        value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+        price = value[0]
+        picurl_list = ob.get("itemInfoModel").get("picsPath")
+        picurl_y = picurl_list[0]
+        picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
+        result.append(title)
+        result.append(price)
+        result.append(picurl)
+        result.append("old")
+        return (item_id,result)
     except Exception,e:
         print e
         return None
 def quchong(x,y):
     # if len(y) == 1:
     # if len(y) != 1:
-    y = y[0]
+    # y = y[0]
+    info_list = y
+    for ln in info_list:
+        y = ln
+        if ln[3] == "new": break
     result = [x] + y
     lv = []
     for ln in result:
@@ -57,7 +82,8 @@ def quchong(x,y):
     return "\001".join(lv)
     # return x
 
-rdd = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x!=None)
+rdd1 = sc.textFile(s1).map(lambda x: f_new(x)).filter(lambda x:x!=None)
+rdd2 = sc.textFile(s2).map(lambda x: f_old(x)).filter(lambda x:x!=None)
 #print rdd.count()
-rdd2 = rdd.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
-rdd2.saveAsTextFile('/user/wrt/item_info_old')
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
+rdd.saveAsTextFile('/user/wrt/item_info_old')
