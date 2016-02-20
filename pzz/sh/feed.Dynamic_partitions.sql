@@ -34,6 +34,7 @@ SUBSTRING (regexp_replace(f_date,'-',''),0,8) ds
 FROM t_base_ec_item_feed_dev_tmp where ds=20000001
 ;
 
+
 EOF
 
 echo "rm tmp table"
