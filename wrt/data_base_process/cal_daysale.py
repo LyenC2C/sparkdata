@@ -46,7 +46,7 @@ def cal(x,y):
 
 # rdd1 = textFile(s1).map(lambda x:(x.split('\001')[0],x.split('\001')[1:]))
 # rdd2 = textFile(s2).map(lambda x:(x.split('\001')[0],x.split('\001')[1:]))
-rdd1 = textFile(s1).map(lambda x:yes_sale(x))
-rdd2 = textFile(s2).map(lambda x:tod_sale(x))
+rdd1 = sc.textFile(s1).map(lambda x:yes_sale(x))
+rdd2 = sc.textFile(s2).map(lambda x:tod_sale(x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):cal(x,y))
 rdd.saveAsTextFile('/user/wrt/daysale/ds=' + yesterday)
