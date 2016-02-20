@@ -20,7 +20,7 @@ LOAD DATA  INPATH '$path' OVERWRITE INTO TABLE t_base_ec_item_feed_dev_tmp PARTI
 -- 增量数据fetch 入库
 -- INSERT overwrite TABLE t_base_ec_item_feed_dev PARTITION (ds )
 
-INSERT INTO TABLE t_base_ec_item_feed_dev PARTITION (ds)
+INSERT INTO TABLE t_base_ec_item_feed_dev_test PARTITION (ds)
 select
 item_id,
 item_title,
@@ -37,5 +37,5 @@ FROM t_base_ec_item_feed_dev_tmp where ds=20000001
 
 EOF
 
-echo "rm tmp table"
-hadoop fs -rmr /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_tmp/ds=20000001/*
+#echo "rm tmp table"
+#hadoop fs -rmr /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_tmp/ds=20000001/*
