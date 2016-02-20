@@ -3,8 +3,8 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 sc = SparkContext(appName="title_price_picurl")
-s1 = "/user/wrt/item_info_new/part-00000"
-s2 = "/comment/iteminfoorg/cover.itemid.sort.id.aj.info.2016-01-28"
+s1 = "/user/wrt/item_info_new"
+s2 = "/comment/iteminfoorg"
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
