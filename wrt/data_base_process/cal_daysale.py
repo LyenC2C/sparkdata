@@ -26,11 +26,11 @@ def tod_sale(line):
 
 def cal(x,y):
     twodays = y
-    if len(twodays) == 1:
+    # if len(twodays) == 1:
         # info_list = twodays
         # if info_list[2] == "yes":
-        day_sold = 0
-        day_sold_price = 0.0
+    day_sold = 0
+    day_sold_price = 0.0
         # if info_list[2] == "tod":
         #     day_sold = 0
     if len(twodays) == 2:
