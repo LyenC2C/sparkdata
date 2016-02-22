@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ds=$1
 
-/home/hadoop/hive/bin/hive<<EOF
+hive<<EOF
 
 use wlbase_dev;
 
