@@ -1,13 +1,20 @@
 pre_path='/home/wrt/sparkdata'
 
-zuotian='20160122'
-qiantian='20160121'
-
-hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+zuotian = 20151029
+qiantian = 20151028
+hadoop fs -rm -r /user/wrt/daysale_tmp
 spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 18g \
-$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
->> ./log_date/log_$zuotian 2>&1
-sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
+sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
+
+#zuotian='20160122'
+#qiantian='20160121'
+#
+#hadoop fs -rm -r /user/zlj/data/temp/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 18g \
+#$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+#>> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
 #hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
 #spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
