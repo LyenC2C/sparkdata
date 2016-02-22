@@ -1,7 +1,7 @@
 pre_path='/home/wrt/sparkdata'
 
-qiantian = 20151028
-zuotian = 20151029
+qiantian='20151028'
+zuotian='20151029'
 
 hadoop fs -rm -r /user/wrt/daysale_tmp
 spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 18g \
