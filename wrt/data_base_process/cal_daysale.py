@@ -5,8 +5,8 @@ yesterday = sys.argv[1]
 today = sys.argv[2]
 
 sc = SparkContext(appName="cal_daysale " + yesterday)
-s1 = "/user/wrt/itemsale/ds=" + yesterday
-s2 = "/user/wrt/itemsale/ds=" + today
+s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday
+s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + today
 
 def yes_sale(line):
     ss = line.strip().split('\001')
