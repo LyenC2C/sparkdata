@@ -55,12 +55,14 @@ hadoop fs -put ${local_tmp_new_feed} ${new_feed_output}/
 hadoop fs -cat ${tmp_data}/part* > ${local_tmp_inc_data}
 hadoop fs -rmr ${tmp_data}/part*
 hadoop fs -put ${local_tmp_inc_data} ${tmp_data}/
-
-#数据分区,插入hive
-hadoop fs -rmr ${tmp_data}.partitions
-sh ./mv_feed_from_partitions.sh
 hadoop fs -chmod -R 775 $tmp_data
-sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh $tmp_data.partitions ${table}
+
+#数据分区
+hadoop fs -rmr ${tmp_data}.partitions
+spark-submit  --master spark://cs220:7077  --total-executor-cores  40 --executor-memory  4g --driver-memory 4g --class MultipleText  ${workspace_path}/pzz/sh/scalatest.jar  ${tmp_data} ${tmp_data}.partitions
+
+#插入hive
+sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${tmp_data}.partitions ${table}
 
 #echo "insert hive"
 #sh ${workspace_path}/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
