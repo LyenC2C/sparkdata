@@ -35,7 +35,7 @@ echo $'\t'"all feedid location:"$'\t'${all_feed_output}
 echo $'\t'"new feedid location:"$'\t'${new_feed_output}
 
 #处理数据
-echo "Start spark job."
+echo "1/5 Start spark job."
 hadoop fs -rmr $all_feed_output
 hadoop fs -rmr $new_feed_output
 hadoop fs -rmr $tmp_data
@@ -47,7 +47,7 @@ local_tmp_new_feed=/mnt/raid1/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.par
 local_tmp_inc_data=/mnt/raid1/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
 
 #合并文件
-echo "cat and put result data  dir.."$tmp_data" to "${tmp_data}.test
+echo "2/5 cat and put result data  dir.."$tmp_data" to "${tmp_data}.test
 hadoop fs -cat ${new_feed_output}/part* > ${local_tmp_new_feed}
 hadoop fs -rmr ${new_feed_output}/part*
 hadoop fs -put ${local_tmp_new_feed} ${new_feed_output}/
@@ -58,17 +58,19 @@ hadoop fs -put ${local_tmp_inc_data} ${tmp_data}/
 hadoop fs -chmod -R 775 $tmp_data
 
 #数据分区
+echo "3/5 inc data partitions.."
 hadoop fs -rmr ${tmp_data}.partitions
-spark-submit  --master spark://cs220:7077  --total-executor-cores  40 --executor-memory  4g --driver-memory 4g --class MultipleText  ${workspace_path}/pzz/sh/scalatest.jar  ${tmp_data} ${tmp_data}.partitions
+spark-submit  --master spark://cs220:7077  --total-executor-cores  40 --executor-memory  4g --driver-memory 4g --class MultipleText  ${workspace_path}/pzz/sh/partition_spark.jar  ${tmp_data} ${tmp_data}.partitions
 
 #插入hive
+echo "4/5 mv partitions to hive.."
 sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${tmp_data}.partitions ${table}
 
 #echo "insert hive"
 #sh ${workspace_path}/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
 
 #反馈商品评论增量
-echo "feed back item feed inc number to commit.."
+echo "5/5 feed back item feed inc number to commit.."
 hadoop fs -rmr /commit_feedbck/cmt/cmt_newfeedid.${mission_id}
 hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 
