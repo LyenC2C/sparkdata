@@ -74,7 +74,7 @@ pre_path='/home/wrt/sparkdata'
 #
 #qiantian='20151109'
 #zuotian='20151110'
-#
+##
 #hadoop fs -rm -r /user/wrt/daysale_tmp
 #spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
 #$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
