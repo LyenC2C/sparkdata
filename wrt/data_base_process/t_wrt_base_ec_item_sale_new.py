@@ -86,7 +86,7 @@ def f1(line):
     except Exception,e:
 		# print e,valid_jsontxt(line)
         print ts
-		return [None]
+        return [None]
 
 def f2(line):
     ss = line.strip().split('\001')
