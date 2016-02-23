@@ -9,6 +9,9 @@ commit_dir=/commit/comments
 #workspace path
 workspace_path=/mnt/raid1/pzz/workspace/sparkdata
 
+#table
+table=t_base_ec_item_feed_dev_test
+
 #任务id
 mission_id=$1
 #输入数据
@@ -53,15 +56,14 @@ hadoop fs -cat ${tmp_data}/part* > ${local_tmp_inc_data}
 hadoop fs -rmr ${tmp_data}/part*
 hadoop fs -put ${local_tmp_inc_data} ${tmp_data}/
 
-#数据分区
+#数据分区,插入hive
 hadoop fs -rmr ${tmp_data}.partitions
 sh ./mv_feed_from_partitions.sh
 hadoop fs -chmod -R 775 $tmp_data
+sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh $tmp_data.partitions ${table}
 
-echo "insert hive"
-sh ${workspace_path}/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
-
-echo "completed insertting "$tmp_data
+#echo "insert hive"
+#sh ${workspace_path}/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
 
 #反馈商品评论增量
 echo "feed back item feed inc number to commit.."
