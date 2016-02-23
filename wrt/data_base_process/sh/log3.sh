@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 pre_path='/home/wrt/sparkdata'
-zuotian=$(date -d '1 days ago' +%Y%m%d)
-echo "haha" >> ./log_date/log_$zuotian 2>&1
+#zuotian=$(date -d '1 days ago' +%Y%m%d)
+
+qiantian='20160124'
+zuotian='20160125'
+
+hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py 20160124 20160125 20160216 >> ./log_date/log_$zuotian 2>&1
+sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+
 
 #sh $pre_path/zlj/project/task/zhejiang/everyday_sold.sql  20151216 20151217 20151224 20151224
 #
