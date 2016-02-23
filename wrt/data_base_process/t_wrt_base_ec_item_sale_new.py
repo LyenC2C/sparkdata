@@ -85,7 +85,7 @@ def f1(line):
         return result
     except Exception,e:
 		# print e,valid_jsontxt(line)
-        print ts
+        print valid_jsontxt(ts)
         return [None]
 
 def f2(line):
