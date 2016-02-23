@@ -8,6 +8,11 @@ sc = SparkContext(appName="cal_daysale " + yesterday)
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + today
 
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
 def yes_sale(line):
     ss = line.strip().split('\001')
     itemid = ss[0]
@@ -42,11 +47,11 @@ def cal(x,y):
             today_info = twodays[0]
         day_sold = max(today_info[1] - yesterday_info[1], 0)
         day_sold_price = float(day_sold) * yesterday_info[0]
-    return str(x) + "\001" + str(day_sold) + "\001" + str(day_sold_price)
+    return str(valid_jsontxt(x)) + "\001" + str(day_sold) + "\001" + str(day_sold_price)
 
 # rdd1 = textFile(s1).map(lambda x:(x.split('\001')[0],x.split('\001')[1:]))
 # rdd2 = textFile(s2).map(lambda x:(x.split('\001')[0],x.split('\001')[1:]))
 rdd1 = sc.textFile(s1).map(lambda x:yes_sale(x))
 rdd2 = sc.textFile(s2).map(lambda x:tod_sale(x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):cal(x,y))
-rdd.saveAsTextFile('/user/wrt/daysale/ds=' + yesterday)
+rdd.coalesce(30).saveAsTextFile('/user/wrt/daysale_tmp')
