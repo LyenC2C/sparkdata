@@ -43,7 +43,7 @@ echo "spark job finished."
 local_tmp_new_feed=/mnt/raid1/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.partall
 local_tmp_inc_data=/mnt/raid1/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
 
-#hive 入库
+#合并文件
 echo "cat and put result data  dir.."$tmp_data" to "${tmp_data}.test
 hadoop fs -cat ${new_feed_output}/part* > ${local_tmp_new_feed}
 hadoop fs -rmr ${new_feed_output}/part*
@@ -53,8 +53,9 @@ hadoop fs -cat ${tmp_data}/part* > ${local_tmp_inc_data}
 hadoop fs -rmr ${tmp_data}/part*
 hadoop fs -put ${local_tmp_inc_data} ${tmp_data}/
 
-hadoop fs -rmr ${tmp_data}.test
-hadoop fs -cp $tmp_data ${tmp_data}.test
+#数据分区
+hadoop fs -rmr ${tmp_data}.partitions
+sh ./mv_feed_from_partitions.sh
 hadoop fs -chmod -R 775 $tmp_data
 
 echo "insert hive"
