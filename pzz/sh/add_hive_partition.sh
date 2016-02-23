@@ -1,8 +1,9 @@
 source /home/yarn/.bashrc
 
-start=20160209
-end=20160228
-table="t_base_ec_item_feed_dev_test"
+table=$1
+start=$2
+end=$3
+
 
 for((i=${start};i<=${end};i++))
 do
