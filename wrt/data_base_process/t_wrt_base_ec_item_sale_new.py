@@ -85,6 +85,7 @@ def f1(line):
         return result
     except Exception,e:
 		# print e,valid_jsontxt(line)
+        ts = line.strip().split('\t',3)[0]
         print valid_jsontxt(ts)
         return [None]
 
