@@ -114,12 +114,16 @@ def f3(line):
     return ss
 
 def quchong_1(x, y):
-    max = 0
-    item_list = y
-    for ln in item_list:
-        if int(ln[8]) > max:
-            max = int(ln[8])
-            y = ln
+    try:
+        max = 0
+        item_list = y
+        for ln in item_list:
+            if int(ln[8]) > max:
+                max = int(ln[8])
+                y = ln
+    except Exception,e:
+        print e,valid_jsontxt(line)
+        y = y[0]
     flag = '0'
     y.append(flag)
     return (x, y)
