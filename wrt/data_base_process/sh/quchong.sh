@@ -241,9 +241,6 @@ $pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysa
 sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
 
 
-
-
-
 #zuotian='20160122'
 #qiantian='20160121'
 #
