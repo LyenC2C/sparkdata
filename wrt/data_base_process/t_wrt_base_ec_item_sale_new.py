@@ -80,12 +80,12 @@ def f1(line):
             lv.append(int_k(total_sold))
             lv.append(int_k(order_cost))
             lv.append(valid_jsontxt(shop_id))
-            lv.append(ts)
+            lv.append(int_k(ts))
             result.append(lv)
         return result
     except Exception,e:
-		print e,valid_jsontxt(line)
-		return [None]
+        print e,valid_jsontxt(line)
+        return [None]
 
 def f2(line):
     ss = line.strip().split('\001')
@@ -114,16 +114,16 @@ def f3(line):
     return ss
 
 def quchong_1(x, y):
-    try:
-        max = 0
-        item_list = y
-        for ln in item_list:
+    max = 0
+    item_list = y
+    for ln in item_list:
+        try:
             if int(ln[8]) > max:
                 max = int(ln[8])
                 y = ln
-    except Exception,e:
-        print e,valid_jsontxt(line)
-        y = y[0]
+        except Exception,e:
+            print valid_jsontxt(ln[8])
+            y = item_list[0]
     flag = '0'
     y.append(flag)
     return (x, y)
