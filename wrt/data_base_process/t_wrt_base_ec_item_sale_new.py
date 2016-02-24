@@ -84,9 +84,7 @@ def f1(line):
             result.append(lv)
         return result
     except Exception,e:
-		# print e,valid_jsontxt(line)
-        ts = line.strip().split('\t',3)[0]
-        print valid_jsontxt(ts)
+        print e,valid_jsontxt(line)
         return [None]
 
 def f2(line):
@@ -119,9 +117,13 @@ def quchong_1(x, y):
     max = 0
     item_list = y
     for ln in item_list:
-        if int(ln[8]) > max:
-            max = int(ln[8])
-            y = ln
+        try:
+            if int(ln[8]) > max:
+                max = int(ln[8])
+                y = ln
+        except Exception,e:
+            print valid_jsontxt(ln[8])
+            y = item_list[0]
     flag = '0'
     y.append(flag)
     return (x, y)
