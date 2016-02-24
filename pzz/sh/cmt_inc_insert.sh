@@ -10,7 +10,7 @@ commit_dir=/commit/comments
 workspace_path=/mnt/raid1/pzz/workspace/sparkdata
 
 #table
-table=t_base_ec_item_feed_dev_test
+table=t_base_ec_item_feed_dev
 
 #任务id
 mission_id=$1
