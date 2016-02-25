@@ -122,8 +122,11 @@ def quchong_1(x, y):
                 max = int(ln[8])
                 y = ln
         except Exception,e:
-            print valid_jsontxt(ln[8])
-            y = item_list[0]
+            # print valid_jsontxt(ln[8])
+            x = "000000"
+            y = ln
+            # y = item_list[0]
+            break
     flag = '0'
     y.append(flag)
     return (x, y)
