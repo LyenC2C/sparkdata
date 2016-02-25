@@ -181,7 +181,7 @@ def quchong_3(x, y):
     return "\001".join(lv)
 
 #s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + iteminfo_day #today's t_base_ec_shop_dev
-s1 = "/commit/shopitem2/shopitem2." + today #today
+s1 = "/commit/shopitem2/" + today #today
 # s1 = "/commit/shopitem2/20160112/shop.item.crawler171.2016-01-12"
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=" + iteminfo_day #today's t_base_ec_item_dev
 s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #yesterday
