@@ -60,8 +60,8 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
 
 EOF
 
-hadoop fs -cat /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_inc_tmp/* >cmt_inc_data_$ds
+hadoop fs -cat /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_inc_tmp/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
-hadoop fs -put  cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev/
 
-rm  cmt_inc_data_$ds
+rm  /mnt/raid2/zlj/cmt_inc_data_$ds
