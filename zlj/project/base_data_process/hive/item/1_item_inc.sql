@@ -3,12 +3,12 @@
 item_ds=$1
 
 
-/home/hadoop/hive/bin/hive<<EOF
+hive<<EOF
 
 
 use wlbase_dev;
 
-LOAD DATA  INPATH '/user/zlj/data/temp/t_base_ec_item_dev_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_zlj_test PARTITION (ds='20150000');
+LOAD DATA  INPATH '/user/wrt/t_base_ec_item_dev_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_zlj_test PARTITION (ds='20150000');
 
 insert  OVERWRITE table t_base_ec_item_dev PARTITION(ds='$item_ds')
   SELECT  /*+ mapjoin(t2)*/
