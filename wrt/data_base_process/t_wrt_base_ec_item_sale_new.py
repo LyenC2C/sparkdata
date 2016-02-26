@@ -80,12 +80,12 @@ def f1(line):
             lv.append(int_k(total_sold))
             lv.append(int_k(order_cost))
             lv.append(valid_jsontxt(shop_id))
-            lv.append(ts)
+            lv.append(int_k(ts))
             result.append(lv)
         return result
     except Exception,e:
-		print e,valid_jsontxt(line)
-		return [None]
+        #print e,valid_jsontxt(line)
+        return [None]
 
 def f2(line):
     ss = line.strip().split('\001')
@@ -117,9 +117,16 @@ def quchong_1(x, y):
     max = 0
     item_list = y
     for ln in item_list:
+        # try:
         if int(ln[8]) > max:
-            max = int(ln[8])
-            y = ln
+                max = int(ln[8])
+                y = ln
+        # except Exception,e:
+        #     # print valid_jsontxt(ln[8])
+        #     x = "000000"
+        #     y = ln
+        #     # y = item_list[0]
+        #     break
     flag = '0'
     y.append(flag)
     return (x, y)
@@ -160,7 +167,7 @@ def quchong_3(x, y):
     item_list = y
     if len(item_list) == 1:
         ln = item_list[0]
-        ln[9] = '1'
+        ln[9] = '1' #flag
         y = ln
     else:
         for ln in item_list:
@@ -174,8 +181,8 @@ def quchong_3(x, y):
     return "\001".join(lv)
 
 #s = "/hive/warehouse/wlbase_dev.db/t_base_ec_shop_dev/ds=" + iteminfo_day #today's t_base_ec_shop_dev
-# s1 = "/commit/shopitem2/" + today #today
-s1 = "/commit/shopitem2/20160112/shop.item.crawler171.2016-01-12"
+s1 = "/commit/shopitem2/" + today #today
+# s1 = "/commit/shopitem2/20160112/shop.item.crawler171.2016-01-12"
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=" + iteminfo_day #today's t_base_ec_item_dev
 s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday #yesterday
 
