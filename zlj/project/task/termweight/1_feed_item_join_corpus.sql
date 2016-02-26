@@ -17,7 +17,7 @@ select item_id,title_cut from t_zlj_base_ec_item_title_cut where ds=20160216
 )t1
 join
 (
-select item_id,user_id from t_base_ec_record_dev
+select item_id,user_id from t_base_ec_record_dev_s
 group by item_id,user_id
 )
 t2
