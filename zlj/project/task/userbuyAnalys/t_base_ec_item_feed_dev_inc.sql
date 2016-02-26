@@ -40,7 +40,8 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
             price,
             location
           FROM t_base_ec_item_dev
-          WHERE ds = 20160105) t1
+          WHERE ds = 20160105
+          ) t1
       JOIN
       (
         SELECT
@@ -49,8 +50,8 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
           user_id,
           length(content)              content_length,
           annoy,
-          regexp_replace(f_date, '-', '') as ds ,
-          datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), f_date) AS datediff
+          SUBSTRING (regexp_replace(f_date,'-',''),0,8)  as ds ,
+          datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), SUBSTRING (f_date,0,10)) AS datediff
         FROM t_base_ec_item_feed_dev_inc
         WHERE ds='$ds' and item_id IS NOT NULL AND f_date IS NOT NULL AND regexp_replace(f_date, '-', '') > 20150101
 
@@ -61,6 +62,6 @@ EOF
 
 hadoop fs -cat /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_inc_tmp/* >cmt_inc_data_$ds
 
-hadoop fs -put  cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t/
+hadoop fs -put  cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev/
 
 rm  cmt_inc_data_$ds
