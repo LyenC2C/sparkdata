@@ -4,7 +4,7 @@
 
 ds=$1
 
-/home/hadoop/hive/bin/hive<<EOF
+/home/zlj/hive/bin/hive<<EOF
 
 
 
