@@ -4,7 +4,7 @@
 
 ds=$1
 
-/home/hadoop/hive/bin/hive<<EOF
+/home/zlj/hive/bin/hive<<EOF
 
 
 
@@ -40,7 +40,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
             price,
             location
           FROM t_base_ec_item_dev
-          WHERE ds = 20160105
+          WHERE ds = 20160216
           ) t1
       JOIN
       (
