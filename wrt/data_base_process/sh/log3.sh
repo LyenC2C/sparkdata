@@ -178,37 +178,37 @@ pre_path='/home/wrt/sparkdata'
 #$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
 #sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
-qiantian='20160222'
-zuotian='20160223'
-
-hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-qiantian='20160223'
-zuotian='20160224'
-
-hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-qiantian='20160224'
-zuotian='20160225'
-
-hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-qiantian='20160225'
-zuotian='20160226'
-
-hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
-$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#qiantian='20160222'
+#zuotian='20160223'
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#qiantian='20160223'
+#zuotian='20160224'
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#qiantian='20160224'
+#zuotian='20160225'
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#qiantian='20160225'
+#zuotian='20160226'
+#
+#hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
+#$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
 qiantian='20160226'
 zuotian='20160227'
@@ -226,6 +226,14 @@ spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-mem
 $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
 sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
+
+qiantian='20160228'
+zuotian='20160229'
+
+hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  120   --executor-memory  12g  --driver-memory 20g \
+$pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale_new.py $qiantian $zuotian 20160216 >> ./log_date/log_$zuotian 2>&1
+sh $pre_path/wrt/data_base_process/t_wrt_base_ec_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
 
 #qiantian='20160125'
