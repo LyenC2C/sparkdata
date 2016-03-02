@@ -47,8 +47,8 @@ done<${local_tmp_path}/ds_log
 cat ${local_tmp_path}/ds_log_error
 while read line
 do
-    #echo 'test,do not remove'
-    hadoop fs -rm $path/$line/*
+    echo 'test,do not remove'
+    #hadoop fs -rm $path/$line/*
 done<${local_tmp_path}/ds_log_error
 
 
