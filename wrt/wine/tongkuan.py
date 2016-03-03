@@ -37,7 +37,7 @@ def pipei(list1,list2):
     #     l1 += ln*ln
     # for ln in values2:
     #     l2 == ln*ln
-    l1 = math.sqrt(l1)
+    #l1 = math.sqrt(l1)
     for i in range(len(words1)):
         if words1[i] in words2:
             j = words2.index(words1[i])
