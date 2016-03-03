@@ -30,10 +30,9 @@ def pipei(list1,list2):
         if words1[i] in words2:
             n += values1[i]
             j = words2.index(words1[i])
-            del words2[j]
+            del words2[j]   #删除匹配到的词和与之对应的权值
             del values2[j]
-            #lt2.remove(ln)
-	if l1 + l2 == 0: return 0.0 #+ ' ' + str(list1) + ' ' +str
+	if l1 + l2 == 0: return 0.0
 	return float(n/(l1+l2)*2)
 
 def f(line):
@@ -46,8 +45,8 @@ def f(line):
     words = []
     values = []
     for ln in title:
-        word = uniform(ln.split("_")[0])
-        value = int(ln.split("_")[1])
+        word = uniform(ln.split("_")[0]) #所有字母变小写
+        value = int(ln.split("_")[1]) #匹配权值
         words.append(word)
         values.append(value)
     return (brand,[item_id,words,values])
@@ -60,7 +59,7 @@ def f(x,y):
         for j in range(i+1,l):
             k1 = brand_list[i]
             k2 = brand-list[j]
-            pipei_value = pipei(k1[1:],k2[1:]) #[words,values]
+            pipei_value = pipei(k1[1:],k2[1:]) #([words,values],[words,values])
             result.append(x + "\t" + k1[0] + "\t" + k2[0] + "\t" + str(pipei_value))
     return result
 
