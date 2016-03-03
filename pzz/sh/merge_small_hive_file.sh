@@ -8,7 +8,7 @@ source ~/.bashrc
 
 
 path=$1
-local_tmp_path=/mnt/pzz/hdfs_merge_tmp
+local_tmp_path=/mnt/raid1/pzz/hdfs_merge_tmp
 #hadoop fs -ls $path
 
 echo $path
