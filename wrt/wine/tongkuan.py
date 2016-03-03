@@ -43,7 +43,7 @@ def pipei(list1,list2):
             del values2[j]
 	if l1 + l2 == 0: return 0.0
 	# return float(n/(l1+l2)*2)
-    return float(/(math.sqrt(l1)*math.sqrt(l2)))
+    return float(n/(math.sqrt(l1)*math.sqrt(l2)))
 def f(line):
     ss = line.strip().split('\t')
     if len(ss) != 3: return None
