@@ -44,8 +44,10 @@ def pipei(list1,list2):
             n += values1[i]*values2[j]
             del words2[j]   #删除匹配到的词和与之对应的权值
             del values2[j]
-	if math.sqrt(l1)*math.sqrt(l2) == 0: return 0.0
-    else: return float(n/(math.sqrt(l1)*math.sqrt(l2)))
+    if math.sqrt(l1)*math.sqrt(l2) == 0:
+        return 0.0
+    else:
+        return float(n/(math.sqrt(l1)*math.sqrt(l2)))
 def f1(line):
     ss = line.strip().split('\t')
     if len(ss) != 3: return None
