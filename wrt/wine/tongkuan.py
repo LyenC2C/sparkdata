@@ -78,3 +78,5 @@ def f(x,y):
 rdd = sc.textFile("/user/zlj/temp/tb_wine_title_cut_w_clean_groupby").map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f(x,y))
 rdd2.saveAsTextFile('/user/zlj/temp/pipei_result')
+
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan.py
