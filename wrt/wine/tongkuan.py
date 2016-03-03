@@ -58,7 +58,7 @@ def f(x,y):
     for i in range(l):
         for j in range(i+1,l):
             k1 = brand_list[i]
-            k2 = brand-list[j]
+            k2 = brand_list[j]
             pipei_value = pipei(k1[1:],k2[1:]) #([words,values],[words,values])
             result.append(x + "\t" + k1[0] + "\t" + k2[0] + "\t" + str(pipei_value))
     return result
