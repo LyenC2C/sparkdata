@@ -1,5 +1,6 @@
 __author__ = 'wrt'
 import sys
+import copy
 from pyspark import SparkContext
 
 sc = SparkContext(appName="tongkuan")
