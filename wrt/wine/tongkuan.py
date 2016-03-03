@@ -28,12 +28,14 @@ def pipei(list1,list2):
     values2 = copy.deepcopy(list2[1])
     # l1 = sum(values1)
     # l2 = sum(values2)
-    l1 = 0
-    l2 = 0
-    for ln in values1:
-        l1 += ln*ln
-    for ln in values2:
-        l2 == ln*ln
+    # l1 = 0
+    # l2 = 0
+    l1 = sum([i*i for i in values1])
+    l2 = sum([i*i for i in values2])
+    # for ln in values1:
+    #     l1 += ln*ln
+    # for ln in values2:
+    #     l2 == ln*ln
     l1 = math.sqrt(l1)
     for i in range(len(words1)):
         if words1[i] in words2:
