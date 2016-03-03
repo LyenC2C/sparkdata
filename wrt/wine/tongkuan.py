@@ -73,7 +73,9 @@ def f2(x,y):
             k1 = brand_list[i]
             k2 = brand_list[j]
             pipei_value = pipei(k1[1:],k2[1:]) #([words,values],[words,values])
-            result.append(x + "\t" + k1[0] + "\t" + k2[0] + "\t" + str(pipei_value))
+            title1 = "".join(k1[1])
+            title2 = "".join(k2[1])
+            result.append(x + "\t" + k1[0] + "\t" + title1 + "\t" + k2[0] + "\t" + title2 + "\t" + str(pipei_value))
     return result
 
 
