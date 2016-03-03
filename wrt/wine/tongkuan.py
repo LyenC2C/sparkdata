@@ -58,6 +58,7 @@ def f1(line):
     words = []
     values = []
     for ln in title:
+        if len(ln.split("_") != 2): return None
         word = uniform(ln.split("_")[0]) #所有字母变小写
         value = int(ln.split("_")[1]) #匹配权值
         words.append(word)
