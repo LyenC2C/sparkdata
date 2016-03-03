@@ -41,7 +41,7 @@ def pipei(list1,list2):
     for i in range(len(words1)):
         if words1[i] in words2:
             j = words2.index(words1[i])
-            n += values1[i]*values1[j]
+            n += values1[i]*values2[j]
             del words2[j]   #删除匹配到的词和与之对应的权值
             del values2[j]
 	if l1 + l2 == 0: return 0.0
