@@ -47,7 +47,7 @@ def pipei(list1,list2):
 	if l1 + l2 == 0: return 0.0
 	# return float(n/(l1+l2)*2)
     return float(n/(math.sqrt(l1)*math.sqrt(l2)))
-def f(line):
+def f1(line):
     ss = line.strip().split('\t')
     if len(ss) != 3: return None
     if ss[1].strip() == "": return None
@@ -63,7 +63,7 @@ def f(line):
         values.append(value)
     return (brand,[item_id,words,values])
 
-def f(x,y):
+def f2(x,y):
     brand_list = y
     l = len(brand_list)
     result = []
@@ -76,8 +76,8 @@ def f(x,y):
     return result
 
 
-rdd = sc.textFile("/user/zlj/temp/tb_wine_title_cut_w_clean_groupby").map(lambda x:f(x)).filter(lambda x:x!=None)
-rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f(x,y))
+rdd = sc.textFile("/user/zlj/temp/tb_wine_title_cut_w_clean_groupby").map(lambda x:f1(x)).filter(lambda x:x!=None)
+rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
 rdd2.saveAsTextFile('/user/zlj/temp/pipei_result')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan.py
