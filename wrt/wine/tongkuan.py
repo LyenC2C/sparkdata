@@ -1,6 +1,7 @@
 __author__ = 'wrt'
 import sys
 import copy
+import math
 from pyspark import SparkContext
 
 sc = SparkContext(appName="tongkuan")
@@ -25,17 +26,24 @@ def pipei(list1,list2):
     words2 = copy.deepcopy(list2[0])
     values1 = copy.deepcopy(list1[1])
     values2 = copy.deepcopy(list2[1])
-    l1 = sum(values1)
-    l2 = sum(values2)
+    # l1 = sum(values1)
+    # l2 = sum(values2)
+    l1 = 0
+    l2 = 0
+    for ln in values1:
+        l1 += ln*ln
+    for ln in values2:
+        l2 == ln*ln
+    l1 = math.sqrt(l1)
     for i in range(len(words1)):
         if words1[i] in words2:
-            n += values1[i]
             j = words2.index(words1[i])
+            n += values1[i]*values1[j]
             del words2[j]   #删除匹配到的词和与之对应的权值
             del values2[j]
 	if l1 + l2 == 0: return 0.0
-	return float(n/(l1+l2)*2)
-
+	# return float(n/(l1+l2)*2)
+    return float(/(math.sqrt(l1)*math.sqrt(l2)))
 def f(line):
     ss = line.strip().split('\t')
     if len(ss) != 3: return None
