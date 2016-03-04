@@ -60,7 +60,7 @@ rdd=[(k,[word word word])]
 '''
 def clean(rdd,top_freq,min_freq):
     filter_wordset=rdd.map(lambda (k,v_list):v_list).flatMap(lambda x:x).map(lambda x:(x,1))\
-        .reduceByKey(lambda a,b:a+b).filter(lambda (x,y): y>0).map(lambda (x,y):x).collect()
+        .reduceByKey(lambda a,b:a+b).filter(lambda (x,y): y>min_freq and y<top_freq).map(lambda (x,y):x).collect()
     broadcastVar = sc.broadcast(filter_wordset)
     worddic = broadcastVar.value
     rdd_clean=rdd.map(lambda (k,v_list):(k,[i for i in v_list if i in worddic]))
@@ -98,11 +98,11 @@ import sys
 if __name__ == "__main__":
     input=sys.argv[1]
     output=sys.argv[2]
-    min_freq=sys.argv[3]
-    limit=sys.argv[4]
+    min_freq=int(sys.argv[3])
+    limit=int(sys.argv[4])
     top_freq=1000000
     if len(sys.argv)==6:
-        top_freq=sys.argv[5]
+        top_freq=int(sys.argv[5])
     rdd=sc.textFile(input).map(lambda x:x.split()).map(lambda  x:(x[0],[i.split('_')[0] for i in x[-1].split('\001') if len(i)>0]))
     rdd_clean=clean(rdd,top_freq,min_freq)
     rdd_clean.saveAsTextFile(output)
