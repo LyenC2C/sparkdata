@@ -250,3 +250,4 @@ if __name__ == "__main__":
 #
 # sc.textFile('/user/zlj/aipusheng.json').map(lambda x:f(x)).repartition(1).saveAsTextFile('/user/zlj/aipusheng_info_title')
 #
+
