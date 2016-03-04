@@ -106,7 +106,7 @@ if __name__ == "__main__":
         top_freq=sys.argv[5]
     rdd=sc.textFile(input).map(lambda x:x.split()).map(lambda  x:(x[0],[i.split('_')[0] for i in x[-1].split('\001') if len(i)>0]))
     rdd_clean=clean(rdd,top_freq,min_freq)
-    rdd_clean.saveAsTextFile(output)
+    rdd.saveAsTextFile(output)
     # rdd_tfidf=tfidf(rdd_clean,limit)
     # rdd_tfidf.map(lambda (x,y):x+'\001'+ "\t".join(y)).saveAsTextFile(output)
 
