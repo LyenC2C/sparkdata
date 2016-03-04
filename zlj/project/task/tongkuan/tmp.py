@@ -83,6 +83,7 @@ def fun(x):
     return ['\001'.join(['_'.join(i) for i in lv])]
 
 
+
 def fun_x(x):
     if len(x)!=2:return None
     info,title=x
