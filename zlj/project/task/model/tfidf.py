@@ -102,7 +102,7 @@ if __name__ == "__main__":
     min_freq=sys.argv[3]
     limit=sys.argv[4]
     top_freq=1000000
-    if len(sys.argv)==5:
+    if len(sys.argv)==6:
         top_freq=sys.argv[5]
     rdd=sc.textFile(input).map(lambda x:x.split()).map(lambda  x:(x[0],[i.split('_')[0] for i in x[-1].split('\001')]))
     rdd_clean=clean(rdd,top_freq,min_freq)
