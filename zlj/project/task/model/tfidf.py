@@ -60,7 +60,7 @@ rdd=[(k,[word word word])]
 '''
 def clean(rdd,top_freq,min_freq):
     filter_wordset=rdd.map(lambda (k,v_list):v_list).flatMap(lambda x:x).map(lambda x:(x,1))\
-        .reduceByKey(lambda a,b:a+b).filter(lambda (x,y): y>min_freq).map(lambda (x,y):x).collect()
+        .reduceByKey(lambda a,b:a+b).filter(lambda (x,y): y>0).map(lambda (x,y):x).collect()
     broadcastVar = sc.broadcast(filter_wordset)
     worddic = broadcastVar.value
     rdd_clean=rdd.map(lambda (k,v_list):(k,[i for i in v_list if i in worddic]))
