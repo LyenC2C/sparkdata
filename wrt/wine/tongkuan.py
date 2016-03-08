@@ -49,7 +49,7 @@ def pipei(list1,list2):
     else:
         return float(n/(math.sqrt(l1)*math.sqrt(l2)))
 def f1(line):
-    ss = line.strip().split(' ')
+    ss = line.strip().split('\t')
     if len(ss) != 3: return None
     if ss[1].strip() == "": return None
     item_id = ss[0]
