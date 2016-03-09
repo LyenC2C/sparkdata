@@ -16,7 +16,7 @@ def f(line):
     ob=json.loads(txt)
     props = ob.get("props")
     for ln in props:
-        if "香型".decode('utf-8') in valid_jsontxt(ln["name"]):
+        if "香型".encode('utf-8') in valid_jsontxt(ln["name"]):
             return None
     return line
 
