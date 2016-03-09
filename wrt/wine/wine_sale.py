@@ -14,6 +14,8 @@ def valid_jsontxt(content):
 def set_null(x):
     if x.strip() == "":
         return "-"
+    else:
+        return x
 def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     item_id = valid_jsontxt(ob.get("auctionId","-"))
