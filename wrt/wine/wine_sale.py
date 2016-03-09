@@ -13,7 +13,7 @@ def valid_jsontxt(content):
         return content
 
 def f(line):
-    ob = son.loads(valid_jsontxt(line.strip()))
+    ob = json.loads(valid_jsontxt(line.strip()))
     item_id = valid_jsontxt(ob.get("auctionId","-"))
     if item_id == "-" : return None
     title = valid_jsontxt(ob.get("title","-"))
