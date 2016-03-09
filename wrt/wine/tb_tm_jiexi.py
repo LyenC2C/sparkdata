@@ -17,7 +17,7 @@ def f(line):
     ob=json.loads(txt)
     props = ob.get("props")
     if type(props) != type([]): return None
-    categoryId = ob.get("itemInfoModel",{}).get("categoryId","-")
+    categoryId = valid_jsontxt(ob.get("itemInfoModel",{}).get("categoryId","-"))
     if categoryId != "50008144" and categoryId != "50013052": return None
     for ln in props:
         if valid_jsontxt("香型") in valid_jsontxt(ln["name"]):
