@@ -11,18 +11,24 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else:
         return content
-
+def set_null(x):
+    if x.strip() == "":
+        return "-"
 def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     item_id = valid_jsontxt(ob.get("auctionId","-"))
-    if item_id == "-" : return None
-    title = valid_jsontxt(ob.get("title","-"))
-    sold = valid_jsontxt(ob.get("sold","-"))
-    reservePrice = valid_jsontxt(ob.get("reservePrice","-"))
-    shop_id = valid_jsontxt(ob.get("shop_id","-"))
-    salePrice = valid_jsontxt(ob.get("salePrice","-"))
+    if item_id == "-" or item_id.strip() == "": return None
+    title = set_null(valid_jsontxt(ob.get("title","-")))
+    sold = set_null(valid_jsontxt(ob.get("sold","-")))
+    reservePrice = set_null(valid_jsontxt(ob.get("reservePrice","-")))
+    shop_id = set_null(valid_jsontxt(ob.get("shop_id","-")))
+    salePrice = set_null(valid_jsontxt(ob.get("salePrice","-")))
+    if salePrice == "-" or sold == "-":
+        month_sales = "-"
+    else:
+        month_sales = valid_jsontxt(str(float(salePrice) * float(sold)))
     # result = []
-    return ((item_id,[title,sold,reservePrice,salePrice,shop_id]))
+    return ((item_id,[title,sold,reservePrice,salePrice,month_sales,shop_id]))
     # picUrl = ob.get("")
 def quchong(x, y):
     # max = 0
