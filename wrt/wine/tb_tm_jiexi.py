@@ -1,3 +1,4 @@
+#coding:utf-8
 __author__ = 'wrt'
 import sys
 import rapidjson as json
@@ -16,7 +17,7 @@ def f(line):
     ob=json.loads(txt)
     props = ob.get("props")
     for ln in props:
-        if "香型".encode('utf-8') in valid_jsontxt(ln["name"]):
+        if valid_jsontxt("香型") in valid_jsontxt(ln["name"]):
             return None
     return line
 
