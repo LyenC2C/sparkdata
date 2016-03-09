@@ -50,3 +50,5 @@ rdd_c = sc.textFile("/commit/project/wine/wine_shopid.0309.shopitem.2016-03-09")
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/wine_sale_tmp')
 
+#spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 wine_sale.py
+
