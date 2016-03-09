@@ -13,7 +13,7 @@ def valid_jsontxt(content):
         return content
 def f(line):
     ss = line.strip().split("\t",2)
-    txt = ss[2]
+    txt = valid_jsontxt(ss[2])
     ob=json.loads(txt)
     props = ob.get("props")
     for ln in props:
