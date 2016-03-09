@@ -29,7 +29,7 @@ def f(line):
         try:
             month_sales = valid_jsontxt(str(float(salePrice) * float(sold)))
         except Exception,e:
-            print "hahaha" + ss[0]
+            print "hahaha" + item_id
             return None
     # result = []
     return ((item_id,[title,sold,reservePrice,salePrice,month_sales,shop_id]))
