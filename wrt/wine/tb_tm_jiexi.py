@@ -16,7 +16,7 @@ def f(line):
     ob=json.loads(txt)
     props = ob.get("props")
     for ln in props:
-        if valid_jsontxt(ln["name"]) == "香型":
+        if valid_jsontxt("香型") in valid_jsontxt(ln["name"]):
             return None
     return line
 
