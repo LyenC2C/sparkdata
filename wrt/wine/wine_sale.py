@@ -46,7 +46,7 @@ def quchong(x, y):
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
-rdd_c = sc.textFile("/commit/project/wine/wine_shopid.0309.shopitem.2016-03-09").f(lambda x:f(x)).filter(lambda x:x!=None)
+rdd_c = sc.textFile("/commit/project/wine/wine_shopid.0309.shopitem.2016-03-09").map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/wine_sale_tmp')
 
