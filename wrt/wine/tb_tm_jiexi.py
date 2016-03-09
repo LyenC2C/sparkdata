@@ -16,6 +16,7 @@ def f(line):
     txt = valid_jsontxt(ss[2])
     ob=json.loads(txt)
     props = ob.get("props")
+    if type(props) != type([]): return None
     for ln in props:
         if valid_jsontxt("香型") in valid_jsontxt(ln["name"]):
             return None
