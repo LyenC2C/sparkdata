@@ -26,7 +26,11 @@ def f(line):
     if salePrice == "-" or sold == "-":
         month_sales = "-"
     else:
-        month_sales = valid_jsontxt(str(float(salePrice) * float(sold)))
+        try:
+            month_sales = valid_jsontxt(str(float(salePrice) * float(sold)))
+        except Exception,e:
+            print "hahaha" + ss[0]
+            return None
     # result = []
     return ((item_id,[title,sold,reservePrice,salePrice,month_sales,shop_id]))
     # picUrl = ob.get("")
