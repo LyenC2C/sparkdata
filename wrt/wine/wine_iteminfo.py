@@ -115,7 +115,7 @@ def quchong(x, y):
     item_list = y
     for ln in item_list:
         if int(ln[-1]) > max:
-                max = int(ln[8])
+                max = int(ln[-1])
                 y = ln
     result = [x] + y
     lv = []
