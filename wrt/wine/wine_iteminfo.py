@@ -131,4 +131,4 @@ rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/wine_iteminfo_tmp')
 
-# spark-submit  --executor-memory 2G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
+#spark-submit  --executor-memory 2G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
