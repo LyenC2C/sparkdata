@@ -130,3 +130,5 @@ cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filt
 rdd_c = sc.textFile(s).map(lambda x:f(x,cate_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/wine_iteminfo_tmp')
+
+#spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
