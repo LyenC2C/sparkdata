@@ -34,7 +34,7 @@ def f(line):
         #     print "hahaha" + item_id
         #     return None
     # result = []
-    return ((item_id,[title,sold,reservePrice,salePrice,month_sales,shop_id]))
+    return (item_id,[title,sold,reservePrice,salePrice,month_sales,shop_id])
     # picUrl = ob.get("")
 def quchong(x, y):
     # max = 0
