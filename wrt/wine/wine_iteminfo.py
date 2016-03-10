@@ -38,15 +38,15 @@ def f(line,cate_dict):
     txt = valid_jsontxt(ss[2])
     ob=json.loads(txt)
     itemInfoModel=ob.get('itemInfoModel',"-")
+    if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
     item_id = itemInfoModel.get('itemId','-')
     title = itemInfoModel.get('title','-')
     favor = itemInfoModel.get('favcount','-')
-    if itemInfoModel == "-": return None
     categoryId = itemInfoModel.get('categoryId','-')
-    cate_rootid = cate_dict.get(categoryId,"-")[0]
+    cate_rootid = cate_dict.get(categoryId,"-")[1]
     if cate_rootid != "50008141": return None   #非酒类直接舍弃
-    cat_name = cate_dict.get(categoryId,"-")[1]
+    cat_name = cate_dict.get(categoryId,"-")[0]
     if categoryId == "50013052" or categoryId == "50008144": #1:白酒 2:红酒 3：啤酒 4:其他酒
         wine_cate = "1"
     elif categoryId == "50013003" or categoryId == "50008143" or categoryId == "50013004" or categoryId == "50512003":
@@ -127,8 +127,8 @@ def quchong(x, y):
 s = "/commit/project/wine/wine_shopid.0309.shopitem.2016-03-09.iteminfo.2016-03-09"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd_c = sc.textFile(s).map(lambda x:f(x,cate_dict)).filter(lambda x:x!=None)
-rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
+rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/wine_iteminfo_tmp')
 
-#spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
+#spark-submit  --executor-memory 2G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
