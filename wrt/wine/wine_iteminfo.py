@@ -44,9 +44,9 @@ def f(line,cate_dict):
     title = itemInfoModel.get('title','-')
     favor = itemInfoModel.get('favcount','-')
     categoryId = itemInfoModel.get('categoryId','-')
-    cate_rootid = cate_dict.get(categoryId,"-")[1]
+    cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
     if cate_rootid != "50008141": return None   #非酒类直接舍弃
-    cat_name = cate_dict.get(categoryId,"-")[0]
+    cat_name = cate_dict.get(categoryId,["-","-"])[0]
     if categoryId == "50013052" or categoryId == "50008144": #1:白酒 2:红酒 3：啤酒 4:其他酒
         wine_cate = "1"
     elif categoryId == "50013003" or categoryId == "50008143" or categoryId == "50013004" or categoryId == "50512003":
