@@ -76,12 +76,13 @@ def f2(x,y):
             pipei_value = pipei(k1[1:],k2[1:]) #([words,values],[words,values])
             title1 = "".join(k1[1])
             title2 = "".join(k2[1])
-            result.append(x + "\t" + k1[0] + "\t" + title1 + "\t" + k2[0] + "\t" + title2 + "\t" + str(pipei_value))
+            if float(pipei_value) > 0.9:
+                result.append(x + "\t" + k1[0] + "\t" + title1 + "\t" + k2[0] + "\t" + title2 + "\t" + str(pipei_value))
     return result
 
 
-rdd = sc.textFile("/user/zlj/temp/tb_wine_title_tfidf_value").map(lambda x:f1(x)).filter(lambda x:x!=None)
+rdd = sc.textFile("/user/zlj/temp/tb_wine_title_all_tfidf_value").map(lambda x:f1(x)).filter(lambda x:x!=None)
 rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
-rdd2.saveAsTextFile('/user/zlj/temp/tb_tfidf_pipei_result')
+rdd2.saveAsTextFile('/user/zlj/temp/tb_all_tfidf_pipei_result_09')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan.py
