@@ -88,7 +88,7 @@ def tfidf(rdd_clean,limit):
     # sorted(a,key=a[1],reverse=True)
     # rst=rddjoin.map(lambda (x, y): join(x, y))
     jrdd=joinrs.groupByKey()
-    # jrdd.map(lambda (x,y):str(x)+'\001'.join([str(k)+":"+str(v) for k,v in y ])).saveAsTextFile('/user/zlj/project/termweight/jointfidf_rs')
+    # jrdd.map(lambda (x,y):str(x)+'\001'.join([str(k)+":"+str( v) for k,v in y ])).saveAsTextFile('/user/zlj/project/termweight/jointfidf_rs')
     rst=jrdd.map(lambda (x, y):(x,list(y))).map(lambda (x,y):[x,
         [i[0]+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit]])
     return rst
@@ -112,3 +112,9 @@ if __name__ == "__main__":
 
 
 
+
+
+#
+
+
+sc.textFile('/user/zlj/tid_base_loc.dir/part-00000').map(lambda x:len(x.split('\001'))).distinct()

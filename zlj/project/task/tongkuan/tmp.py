@@ -173,6 +173,62 @@ def fun_jdx(x):
 
 
 
+#
+# sc.textFile('/user/zlj/temp/jd_wine_title_cut_w').map(lambda x:fun_jdx(x.split('BIG'))).\
+#     filter(lambda x: x is not None).map(lambda x:'\t'.join(x)).saveAsTextFile('/user/zlj/temp/jd_wine_title_cut_w_clean_groupby')
 
-sc.textFile('/user/zlj/temp/jd_wine_title_cut_w').map(lambda x:fun_jdx(x.split('BIG'))).\
-    filter(lambda x: x is not None).map(lambda x:'\t'.join(x)).saveAsTextFile('/user/zlj/temp/jd_wine_title_cut_w_clean_groupby')
+
+ob=json.loads('')
+
+rdd=sc.textFile(path).map(lambda x:x.split('\t'))
+
+
+rdd.map(lambda x:len(x)).take(10)
+
+json.loads(valid_jsontxt(rdd.map(lambda x:x[-1]).take(1)[0]))
+rdd.map(lambda x:(x[1],getinfo(x[-1]))).filter(lambda x:x[-1] is not None).map(lambda x:(x[-1][0],x[-1][1]))\
+    .groupByKey().map(lambda (x,y):[x,str(len(y)),"\t".join([valid_jsontxt(i) for i in set(y)])])\
+    .map(lambda x:"\001".join(valid_jsontxt(i) for i in x)).distinct().saveAsTextFile('/user/zlj/temp/brand_s')
+
+
+#groupby
+
+rdd1=rdd.map(lambda x:(x[1],getinfo(x[-1]))).filter(lambda x:x[-1] is not None).map(lambda x:[x[-1][0]+'_'+i for i in x[-1][1].split()])
+
+rdd1.flatMap(lambda x:x).map(lambda x:(x,1)).reduceByKey(lambda a,b:a+b)\
+    .map(lambda x:(x[0].split('_')[0],(x[0].split('_')[-1],x[1])))\
+    .groupByKey().map(lambda (x,y):[x,str(len(y)),"\t".join([valid_jsontxt(i[0]+'_'+str(i[1])) for i in sorted(set(y),key=lambda  t:t[-1],reverse=True)])])\
+    .map(lambda x:"\001".join(valid_jsontxt(i) for i in x)).distinct().saveAsTextFile('/user/zlj/temp/brand_s_count')
+
+
+def getinfo(txt):
+    ob=json.loads(valid_jsontxt(txt))
+    brand=''
+    brand_s=''
+    if 'props' not in ob.keys():return None
+    if 'trackParams' not in ob.keys():return None
+    if 'B' not in ob['trackParams']['BC_type']:return None
+    props=ob['props']
+    for item in props:
+        if item['name']=='品牌':
+            brand= item['value']
+        if item['name']=='品名':
+             brand_s= item['value']
+    return [brand,brand_s]
+
+
+
+
+    if 'props' not in ob: return None
+    for item in ob.get('props',['','']):
+        if item[u'name']==u'品牌':
+            brand=item[u'value']
+        if item[u'name']==u'品名':
+            brand_s=item[u'value']
+    return [brand,brand_s]
+
+for item in props:
+    if item['name']=='品牌':
+        print item['value']
+    if item['name']=='品名':
+         print item['value']
