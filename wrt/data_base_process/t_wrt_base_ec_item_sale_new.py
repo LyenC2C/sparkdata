@@ -59,13 +59,14 @@ def f1(line):
         #s_price = bctype_dict.get(shop_id,)
         #bc_type = bctype_dict.get(shop_id,"-")
         bc_type = "-"
-        s_price = 0.0
+        # s_price = 0.0
         order_cost = 0
         for item in itemsArray:
             lv = []
             item_id = item.get("auctionId","-")
             item_title = item.get("title","-")
             r_price = item.get("reservePrice",0.0)
+            s_price = r_price
             #s_price = item.get("salePrice",0.0)
             quantity = item.get("quantity",0)
             total_sold = item.get("totalSoldQuantity",0)
