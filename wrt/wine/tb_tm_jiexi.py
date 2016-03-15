@@ -24,7 +24,7 @@ def f(line):
     #     #     return None
     #     if valid_jsontxt("净含量") == valid_jsontxt(ln["name"]):
     #         return None
-    # return line
+    return line
 
 rdd = sc.textFile("/user/zlj/temp/zlj_wine.iteminfo.2016-03-07").map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/zlj/temp/wrt_wine_tb_tm_baijiu')
