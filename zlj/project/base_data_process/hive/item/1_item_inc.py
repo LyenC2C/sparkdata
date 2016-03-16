@@ -237,3 +237,17 @@ if __name__ == "__main__":
 # select item_id,title,cat_id,cat_name,root_cat_id,root_cat_name,brand_id,brand_name,bc_type,price,price_zone,is_online,off_time,favor,seller_id,shop_id,ts from testtable
 # '''
 
+# def f(x):
+#     va=json.loads(valid_jsontxt(x))
+#     ls=[]
+#     ls.append(va['item_info'].get('title',''))
+#     # ls.append(va['item_info'].get('item_id',''))
+#     # ls.append(va['item_info'].get('brand_model',''))
+#     # ls.append(va['item_info'].get('brand',''))
+#     # ls.append(va['item_info'].get('category_id',''))
+#     return ' '.join([valid_jsontxt(i) for i in ls])
+#     # return ls
+#
+# sc.textFile('/user/zlj/aipusheng.json').map(lambda x:f(x)).repartition(1).saveAsTextFile('/user/zlj/aipusheng_info_title')
+#
+

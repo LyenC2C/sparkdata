@@ -23,7 +23,8 @@ def parse_cmt_new(line_s):
     # ts=str(time.mktime(datetime.datetime.now().timetuple()))
     #json_txt = line.strip()[line.find('2(') + 2:-1]
     #0128 changed
-    json_txt = line.strip()[line.find('3(') + 2:-1]
+    #json_txt = line.strip()[line.find('3(') + 2:-1]
+    json_txt = line.strip()[line.find('({"') + 1:-1]
     ob = json.loads(json_txt)
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
         data = ob['data']
@@ -45,11 +46,12 @@ def parse_cmt_new(line_s):
                 # l.append(data.get('userStar'))
                 feedback = value.get('feedback', '-').replace('\t', '')
                 l.append(valid_jsontxt(feedback))
-                date = value.get('feedbackDate', '-')
+                date = value.get('feedbackDate', '-').replace(".","-")
                 l.append(date)
-                l.append(value.get('annoy', '-'))
+                annoy = value.get('annoy', '-')
+                l.append(annoy)
                 l.append(ts)
-                date = date.replace('-', '')
+                date = date[:10].replace('-', '')
                 int(date)
                 if len(date) != 8:
                     print "date is wrong,now is "+date

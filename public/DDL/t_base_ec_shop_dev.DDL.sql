@@ -1,23 +1,23 @@
 CREATE EXTERNAL TABLE  if not exists t_base_ec_shop_dev (
-shop_id STRING  COMMENT 'µêÆÌid' ,
-seller_id STRING  COMMENT 'Âô¼Òid' ,
-shop_name STRING  COMMENT 'µêÆÌÃû³Æ' ,
-seller_name STRING  COMMENT 'Âô¼ÒÃû³Æ' ,
-star STRING  COMMENT 'ÐÇ¼¶£¬ÌìÃ¨Îª99' ,
-credit STRING  COMMENT 'ÐÅÓþµÈ¼¶' ,
-starts STRING COMMENT '¿ªµêÊ±¼ä',
-bc_type STRING COMMENT 'µêÆÌÀàÐÍ',
-item_count BIGINT COMMENT 'ÉÌÆ·×ÜÊý',
-fans_count BIGINT   COMMENT '·ÛË¿Êý' ,
-good_rate_p FLOAT   COMMENT 'ºÃÆÀÂÊ' ,
-weitao_id STRING  COMMENT 'Î¢ÌÔid' ,
-desc_score FLOAT  COMMENT 'ÃèÊö·Ö' ,
-service_score FLOAT  COMMENT '·þÎñ·Ö' ,
-wuliu_score FLOAT  COMMENT 'ÎïÁ÷·Ö' ,
-location  String COMMENT 'µØÖ·' ,
-ts STRING COMMENT '²É¼¯Ê±¼ä´Á'
+shop_id STRING  COMMENT 'åº—é“ºid' ,
+seller_id STRING  COMMENT 'å–å®¶id' ,
+shop_name STRING  COMMENT 'åº—é“ºåç§°' ,
+seller_name STRING  COMMENT 'å–å®¶åç§°' ,
+star STRING  COMMENT 'æ˜Ÿçº§ï¼Œå¤©çŒ«ä¸º99' ,
+credit STRING  COMMENT 'ä¿¡èª‰ç­‰çº§' ,
+starts STRING COMMENT 'å¼€åº—æ—¶é—´',
+bc_type STRING COMMENT 'åº—é“ºç±»åž‹',
+item_count BIGINT COMMENT 'å•†å“æ€»æ•°',
+fans_count BIGINT   COMMENT 'ç²‰ä¸æ•°' ,
+good_rate_p FLOAT   COMMENT 'å¥½è¯„çŽ‡' ,
+weitao_id STRING  COMMENT 'å¾®æ·˜id' ,
+desc_score FLOAT  COMMENT 'æè¿°åˆ†' ,
+service_score FLOAT  COMMENT 'æœåŠ¡åˆ†' ,
+wuliu_score FLOAT  COMMENT 'ç‰©æµåˆ†' ,
+location  String COMMENT 'åœ°å€' ,
+ts STRING COMMENT 'é‡‡é›†æ—¶é—´æˆ³'
 )
-COMMENT 'µçÉÌµêÆÌ»ù´¡ÐÅÏ¢±í'
+COMMENT 'ç”µå•†åº—é“ºåŸºç¡€ä¿¡æ¯è¡¨'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'  LINES TERMINATED BY '\n';
 -- stored as textfile location '/hive/external/wlbase_dev/t_base_ec_shop_dev' ;

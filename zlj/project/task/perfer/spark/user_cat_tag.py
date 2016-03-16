@@ -123,7 +123,7 @@ import math
 
 
 def f(x):
-    if ( x.price.replace('.', '').isdigit()):
+    if ( str(x.price).replace('.', '').isdigit()):
         price=float(x.price)
         root_cat_id=x.root_cat_id
         user_id=x.user_id
@@ -140,10 +140,18 @@ def f(x):
 # path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t/'
 # rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 hiveContext.sql('use wlbase_dev')
-rdd=hiveContext.sql('select user_id,root_cat_id,price, ds from t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t')\
+rdd=hiveContext.sql('select user_id,root_cat_id,price, ds from t_base_ec_record_dev_s')\
     .map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
-rdd2=rdd1.groupByKey().map(lambda (x,y):(x," ".join(y)))
+
+def sort_limit(y):
+    lv=[]
+    for i in y:
+        lv.append(i.split('_'))
+    ts=[i for index, i in enumerate(sorted(lv, key=lambda t: float(t[-1]), reverse=True)) if index < 11]
+    return ' '.join([i[0]+'_'+i[1] for i in ts])
+
+rdd2=rdd1.groupByKey().map(lambda (x,y):(x,sort_limit(y))).repartition(100)
 schema1 = StructType([
     StructField("user_id", StringType(), True),
     StructField("cat_tags", StringType(), True),

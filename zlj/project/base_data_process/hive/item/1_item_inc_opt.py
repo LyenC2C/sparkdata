@@ -237,7 +237,7 @@ if __name__ == "__main__":
             return ts 
         
         rdd3=rddjoin.map(lambda (x,y):fun(x,y)).filter(lambda x:x is not  None).coalesce(100)
-        rdd3.map(lambda x:'\001'.join([str(valid_jsontxt(i)) for i in  x])).saveAsTextFile('/user/zlj/data/temp/t_base_ec_item_dev_tmp')
+        rdd3.map(lambda x:'\001'.join([str(valid_jsontxt(i)) for i in  x])).saveAsTextFile('/user/wrt/t_base_ec_item_dev_tmp')
         #hiveContext.sql('use wlbase_dev')
         #ddf=hiveContext.createDataFrame(rdd3,schema1)
         #ddf.saveAsTable('t_base_ec_item_dev',mode='overwrite',partitionBy='2015')

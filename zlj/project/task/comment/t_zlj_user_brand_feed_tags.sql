@@ -32,10 +32,10 @@ CREATE TABLE t_zlj_user_brand_feed_tags
                  (
                    SELECT
                     user_id, brand_id,brand_name ,
-                     impr_c
+                     parse_info_s as impr_c
                    FROM
                      t_zlj_feed2015_parse_jion_cat_brand_shop
-                   WHERE LENGTH(impr_c) > 1  and LENGTH(brand_id)>2  and LENGTH(user_id)>2
+                   WHERE LENGTH(parse_info_s) > 1  and LENGTH(brand_id)>2  and LENGTH(user_id)>2
                    ) t5
                LATERAL  VIEW explode(split(impr_c, '\\|'))t1 AS word
              ) t

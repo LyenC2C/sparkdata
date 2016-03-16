@@ -11,11 +11,13 @@ create table t_zlj_item_feed_title_cut_20151226 as
 select user_id,title_cut
 from
 (
-select item_id,title_cut from t_base_ec_item_title_cut where ds=20151225
+
+select item_id,title_cut from t_zlj_base_ec_item_title_cut where ds=20160216
+
 )t1
 join
 (
-select item_id,user_id from t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t
+select item_id,user_id from t_base_ec_record_dev_s
 group by item_id,user_id
 )
 t2
