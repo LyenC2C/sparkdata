@@ -6,13 +6,6 @@ import math
 from pyspark import SparkContext
 
 sc = SparkContext(appName="tongkuan")
-
-
-def valid_jsontxt(content):
-    if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
 def Q2B(uchar):
     inside_code = ord(uchar)
     if inside_code == 0x3000:
@@ -60,7 +53,7 @@ def pipei(list1, list2):
 def f1(line):
     ss = line.strip().split('\t',2)
     # if len(ss) != 3: return None
-    if valid_jsontxt(ss[0]) != valid_jsontxt('五粮液'): return None
+    if ss[0].encode('utf-8') != '五粮液': return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
     brand = ss[0] + ss[1]
@@ -73,8 +66,7 @@ def f1(line):
         # value = float(ln.split("_")[1]) #匹配权值
         words.append(word)
         # values.append(value)
-    # return (brand,words)
-    return line
+    return (brand,words)
 
 def f2(x,y):
     brand_list = y
@@ -93,8 +85,7 @@ def f2(x,y):
 
 
 rdd = sc.textFile("/user/zlj/wine/tb_wine_title_groupby_cut_sonbrand").map(lambda x:f1(x)).filter(lambda x:x!=None)
-# rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
-# rdd2.saveAsTextFile('/user/zlj/temp/wine_wuliangye_sonbrand')
-rdd.saveAsTextFile('/user/zlj/temp/wine_wuliangye_sonbrand')
+rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
+rdd2.saveAsTextFile('/user/zlj/temp/wine_wuliangye_sonbrand')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan.py
