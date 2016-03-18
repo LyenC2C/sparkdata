@@ -66,8 +66,8 @@ def f1(line):
             item_id = item.get("auctionId","-")
             item_title = item.get("title","-")
             r_price = item.get("reservePrice",0.0)
-            s_price = 0.0 #r_price
-            #s_price = item.get("salePrice",0.0)
+            # s_price = 0.0 #r_price
+            s_price = item.get("salePrice",0.0)
             quantity = item.get("quantity",0)
             total_sold = item.get("totalSoldQuantity",0)
             #order_cost = item.get("orderCost",0)
