@@ -66,7 +66,8 @@ def f1(line):
         # value = float(ln.split("_")[1]) #匹配权值
         words.append(word)
         # values.append(value)
-    return (brand,words)
+    # return (brand,words)
+    return line
 
 def f2(x,y):
     brand_list = y
@@ -85,7 +86,8 @@ def f2(x,y):
 
 
 rdd = sc.textFile("/user/zlj/wine/tb_wine_title_groupby_cut_sonbrand").map(lambda x:f1(x)).filter(lambda x:x!=None)
-rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
-rdd2.saveAsTextFile('/user/zlj/temp/wine_wuliangye_sonbrand')
+# rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
+# rdd2.saveAsTextFile('/user/zlj/temp/wine_wuliangye_sonbrand')
+rdd.saveAsTextFile('/user/zlj/temp/wine_wuliangye_sonbrand')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan.py
