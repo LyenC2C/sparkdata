@@ -128,7 +128,7 @@ def quchong_1(x, y):
         #     y = ln
         #     # y = item_list[0]
         #     break
-    flag = '0'
+    flag = '2'
     y.append(flag)
     return (x, y)
 
@@ -168,7 +168,8 @@ def quchong_3(x, y):
     item_list = y
     if len(item_list) == 1:
         ln = item_list[0]
-        ln[9] = '1' #flag
+        if ln[9] == '2': ln[9] = '0'#flag
+        else: ln[9] = '1'
         y = ln
     else:
         for ln in item_list:
