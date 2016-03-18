@@ -6,6 +6,13 @@ import math
 from pyspark import SparkContext
 
 sc = SparkContext(appName="tongkuan")
+
+
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return content
 def Q2B(uchar):
     inside_code = ord(uchar)
     if inside_code == 0x3000:
@@ -53,7 +60,7 @@ def pipei(list1, list2):
 def f1(line):
     ss = line.strip().split('\t',2)
     # if len(ss) != 3: return None
-    if ss[0] != '五粮液': return None
+    if valid_jsontxt(ss[0]) != valid_jsontxt('五粮液'): return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
     brand = ss[0] + ss[1]
