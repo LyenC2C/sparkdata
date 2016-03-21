@@ -56,17 +56,22 @@ def f1(line):
     if ss[0].encode('utf-8') != '五粮液': return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
+
     brand = ss[0] + ss[1]
     title = ss[2].split("\t")#.split("\001")#[1:]
     words = []
     values = []
-    for ln in title:
+    dushu = '-'
+    for i in range(len(title)):
         # if len(ln.split("_")) != 2: return None
-        word = uniform(ln) #所有字母变小写
+        word = uniform(title[i]) #所有字母变小写
+        if title[i] == '度' and i != 0:
+            if title[i-1].isdigit():
+                dushu = title[i-1]
         # value = float(ln.split("_")[1]) #匹配权值
         words.append(word)
         # values.append(value)
-    return (brand,words)
+    return (brand,[words,dushu])
 
 def f2(x,y):
     brand_list = y
@@ -74,9 +79,14 @@ def f2(x,y):
     result = []
     for i in range(l):
         for j in range(i+1, l):
-            k1 = brand_list[i]
-            k2 = brand_list[j]
-            pipei_value = pipei(k1,k2)
+            dushu1 = brand_list[1]
+            dushu2 = brand_list[1]
+            k1 = brand_list[i][0]
+            k2 = brand_list[j][0]
+            if dushu1 != dushu2 and dushu1 != '-' and dushu2 == '-':
+                pipei_value = 0.0
+            else:
+                pipei_value = pipei(k1,k2)
             title1 = "".join(k1)
             title2 = "".join(k2)
             # if float(pipei_value) > 0.9:
