@@ -13,7 +13,7 @@ dushu STRING,
 jinghan STRING,
 price STRING,
 price_zone STRING,
-favor (bigint)
+favor STRING,
 seller_id STRING,
 shop_id STRING,
 location STRING,
