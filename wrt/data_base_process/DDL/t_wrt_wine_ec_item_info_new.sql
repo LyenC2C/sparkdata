@@ -17,8 +17,7 @@ favor STRING,
 seller_id STRING,
 shop_id STRING,
 location STRING,
-ts STRING,
-ds STRING
+ts STRING
 )
 COMMENT '酒类商品详情表'
 PARTITIONED BY  (ds STRING )
