@@ -31,89 +31,93 @@ def get_cate_dict(line):
     return (ss[0],[ss[1],ss[3]])
 
 def f(line,cate_dict):
-    ss = line.strip().split("\t",2)
-    if len(ss) != 3: return None
-    ts = ss[0]
-    # item_id = ss[1]
-    txt = valid_jsontxt(ss[2])
-    ob = json.loads(txt)
-    if type(ob) != type({}): return None
-    itemInfoModel = ob.get('itemInfoModel',"-")
-    if itemInfoModel == "-": return None
-    location = valid_jsontxt(itemInfoModel.get('location','-'))
-    item_id = itemInfoModel.get('itemId','-')
-    title = itemInfoModel.get('title','-').replace("\n","")
-    favor = itemInfoModel.get('favcount','-')
-    categoryId = itemInfoModel.get('categoryId','-')
-    cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
-    if cate_rootid != "50008141": return None   #非酒类直接舍弃
-    cat_name = cate_dict.get(categoryId,["-","-"])[0]
-    if categoryId == "50013052" or categoryId == "50008144": #1:白酒 2:红酒 3：啤酒 4:其他酒
-        wine_cate = "1"
-    elif categoryId == "50013003" or categoryId == "50008143" or categoryId == "50013004" or categoryId == "50512003":
-        wine_cate = "2"
-    elif categoryId == "50008146" or categoryId == "50013006":
-        wine_cate = "3"
-    else:
-        wine_cate = "4"
-    guochan_list = ["50008143","50013004","50013006","123224006","50013006","123214002","50013052","123502002","50008144","50008148","50008147"]
-    if categoryId in guochan_list: #进口酒:1 国产酒:2
-        is_jinkou = "2"
-    else:
-        is_jinkou = "1"
-    trackParams = ob.get('trackParams',{})
-    BC_type = trackParams.get('BC_type','-')
-    brandId = trackParams.get('brandId','-')
-    brand_name = '-'
-    xiangxing = "-"
-    dushu = "-"
-    jinghan = "-"
-    props=ob.get('props',[])
-    for v in props:
-        if valid_jsontxt("香型") in valid_jsontxt(v["name"]):
-            xiangxing = v['value']
-        if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
-            brand_name = v['value']
-        if valid_jsontxt('度数') == valid_jsontxt(v['name']):
-            dushu = filter(str.isdigit, valid_jsontxt(v['value']))[:2]
-        if valid_jsontxt('净含量') == valid_jsontxt(v['name']):
-            jinghan = v['value']
-        if valid_jsontxt('产地') == valid_jsontxt(v['name']):
-            if valid_jsontxt('中国') in valid_jsontxt(v['value']):
-                is_jinkou = "2"
-            else:
-                is_jinkou = "1"
-    value=parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-    price=value[0]
-    price_zone=value[1]
-    seller=ob.get('seller',"-")
-    seller_id=seller.get('userNumId','-')
-    shopId=seller.get('shopId','-')
-    result = []
-    # result.append(item_id)
-    result.append(title)
-    result.append(categoryId)
-    result.append(cat_name)
-    # result.append(root_cat_id)
-    # result.append(root_cat_name)
-    result.append(wine_cate)
-    result.append(is_jinkou)
-    result.append(brandId)
-    result.append(brand_name)
-    result.append(BC_type)
-    result.append(xiangxing)
-    result.append(dushu)
-    result.append(jinghan)
-    result.append(str(price))
-    result.append((price_zone))
-    # result.append((is_online))
-    # result.append(off_time)
-    result.append(int(favor))
-    result.append(seller_id)
-    result.append(shopId)
-    result.append(location)
-    result.append(ts)
-    return (item_id,result)
+    try:
+        ss = line.strip().split("\t",2)
+        if len(ss) != 3: return None
+        ts = ss[0]
+        # item_id = ss[1]
+        txt = valid_jsontxt(ss[2])
+        ob = json.loads(txt)
+        # if type(ob) != type({}): return line
+        itemInfoModel = ob.get('itemInfoModel',"-")
+        if itemInfoModel == "-": return None
+        location = valid_jsontxt(itemInfoModel.get('location','-'))
+        item_id = itemInfoModel.get('itemId','-')
+        title = itemInfoModel.get('title','-').replace("\n","")
+        favor = itemInfoModel.get('favcount','-')
+        categoryId = itemInfoModel.get('categoryId','-')
+        cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
+        if cate_rootid != "50008141": return None   #非酒类直接舍弃
+        cat_name = cate_dict.get(categoryId,["-","-"])[0]
+        if categoryId == "50013052" or categoryId == "50008144": #1:白酒 2:红酒 3：啤酒 4:其他酒
+            wine_cate = "1"
+        elif categoryId == "50013003" or categoryId == "50008143" or categoryId == "50013004" or categoryId == "50512003":
+            wine_cate = "2"
+        elif categoryId == "50008146" or categoryId == "50013006":
+            wine_cate = "3"
+        else:
+            wine_cate = "4"
+        guochan_list = ["50008143","50013004","50013006","123224006","50013006","123214002","50013052","123502002","50008144","50008148","50008147"]
+        if categoryId in guochan_list: #进口酒:1 国产酒:2
+            is_jinkou = "2"
+        else:
+            is_jinkou = "1"
+        trackParams = ob.get('trackParams',{})
+        BC_type = trackParams.get('BC_type','-')
+        brandId = trackParams.get('brandId','-')
+        brand_name = '-'
+        xiangxing = "-"
+        dushu = "-"
+        jinghan = "-"
+        props=ob.get('props',[])
+        for v in props:
+            if valid_jsontxt("香型") in valid_jsontxt(v["name"]):
+                xiangxing = v['value']
+            if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
+                brand_name = v['value']
+            if valid_jsontxt('度数') == valid_jsontxt(v['name']):
+                dushu = filter(str.isdigit, valid_jsontxt(v['value']))[:2]
+            if valid_jsontxt('净含量') == valid_jsontxt(v['name']):
+                jinghan = v['value']
+            if valid_jsontxt('产地') == valid_jsontxt(v['name']):
+                if valid_jsontxt('中国') in valid_jsontxt(v['value']):
+                    is_jinkou = "2"
+                else:
+                    is_jinkou = "1"
+        value=parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+        price=value[0]
+        price_zone=value[1]
+        seller=ob.get('seller',"-")
+        seller_id=seller.get('userNumId','-')
+        shopId=seller.get('shopId','-')
+        result = []
+        # result.append(item_id)
+        result.append(title)
+        result.append(categoryId)
+        result.append(cat_name)
+        # result.append(root_cat_id)
+        # result.append(root_cat_name)
+        result.append(wine_cate)
+        result.append(is_jinkou)
+        result.append(brandId)
+        result.append(brand_name)
+        result.append(BC_type)
+        result.append(xiangxing)
+        result.append(dushu)
+        result.append(jinghan)
+        result.append(str(price))
+        result.append((price_zone))
+        # result.append((is_online))
+        # result.append(off_time)
+        result.append(int(favor))
+        result.append(seller_id)
+        result.append(shopId)
+        result.append(location)
+        result.append(ts)
+        return (item_id,result)
+    except Exception,e:
+        print e,valid_jsontxt(line)
+        return None
 
 def quchong(x, y):
     max = 0
