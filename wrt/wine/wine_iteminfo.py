@@ -38,7 +38,7 @@ def f(line,cate_dict):
         # item_id = ss[1]
         txt = valid_jsontxt(ss[2])
         ob = json.loads(txt)
-        # if type(ob) != type({}): return line
+        if type(ob) != type({}): return None
         itemInfoModel = ob.get('itemInfoModel',"-")
         if itemInfoModel == "-": return None
         location = valid_jsontxt(itemInfoModel.get('location','-'))
