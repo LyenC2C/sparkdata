@@ -66,6 +66,7 @@ def f(line,cate_dict):
     brand_name = '-'
     xiangxing = "-"
     dushu = "-"
+    jinghan = "-"
     props=ob.get('props',[])
     for v in props:
         if valid_jsontxt("香型") in valid_jsontxt(v["name"]):
@@ -73,7 +74,9 @@ def f(line,cate_dict):
         if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
             brand_name = v['value']
         if valid_jsontxt('度数') == valid_jsontxt(v['name']):
-            dushu = filter(str.isdigit, valid_jsontxt(v['value']))
+            dushu = filter(str.isdigit, valid_jsontxt(v['value']))[:2]
+        if valid_jsontxt('净含量') == valid_jsontxt(v['name']):
+            jinghan = v['value']
         if valid_jsontxt('产地') == valid_jsontxt(v['name']):
             if valid_jsontxt('中国') in valid_jsontxt(v['value']):
                 is_jinkou = "2"
@@ -99,6 +102,7 @@ def f(line,cate_dict):
     result.append(BC_type)
     result.append(xiangxing)
     result.append(dushu)
+    result.append(jinghan)
     result.append(str(price))
     result.append((price_zone))
     # result.append((is_online))
