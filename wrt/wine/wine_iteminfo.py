@@ -41,7 +41,7 @@ def f(line,cate_dict):
     if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
     item_id = itemInfoModel.get('itemId','-')
-    title = itemInfoModel.get('title','-')
+    title = itemInfoModel.get('title','-').replace("\n","")
     favor = itemInfoModel.get('favcount','-')
     categoryId = itemInfoModel.get('categoryId','-')
     cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
