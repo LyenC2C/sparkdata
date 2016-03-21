@@ -89,8 +89,8 @@ def f2(x,y):
                 pipei_value = pipei(k1,k2)
             title1 = "".join(k1)
             title2 = "".join(k2)
-            # if float(pipei_value) > 0.9:
-            result.append(title1 + "\t" + title2 + "\t" + str(pipei_value))
+            if float(pipei_value) > 0.6:
+                result.append(title1 + "\t" + title2 + "\t" + str(pipei_value))
     return result
 
 
@@ -98,4 +98,4 @@ rdd = sc.textFile("/user/zlj/wine/tb_wine_title_groupby_cut_sonbrand").map(lambd
 rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
 rdd2.saveAsTextFile('/user/zlj/temp/wine_wuliangye_sonbrand_dushu')
 
-#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan.py
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan2.py
