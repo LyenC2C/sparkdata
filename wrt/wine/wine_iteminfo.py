@@ -128,7 +128,7 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/commit/project/wine/wine_shopid.0309.shopitem.2016-03-09.iteminfo.2016-03-09"
+s = "/commit/project/wine/jiu.shop.search.dec.all.shopid.shopitem.2016-03-15.true.iteminfo.2016-03-16"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
