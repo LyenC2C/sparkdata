@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE  if not exists t_base_ec_item_dev (
+CREATE EXTERNAL TABLE  if not exists t_base_ec_item_dev_new (
 item_id STRING,
 title STRING,
 cat_id STRING,
@@ -20,6 +20,6 @@ location STRING,
 ts STRING,
 ds STRING
 )
-COMMENT '电商商品基础信息表'
+COMMENT '酒类商品详情表'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
