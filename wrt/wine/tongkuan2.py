@@ -79,8 +79,8 @@ def f2(x,y):
     result = []
     for i in range(l):
         for j in range(i+1, l):
-            dushu1 = brand_list[1]
-            dushu2 = brand_list[1]
+            dushu1 = brand_list[i][1]
+            dushu2 = brand_list[j][1]
             k1 = brand_list[i][0]
             k2 = brand_list[j][0]
             if dushu1 != dushu2 and dushu1 != '-' and dushu2 == '-':
