@@ -63,7 +63,7 @@ def f1(line):
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
 
-    brand = ss[0] + ss[1]
+    brand = ss[0] + "/" + ss[1]
     title = ss[2].split("\t")#.split("\001")#[1:]
     words = []
     values = []
@@ -96,7 +96,7 @@ def f2(x,y):
             title1 = "".join(k1)
             title2 = "".join(k2)
             if float(pipei_value) > 0.6:
-                result.append(title1 + "\t" + title2 + "\t" + str(pipei_value))
+                result.append(x + "/" + dushu1 + ":" + title1 + "\t" + x + "/" + dushu2 + ":" + title2 + "\t" + str(pipei_value))
     return result
 
 
