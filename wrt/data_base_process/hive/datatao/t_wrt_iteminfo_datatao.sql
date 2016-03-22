@@ -13,4 +13,4 @@ location STRING
 
 insert overwrite table t_wrt_iteminfo_datatao
 select item_id,title,cat_name,root_cat_name,price,price_zone,favor,brand_name,shop_id,location from
-t_base_ec_item_dev where ds = 20160225 and (cat_id =50025435 or cat_id = 50830004) and bc_type = 'B' limit 1000;
+t_base_ec_item_dev where ds = 20160225 and root_cat_id =1801 and bc_type = 'B' limit 1000;
