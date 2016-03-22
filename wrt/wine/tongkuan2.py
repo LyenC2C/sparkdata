@@ -89,7 +89,7 @@ def f2(x,y):
             dushu2 = brand_list[j][1]
             k1 = brand_list[i][0]
             k2 = brand_list[j][0]
-            if dushu1 != dushu2 and dushu1 != '-' and dushu2 == '-':
+            if dushu1 != dushu2 or (dushu1 == '-' and dushu2 == '-'):
                 pipei_value = pipei(k1,k2)
             else:
                 pipei_value = 0.0
