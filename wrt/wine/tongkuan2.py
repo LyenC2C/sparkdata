@@ -90,9 +90,9 @@ def f2(x,y):
             k1 = brand_list[i][0]
             k2 = brand_list[j][0]
             if dushu1 != dushu2 and dushu1 != '-' and dushu2 == '-':
-                pipei_value = 0.0
-            else:
                 pipei_value = pipei(k1,k2)
+            else:
+                pipei_value = 0.0
             title1 = "".join(k1)
             title2 = "".join(k2)
             if float(pipei_value) > 0.6:
