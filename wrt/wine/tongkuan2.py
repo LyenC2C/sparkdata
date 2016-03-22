@@ -71,7 +71,7 @@ def f1(line):
     for i in range(len(title)):
         # if len(ln.split("_")) != 2: return None
         word = uniform(title[i]) #所有字母变小写
-        if valid_jsontxt(title[i]) == 'ml':# and (i != 0):
+        if valid_jsontxt(title[i]) == 'ml':#and (i != 0):
             #if title[i-1].isdigit():
             dushu = title[i-1]
         # value = float(ln.split("_")[1]) #匹配权值
