@@ -6,6 +6,12 @@ import math
 from pyspark import SparkContext
 
 sc = SparkContext(appName="tongkuan")
+
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        return content.encode("utf-8")
+    else:
+        return
 def Q2B(uchar):
     inside_code = ord(uchar)
     if inside_code == 0x3000:
@@ -65,7 +71,7 @@ def f1(line):
     for i in range(len(title)):
         # if len(ln.split("_")) != 2: return None
         word = uniform(title[i]) #所有字母变小写
-        if title[i] == '度' and i != 0:
+        if valid_jsontxt(title[i]) == valid_jsontxt('度') and i != 0:
             if title[i-1].isdigit():
                 dushu = title[i-1]
         # value = float(ln.split("_")[1]) #匹配权值
