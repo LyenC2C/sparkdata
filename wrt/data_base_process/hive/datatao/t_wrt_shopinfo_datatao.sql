@@ -26,4 +26,4 @@ t1.shop_id = t2.shop_id;
 --查看数量
 select count(1) from(
 select shop_id from t_base_ec_item_dev where ds = 20160225 and root_cat_id = 1801 and bc_type = 'B' group by shop_id
-)  t
+)t;
