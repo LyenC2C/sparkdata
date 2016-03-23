@@ -19,3 +19,5 @@ join
 (select item_id,day_sold,day_sold_price,ds from t_base_ec_item_daysale_dev where ds >= 20160301 and ds <= 20160310 )t2
 on
 t_wrt_iteminfo_datatao.item_id = t2.item_id and t1.ds = t2.ds;
+
+--python ../itemsale.py

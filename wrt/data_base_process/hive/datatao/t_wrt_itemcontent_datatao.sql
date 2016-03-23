@@ -11,3 +11,5 @@ join
 (select item_id,content from t_base_ec_item_feed_dev where ds >= 20151101 and ds<= 20160131)t
 on
 t_wrt_iteminfo_datatao.item_id = t.item_id;
+
+--python ../content.py
