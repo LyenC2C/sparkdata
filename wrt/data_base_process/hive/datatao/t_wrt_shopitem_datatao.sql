@@ -17,3 +17,5 @@ join
 (select shop_id,shop_name from t_wrt_shopinfo_datatao)t2
 on
 t1.shop_id = t2.shop_id;
+
+

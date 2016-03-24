@@ -30,6 +30,8 @@ ON
 t1.item_id = t2.item_id and t1.ds = t2.ds
 group by t1.shop_id,t1.ds;
 
+--python ../shopsale.py
+
 -- insert overwrite table t_wrt_shopsale_datatao
 -- select /*+ mapjoin(t_wrt_shopinfo_datatao)*/
 -- t1.shop_id,t1.total_sold,t2.day_sold,t2.day_sold_price,t1.ds from
