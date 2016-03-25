@@ -1,4 +1,4 @@
-/home/hadoop/hive/bin/hive<<EOF
+/home/zlj/hive/bin/hive<<EOF
 
 -- 汽车类
 SET hive.exec.reducers.bytes.per.reducer = 500000000;

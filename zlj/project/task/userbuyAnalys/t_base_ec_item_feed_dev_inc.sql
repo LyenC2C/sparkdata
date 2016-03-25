@@ -40,7 +40,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
             price,
             location
           FROM t_base_ec_item_dev
-          WHERE ds = 20160216
+          WHERE ds = 20160225
           ) t1
       JOIN
       (

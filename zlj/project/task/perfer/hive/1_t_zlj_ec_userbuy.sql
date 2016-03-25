@@ -1,7 +1,7 @@
 item_ds=$1
 feed_ds=$2
 
-/home/hadoop/hive/bin/hive<<EOF
+/home/zlj/hive/bin/hive<<EOF
 
 
 SET hive.exec.reducers.bytes.per.reducer=500000000;

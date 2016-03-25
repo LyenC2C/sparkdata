@@ -20,8 +20,15 @@ CREATE TABLE t_base_ec_record_dev_wine
     FROM t_base_ec_record_dev
     WHERE root_cat_id = 50008141;
 
+
 -- 4537002  „Ú÷›¿œΩ—
 
+
+select id1 ,id2 ,w, t3.info as t1info ,t4.info as t2info from
+(select t1.id1 ,t2.info,t1.id2,w  from  infer t1 join t2 emp on t1.id1=t2.id)
+t3
+  join emp t4 on  t3.id2=t4.id
+;
 
 CREATE TABLE t_base_ec_record_dev_wine_userid
   AS
