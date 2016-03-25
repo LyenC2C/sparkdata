@@ -1,7 +1,8 @@
 __author__ = 'wrt'
 #coding:utf-8
 import sys
-import rapidjson as json
+# import rapidjson as json
+import json
 from pyspark import SparkContext
 
 sc = SparkContext(appName="check_sale_price")
