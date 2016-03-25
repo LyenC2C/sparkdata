@@ -57,7 +57,7 @@ def f1(line):
         result.append(lv)
     return result
 def f2(line):
-    lis=valid_jsontxt(line).split('\t')
+    lis=line.split('\t')
     if len(lis)!=3: return None
     ts=lis[0]
     txt=lis[2]
