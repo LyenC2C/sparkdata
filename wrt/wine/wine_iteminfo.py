@@ -36,12 +36,13 @@ def f(line,cate_dict):
     ts = ss[0]
     # item_id = ss[1]
     txt = valid_jsontxt(ss[2])
-    ob=json.loads(txt)
-    itemInfoModel=ob.get('itemInfoModel',"-")
+    ob = json.loads(txt)
+    if type(ob) != type({}): return None
+    itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
     item_id = itemInfoModel.get('itemId','-')
-    title = itemInfoModel.get('title','-')
+    title = itemInfoModel.get('title','-').replace("\n","")
     favor = itemInfoModel.get('favcount','-')
     categoryId = itemInfoModel.get('categoryId','-')
     cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
@@ -66,6 +67,7 @@ def f(line,cate_dict):
     brand_name = '-'
     xiangxing = "-"
     dushu = "-"
+    jinghan = "-"
     props=ob.get('props',[])
     for v in props:
         if valid_jsontxt("香型") in valid_jsontxt(v["name"]):
@@ -73,7 +75,9 @@ def f(line,cate_dict):
         if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
             brand_name = v['value']
         if valid_jsontxt('度数') == valid_jsontxt(v['name']):
-            dushu = filter(str.isdigit, valid_jsontxt(v['value']))
+            dushu = filter(str.isdigit, valid_jsontxt(v['value']))[:2]
+        if valid_jsontxt('净含量') == valid_jsontxt(v['name']):
+            jinghan = v['value']
         if valid_jsontxt('产地') == valid_jsontxt(v['name']):
             if valid_jsontxt('中国') in valid_jsontxt(v['value']):
                 is_jinkou = "2"
@@ -99,6 +103,7 @@ def f(line,cate_dict):
     result.append(BC_type)
     result.append(xiangxing)
     result.append(dushu)
+    result.append(jinghan)
     result.append(str(price))
     result.append((price_zone))
     # result.append((is_online))
@@ -124,7 +129,7 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/commit/project/wine/wine_shopid.0309.shopitem.2016-03-09.iteminfo.2016-03-09"
+s = "/commit/project/wine/jiu.shop.search.dec.all.shopid.shopitem.2016-03-15.true.iteminfo.2016-03-16"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)

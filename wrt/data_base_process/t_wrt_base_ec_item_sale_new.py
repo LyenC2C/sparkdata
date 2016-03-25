@@ -59,14 +59,15 @@ def f1(line):
         #s_price = bctype_dict.get(shop_id,)
         #bc_type = bctype_dict.get(shop_id,"-")
         bc_type = "-"
-        s_price = 0.0
+        # s_price = 0.0
         order_cost = 0
         for item in itemsArray:
             lv = []
             item_id = item.get("auctionId","-")
             item_title = item.get("title","-")
             r_price = item.get("reservePrice",0.0)
-            #s_price = item.get("salePrice",0.0)
+            # s_price = 0.0 #r_price
+            s_price = item.get("salePrice",0.0)
             quantity = item.get("quantity",0)
             total_sold = item.get("totalSoldQuantity",0)
             #order_cost = item.get("orderCost",0)
@@ -127,7 +128,7 @@ def quchong_1(x, y):
         #     y = ln
         #     # y = item_list[0]
         #     break
-    flag = '0'
+    flag = '2'
     y.append(flag)
     return (x, y)
 
@@ -167,7 +168,8 @@ def quchong_3(x, y):
     item_list = y
     if len(item_list) == 1:
         ln = item_list[0]
-        ln[9] = '1' #flag
+        if ln[9] == '2': ln[9] = '0'#flag
+        else: ln[9] = '1'
         y = ln
     else:
         for ln in item_list:
