@@ -87,10 +87,13 @@ def quchong(x, y):
     return (x, y)
 
 def bidui(x,y):
-    if y[0] != y[1]:
-        return x + "\001" + y[0] + "\001" + y[1]
+    if len(y) == 2:
+        if y[0] != y[1]:
+            return x + "\001" + y[0] + "\001" + y[1]
+        else:
+            return "hehe"
     else:
-        return "hehe"
+        return  None
 
 s1 = "/commit/shopitem2/20160225"
 s2 = "/commit/iteminfo/20160225"
