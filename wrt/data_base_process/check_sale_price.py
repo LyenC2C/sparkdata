@@ -67,9 +67,12 @@ def f2(line):
         itemInfoModel= ob.get('itemInfoModel',"-")
         if itemInfoModel == '-': return None
         item_id = valid_jsontxt(itemInfoModel.get('itemId','-'))
-        if len(ob['apiStack']['itemInfoModel']['priceUnits']) != 1: return None
+        if item_id == '-': return None
+        # if len(ob['apiStack']['itemInfoModel']['priceUnits']) != 1: return None
         # if not ob['apiStack']['itemInfoModel']['priceUnits'][0].has_key("value")
-        price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
+        # price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
+        value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+        price = value[0]
         return (item_id,price)
     except Exception,e:
         print valid_jsontxt(line)
