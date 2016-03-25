@@ -93,9 +93,9 @@ def bidui(x,y):
     if len(y) == 2:
         if y[0][0] != y[1][0]:
             if y[0][1] == 'r':
-                return str(x) + "\001" + str(y[0]) + "\001" + str(y[1])
+                return str(x) + "\001" + str(y[0][0]) + "\001" + str(y[1][0])
             else:
-                return str(x) + "\001" + str(y[1]) + "\001" + str(y[0])
+                return str(x) + "\001" + str(y[1][0]) + "\001" + str(y[0][0])
         else:
             return "hehe"
     else:
