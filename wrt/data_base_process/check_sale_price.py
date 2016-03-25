@@ -73,7 +73,7 @@ def f2(line):
         # price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
         value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
         price = value[0]
-        return (item_id,price)
+        return (item_id,[price,'i'])
     except Exception,e:
         print valid_jsontxt(line)
         return None
@@ -91,8 +91,11 @@ def quchong(x, y):
 
 def bidui(x,y):
     if len(y) == 2:
-        if y[0] != y[1]:
-            return str(x) + "\001" + str(y[0]) + "\001" + str(y[1])
+        if y[0][0] != y[1][0]:
+            if y[0][1] == 'r':
+                return str(x) + "\001" + str(y[0]) + "\001" + str(y[1])
+            else:
+                return str(x) + "\001" + str(y[1]) + "\001" + str(y[0])
         else:
             return "hehe"
     else:
@@ -101,7 +104,7 @@ def bidui(x,y):
 s1 = "/commit/shopitem2/20160225"
 s2 = "/commit/iteminfo/20160225"
 
-rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1]))
+rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],[x[1],'r']))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd2_c = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None)
 rdd2 = rdd2_c.groupByKey().mapValues(list).map(lambda (x,y):quchong(x, y))
