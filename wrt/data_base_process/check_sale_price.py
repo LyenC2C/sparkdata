@@ -57,19 +57,23 @@ def f1(line):
         result.append(lv)
     return result
 def f2(line):
-    lis=line.split('\t')
-    if len(lis)!=3: return None
-    ts=lis[0]
-    txt=lis[2]
-    ob=json.loads(valid_jsontxt(txt))
-    if type(ob) != type({}): return None
-    itemInfoModel= ob.get('itemInfoModel',"-")
-    if itemInfoModel == '-': return None
-    item_id = valid_jsontxt(itemInfoModel.get('itemId','-'))
-    if len(ob['apiStack']['itemInfoModel']['priceUnits']) != 1: return None
-    # if not ob['apiStack']['itemInfoModel']['priceUnits'][0].has_key("value")
-    price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
-    return (item_id,price)
+    try:
+        lis=line.split('\t')
+        if len(lis)!=3: return None
+        ts=lis[0]
+        txt=lis[2]
+        ob=json.loads(valid_jsontxt(txt))
+        if type(ob) != type({}): return None
+        itemInfoModel= ob.get('itemInfoModel',"-")
+        if itemInfoModel == '-': return None
+        item_id = valid_jsontxt(itemInfoModel.get('itemId','-'))
+        if len(ob['apiStack']['itemInfoModel']['priceUnits']) != 1: return None
+        # if not ob['apiStack']['itemInfoModel']['priceUnits'][0].has_key("value")
+        price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
+        return (item_id,price)
+    except Exception,e:
+        print valid_jsontxt(line)
+        return None
 
 
 def quchong(x, y):
