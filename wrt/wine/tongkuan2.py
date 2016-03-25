@@ -1,6 +1,6 @@
 __author__ = 'wrt'
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
+# -*- coding: <utf-8> -*-
 import sys
 import copy
 import math
