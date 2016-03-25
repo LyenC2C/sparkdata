@@ -66,7 +66,8 @@ def f2(line):
     itemInfoModel=ob['itemInfoModel']
     item_id = valid_jsontxt(itemInfoModel.get('itemId','-'))
     if len(ob['apiStack']['itemInfoModel']['priceUnits']) != 1: return None
-    price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['value'])
+    # if not ob['apiStack']['itemInfoModel']['priceUnits'][0].has_key("value")
+    price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
     return (item_id,price)
 
 
@@ -96,4 +97,4 @@ rdd2 = rdd2_c.groupByKey().mapValues(list).map(lambda (x,y):quchong(x, y))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): bidui(x, y))
 rdd.saveAsTextFile('/user/wrt/check_sale_price')
 
-#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 check_sale_price.py
