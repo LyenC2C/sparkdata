@@ -1,6 +1,5 @@
 __author__ = 'wrt'
-#!/usr/bin/python
-# -*- coding: <utf-8> -*-
+#coding=utf-8
 import sys
 import copy
 import math
@@ -51,7 +50,7 @@ def pipei(list1, list2):
             j = words2.index(words1[i])
             # n += values1[i]*values2[j]
             n += 1
-            del words2[j]   #删除匹配到的词和与之对应的权值
+            del words2[j]
             # del values2[j]
     if math.sqrt(l1)*math.sqrt(l2) == 0:
         return 0.0
