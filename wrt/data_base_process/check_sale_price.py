@@ -102,7 +102,7 @@ rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(la
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd2_c = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None)
 rdd2 = rdd2_c.groupByKey().mapValues(list).map(lambda (x,y):quchong(x, y))
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): bidui(x, y))
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): bidui(x, y)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/check_sale_price')
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 check_sale_price.py
