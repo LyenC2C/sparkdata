@@ -1,5 +1,5 @@
 __author__ = 'wrt'
-#encoding=utf-8
+#encoding:utf-8
 import sys
 import copy
 import math
