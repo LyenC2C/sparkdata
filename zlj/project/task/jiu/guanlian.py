@@ -44,3 +44,6 @@ sqlContext.registerDataFrameAsTable(pprdd,"pp")
 
 resultrdd=sqlContext.sql('select  uid,categoryId,topbrandName,buy_times from querydd a join pp b on a.categoryId=b.brandId')
 resultrdd.map(lambda x:str(x.uid)+" "+str(x.categoryId)+" "+x.topbrandName.encode('utf-8')+" "+str(x.buy_times)).saveAsTextFile('/user/zlj/data/user_pre_cat')
+
+
+sc.textFile('/user/zlj/wine/tb_wine_title/').map(lambda x:(x.split()[-2],x)).groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/zlj/wine/tb_wine_title_groupby')

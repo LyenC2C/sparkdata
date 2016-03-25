@@ -1,4 +1,4 @@
-/home/hadoop/hive/bin/hive<<EOF
+/home/zlj/hive/bin/hive<<EOF
 
 
 SET hive.exec.dynamic.partition = TRUE;
