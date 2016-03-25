@@ -59,7 +59,11 @@ def pipei(list1, list2):
 def f1(line):
     ss = line.strip().split('\t',2)
     # if len(ss) != 3: return None
-    if ss[0].encode('utf-8') != '五粮液': return None
+    if ss[0].encode('utf-8') != '五粮液':
+        return None
+    else:
+        if ss[1] == '-':
+            return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
 
