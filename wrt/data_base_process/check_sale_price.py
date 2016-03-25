@@ -72,7 +72,7 @@ def f2(line):
         # if not ob['apiStack']['itemInfoModel']['priceUnits'][0].has_key("value")
         # price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
         value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-        price = value[0]
+        price = str(value[0])
         return (item_id,price)
     except Exception,e:
         print valid_jsontxt(line)
