@@ -63,7 +63,7 @@ def f2(line):
     txt=lis[2]
     ob=json.loads(txt)
     if type(ob) != type({}): return None
-    itemInfoModel= ob.has_key('itemInfoModel',"-")
+    itemInfoModel= ob.get('itemInfoModel',"-")
     if itemInfoModel == '-': return None
     item_id = valid_jsontxt(itemInfoModel.get('itemId','-'))
     if len(ob['apiStack']['itemInfoModel']['priceUnits']) != 1: return None
