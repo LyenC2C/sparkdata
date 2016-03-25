@@ -61,7 +61,7 @@ def f2(line):
     if len(lis)!=3: return None
     ts=lis[0]
     txt=lis[2]
-    ob=json.loads(txt)
+    ob=json.loads(valid_jsontxt(txt))
     if type(ob) != type({}): return None
     itemInfoModel= ob.get('itemInfoModel',"-")
     if itemInfoModel == '-': return None
