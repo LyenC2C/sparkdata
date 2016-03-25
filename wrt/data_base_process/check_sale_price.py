@@ -53,7 +53,7 @@ def f1(line):
         item_id = item.get("auctionId","-")
         r_price = item.get("reservePrice",0.0)
         lv.append(str(valid_jsontxt(item_id)))
-        lv.append(valid_jsontxt(r_price))
+        lv.append(float_k(r_price))
         result.append(lv)
     return result
 def f2(line):
@@ -72,7 +72,7 @@ def f2(line):
         # if not ob['apiStack']['itemInfoModel']['priceUnits'][0].has_key("value")
         # price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
         value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-        price = str(value[0])
+        price = value[0]
         return (item_id,price)
     except Exception,e:
         print valid_jsontxt(line)
@@ -92,7 +92,7 @@ def quchong(x, y):
 def bidui(x,y):
     if len(y) == 2:
         if y[0] != y[1]:
-            return x + "\001" + y[0] + "\001" + y[1]
+            return str(x) + "\001" + str(y[0]) + "\001" + str(y[1])
         else:
             return "hehe"
     else:
