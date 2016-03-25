@@ -34,32 +34,28 @@ def parse_price(price_dic):
     return [price,price_range]
 
 def f1(line):
-    try:
-        ss = line.strip().split('\t',3)
-        ts = ss[0]
-        result = []
-        zhengwen = ss[3]
-        ob = json.loads(valid_jsontxt(zhengwen))
-        if type(ob) != type({}):
-            return [None]
-        if not ob.has_key("itemsArray"):
-            return [None]
-        if ob["totalResults"] == 0:
-            return [None]
-        itemsArray = ob["itemsArray"]
-        # shop_id = ob.get("shopId","-")
-        for item in itemsArray:
-            if item.has_key("salePrice"): continue
-            lv = []
-            item_id = item.get("auctionId","-")
-            r_price = item.get("reservePrice",0.0)
-            lv.append(str(valid_jsontxt(item_id)))
-            lv.append(valid_jsontxt(r_price))
-            result.append(lv)
-        return result
-    except Exception,e:
-        #print e,valid_jsontxt(line)
+    ss = line.strip().split('\t',3)
+    ts = ss[0]
+    result = []
+    zhengwen = ss[3]
+    ob = json.loads(valid_jsontxt(zhengwen))
+    if type(ob) != type({}):
         return [None]
+    if not ob.has_key("itemsArray"):
+        return [None]
+    if ob["totalResults"] == 0:
+        return [None]
+    itemsArray = ob["itemsArray"]
+    # shop_id = ob.get("shopId","-")
+    for item in itemsArray:
+        if item.has_key("salePrice"): continue
+        lv = []
+        item_id = item.get("auctionId","-")
+        r_price = item.get("reservePrice",0.0)
+        lv.append(str(valid_jsontxt(item_id)))
+        lv.append(valid_jsontxt(r_price))
+        result.append(lv)
+    return result
 def f2(line):
     lis=valid_jsontxt(line).split('\t')
     if len(lis)!=3: return None
@@ -96,6 +92,8 @@ s2 = "/commit/iteminfo/20160225"
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd2_c = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None)
-rdd2 = rdd2_c.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
+rdd2 = rdd2_c.groupByKey().mapValues(list).map(lambda (x,y):quchong(x, y))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): bidui(x, y))
 rdd.saveAsTextFile('/user/wrt/check_sale_price')
+
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_wrt_base_ec_item_sale.py
