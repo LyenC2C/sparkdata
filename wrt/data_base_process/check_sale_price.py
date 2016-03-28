@@ -53,7 +53,7 @@ def f1(line):
         item_id = item.get("auctionId","-")
         r_price = item.get("reservePrice",0.0)
         lv.append(str(valid_jsontxt(item_id)))
-        lv.append(valid_jsontxt(r_price))
+        lv.append(float_k(r_price))
         result.append(lv)
     return result
 def f2(line):
@@ -72,8 +72,8 @@ def f2(line):
         # if not ob['apiStack']['itemInfoModel']['priceUnits'][0].has_key("value")
         # price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
         value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-        price = str(value[0])
-        return (item_id,price)
+        price = value[0]
+        return (item_id,[price,'i'])
     except Exception,e:
         print valid_jsontxt(line)
         return None
@@ -91,8 +91,11 @@ def quchong(x, y):
 
 def bidui(x,y):
     if len(y) == 2:
-        if y[0] != y[1]:
-            return x + "\001" + y[0] + "\001" + y[1]
+        if y[0][0] != y[1][0]:
+            if y[0][1] == 'r':
+                return str(x) + "\001" + str(y[0][0]) + "\001" + str(y[1][0])
+            else:
+                return str(x) + "\001" + str(y[1][0]) + "\001" + str(y[0][0])
         else:
             return "hehe"
     else:
@@ -101,11 +104,11 @@ def bidui(x,y):
 s1 = "/commit/shopitem2/20160225"
 s2 = "/commit/iteminfo/20160225"
 
-rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1]))
+rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],[x[1],'r']))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd2_c = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None)
 rdd2 = rdd2_c.groupByKey().mapValues(list).map(lambda (x,y):quchong(x, y))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): bidui(x, y)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/wrt/check_sale_price')
+rdd.saveAsTextFile('/user/wrt/check_sale_price_2')
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 check_sale_price.py
