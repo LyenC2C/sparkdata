@@ -60,8 +60,8 @@ def f1(line):
     ss = line.strip().split('\t',3)
     # if len(ss) != 3: return None
     item_id = ss[0]
-    if ss[1].encode('utf-8') != '五粮液':
-        return None
+    # if ss[1].encode('utf-8') != '五粮液':
+    #     return None
     # else:
     #     if ss[2] == '-':
     #         return None
