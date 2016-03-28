@@ -62,9 +62,9 @@ def f1(line):
     item_id = ss[0]
     if ss[1].encode('utf-8') != '五粮液':
         return None
-    else:
-        if ss[2] == '-':
-            return None
+    # else:
+    #     if ss[2] == '-':
+    #         return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
 
