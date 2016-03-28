@@ -1,5 +1,6 @@
-__author__ = 'wrt'
 #coding:utf-8
+__author__ = 'wrt'
+
 import sys
 import json
 from pyspark import SparkContext
