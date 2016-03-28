@@ -57,7 +57,7 @@ def pipei(list1, list2):
     else:
         return float(n/(math.sqrt(l1)*math.sqrt(l2)))
 def f1(line):
-    ss = line.strip().split('\t',2)
+    ss = line.strip().split('\t',3)
     # if len(ss) != 3: return None
     item_id = ss[0]
     if ss[1].encode('utf-8') != '五粮液':
