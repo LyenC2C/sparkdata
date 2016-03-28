@@ -64,7 +64,7 @@ def f1(line):
         return None
     else:
         if ss[2] == '-':
-    #         return None
+            return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
 
