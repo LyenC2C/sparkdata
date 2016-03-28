@@ -59,16 +59,17 @@ def pipei(list1, list2):
 def f1(line):
     ss = line.strip().split('\t',2)
     # if len(ss) != 3: return None
-    if ss[0].encode('utf-8') != '五粮液':
+    item_id = ss[0]
+    if ss[1].encode('utf-8') != '五粮液':
         return None
     else:
-        if ss[1] == '-':
+        if ss[2] == '-':
             return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
 
-    brand = ss[0] + "/" + ss[1]
-    title = ss[2].split("\t")#.split("\001")#[1:]
+    brand = ss[1] + "/" + ss[2]
+    title = ss[3].split("\t")#.split("\001")#[1:]
     words = []
     values = []
     dushu = '-'
@@ -81,7 +82,7 @@ def f1(line):
         # value = float(ln.split("_")[1]) #匹配权值
         words.append(word)
         # values.append(value)
-    return (brand,[words,dushu])
+    return (brand,[words,dushu,item_id])
 
 def f2(x,y):
     brand_list = y
@@ -93,6 +94,8 @@ def f2(x,y):
             dushu2 = brand_list[j][1]
             k1 = brand_list[i][0]
             k2 = brand_list[j][0]
+            item_id1 = brand_list[i][2]
+            item_id2 = brand_list[j][2]
             if dushu1 == dushu2 or (dushu1 == '-' or dushu2 == '-'):
                 pipei_value = pipei(k1,k2)
             else:
@@ -100,7 +103,7 @@ def f2(x,y):
             title1 = "".join(k1)
             title2 = "".join(k2)
             if float(pipei_value) > 0.7:
-                result.append(x + "/" + dushu1 + ":" + title1 + "\t" + x + "/" + dushu2 + ":" + title2 + "\t" + str(pipei_value))
+                result.append(x + "/" + item_id1 + ":" + title1 + "\t" + x + "/" + item_id2 + ":" + title2 + "\t" + str(pipei_value))
     return result
 
 
