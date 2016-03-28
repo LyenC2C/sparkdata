@@ -103,7 +103,7 @@ def f2(x,y):
             title1 = "".join(k1)
             title2 = "".join(k2)
             if float(pipei_value) > 0.7:
-                result.append(x + "/" + item_id1 + ":" + title1 + "\t" + x + "/" + item_id2 + ":" + title2 + "\t" + str(pipei_value))
+                result.append(x + "\t" + dushu1 + "/" + item_id1 + ":" + title1 + "\t" + dushu2 + "/" + item_id2 + ":" + title2 + "\t" + str(pipei_value))
     return result
 
 
