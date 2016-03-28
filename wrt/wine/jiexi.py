@@ -47,5 +47,5 @@ def quchong(x, y):
     return "\001".join(result)
 
 rdd_c = sc.textFile("/user/zlj/temp/jindong_jiu.json").map(lambda x:f(x)).map(lambda x:(x[0],x[1:]))
-rdd = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/jd_jiu_uniq')
