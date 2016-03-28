@@ -24,7 +24,7 @@ def parse_price(price_dic):
     price = '0'
     price_range = '-'
     for value in price_dic:
-        if valid_jsontxt(value['name']) != valid_jsontxt('价格'): continue
+        if value['name'].encode('utf-8') != '价格': continue
         tmp = value['price']
         v = 0
         if '-' in tmp:     v=float(tmp.split('-')[0])
