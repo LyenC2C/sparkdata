@@ -19,14 +19,15 @@ def float_k(x):
         return float(x)
 
 def parse_price(price_dic):
-    min=1000000000.0
-    price='0'
-    price_range='-'
+    min = 1000000000.0
+    price = '0'
+    price_range = '-'
     for value in price_dic:
-        tmp=value['price']
-        v=0
+        if value['name'] != '价格': continue
+        tmp = value['price']
+        v = 0
         if '-' in tmp:     v=float(tmp.split('-')[0])
-        else :             v=float(tmp)
+        else:             v=float(tmp)
         if min>v:
             min=v
             price=v
@@ -60,8 +61,8 @@ def f2(line):
     try:
         lis=line.split('\t')
         if len(lis)!=3: return None
-        ts=lis[0]
-        txt=lis[2]
+        ts = lis[0]
+        txt = lis[2]
         ob=json.loads(valid_jsontxt(txt))
         if type(ob) != type({}): return None
         itemInfoModel= ob.get('itemInfoModel',"-")
