@@ -62,9 +62,9 @@ def f1(line):
     item_id = ss[0]
     if ss[1].encode('utf-8') != '五粮液':
         return None
-    # else:
-    #     if ss[2] == '-':
-    #         return None
+    else:
+        if ss[2] == '-':
+            return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
 
@@ -102,13 +102,13 @@ def f2(x,y):
                 pipei_value = 0.0
             title1 = "".join(k1)
             title2 = "".join(k2)
-            #if float(pipei_value) > 0.7:
-            result.append(x + "\t" + dushu1 + "/" + item_id1 + ":" + title1 + "\t" + dushu2 + "/" + item_id2 + ":" + title2 + "\t" + str(pipei_value))
+            if float(pipei_value) > 0.7:
+                result.append(x + "\t" + dushu1 + "/" + item_id1 + ":" + title1 + "\t" + dushu2 + "/" + item_id2 + ":" + title2 + "\t" + str(pipei_value))
     return result
 
 
-rdd = sc.textFile("/user/zlj/wine/jd_wine_title_cut_sonbrand").map(lambda x:f1(x)).filter(lambda x:x!=None)
+rdd = sc.textFile("/user/zlj/wine/tb_wine_title_new_cut_sonbrand/").map(lambda x:f1(x)).filter(lambda x:x!=None)
 rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
-rdd2.saveAsTextFile('/user/zlj/temp/jd_wine_wuliangye_sonbrand_dushu')
+rdd2.saveAsTextFile('/user/zlj/temp/tb_wine_wuliangye_sonbrand_dushu')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan2.py
