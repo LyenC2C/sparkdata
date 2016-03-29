@@ -165,4 +165,4 @@ hiveContext.sql('create table t_zlj_userbuy_item_cattags as select * from tmptab
 
 # rdd2.saveAsTextFile('/user/zlj/temp/tags')
 
- # round(log2(cast(t1.price as FLOAT))*pow(0.5, (datediff)/4.0)*50,4) AS score
+# round(log2(cast(t1.price as FLOAT))*pow(0.5, (datediff)/4.0)*50,4) AS score
