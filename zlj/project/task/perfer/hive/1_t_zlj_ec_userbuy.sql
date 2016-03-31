@@ -25,6 +25,8 @@ CREATE TABLE t_zlj_ec_userbuy
 
     FROM
       t_base_ec_record_dev
+
+      where item_id rlike '^\\d+$' and brand_id  rlike '^\\d+$' and user_id   rlike '^\\d+$'
       ;
 
 EOF

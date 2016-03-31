@@ -33,10 +33,10 @@ def f_coding(x):
         return x.decode("utf-8")
     else:
         return x
-dim_limit=10
-brand_limit=10
-shop_limit=10
-brandtag_limit=10
+dim_limit=8
+brand_limit=8
+shop_limit=5
+brandtag_limit=8
 def dim():
     sql_dim='''
     SELECT
