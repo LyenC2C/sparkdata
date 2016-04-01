@@ -11,8 +11,11 @@ def valid_jsontxt(content):
     return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
 
 def gen_uid_feedid(line):
-    ls = line.strip().split("\001")
-    return [ls[3], ls[2]]
+    try:
+        ls = line.strip().split("\001")
+        return [ls[3], ls[2]]
+    except:
+        return None
 
 def parse_cmt_v3(line_s):
     line = valid_jsontxt(line_s)
@@ -111,6 +114,7 @@ if __name__ == "__main__":
         hive_dbpath = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=*/*"
         sc.textFile(hive_dbpath) \
             .map(lambda x: gen_uid_feedid(x)) \
+            .filter(lambda x:x!=None)\
             .groupByKey(100) \
             .map(lambda (x, y): x + "\001" + "\001".join(y)) \
             .saveAsTextFile(sys.argv[2])
