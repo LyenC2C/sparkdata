@@ -127,8 +127,22 @@ def sentiment_score(segtmp):
 
 
 
-s='我  很 傻 很 蠢'
+# s='我  很 傻 很 蠢'
 
 
 # print s.split()
-print (sentiment_score(s.split()))
+
+fw=open('D:\\workdata\\baijiu_seg_senti','w')
+for line in open('D:\\workdata\\baijiu_seg'):
+    ls=line.split('\t')
+    brand=ls[0].decode('utf-8')
+    tt=sentiment_score(ls[1:])
+    score=tt[0]-tt[1]
+    if  score >1:
+        rs= brand+'\t' +'1'
+    elif  score <-1:
+        rs =brand+'\t' +'-1'
+    else:
+        rs =brand+'\t' +'0'
+
+    # fw.write(rs+'\n')

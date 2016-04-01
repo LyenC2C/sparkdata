@@ -1,5 +1,5 @@
-__author__ = 'wrt'
 #coding=utf-8
+__author__ = 'wrt'
 import sys
 import copy
 import math
@@ -50,23 +50,28 @@ def pipei(list1, list2):
             j = words2.index(words1[i])
             # n += values1[i]*values2[j]
             n += 1
-            del words2[j]
+            del words2[j]   #删除匹配到的词和与之对应的权值
             # del values2[j]
     if math.sqrt(l1)*math.sqrt(l2) == 0:
         return 0.0
     else:
         return float(n/(math.sqrt(l1)*math.sqrt(l2)))
 def f1(line):
-    ss = line.strip().split('\t',2)
+    ss = line.strip().split('\t',3)
     # if len(ss) != 3: return None
-    if ss[0].encode('utf-8') != '五粮液': return None
+    item_id = ss[0]
+    if ss[1].encode('utf-8') != '泸州老窖':
+        return None
+    else:
+        if ss[2] == '-':
+            return None
     # if ss[1].strip() == "": return None
     # item_id = ss[0]
 
-    brand = ss[0] + "/" + ss[1]
-    title = ss[2].split("\t")#.split("\001")#[1:]
+    brand = ss[1] + "/" + ss[2]
+    title = ss[3].split("\t")#.split("\001")#[1:]
     words = []
-    values = []
+    # values = []
     dushu = '-'
     for i in range(len(title)):
         # if len(ln.split("_")) != 2: return None
@@ -77,7 +82,7 @@ def f1(line):
         # value = float(ln.split("_")[1]) #匹配权值
         words.append(word)
         # values.append(value)
-    return (brand,[words,dushu])
+    return (brand,[words,dushu,item_id])
 
 def f2(x,y):
     brand_list = y
@@ -89,6 +94,8 @@ def f2(x,y):
             dushu2 = brand_list[j][1]
             k1 = brand_list[i][0]
             k2 = brand_list[j][0]
+            item_id1 = brand_list[i][2]
+            item_id2 = brand_list[j][2]
             if dushu1 == dushu2 or (dushu1 == '-' or dushu2 == '-'):
                 pipei_value = pipei(k1,k2)
             else:
@@ -96,12 +103,12 @@ def f2(x,y):
             title1 = "".join(k1)
             title2 = "".join(k2)
             if float(pipei_value) > 0.7:
-                result.append(x + "/" + dushu1 + ":" + title1 + "\t" + x + "/" + dushu2 + ":" + title2 + "\t" + str(pipei_value))
+                result.append(x + "\t" + dushu1 + "/" + item_id1 + ":" + title1 + "\t" + dushu2 + "/" + item_id2 + ":" + title2 + "\t" + str(pipei_value))
     return result
 
 
-rdd = sc.textFile("/user/zlj/wine/jd_wine_title_cut_sonbrand").map(lambda x:f1(x)).filter(lambda x:x!=None)
+rdd = sc.textFile("/user/zlj/wine/tb_wine_title_new_cut_sonbrand/").map(lambda x:f1(x)).filter(lambda x:x!=None)
 rdd2 = rdd.groupByKey().mapValues(list).flatMap(lambda (x,y):f2(x,y))
-rdd2.saveAsTextFile('/user/zlj/temp/jd_wine_wuliangye_sonbrand_dushu')
+rdd2.saveAsTextFile('/user/zlj/temp/tb_wine_luzhoulaojiao_sonbrand_dushu')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 tongkuan2.py

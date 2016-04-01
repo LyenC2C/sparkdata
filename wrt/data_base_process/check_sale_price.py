@@ -1,5 +1,6 @@
-__author__ = 'wrt'
 #coding:utf-8
+__author__ = 'wrt'
+
 import sys
 import json
 from pyspark import SparkContext
@@ -19,14 +20,15 @@ def float_k(x):
         return float(x)
 
 def parse_price(price_dic):
-    min=1000000000.0
-    price='0'
-    price_range='-'
+    min = 1000000000.0
+    price = '0'
+    price_range = '-'
     for value in price_dic:
-        tmp=value['price']
-        v=0
+        if value['name'].encode('utf-8') != '价格': continue
+        tmp = value['price']
+        v = 0
         if '-' in tmp:     v=float(tmp.split('-')[0])
-        else :             v=float(tmp)
+        else:             v=float(tmp)
         if min>v:
             min=v
             price=v
@@ -60,8 +62,8 @@ def f2(line):
     try:
         lis=line.split('\t')
         if len(lis)!=3: return None
-        ts=lis[0]
-        txt=lis[2]
+        ts = lis[0]
+        txt = lis[2]
         ob=json.loads(valid_jsontxt(txt))
         if type(ob) != type({}): return None
         itemInfoModel= ob.get('itemInfoModel',"-")
@@ -73,7 +75,7 @@ def f2(line):
         # price = valid_jsontxt(ob['apiStack']['itemInfoModel']['priceUnits'][0]['price'])
         value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
         price = value[0]
-        return (item_id,price)
+        return (item_id,[price,'i'])
     except Exception,e:
         print valid_jsontxt(line)
         return None
@@ -91,8 +93,11 @@ def quchong(x, y):
 
 def bidui(x,y):
     if len(y) == 2:
-        if y[0] != y[1]:
-            return str(x) + "\001" + str(y[0]) + "\001" + str(y[1])
+        if y[0][0] != y[1][0]:
+            if y[0][1] == 'r':
+                return str(x) + "\001" + str(y[0][0]) + "\001" + str(y[1][0])
+            else:
+                return str(x) + "\001" + str(y[1][0]) + "\001" + str(y[0][0])
         else:
             return "hehe"
     else:
@@ -101,11 +106,11 @@ def bidui(x,y):
 s1 = "/commit/shopitem2/20160225"
 s2 = "/commit/iteminfo/20160225"
 
-rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1]))
+rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],[x[1],'r']))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd2_c = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None)
 rdd2 = rdd2_c.groupByKey().mapValues(list).map(lambda (x,y):quchong(x, y))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): bidui(x, y)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/wrt/check_sale_price')
+rdd.saveAsTextFile('/user/wrt/check_sale_price_3')
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 check_sale_price.py

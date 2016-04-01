@@ -14,10 +14,3 @@ import rapidjson as json
 sc = SparkContext(appName="cmt")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
-
-f=open('')
-#
-# fl=f.readall()
-# for line in f:
-#     if len(line)<1:continue
-#     if 'score' in line:
