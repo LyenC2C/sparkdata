@@ -3,8 +3,23 @@ source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
-zuotian='20160318'
-qiantian='20160225'
+#zuotian='20160318'
+#qiantian='20160225'
+#
+#spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+#$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+#/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+#$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+#>> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+#hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+zuotian='20160319'
+qiantian='20160318'
 
 spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
 $pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
@@ -16,17 +31,128 @@ $pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commi
 >> ./log_date/log_$zuotian 2>&1
 sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
-#hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
-#
-#zuotian='20160318'
-#qiantian='20160225'
-#
-#hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
-#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
-#$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
-#>> ./log_date/log_$zuotian 2>&1
-#sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
 
+zuotian='20160320'
+qiantian='20160319'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+zuotian='20160323'
+qiantian='20160320'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+zuotian='20160324'
+qiantian='20160323'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+zuotian='20160325'
+qiantian='20160324'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+zuotian='20160328'
+qiantian='20160325'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+zuotian='20160329'
+qiantian='20160328'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+
+zuotian='20160330'
+qiantian='20160329'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
+
+zuotian='20160331'
+qiantian='20160330'
+
+spark-submit  --total-executor-cores  80  --executor-memory 8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/shop/1_shop_inc.py  -inc \
+/commit/iteminfo/$zuotian/*  $qiantian $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /user/wrt/t_base_ec_item_dev_tmp >> ./log_date/log_$zuotian 2>&1
+spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+$pre_path/zlj/project/base_data_process/hive/item/1_item_inc_opt.py  -inc /commit/iteminfo/$zuotian/* $qiantian $zuotian \
+>> ./log_date/log_$zuotian 2>&1
+sh $pre_path/zlj/project/base_data_process/hive/item/1_item_inc.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+
+hadoop fs -rm -r /hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/ds=$qiantian >> ./log_date/log_$zuotian 2>&1
 
 #hadoop fs -rm -r /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
 #spark-submit  --executor-memory 12G  --driver-memory 20G  --total-executor-cores 120 \
