@@ -18,6 +18,7 @@ def f(line):
     ed = line.find(")")
     txt = line[st+1:ed].replace(",]","]")
     ob= json.loads(valid_jsontxt(txt))
+    if type(ob) != type({}): return None
     auctions = ob.get["auctions","-"]
     if auctions == "-": return None
     result = []
