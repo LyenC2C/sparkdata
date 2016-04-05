@@ -57,6 +57,7 @@ def f(line,cate_dict,get_country_dict):
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     price_zone = value[1]
+    trackParams = ob.get('trackParams',{})
     brandId = trackParams.get('brandId','-')
     brand_name = '-'
     for v in props:
