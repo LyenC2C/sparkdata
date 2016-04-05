@@ -104,3 +104,5 @@ rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/tmp/t_korea_iteminfo')
 
 
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 t_korea_iteminfo.py
+
