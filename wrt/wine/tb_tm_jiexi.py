@@ -17,11 +17,12 @@ def get_cate_dict(line):
 
 def f(line,cate_dict):
     ss = line.strip().split("\t",2)
+    if len(ss) != 3: return None
     txt = valid_jsontxt(ss[2])
-    ob=json.loads(txt)
+    ob = json.loads(txt)
     if type(ob) != type({}): return None
-    # props = ob.get("props")
-    # if type(props) != type([]): return None
+    props = ob.get("props")
+    if type(props) != type([]): return None
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     # categoryId = valid_jsontxt(ob.get("itemInfoModel",{}).get("categoryId","-"))
@@ -34,12 +35,13 @@ def f(line,cate_dict):
     #     #     return None
     #     if valid_jsontxt("净含量") == valid_jsontxt(ln["name"]):
     #         return None
-    return line
+    item_id = itemInfoModel.get('itemId','-')
+    return item_id
 
-s = "/commit/project/wine/jiu.shop.search.dec.all.shopid.shopitem.2016-03-15.true.iteminfo.2016-03-16"
+s = "/commit/iteminfo/20160401"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/zlj/temp/wrt_wine_tb_tm_baijiu')
+rdd.saveAsTextFile('/user/wrt/temp/baijiu_0401_itemid')
 
 # spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 tb_tm_jiexi.py
