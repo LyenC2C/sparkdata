@@ -31,7 +31,7 @@ def get_cate_dict(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     return (ob["sub_category_id"],[ob["sub_category_name"],ob["category_name"]])
 
-def get_country_dict(x):
+def get_country_dict(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     return (ob["brand"],ob["country_name"])
 
