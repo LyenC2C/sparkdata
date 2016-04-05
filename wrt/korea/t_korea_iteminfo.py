@@ -19,7 +19,7 @@ def parse_price(price_dic):
     for value in price_dic:
         tmp=value['price']
         v=0
-        if '-' in tmp:     v=float(tmp.split('-')[0])
+        if '-' in tmp:     v=tmp.split('-')[0]
         else :             v=float(tmp)
         if min>v:
             min=v
@@ -52,8 +52,8 @@ def f(line,cate_dict,get_country_dict):
     shopId = seller.get('shopId','-')
     seller_id = seller.get('userNumId','-')
     categoryId = itemInfoModel.get('categoryId','-')
-    cate_name = cate_dict.get(categoryId)[0]
-    cate_root_name = cate_dict.get(categoryId)[1]
+    cate_name = cate_dict.get(categoryId,["-","-"])[0]
+    cate_root_name = cate_dict.get(categoryId,["-","-"])[1]
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     price_zone = value[1]
