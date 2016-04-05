@@ -32,22 +32,23 @@ def f(line):
         lv.append(valid_jsontxt(auction.get("inSale",'-')))
         lv.append(valid_jsontxt(auction.get("start",'-')))
         # return "\001".join(lv)
-        result.append("\001".join(lv))
+        # result.append("\001".join(lv))
+        result.append(lv)
     return result
 
-# def quchong(x,y):
-#     result = [x] + y[0]
-#     lv = []
-#     # lv.append(x)
-#     for ln in result:
-#         lv.append(str(valid_jsontxt(ln)))
-#     return "\001".join(lv)
+def quchong(x,y):
+    result = [x] + y[0]
+    lv = []
+    # lv.append(x)
+    for ln in result:
+        lv.append(str(valid_jsontxt(ln)))
+    return "\001".join(lv)
 
 
 
 s = "/commit/project/tmallint/sold.item.source.20160401"
-rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None)#.map(lambda x:(x[0],x[1:]))
-# rdd_f = rdd.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
-rdd.saveAsTextFile('/user/wrt/temp/t_korea_itemsale')
+rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd_f = rdd.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
+rdd_f.saveAsTextFile('/user/wrt/temp/t_korea_itemsale')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 t_korea_itemsale.py
