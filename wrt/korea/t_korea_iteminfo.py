@@ -66,7 +66,7 @@ def f(line,cate_dict,get_country_dict):
             brand_name = v['value']
     country = get_country_dict.get(brandId,"-")
     result = []
-    result.append(item_id)
+    # result.append(item_id)
     result.append(title)
     result.append(categoryId)
     result.append(cate_name)
