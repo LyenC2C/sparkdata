@@ -35,9 +35,10 @@ def f(line):
     return result
 
 def quchong(x,y):
-    result = [x] + y[0]
+    # result = [x] + y[0]
     lv = []
-    for ln in result:
+    lv.append(x)
+    for ln in y[0]:
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
