@@ -66,7 +66,7 @@ def f(line,cate_dict,get_country_dict):
     for v in props:
         if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
             brand_name = v['value']
-    country = get_country_dict.get(brandId,"-")
+    country = get_country_dict.get(valid_jsontxt(brand_name),"-")
     result = []
     # result.append(item_id)
     result.append(title)
