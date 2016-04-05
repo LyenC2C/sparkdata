@@ -58,6 +58,8 @@ def f(line,cate_dict,get_country_dict):
     price = value[0]
     price_zone = value[1]
     trackParams = ob.get('trackParams',{})
+    BC_type = trackParams.get('BC_type','-')
+    if BC_type == 'C': return None
     brandId = trackParams.get('brandId','-')
     brand_name = '-'
     props=ob.get('props',[])
