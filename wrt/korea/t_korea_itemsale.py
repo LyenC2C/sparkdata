@@ -11,7 +11,7 @@ def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
     else:
-        return
+        return content
 
 def f(line):
     st = line.find("(")
