@@ -44,3 +44,5 @@ s = "/commit/project/tmallint/sold.item.source.20160401"
 rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd_f = rdd.map(lambda (x,y):quchong(x,y))
 rdd_f.saveAsTextFile('/user/wrt/temp/t_korea_itemsale')
+
+#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 t_korea_itemsale.py
