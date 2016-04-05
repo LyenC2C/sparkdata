@@ -18,35 +18,36 @@ def f(line):
     ed = line.find(")")
     txt = line[st+1:ed].replace(",]","]")
     ob= json.loads(valid_jsontxt(txt))
-    if type(ob) != type({}): return None
+    if type(ob) != type({}): return [None]
     auctions = ob.get("auctions","-")
-    if auctions == "-": return None
+    if auctions == "-": return [None]
     result = []
     for auction in auctions:
         lv = []
-        lv.append(auction.get("aid",'-'))
-        lv.append(auction.get("amount",'-'))
-        lv.append(auction.get("total",'-'))
-        lv.append(auction.get("qu",'-'))
-        lv.append(auction.get("st",'-'))
-        lv.append(auction.get("inSale",'-'))
-        lv.append(auction.get("start",'-'))
-        result.append(lv)
+        lv.append(valid_jsontxt(auction.get("aid",'-')))
+        lv.append(valid_jsontxt(auction.get("amount",'-')))
+        lv.append(valid_jsontxt(auction.get("total",'-')))
+        lv.append(valid_jsontxt(auction.get("qu",'-')))
+        lv.append(valid_jsontxt(auction.get("st",'-')))
+        lv.append(valid_jsontxt(auction.get("inSale",'-')))
+        lv.append(valid_jsontxt(auction.get("start",'-')))
+        # return "\001".join(lv)
+        result.append("\001".join(lv))
     return result
 
-def quchong(x,y):
-    result = [x] + y[0]
-    lv = []
-    # lv.append(x)
-    for ln in result:
-        lv.append(str(valid_jsontxt(ln)))
-    return "\001".join(lv)
+# def quchong(x,y):
+#     result = [x] + y[0]
+#     lv = []
+#     # lv.append(x)
+#     for ln in result:
+#         lv.append(str(valid_jsontxt(ln)))
+#     return "\001".join(lv)
 
 
 
 s = "/commit/project/tmallint/sold.item.source.20160401"
-rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd_f = rdd.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
+rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None)#.map(lambda x:(x[0],x[1:]))
+# rdd_f = rdd.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
 rdd_f.saveAsTextFile('/user/wrt/temp/t_korea_itemsale')
 
 #spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 t_korea_itemsale.py
