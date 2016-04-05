@@ -60,6 +60,7 @@ def f(line,cate_dict,get_country_dict):
     trackParams = ob.get('trackParams',{})
     brandId = trackParams.get('brandId','-')
     brand_name = '-'
+    props=ob.get('props',[])
     for v in props:
         if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
             brand_name = v['value']
