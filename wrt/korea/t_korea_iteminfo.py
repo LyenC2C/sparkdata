@@ -48,6 +48,7 @@ def f(line,cate_dict,get_country_dict):
     item_id = itemInfoModel.get('itemId','-')
     title = itemInfoModel.get('title','-').replace("\n","")
     favor = itemInfoModel.get('favcount','-')
+    seller=ob.get('seller',"-")
     shopId = seller.get('shopId','-')
     seller_id = seller.get('userNumId','-')
     categoryId = itemInfoModel.get('categoryId','-')
