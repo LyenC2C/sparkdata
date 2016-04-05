@@ -146,12 +146,12 @@ if __name__ == "__main__":
     elif sys.argv[1] == '-gen_his_user_feedid':
         sc = SparkContext(appName="gen_his_user_feedid")
         hive_dbpath = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=*/*"
-        rdd_uidfeedid = sc.textFile(hive_dbpath)
-        rdd_uidfeedid.map(lambda x: gen_uid_feedid(x)) \
-            .filter(lambda x:x!=None)\
-            .groupByKey(100) \
-            .mapValues(list)\
-            .map(lambda (x,y):[x,[1,'\001'.join(y)]])
+        rdd_uidfeedid = sc.textFile(hive_dbpath)\
+                .map(lambda x: gen_uid_feedid(x)) \
+                .filter(lambda x:x!=None)\
+                .groupByKey(100) \
+                .mapValues(list)\
+                .map(lambda (x,y):[x,[1,'\001'.join(y)]])
         rdd_uidmark = sc.textFile("/user/yarn/taobao/taobao.uidmark.24")
         rdd_uidmark.map(lambda x:x.strip().split("\t"))\
                 .map(lambda x:[x[0],[2,x[1]]])
