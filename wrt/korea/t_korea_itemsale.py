@@ -18,9 +18,9 @@ def f(line):
     ed = line.find(")")
     txt = valid_jsontxt(line[st+1:ed]).replace(",]","]")
     ob= json.loads(txt)
-    if type(ob) != type({}): return [None]
+    # if type(ob) != type({}): return [None]
     auctions = ob.get("auctions","-")
-    if auctions == "-": return [None]
+    # if auctions == "-": return [None]
     result = []
     for auction in auctions:
         lv = []
