@@ -22,7 +22,7 @@ def f(line,cate_dict):
     ob = json.loads(txt)
     if type(ob) != type({}): return None
     props = ob.get("props")
-    if type(props) != type([]): return line
+    if type(props) != type([]): return None
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     # categoryId = valid_jsontxt(ob.get("itemInfoModel",{}).get("categoryId","-"))
