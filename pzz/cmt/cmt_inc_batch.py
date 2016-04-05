@@ -17,15 +17,49 @@ def gen_uid_feedid(line):
     except:
         return None
 
+def gen_uid_mark_feedid(x,y):
+    dic = {1:"",2:""}
+    for each in y:
+        dic[each[0]] = each[1]
+    if dic[1] == "":
+        dic[1] = "0"
+    return x+'\001'+dic[2]+'\001'+dic[1]
+
+
+'''
+      {
+        "id": "259696832339",
+        "auctionNumId": "8618812545",
+        "userId": "2699367733",
+        "userNick": "亚**8",
+        "userStar": "2",
+        "userStarPic": "//img.alicdn.com/newrank/b_red_2.gif",
+        "headPicUrl": "//img.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_40x40.jpg",
+        "annoy": "1",
+        "rateType": "1",
+        "feedback": "给个好评，但是物流不给力。",
+        "feedbackDate": "2015-12-08",
+        "reply": "",
+        "skuMap": {
+          "食品口味": "牛奶味",
+          "剩余保质期": "6个月以上"
+        },
+        "hasDetail": "false",
+        "allowInteract": "false",
+        "userMark": "WMAah0h1zjBN/NF/Lb+B/Q==",
+        "share": {
+          "shareSupport": "false",
+          "shareURL": "//h5.m.taobao.com/user_comment/comment_detail.html?rateId=259696832339&sellerId=MMGlevH8Yv0ZhMC*ev8lePmxyPkZhOmkGMmPzPF-IP0gT&isEncode=true"
+        }
+      }
+'''
 def parse_cmt_v3(line_s):
     line = valid_jsontxt(line_s)
-    ts = line[:line.find('\t')]
-    # ts ='1445270400'
-    # ts=str(time.mktime(datetime.datetime.now().timetuple()))
-    #json_txt = line.strip()[line.find('2(') + 2:-1]
-    #0128 changed
-    #json_txt = line.strip()[line.find('3(') + 2:-1]
-    json_txt = line.strip()[line.find('({"') + 1:-1]
+    ls = line.strip().split("\t")
+    if len(ls) != 6:
+        return None
+    ts = ls[0]
+    json_txt = ls[5][11:-1]
     ob = json.loads(json_txt)
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
         data = ob['data']
@@ -112,13 +146,36 @@ if __name__ == "__main__":
     elif sys.argv[1] == '-gen_his_user_feedid':
         sc = SparkContext(appName="gen_his_user_feedid")
         hive_dbpath = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev/ds=*/*"
-        sc.textFile(hive_dbpath) \
-            .map(lambda x: gen_uid_feedid(x)) \
+        rdd_uidfeedid = sc.textFile(hive_dbpath)
+        rdd_uidfeedid.map(lambda x: gen_uid_feedid(x)) \
             .filter(lambda x:x!=None)\
             .groupByKey(100) \
-            .map(lambda (x, y): x + "\001" + "\001".join(y)) \
-            .saveAsTextFile(sys.argv[2])
+            .map(lambda (x,y):(x,[1,'\001'.join(y)]))
+        rdd_uidmark = sc.textFile("/user/yarn/taobao/taobao.uidmark.24")
+        rdd_uidmark.map(lambda x:x.strip().split("\t"))\
+                .map(lambda (x,y):(x,[2,y]))
+
+        rdd_uidfeedid.union(rdd_uidmark)\
+                .groupByKey()\
+                .map(lambda (x,y):gen_uid_mark_feedid(x,y))\
+                .saveAsTextFile(sys.argv[2])
         sc.stop()
+
+    elif sys.argv[1] == '-gen_data_inc':
+        sc = SparkContext(appName="gen_cmt_inc "+sys.argv[3])
+
+        # rdd_his_feed:return [userid,[0,[feedid1,feedid2]]]
+        rdd_his_feed = sc.textFile(sys.argv[2])\
+                        .map(lambda x:x.strip().split("\001"))\
+                        .map(lambda x:[x[0],x[0,x[1:]]])
+
+        rdd_new_data = sc.textFile(sys.argv[3])\
+                    .filter(lambda x: 'SUCCESS' in x) \
+                    .map(lambda x: parse_cmt_v3(x)) \
+                    .filter(lambda x: x != None)\
+                    .flatMap(lambda x:x)\
+                    .groupByKey()\
+                    .map(lambda (x,y):[x,[1,y]])
 '''
     elif sys.argv[1] == '-gen_data_inc':
         sc = SparkContext(appName="gen_cmt_inc "+sys.argv[3])
