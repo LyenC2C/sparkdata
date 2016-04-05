@@ -96,7 +96,7 @@ def quchong(x, y):
 
 s = "/commit/project/tmallint/info.item.source.20160401.2016-04-01"
 s_dim = "/commit/project/tmallint/dim.subcat.final.json"
-b_country = " /commit/project/tmallint/brand.json"
+b_country = "/commit/project/tmallint/brand.json"
 rdd1 = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap())
 cate_dict = rdd1.value
 rdd2 = sc.broadcast(sc.textFile(b_country).map(lambda x: get_country_dict(x)).filter(lambda x:x!=None).collectAsMap())
