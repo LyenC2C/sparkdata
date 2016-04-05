@@ -19,7 +19,7 @@ def f(line,cate_dict):
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
     txt = valid_jsontxt(ss[2])
-    ob=json.loads(txt)
+    ob = json.loads(txt)
     if type(ob) != type({}): return None
     props = ob.get("props")
     if type(props) != type([]): return line
