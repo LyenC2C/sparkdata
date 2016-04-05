@@ -19,7 +19,7 @@ def f(line):
     txt = valid_jsontxt(line[st+1:ed]).replace(",]","]")
     ob= json.loads(txt)
     # if type(ob) != type({}): return [None]
-    auctions = ob.get("auctions","-")
+    auctions = ob.get("auctions")
     # if auctions == "-": return [None]
     result = []
     for auction in auctions:
