@@ -150,10 +150,11 @@ if __name__ == "__main__":
         rdd_uidfeedid.map(lambda x: gen_uid_feedid(x)) \
             .filter(lambda x:x!=None)\
             .groupByKey(100) \
-            .map(lambda (x,y):(x,[1,'\001'.join(y)]))
+            .mapValues(list)\
+            .map(lambda (x,y):[x,[1,'\001'.join(y)]])
         rdd_uidmark = sc.textFile("/user/yarn/taobao/taobao.uidmark.24")
         rdd_uidmark.map(lambda x:x.strip().split("\t"))\
-                .map(lambda (x,y):(x,[2,y]))
+                .map(lambda (x,y):[x,[2,y]])
 
         rdd_uidfeedid.union(rdd_uidmark)\
                 .groupByKey()\
