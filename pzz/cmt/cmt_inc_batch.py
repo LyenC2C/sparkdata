@@ -154,7 +154,7 @@ if __name__ == "__main__":
             .map(lambda (x,y):[x,[1,'\001'.join(y)]])
         rdd_uidmark = sc.textFile("/user/yarn/taobao/taobao.uidmark.24")
         rdd_uidmark.map(lambda x:x.strip().split("\t"))\
-                .map(lambda (x,y):[x,[2,y]])
+                .map(lambda x:[x[0],[2,x[1]]])
 
         rdd_uidfeedid.union(rdd_uidmark)\
                 .groupByKey()\
