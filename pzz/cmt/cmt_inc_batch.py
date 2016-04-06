@@ -1,4 +1,4 @@
-# coding:utf-8
+#coding:utf-8
 import sys, rapidjson, time
 import rapidjson as json
 from pyspark import SparkContext
@@ -184,6 +184,7 @@ def clean_data_by_his_mark_feedid(usermark,y):
                         ls = feeddata.split("\001")
                         if ls[3] == '0':
                             ls[3] = uid
+                        print ls,uid
                         existuid_rls.append('\001'.join(ls))
                         #new_user_feedid_ls.append(feedid)
                         feedid_dic[feedid] = None
@@ -352,3 +353,8 @@ if __name__ == "__main__":
 
         sc.stop()
 '''
+
+#pyspark --total-executor-cores  120 --executor-memory  10g --driver-memory 10g cmt_inc_baatch.py -gen_data_inc \
+# /data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160316/part* /commit/comments/20160317/*  /data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160317 \
+# /data/develop/ec/tb/cmt/feedid/inc_item_num.20160317 /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.20160317 /data/develop/ec/tb/cmt/user/user.20160317 \
+# /data/develop/ec/tb/cmt/tmpdata.nouid/nouid_cmt_inc_data.20160317
