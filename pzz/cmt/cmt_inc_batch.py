@@ -290,7 +290,7 @@ if __name__ == "__main__":
 
         #计算新的feedid库
         rdd_all_feedid = rdd_res_valid.map(lambda (existuid_rls,all_feed_ls):all_feed_ls)\
-                                    .map(lambda (x,y,z):x+'\001'+y+'\001'+"\001".join(x))\
+                                    .map(lambda (x,y,z):x+'\001'+y+'\001'+"\001".join(z))\
                                     .coalesce(300)
 
         #计算新增评论数据
