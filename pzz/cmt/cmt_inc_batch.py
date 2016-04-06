@@ -91,7 +91,7 @@ def parse_cmt_v3(line_s):
                 annoy = value.get('annoy', '-')
                 l.append(annoy)
                 l.append(ts)
-                sku = json.dumps(json.dumps(value.get('skuMap')))
+                sku = json.dumps(value.get('skuMap'))
                 l.append(sku)
                 rate_type = value.get('rateType', '-')
                 l.append(rate_type)
