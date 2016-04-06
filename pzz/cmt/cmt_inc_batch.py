@@ -80,7 +80,7 @@ def parse_cmt_v3(line_s):
                 l.append(feedid)
                 userid = value.get('userId', '-')
                 usermark = value.get('userMark','')
-                if usermark == "" or len(usermark)!=24:
+                if len(usermark)!=24:
                     continue
                 l.append(userid)
                 # l.append(data.get('userStar'))
