@@ -1,4 +1,4 @@
-# coding:utf-8
+#coding:utf-8
 import sys, rapidjson, time
 import rapidjson as json
 from pyspark import SparkContext
@@ -91,11 +91,12 @@ def parse_cmt_v3(line_s):
                 annoy = value.get('annoy', '-')
                 l.append(annoy)
                 l.append(ts)
-                sku = json.dumps(json.dumps(value.get('skuMap')))
+                sku = json.dumps(value.get('skuMap'))
                 l.append(sku)
                 rate_type = value.get('rateType', '-')
                 l.append(rate_type)
                 l.append(crawl_type)
+                l.append(usermark)
 
                 #user
                 user_nick = value.get('userNick', '-')
@@ -183,7 +184,9 @@ def clean_data_by_his_mark_feedid(usermark,y):
                     if feedid_dic.has_key(feedid) == False:
                         ls = feeddata.split("\001")
                         if ls[3] == '0':
-                            ls[3] = uid
+
+                            ls[3] = str(uid)
+                        #print feeddata,ls,uid
                         existuid_rls.append('\001'.join(ls))
                         #new_user_feedid_ls.append(feedid)
                         feedid_dic[feedid] = None
@@ -263,9 +266,11 @@ if __name__ == "__main__":
                                         .map(lambda x:[x,[2,1]])
 
         #存储新采用户数据
+        '''
         rdd_new_user_data.flatMap(lambda x:x)\
                     .distinct()\
                     .saveAsTextFile(user_save_path)
+        '''
 
         rdd_new = rdd_new_feed_data.flatMap(lambda x:x)\
                     .groupByKey()\
@@ -352,3 +357,8 @@ if __name__ == "__main__":
 
         sc.stop()
 '''
+
+#pyspark --total-executor-cores  120 --executor-memory  10g --driver-memory 10g cmt_inc_baatch.py -gen_data_inc \
+# /data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160316/part* /commit/comments/20160317/*  /data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160317 \
+# /data/develop/ec/tb/cmt/feedid/inc_item_num.20160317 /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.20160317 /data/develop/ec/tb/cmt/user/user.20160317 \
+# /data/develop/ec/tb/cmt/tmpdata.nouid/nouid_cmt_inc_data.20160317
