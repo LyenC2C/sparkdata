@@ -163,7 +163,7 @@ def fun1(x, ds):
 
 
 if __name__ == "__main__":
-    hiveContext.sql('use wlbase_dev')
+    hiveContext.sql('use wlservice')
     if sys.argv[1] == '-h':
         comment = '-店铺 \n\
 			  '
@@ -177,7 +177,7 @@ if __name__ == "__main__":
             .map(lambda x: try_parse(x, 'insert')) \
             .filter(lambda x: x is not None) \
             .groupByKey(50).map(lambda (x, y): [i for i in y][0]).map(lambda x: fun1(x, ds))
-        df = hiveContext.sql('select * from t_base_ec_shop_dev limit 1')
+        df = hiveContext.sql('select * from t_wrt_baijiu_shopinfo limit 1')
         schema1 = df.schema
         ddf = hiveContext.createDataFrame(rdd, schema1)
         hiveContext.registerDataFrameAsTable(ddf, 'tmptable')
