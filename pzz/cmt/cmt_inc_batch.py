@@ -96,6 +96,7 @@ def parse_cmt_v3(line_s):
                 rate_type = value.get('rateType', '-')
                 l.append(rate_type)
                 l.append(crawl_type)
+                l.append(usermark)
 
                 #user
                 user_nick = value.get('userNick', '-')
@@ -183,6 +184,7 @@ def clean_data_by_his_mark_feedid(usermark,y):
                     if feedid_dic.has_key(feedid) == False:
                         ls = feeddata.split("\001")
                         if ls[3] == '0':
+
                             ls[3] = str(uid)
                         #print feeddata,ls,uid
                         existuid_rls.append('\001'.join(ls))
