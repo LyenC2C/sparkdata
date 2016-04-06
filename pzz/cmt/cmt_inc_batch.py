@@ -166,7 +166,6 @@ def clean_data_by_his_mark_feedid(usermark,y):
     #返回无uid数据ls
     nouid_rls = []
     uid = '0'
-    today_flag = "0"
     exist_uid_flag = 0
 
     for each in y:
@@ -178,13 +177,11 @@ def clean_data_by_his_mark_feedid(usermark,y):
 
     for each in y:
         if each[0] == 1:
-            today_flag = "1"
             if exist_uid_flag == 1:
                 for feedid,feeddata in each[1]:
                     if feedid_dic.has_key(feedid) == False:
                         ls = feeddata.split("\001")
                         if ls[3] == '0':
-
                             ls[3] = str(uid)
                         #print feeddata,ls,uid
                         existuid_rls.append('\001'.join(ls))
@@ -198,7 +195,7 @@ def clean_data_by_his_mark_feedid(usermark,y):
     else:
         all_feed_ls = [uid,usermark,feedid_dic.keys()]
         #返回:有uid的评论数据,所有的评论id
-        return [existuid_rls,all_feed_ls]
+        return [1,[existuid_rls,all_feed_ls]]
 
 
 def merge_item_inc_num(x,y):
@@ -281,22 +278,24 @@ if __name__ == "__main__":
                 .map(lambda (x,y):clean_data_by_his_mark_feedid(x,y))
 
         #存储新增无uid评论数据
-        rdd_res_nouid = rdd_res.filter(lambda x:x[0] == 0)\
+        rdd_res_nouid = rdd_res.filter(lambda (x,y):x == 0)\
                             .map(lambda (x,y):y)\
                             .flatMap(lambda x:x)\
                             .saveAsTextFile(nouid_feed_save_path)
-        rdd_res_valid = rdd_res.filter(lambda x:x[0] != 0)
+
+        #cache 有效数据
+        rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1)
         rdd_res_valid.cache()
 
         #计算新的feedid库
         rdd_all_feedid = rdd_res_valid.map(lambda (existuid_rls,all_feed_ls):all_feed_ls)\
-                                    .map(lambda x:"\001".join(x))\
+                                    .map(lambda (x,y,z):x+'\001'+y+'\001'+"\001".join(x))\
                                     .coalesce(300)
 
         #计算新增评论数据
         rdd_inc_data = rdd_res_valid.map(lambda (existuid_rls,all_feed_ls):existuid_rls)\
                     .flatMap(lambda x:x)\
-                    .coalesce(min(rdd_res.getNumPartitions(),300))
+                    .coalesce(min(rdd_res_valid.getNumPartitions(),300))
 
         #计算新增商品各标志位
         rdd_inc_item_num = rdd_inc_data.map(lambda x:(x[0],1))\
