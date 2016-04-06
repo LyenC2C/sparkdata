@@ -278,11 +278,12 @@ if __name__ == "__main__":
                 .map(lambda (x,y):clean_data_by_his_mark_feedid(x,y))
 
         #存储新增无uid评论数据
+        '''
         rdd_res_nouid = rdd_res.filter(lambda (x,y):x == 0)\
                             .map(lambda (x,y):y)\
                             .flatMap(lambda x:x)\
                             .saveAsTextFile(nouid_feed_save_path)
-
+        '''
         #cache 有效数据
         rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1)
         rdd_res_valid.cache()
