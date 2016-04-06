@@ -263,12 +263,6 @@ if __name__ == "__main__":
                                         .filter(lambda x:x!="")\
                                         .map(lambda x:[x,[2,1]])
 
-        #存储新采用户数据
-        '''
-        rdd_new_user_data.flatMap(lambda x:x)\
-                    .distinct()\
-                    .saveAsTextFile(user_save_path)
-        '''
 
         rdd_new = rdd_new_feed_data.flatMap(lambda x:x)\
                     .groupByKey()\
@@ -281,11 +275,10 @@ if __name__ == "__main__":
         rdd_res.cache()
 
         #存储新增无uid评论数据
-
         rdd_res_nouid = rdd_res.filter(lambda (x,y):x == 0)\
                             .map(lambda (x,y):y)\
-                            .flatMap(lambda x:x)\
-                            .saveAsTextFile(nouid_feed_save_path)
+                            .flatMap(lambda x:x)
+
 
         #cache 有效数据
         rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1).map(lambda (x,y):y)
@@ -310,8 +303,14 @@ if __name__ == "__main__":
                     .map(lambda (x,y):merge_item_inc_num(x,y))\
                     .coalesce(100)
 
-        rdd_all_feedid.saveAsTextFile(new_mark_feedid_save_path)
-        rdd_inc_data.saveAsTextFile(inc_data_save_path)
+        #新采用户数据
+        rdd_new_user_data.flatMap(lambda x:x)\
+                    .distinct()
+
+        #rdd_new_user_data.saveAsTextFile(user_save_path)
+        #rdd_res_nouid.saveAsTextFile(nouid_feed_save_path)
+        #rdd_all_feedid.saveAsTextFile(new_mark_feedid_save_path)
+        #rdd_inc_data.saveAsTextFile(inc_data_save_path)
         rdd_inc_item_num.saveAsTextFile(inc_item_num_save_path)
 
 
