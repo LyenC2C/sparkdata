@@ -246,6 +246,7 @@ if __name__ == "__main__":
         #历史mark uid feedid 库
         rdd_his = sc.textFile(his_mark_feedid)\
                     .map(lambda x:x.strip().split("\001"))\
+                    .filter(lambda x:len(x[1])!=0)\
                     .map(lambda x:[x[1],[0,x[0],x[2:]]])
 
         #新采数据
@@ -280,12 +281,12 @@ if __name__ == "__main__":
         rdd_res.cache()
 
         #存储新增无uid评论数据
-        '''
+
         rdd_res_nouid = rdd_res.filter(lambda (x,y):x == 0)\
                             .map(lambda (x,y):y)\
                             .flatMap(lambda x:x)\
                             .saveAsTextFile(nouid_feed_save_path)
-        '''
+
         #cache 有效数据
         rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1).map(lambda (x,y):y)
         #rdd_res_valid.cache()
