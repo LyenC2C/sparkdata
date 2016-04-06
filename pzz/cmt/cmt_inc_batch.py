@@ -53,17 +53,21 @@ def gen_uid_mark_feedid(x,y):
         }
       }
 '''
+#return [[[usermark,[feedid,"\001".join(l)]],[]],user_dic.keys]
 def parse_cmt_v3(line_s):
     line = valid_jsontxt(line_s)
     ls = line.strip().split("\t")
     if len(ls) != 6:
         return None
     ts = ls[0]
+    crawl_type=ls[2]
     json_txt = ls[5][11:-1]
     ob = json.loads(json_txt)
+    itemid = ""
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
         data = ob['data']
-        list = []
+        feed_ls = []
+        user_dic = {}
         for value in data['rateList']:
             try:
                 l = []
@@ -75,9 +79,10 @@ def parse_cmt_v3(line_s):
                 int(feedid)
                 l.append(feedid)
                 userid = value.get('userId', '-')
-                int(userid)
+                usermark = value.get('userMark','')
+                if usermark == "":
+                    continue
                 l.append(userid)
-
                 # l.append(data.get('userStar'))
                 feedback = value.get('feedback', '-').replace('\t', '')
                 l.append(valid_jsontxt(feedback))
@@ -86,16 +91,33 @@ def parse_cmt_v3(line_s):
                 annoy = value.get('annoy', '-')
                 l.append(annoy)
                 l.append(ts)
+                sku = json.dumps(json.dumps(value.get('skuMap')))
+                l.append(sku)
+                rate_type = value.get('rateType', '-')
+                l.append(rate_type)
+                l.append(crawl_type)
+
+                #user
+                user_nick = value.get('userNick', '-')
+                user_star = value.get('userStar', '-')
+                key = userid+'\001'+usermark+'\001'+user_nick+'\001'+user_star
+                if user_dic.has_key(key):
+                    pass
+                else:
+                    user_dic[key] = None
+
+                #date
                 date = date[:10].replace('-', '')
                 int(date)
                 if len(date) != 8:
                     print "date is wrong,now is "+date
                     continue
                 # l.append(str(time.mktime(datetime.datetime.now().timetuple())))
-                list.append([itemid, [feedid,"\001".join(l)]])
+                feed_ls.append([usermark, [feedid,"\001".join(l)]])
             except Exception,e:
                 print e,line
-        return list
+        #return [[[usermark,[feedid,"\001".join(l)]],[]],user_dic.keys]
+        return [feed_ls,user_dic.keys(),itemid]
     return None
 
 
@@ -109,7 +131,7 @@ def uniq_cmt(ls):
             feedid_dic[feedid] = None
     return rls
 
-def clean_data_by_hisfeedid(itemid,y):
+def clean_data_by_his_feedid(itemid,y):
     feedid_dic = {}
     #返回数据ls
     rls = []
@@ -135,6 +157,52 @@ def clean_data_by_hisfeedid(itemid,y):
         all_feed_ls.append(k)
 
     return [rls,all_feed_ls,new_item_feedid_ls,today_flag]
+
+def clean_data_by_his_mark_feedid(usermark,y):
+    feedid_dic = {}
+    #返回有uid数据ls
+    existuid_rls = []
+    #返回无uid数据ls
+    nouid_rls = []
+    uid = '0'
+    today_flag = "0"
+    exist_uid_flag = 0
+
+    for each in y:
+        if each[0] == 0:
+            uid = each[1]
+            exist_uid_flag = 1
+            for feedid in each[2]:
+                feedid_dic[feedid] = None
+
+    for each in y:
+        if each[0] == 1:
+            today_flag = "1"
+            if exist_uid_flag == 1:
+                for feedid,feeddata in each[1]:
+                    if feedid_dic.has_key(feedid) == False:
+                        ls = feeddata.split("\001")
+                        if ls[3] == '0':
+                            ls[3] = uid
+                        existuid_rls.append('\001'.join(ls))
+                        #new_user_feedid_ls.append(feedid)
+                        feedid_dic[feedid] = None
+            else:
+                for feedid,feeddata in each[1]:
+                    nouid_rls.append(feeddata)
+    if uid == "0":
+        return [0,nouid_rls]
+    else:
+        all_feed_ls = [uid,usermark,feedid_dic.keys()]
+        #返回:有uid的评论数据,所有的评论id
+        return [existuid_rls,all_feed_ls]
+
+
+def merge_item_inc_num(x,y):
+    dic = {1:0,2:0}
+    for each in y:
+        dic[each[0]] = ech[1]
+    return x+'\t'+str(dic[1])+'\t'+str(dic[2])
 
 if __name__ == "__main__":
     if sys.argv[1] == '-h':
@@ -164,20 +232,82 @@ if __name__ == "__main__":
         sc.stop()
 
     elif sys.argv[1] == '-gen_data_inc':
-        sc = SparkContext(appName="gen_cmt_inc "+sys.argv[3])
 
+        his_mark_feedid = sys.argv[2]
+        new_data_input_path = sys.argv[3]
+        new_mark_feedid_save_path = sys.argv[4]
+        inc_item_num_save_path = sys.argv[5]
+        inc_data_save_path=sys.argv[6]
+        user_save_path=sys.argv[7]
+        nouid_feed_save_path=sys.argv[8]
+        sc = SparkContext(appName="gen_cmt_inc "+new_data_input_path)
         # rdd_his_feed:return [userid,[0,[feedid1,feedid2]]]
-        rdd_his_feed = sc.textFile(sys.argv[2])\
-                        .map(lambda x:x.strip().split("\001"))\
-                        .map(lambda x:[x[0],x[0,x[1:]]])
 
-        rdd_new_data = sc.textFile(sys.argv[3])\
+        #历史mark uid feedid 库
+        rdd_his = sc.textFile(his_mark_feedid)\
+                    .map(lambda x:x.strip().split("\001"))\
+                    .map(lambda x:[x[1],[0,x[0],x[2:]]])
+
+        #新采数据
+        rdd_new_data = sc.textFile(new_data_input_path)\
                     .filter(lambda x: 'SUCCESS' in x) \
                     .map(lambda x: parse_cmt_v3(x)) \
-                    .filter(lambda x: x != None)\
-                    .flatMap(lambda x:x)\
+                    .filter(lambda x: x != None)
+        #评论数据
+        rdd_new_feed_data = rdd_new_data.map(lambda (x,y,z):x)
+        #用户数据
+        rdd_new_user_data = rdd_new_data.map(lambda (x,y,z):y)
+        #今日新采itemid, [x,[2,1]] 2表示计算位 1表示出现标识位
+        rdd_today_crawl_item = rdd_new_data.map(lambda (x,y,z):z)\
+                                        .filter(lambda x:x!="")\
+                                        .map(lambda x:[x,[2,1]])
+
+        #存储新采用户数据
+        rdd_new_user_data.flatMap(lambda x:x)\
+                    .distinct()\
+                    .saveAsTextFile(user_save_path)
+
+        rdd_new = rdd_new_feed_data.flatMap(lambda x:x)\
                     .groupByKey()\
                     .map(lambda (x,y):[x,[1,y]])
+
+        rdd_res = rdd_his.union(rdd_new)\
+                .groupByKey()\
+                .map(lambda (x,y):clean_data_by_his_mark_feedid(x,y))
+
+        #存储新增无uid评论数据
+        rdd_res_nouid = rdd_res.filter(lambda x:x[0] == 0)\
+                            .map(lambda (x,y):y)\
+                            .flatMap(lambda x:x)\
+                            .saveAsTextFile(nouid_feed_save_path)
+        rdd_res_valid = rdd_res.filter(lambda x:x[0] != 0)
+        rdd_res_valid.cache()
+
+        #计算新的feedid库
+        rdd_all_feedid = rdd_res_valid.map(lambda (existuid_rls,all_feed_ls):all_feed_ls)\
+                                    .map(lambda x:"\001".join(x))\
+                                    .coalesce(300)
+
+        #计算新增评论数据
+        rdd_inc_data = rdd_res_valid.map(lambda (existuid_rls,all_feed_ls):existuid_rls)\
+                    .flatMap(lambda x:x)\
+                    .coalesce(min(rdd_res.getNumPartitions(),300))
+
+        #计算新增商品各标志位
+        rdd_inc_item_num = rdd_inc_data.map(lambda x:(x[0],1))\
+                    .reduceByKey(lambda x,y:x+y)\
+                    .map(lambda (x,y):[x,[1,y]])\
+                    .union(rdd_today_crawl_item)\
+                    .groupByKey()\
+                    .map(lambda (x,y):merge_item_inc_num(x,y))\
+                    .coalesce(100)
+
+        rdd_all_feedid.saveAsTextFile(new_mark_feedid_save_path)
+        rdd_inc_data.saveAsTextFile(inc_data_save_path)
+        rdd_inc_item_num.saveAsTextFile(inc_item_num_save_path)
+
+
+
 '''
     elif sys.argv[1] == '-gen_data_inc':
         sc = SparkContext(appName="gen_cmt_inc "+sys.argv[3])
