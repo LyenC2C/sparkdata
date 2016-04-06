@@ -295,7 +295,7 @@ if __name__ == "__main__":
                     .coalesce(min(rdd_res_valid.getNumPartitions(),300))
 
         #计算新增商品各标志位
-        rdd_inc_item_num = rdd_inc_data.map(lambda x:(x[0],1))\
+        rdd_inc_item_num = rdd_inc_data.map(lambda x:(x.split("\001")[0],1))\
                     .reduceByKey(lambda x,y:x+y)\
                     .map(lambda (x,y):[x,[1,y]])\
                     .union(rdd_today_crawl_item)\
