@@ -241,8 +241,8 @@ if __name__ == "__main__":
         user_save_path=sys.argv[7]
         nouid_feed_save_path=sys.argv[8]
         sc = SparkContext(appName="gen_cmt_inc "+new_data_input_path)
+        
         # rdd_his_feed:return [userid,[0,[feedid1,feedid2]]]
-
         #历史mark uid feedid 库
         rdd_his = sc.textFile(his_mark_feedid)\
                     .map(lambda x:x.strip().split("\001"))\
@@ -307,10 +307,10 @@ if __name__ == "__main__":
         rdd_new_user_data.flatMap(lambda x:x)\
                     .distinct()
 
-        #rdd_new_user_data.saveAsTextFile(user_save_path)
-        #rdd_res_nouid.saveAsTextFile(nouid_feed_save_path)
-        #rdd_all_feedid.saveAsTextFile(new_mark_feedid_save_path)
-        #rdd_inc_data.saveAsTextFile(inc_data_save_path)
+        rdd_new_user_data.saveAsTextFile(user_save_path)
+        rdd_res_nouid.saveAsTextFile(nouid_feed_save_path)
+        rdd_all_feedid.saveAsTextFile(new_mark_feedid_save_path)
+        rdd_inc_data.saveAsTextFile(inc_data_save_path)
         rdd_inc_item_num.saveAsTextFile(inc_item_num_save_path)
 
 
