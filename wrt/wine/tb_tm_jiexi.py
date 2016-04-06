@@ -27,9 +27,9 @@ def f(line,cate_dict):
     if itemInfoModel == "-": return None
     # categoryId = valid_jsontxt(ob.get("itemInfoModel",{}).get("categoryId","-"))
     categoryId = itemInfoModel.get('categoryId','-')
-    cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
-    if cate_rootid != "50008141": return None
-    # if categoryId != "50008144" and categoryId != "50013052": return None
+    # cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
+    # if cate_rootid != "50008141": return None
+    if categoryId != "50008144" and categoryId != "50013052": return None
     # for ln in props:
     #     # if valid_jsontxt("香型") in valid_jsontxt(ln["name"]):
     #     #     return None
