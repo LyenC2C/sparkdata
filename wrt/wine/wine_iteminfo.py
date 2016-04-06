@@ -63,6 +63,7 @@ def f(line,cate_dict):
         is_jinkou = "1"
     trackParams = ob.get('trackParams',{})
     BC_type = trackParams.get('BC_type','-')
+    if BC_type != 'B': return None
     brandId = trackParams.get('brandId','-')
     brand_name = '-'
     xiangxing = "-"
