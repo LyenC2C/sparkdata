@@ -184,7 +184,7 @@ def clean_data_by_his_mark_feedid(usermark,y):
                         ls = feeddata.split("\001")
                         if ls[3] == '0':
                             ls[3] = uid
-                        print ls,uid
+                        print feeddata,ls,uid
                         existuid_rls.append('\001'.join(ls))
                         #new_user_feedid_ls.append(feedid)
                         feedid_dic[feedid] = None
