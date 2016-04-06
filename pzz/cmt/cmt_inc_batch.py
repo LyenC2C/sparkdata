@@ -201,7 +201,7 @@ def clean_data_by_his_mark_feedid(usermark,y):
 def merge_item_inc_num(x,y):
     dic = {1:0,2:0}
     for each in y:
-        dic[each[0]] = ech[1]
+        dic[each[0]] = each[1]
     return x+'\t'+str(dic[1])+'\t'+str(dic[2])
 
 if __name__ == "__main__":
