@@ -277,6 +277,8 @@ if __name__ == "__main__":
                 .groupByKey()\
                 .map(lambda (x,y):clean_data_by_his_mark_feedid(x,y))
 
+        rdd_res.cache()
+
         #存储新增无uid评论数据
         '''
         rdd_res_nouid = rdd_res.filter(lambda (x,y):x == 0)\
@@ -286,7 +288,7 @@ if __name__ == "__main__":
         '''
         #cache 有效数据
         rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1).map(lambda (x,y):y)
-        rdd_res_valid.cache()
+        #rdd_res_valid.cache()
 
         #计算新的feedid库
         rdd_all_feedid = rdd_res_valid.map(lambda (existuid_rls,all_feed_ls):all_feed_ls)\
