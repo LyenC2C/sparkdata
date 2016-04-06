@@ -285,7 +285,7 @@ if __name__ == "__main__":
                             .saveAsTextFile(nouid_feed_save_path)
         '''
         #cache 有效数据
-        rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1)
+        rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1).map(lambda (x,y):y)
         rdd_res_valid.cache()
 
         #计算新的feedid库
