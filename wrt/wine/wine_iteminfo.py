@@ -67,7 +67,7 @@ def f(line,cate_dict):
     brand_name = '-'
     xiangxing = "-"
     dushu = "-"
-    jinghan = "-"
+    jinghan = "500ml"
     props=ob.get('props',[])
     for v in props:
         if valid_jsontxt("香型") in valid_jsontxt(v["name"]):
@@ -83,12 +83,12 @@ def f(line,cate_dict):
                 is_jinkou = "2"
             else:
                 is_jinkou = "1"
-    value=parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-    price=value[0]
+    value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+    price = value[0]
     price_zone=value[1]
     seller=ob.get('seller',"-")
     seller_id=seller.get('userNumId','-')
-    shopId=seller.get('shopId','-')
+    shopId = seller.get('shopId','-')
     result = []
     # result.append(item_id)
     result.append(title)
@@ -129,11 +129,11 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/commit/project/wine/jiu.shop.search.dec.all.shopid.shopitem.2016-03-15.true.iteminfo.2016-03-16"
+s = "/commit/project/wine/3.m.baijiu.only.iteminfo.2016-04-06"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-rdd.saveAsTextFile('/user/wrt/wine_iteminfo_tmp')
+rdd.saveAsTextFile('/user/wrt/temp/baijiu_iteminfo_tmp')
 
 # spark-submit  --executor-memory 2G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
