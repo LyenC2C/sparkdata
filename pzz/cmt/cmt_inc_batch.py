@@ -264,9 +264,11 @@ if __name__ == "__main__":
                                         .map(lambda x:[x,[2,1]])
 
         #存储新采用户数据
+        '''
         rdd_new_user_data.flatMap(lambda x:x)\
                     .distinct()\
                     .saveAsTextFile(user_save_path)
+        '''
 
         rdd_new = rdd_new_feed_data.flatMap(lambda x:x)\
                     .groupByKey()\
