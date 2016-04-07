@@ -22,9 +22,9 @@ mission_data="/commit/comments/"$1"/*"
 lastmission_id=$2
 
 #获取输入参数
-all_feed_input=${feed_dir}/cmt_allfeedid.${lastmission_id}
+all_feed_input=${feed_dir}/all_uid_mark_feedids.${lastmission_id}
 new_data_input=$mission_data
-all_feed_output=${feed_dir}/cmt_allfeedid.${mission_id}
+all_feed_output=${feed_dir}/all_uid_mark_feedids.${mission_id}
 new_feed_output=${feed_dir}/inc_item_num.${mission_id}
 tmp_data=${data_dir}/cmt_inc_data.${mission_id}
 user_data=${user_dir}/user.${mission_id}
