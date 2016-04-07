@@ -80,7 +80,7 @@ sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${tmp_data}.partitions ${
 
 #反馈商品评论增量
 echo "5/5 feed back item feed inc number to commit.."
-hadoop fs -rmr /commit_feedbck/cmt/cmt_newfeedid.${mission_id}
+hadoop fs -rmr /commit_feedbck/cmt/inc_item_num.${mission_id}
 hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
 
 echo "mission FINISH! "$1
