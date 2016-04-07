@@ -25,7 +25,7 @@ lastmission_id=$2
 all_feed_input=${feed_dir}/cmt_allfeedid.${lastmission_id}
 new_data_input=$mission_data
 all_feed_output=${feed_dir}/cmt_allfeedid.${mission_id}
-new_feed_output=${feed_dir}/cmt_newfeedid.${mission_id}
+new_feed_output=${feed_dir}/inc_item_num.${mission_id}
 tmp_data=${data_dir}/cmt_inc_data.${mission_id}
 user_data=${user_dir}/user.${mission_id}
 nouid_data=${data_nouid_dir}/nouid_cmt_inc_data.${mission_id}
@@ -47,14 +47,19 @@ spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 10
 echo "spark job finished."
 
 #本地临时文件
-local_tmp_new_feed=/mnt/raid1/pzz/hdfs_merge_tmp/cmt_newfeedid.${mission_id}.partall
+local_tmp_new_feed=/mnt/raid1/pzz/hdfs_merge_tmp/inc_item_num.${mission_id}.partall
 local_tmp_inc_data=/mnt/raid1/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
+local_nouid_data=/mnt/raid1/pzz/hdfs_merge_tmp/local_nouid_data.${mission_id}.partall
 
 #合并文件
 echo "2/5 cat and put result data  dir.."$tmp_data" to "${tmp_data}.test
 hadoop fs -cat ${new_feed_output}/part* > ${local_tmp_new_feed}
 hadoop fs -rmr ${new_feed_output}/part*
 hadoop fs -put ${local_tmp_new_feed} ${new_feed_output}/
+
+hadoop fs -cat ${nouid_data}/part* > ${local_nouid_data}
+hadoop fs -rmr ${nouid_data}/part*
+hadoop fs -put ${local_nouid_data} ${nouid_data}/
 
 hadoop fs -cat ${tmp_data}/part* > ${local_tmp_inc_data}
 hadoop fs -rmr ${tmp_data}/part*
