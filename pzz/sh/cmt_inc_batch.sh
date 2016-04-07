@@ -43,7 +43,7 @@ echo "1/5 Start spark job."
 hadoop fs -rmr $all_feed_output
 hadoop fs -rmr $new_feed_output
 hadoop fs -rmr $tmp_data
-spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 100 ${workspace_path}/pzz/cmt/cmt_inc_clean.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data ${user_data} ${nouid_data}
+spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 100 ${workspace_path}/pzz/cmt/cmt_inc_batch.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data ${user_data} ${nouid_data}
 echo "spark job finished."
 
 #本地临时文件
@@ -52,7 +52,7 @@ local_tmp_inc_data=/mnt/raid1/pzz/hdfs_merge_tmp/cmt_inc_data.${mission_id}.part
 local_nouid_data=/mnt/raid1/pzz/hdfs_merge_tmp/local_nouid_data.${mission_id}.partall
 
 #合并文件
-echo "2/5 cat and put result data  dir.."$tmp_data" to "${tmp_data}.test
+echo "2/5 cat and put result data  dir.."$tmp_data
 hadoop fs -cat ${new_feed_output}/part* > ${local_tmp_new_feed}
 hadoop fs -rmr ${new_feed_output}/part*
 hadoop fs -put ${local_tmp_new_feed} ${new_feed_output}/
