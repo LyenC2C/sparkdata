@@ -80,7 +80,7 @@ def parse_cmt_v3(line_s):
                 l.append(feedid)
                 userid = value.get('userId', '-')
                 usermark = value.get('userMark','')
-                if usermark == "":
+                if len(usermark)!=24:
                     continue
                 l.append(userid)
                 # l.append(data.get('userStar'))
@@ -201,7 +201,7 @@ def clean_data_by_his_mark_feedid(usermark,y):
 def merge_item_inc_num(x,y):
     dic = {1:0,2:0}
     for each in y:
-        dic[each[0]] = ech[1]
+        dic[each[0]] = each[1]
     return x+'\t'+str(dic[1])+'\t'+str(dic[2])
 
 if __name__ == "__main__":
@@ -241,11 +241,12 @@ if __name__ == "__main__":
         user_save_path=sys.argv[7]
         nouid_feed_save_path=sys.argv[8]
         sc = SparkContext(appName="gen_cmt_inc "+new_data_input_path)
+        
         # rdd_his_feed:return [userid,[0,[feedid1,feedid2]]]
-
         #历史mark uid feedid 库
         rdd_his = sc.textFile(his_mark_feedid)\
                     .map(lambda x:x.strip().split("\001"))\
+                    .filter(lambda x:len(x[1])!=0)\
                     .map(lambda x:[x[1],[0,x[0],x[2:]]])
 
         #新采数据
@@ -262,12 +263,6 @@ if __name__ == "__main__":
                                         .filter(lambda x:x!="")\
                                         .map(lambda x:[x,[2,1]])
 
-        #存储新采用户数据
-        '''
-        rdd_new_user_data.flatMap(lambda x:x)\
-                    .distinct()\
-                    .saveAsTextFile(user_save_path)
-        '''
 
         rdd_new = rdd_new_feed_data.flatMap(lambda x:x)\
                     .groupByKey()\
@@ -277,16 +272,17 @@ if __name__ == "__main__":
                 .groupByKey()\
                 .map(lambda (x,y):clean_data_by_his_mark_feedid(x,y))
 
+        rdd_res.cache()
+
         #存储新增无uid评论数据
-        '''
         rdd_res_nouid = rdd_res.filter(lambda (x,y):x == 0)\
                             .map(lambda (x,y):y)\
-                            .flatMap(lambda x:x)\
-                            .saveAsTextFile(nouid_feed_save_path)
-        '''
+                            .flatMap(lambda x:x)
+
+
         #cache 有效数据
         rdd_res_valid = rdd_res.filter(lambda (x,y):x == 1).map(lambda (x,y):y)
-        rdd_res_valid.cache()
+        #rdd_res_valid.cache()
 
         #计算新的feedid库
         rdd_all_feedid = rdd_res_valid.map(lambda (existuid_rls,all_feed_ls):all_feed_ls)\
@@ -299,7 +295,7 @@ if __name__ == "__main__":
                     .coalesce(min(rdd_res_valid.getNumPartitions(),300))
 
         #计算新增商品各标志位
-        rdd_inc_item_num = rdd_inc_data.map(lambda x:(x[0],1))\
+        rdd_inc_item_num = rdd_inc_data.map(lambda x:(x.split("\001")[0],1))\
                     .reduceByKey(lambda x,y:x+y)\
                     .map(lambda (x,y):[x,[1,y]])\
                     .union(rdd_today_crawl_item)\
@@ -307,6 +303,12 @@ if __name__ == "__main__":
                     .map(lambda (x,y):merge_item_inc_num(x,y))\
                     .coalesce(100)
 
+        #新采用户数据
+        rdd_new_user_data.flatMap(lambda x:x)\
+                    .distinct()
+
+        rdd_new_user_data.saveAsTextFile(user_save_path)
+        rdd_res_nouid.saveAsTextFile(nouid_feed_save_path)
         rdd_all_feedid.saveAsTextFile(new_mark_feedid_save_path)
         rdd_inc_data.saveAsTextFile(inc_data_save_path)
         rdd_inc_item_num.saveAsTextFile(inc_item_num_save_path)
