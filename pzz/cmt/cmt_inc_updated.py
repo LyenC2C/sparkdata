@@ -119,6 +119,9 @@ def parse_cmt_v3(line_s):
                 print e,line
         #return [[[usermark,[feedid,"\001".join(l)]],[]],user_dic.keys]
         return [feed_ls,user_dic.keys(),itemid]
+    else :
+        print 'not a json line',line
+
     return None
 
 
@@ -307,7 +310,7 @@ if __name__ == "__main__":
         rdd_new_user_data.flatMap(lambda x:x)\
                     .distinct()
 
-        rdd_new_user_data.saveAsTextFile(user_save_path)
+        #rdd_new_user_data.saveAsTextFile(user_save_path)
         rdd_res_nouid.saveAsTextFile(nouid_feed_save_path)
         rdd_all_feedid.saveAsTextFile(new_mark_feedid_save_path)
         rdd_inc_data.saveAsTextFile(inc_data_save_path)
