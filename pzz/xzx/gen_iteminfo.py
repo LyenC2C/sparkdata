@@ -99,6 +99,7 @@ if __name__ == "__main__":
                     .groupByKey()\
                     .mapValues(list)\
                     .map(lambda (x,y):gen_item_base(x,y))\
+                    .coalesce(1100)\
                     .saveAsTextFile(output_path)
 
         sc.stop()
