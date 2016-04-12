@@ -3,6 +3,8 @@ __author__ = 'wrt'
 import sys
 from pyspark import SparkContext
 
+sc = SparkContext(appName="qqweibo_user_info")
+
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -126,3 +128,5 @@ occu_dict = sc.broadcast(sc.textFile().map(lambda x: (x.split("\t")[0],x.split("
     .filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
+
+#spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 t_qqweibo_user_info.py
