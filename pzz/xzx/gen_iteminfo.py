@@ -95,6 +95,7 @@ if __name__ == "__main__":
         rdd2 = sc.textFile("/commit/iteminfo/*/*")
         output = sys.argv[2]
         rdd1.union(rdd2).map(lambda x:pro_compress_line(x))\
+                    .filter(lambda x:x!=None)\
                     .groupByKey()\
                     .mapValues(list)\
                     .map(lambda (x,y):gen_item_base(x,y))\
