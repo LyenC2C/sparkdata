@@ -52,6 +52,7 @@ def pro_compress_line(line):
             return [ls[1],[int(ls[0]),flag,compress(line.strip().encode("utf-8"))]]
         except Exception,e:
             print e,line.encode("utf-8")
+            return None
 
 def gen_item_base(x,y):
     status_flag = 0
