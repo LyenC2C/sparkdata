@@ -99,7 +99,7 @@ def f(line,occu_dict):
     for ln in com_list[:3]: #排好序后的前三位
         i += 1
         for ls in ln[1]: #com_startYear,com_endYear,com_comName,com_depName
-            result.append(valid_jsontxt(ls))
+            result.append(valid_jsontxt(str(ls)))
     for i in range(3-i): #不足3个的补齐“-”
         for ls in range(4):
             result.append("-")
@@ -118,7 +118,7 @@ def f(line,occu_dict):
     for ln in sch_list[:3]: #排好序后的前三位
         i += 1
         for ls in ln[1]: #year,background,school,department
-            result.append(valid_jsontxt(ls))
+            result.append(valid_jsontxt(str(ls)))
     for i in range(3-i): #不足3个的补齐“-”
         for ls in range(4):
             result.append("-")
