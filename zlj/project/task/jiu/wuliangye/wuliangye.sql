@@ -1,4 +1,4 @@
-CREATE TABLE t_base_ec_record_dev_wine
+CREATE TABLE t_base_ec_record_dev_wine_0407
   AS
     SELECT
       item_id,
@@ -17,8 +17,8 @@ CREATE TABLE t_base_ec_record_dev_wine
       bc_type,
       price,
       location
-    FROM t_base_ec_record_dev
-    WHERE root_cat_id = 50008141;
+    FROM t_base_ec_record_dev_new
+    WHERE cat_id in ( 50008144,50013052) and ds>20151230;
 
 
 -- 4537002  „Ú÷›¿œΩ—
