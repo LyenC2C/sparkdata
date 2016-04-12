@@ -46,7 +46,7 @@ def f(line,occu_dict):
     l_provinceName = location.get("provinceName","-")
     l_city = location.get("city","-")
     l_cityName = location.get("cityName","-")
-    birthday = info.get("birthday","{}")
+    birthday = info.get("birthday",{})
     b_year = birthday.get("year","-")
     b_month = birthday.get("month","-")
     b_day = birthday.get("day","-")
