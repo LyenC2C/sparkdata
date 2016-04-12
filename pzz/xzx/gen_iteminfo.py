@@ -94,7 +94,7 @@ if __name__ == "__main__":
         input_path = sys.argv[2]
         output_path = sys.argv[3]
         rdd1 = sc.textFile(input_path)
-        rdd1.union(rdd2).map(lambda x:pro_compress_line(x))\
+        rdd1.map(lambda x:pro_compress_line(x))\
                     .filter(lambda x:x!=None)\
                     .groupByKey()\
                     .mapValues(list)\
