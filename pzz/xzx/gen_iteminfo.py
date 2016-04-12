@@ -42,7 +42,7 @@ def pro_compress_line(line):
             flag= 2
         int(ls[1])
     except Exception,e:
-        print e,line
+        print e,line.encode("utf-8")
         return None
 
     #return itemid,[ts,falg,data]
