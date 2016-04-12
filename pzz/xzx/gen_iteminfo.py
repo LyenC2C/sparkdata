@@ -55,7 +55,7 @@ def gen_item_base(x,y):
     status_ts = 0
     data_flag = 0
     data_ts = 0
-    data = None
+    data = ""
 
     #[ts,flag,content]
     sortls = sorted(y,key=lambda x:x[0],reverse=True)
