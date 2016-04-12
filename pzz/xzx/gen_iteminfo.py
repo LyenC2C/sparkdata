@@ -1,7 +1,7 @@
 # coding:utf-8
 import sys, rapidjson, time
 import rapidjson as json
-from pyspark import SparkContext
+
 import zlib
 import base64
 import time
@@ -30,36 +30,81 @@ def valid_jsontxt(content):
 
 def pro_compress_line(line):
     ls = line.strip().split("\t")
+    #flag:0-无效,1-正常,2-下架
     flag = 0
-    j = json.loads(valid_jsontxt(ls[2]))
-    if j.has_key("ret") and "ERRCODE_QUERY_DETAIL_FAIL" in j["ret"]:
-        flag= 0
-    elif j["apiStack"]["itemControl"]["unitControl"].has_key("offShelfUrl") == False:
-        flag = 1
-    elif j["apiStack"]["itemControl"]["unitControl"].has_key("offShelfUrl") == True:
-        flag= 2
-    #return [ls[1],[int(ls[0]),flag,compress(line.strip())]]
-    return [ls[1],[int(ls[0]),flag,line.strip()]]
+    try:
+        j = json.loads(valid_jsontxt(ls[2]))
+        if j.has_key("ret") and "ERRCODE_QUERY_DETAIL_FAIL" in j["ret"]:
+            flag= 0
+        elif j["apiStack"]["itemControl"]["unitControl"].has_key("offShelfUrl") == False:
+            flag = 1
+        elif j["apiStack"]["itemControl"]["unitControl"].has_key("offShelfUrl") == True:
+            flag= 2
+        int(ls[1])
+    except Exception,e:
+        print e,line.encode("utf-8")
+        return None
 
-def gen_newly_status(x,y):
+    #return itemid,[ts,falg,data]
+    #return [ls[1],[int(ls[0]),flag,compress(line.strip())]]
+    if len(ls[1]) >= 8 and len(ls[1]) <= 14:
+        try:
+            return [ls[1],[int(ls[0]),flag,compress(line.strip().encode("utf-8"))]]
+        except Exception,e:
+            print e,line.encode("utf-8")
+            return None
+
+def gen_item_base(x,y):
+    status_flag = 0
+    status_ts = 0
+    data_flag = 0
+    data_ts = 0
+    data = ""
+
     #[ts,flag,content]
     sortls = sorted(y,key=lambda x:x[0],reverse=True)
-    if sortls[0][1] == 1:
+    if sortls[0][1] != 0:
+        status_flag = sortls[0][1]
+        status_ts = sortls[0][0]
+        data_flag = status_flag
+        data_ts = status_ts
+        data = sortls[0][2]
+    else:
+        status_flag = 0
+        status_ts = sortls[0][0]
         for each in sortls[1:]:
-            if each[1] != 1:
-                print y
-                return True
-    return False
+            if each[1] != 0:
+                data_ts = each[0]
+                data_flag = each[1]
+                data = each[2]
+                break
+    #return [status_flag,status_ts,data_flag,data_ts,data]
+    return str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
 
 if __name__ == "__main__":
+    if sys.argv[1] == "local":
+        key = ""
+        tmp = []
+        for line in sys.stdin:
+            [itemid,ls] = pro_compress_line(line)
+            tmp.append(ls)
+        res = gen_item_base(key,tmp)
+        print res
+
+
     if sys.argv[1] == '-genbase':
+        from pyspark import SparkContext
         sc = SparkContext(appName="xzx_iteminfo_genbase")
-        rdd1 = sc.textFile("/commit/iteminfoorg/*")
-        rdd2 = sc.textFile("/commit/iteminfo/*/*")
-        rdd1.union(rdd2).map(lambda x:pro_compress_line(x))\
+        input_path = sys.argv[2]
+        output_path = sys.argv[3]
+        rdd1 = sc.textFile(input_path)
+        rdd1.map(lambda x:pro_compress_line(x))\
+                    .filter(lambda x:x!=None)\
                     .groupByKey()\
                     .mapValues(list)\
-                    .filter(lambda (x,y):gen_newly_status(x,y))\
-                    .take(10)
+                    .map(lambda (x,y):gen_item_base(x,y))\
+                    .coalesce(1100)\
+                    .saveAsTextFile(output_path)
+
         sc.stop()
 

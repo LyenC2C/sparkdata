@@ -12,6 +12,8 @@ from pyspark.sql.types import *
 import time
 import rapidjson as json
 import math
+from pyspark.mllib.feature import HashingTF
+
 
 from itertools import groupby
 
