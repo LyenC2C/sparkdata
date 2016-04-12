@@ -91,15 +91,15 @@ if __name__ == "__main__":
     if sys.argv[1] == '-genbase':
         from pyspark import SparkContext
         sc = SparkContext(appName="xzx_iteminfo_genbase")
-        rdd1 = sc.textFile("/commit/iteminfoorg/*")
-        rdd2 = sc.textFile("/commit/iteminfo/*/*")
-        output = sys.argv[2]
+        input_path = sys.argv[2]
+        output_path = sys.argv[3]
+        rdd1 = sc.textFile(input_path)
         rdd1.union(rdd2).map(lambda x:pro_compress_line(x))\
                     .filter(lambda x:x!=None)\
                     .groupByKey()\
                     .mapValues(list)\
                     .map(lambda (x,y):gen_item_base(x,y))\
-                    .saveAsTextFile(output)
+                    .saveAsTextFile(output_path)
 
         sc.stop()
 
