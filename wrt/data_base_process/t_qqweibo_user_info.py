@@ -128,7 +128,7 @@ s_occu = "/commit/qqweibo/userinfo/map/occu.map"
 s = "/commit/qqweibo/userinfo/qqweibo_user.all.179.json"
 occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
     .filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
+rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
 
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 t_qqweibo_user_info.py
