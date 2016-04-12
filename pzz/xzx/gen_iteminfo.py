@@ -93,7 +93,7 @@ if __name__ == "__main__":
         sc = SparkContext(appName="xzx_iteminfo_genbase")
         rdd1 = sc.textFile("/commit/iteminfoorg/*")
         rdd2 = sc.textFile("/commit/iteminfo/*/*")
-        output = sys.argv[1]
+        output = sys.argv[2]
         rdd1.union(rdd2).map(lambda x:pro_compress_line(x))\
                     .groupByKey()\
                     .mapValues(list)\
