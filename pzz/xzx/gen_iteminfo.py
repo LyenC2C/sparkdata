@@ -48,7 +48,10 @@ def pro_compress_line(line):
     #return itemid,[ts,falg,data]
     #return [ls[1],[int(ls[0]),flag,compress(line.strip())]]
     if len(ls[1]) >= 8 and len(ls[1]) <= 14:
-        return [ls[1],[int(ls[0]),flag,compress(line.strip().encode("utf-8"))]]
+        try:
+            return [ls[1],[int(ls[0]),flag,compress(line.strip().encode("utf-8"))]]
+        except Exception,e:
+            print e,line.encode("utf-8")
 
 def gen_item_base(x,y):
     status_flag = 0
