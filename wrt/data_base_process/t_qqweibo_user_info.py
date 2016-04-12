@@ -92,7 +92,7 @@ def f(line,occu_dict):
         com_endYear = com.get("endYear","-")
         com_comName = com.get("comName","-")
         com_depName = com.get("depName","-")
-        index = company.get("index")
+        index = com.get("index")
         com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
