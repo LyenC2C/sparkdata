@@ -11,7 +11,9 @@ def valid_jsontxt(content):
     else:
         return content
 
-
+def get_dict(x):
+    ss = x.split("\t")
+    return (ss[0],ss[1])
 def f(line,occu_dict):
     result = []
     ob = loads.loads(valid_jsontxt(line))
@@ -124,7 +126,7 @@ def f(line,occu_dict):
 
 s_occu = "/commit/qqweibo/userinfo/map/all.school.map"
 s = "/commit/qqweibo/userinfo/qqweibo_user.all.179.json"
-occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
+occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x:get_dict(x))#.map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
     .filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
