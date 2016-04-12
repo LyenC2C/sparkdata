@@ -55,7 +55,7 @@ def f(line,occu_dict):
     tags = info.get("tags",[])
     tags_r = ""
     for tag in tags:
-        tags_r += tag.get("category","-") + "_" + tag.get("content","-")
+        tags_r += valid_jsontxt(str(tag.get("category","-"))) + "_" + valid_jsontxt(str(tag.get("content","-")))
     result.append(valid_jsontxt(str(id)))
     result.append(valid_jsontxt(str(certificationInfo)))
     result.append(valid_jsontxt(str(faceUrl)))
