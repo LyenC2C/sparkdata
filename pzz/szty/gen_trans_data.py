@@ -17,10 +17,12 @@ def f(x):
 
 
 def filter_group(x,y):
+    ls = []
     if 1 in y:
         for each in y:
             if each != 1:
-                return [x,each]
+                ls.append([x]+each)
+        return ls
     else:
         return None
 
@@ -58,7 +60,7 @@ if __name__ == '__main__':
     rdd_qid = sc.textFile("/user/yarn/service/szty/base_info.20160412.qid").map(lambda x:(x.strip(),1))
 
     #filtered  [qunid,[1,qqid+'\001'+name]]
-    rdd1 = sc.textFile("/data/develop/qq/group_member.json")\
+    rdd1 = sc.textFile("/data/develop/qq/group_member.json.test")\
             .map(lambda x:f(x))\
             .filter(lambda x:x!=None)\
             .map(lambda j:[str(j["qq_id"]),[str(j["qun_id"]),j["name"]]])\
@@ -67,7 +69,8 @@ if __name__ == '__main__':
             .mapValues(list)\
             .map(lambda (x,y):filter_group(x,y))\
             .filter(lambda x:x!=None)\
-            .map(lambda (x,y):[y[0],[1,x+'\001'+y[1].decode("utf-8")]])
+            .flatMap(lambda x:x)\
+            .map(lambda x:[x[1],[1,x[0]+'\001'+x[2].decode("utf-8")]])
 
     #[qunid,[2,qun_id+'\001'+title+'\001'+qun_text]]
     rdd2 = sc.textFile("/data/develop/qq/qun_info.tsv/*")\
