@@ -24,13 +24,6 @@ def filter_group(x,y):
     else:
         return None
 
-def filter_wb_qq(x,qid_dic):
-    ls = x.strip().split("\t")
-    if qid_dic.has_key(ls[0]):
-        return [ls[0],ls[1]]
-    else:
-        return None
-
 def pro_group(x,y):
     flag = 0
     qun_content = ""
@@ -90,7 +83,7 @@ if __name__ == '__main__':
             .map(lambda x:[x[0],x])\
             .groupByKey()\
             .map(lambda (x,y):qqid_qun_group(x,y))\
-            .map(lambda x:[3,'\001'.join(x[1:])])
+            .map(lambda (x,y):[x,[3,y]])
 
     rdd_base = sc.textFile("/user/yarn/service/szty/base_info.20160412/*")\
                 .map(lambda x:x.split("\001"))\
