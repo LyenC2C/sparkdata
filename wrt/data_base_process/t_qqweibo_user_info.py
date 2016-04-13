@@ -21,7 +21,8 @@ def f(line,occu_dict):
     try:
         ob = json.loads(valid_jsontxt(line))
     except:
-        print line
+        print valid_jsontxt(line)
+        return None
     info = ob.get("info","-")
     if info == "-": return None
     id = info.get("id","-")
@@ -137,4 +138,4 @@ occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.s
 rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
 
-#spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 t_qqweibo_user_info.py
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_qqweibo_user_info.py
