@@ -17,12 +17,12 @@ def get_dict(x):
     return (ss[0],ss[1])
 def f(line,occu_dict):
     result = []
-    text = line.replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", "")
-    ob = json.loads(valid_jsontxt(text))
+    # text = line.replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", "")
+    ob = json.loads(valid_jsontxt(line))
     info = ob.get("info","-")
     if info == "-": return None
     id = info.get("id","-")
-    certificationInfo = ob.get("certificationInfo","-") #认证信息
+    certificationInfo = ob.get("certificationInfo","-").replace("\n","").replace("\r","").replace("\t","") #认证信息
     faceUrl = info.get("faceUrl","-")
     gender = info.get("gender","-") #性别，1是男，2是女，0好像也是男
     isVIP = info.get("isVIP","-") #微博vip？
