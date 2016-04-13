@@ -61,9 +61,11 @@ def f(line):
     result.append(valid_jsontxt(str(qun_id)))
     result.append(valid_jsontxt(str(qun_class)))
     result.append(valid_jsontxt(str(mast_qq)))
-    result.append(valid_jsontxt(str(title_result)))
+    # result.append(valid_jsontxt(str(title_result)))
+    result.append(title_result)
     result.append(valid_jsontxt(str(create_date)))
-    result.append(valid_jsontxt(str(qun_text_result)))
+    # result.append(valid_jsontxt(str(qun_text_result)))
+    result.append(qun_text_result)
     return '\001'.join(result)
 
 
