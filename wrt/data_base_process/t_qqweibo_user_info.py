@@ -17,7 +17,8 @@ def get_dict(x):
     return (ss[0],ss[1])
 def f(line,occu_dict):
     result = []
-    ob = json.loads(valid_jsontxt(line))
+    text = line.replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", "")
+    ob = json.loads(valid_jsontxt(text))
     info = ob.get("info","-")
     if info == "-": return None
     id = info.get("id","-")
