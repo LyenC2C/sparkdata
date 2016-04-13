@@ -31,7 +31,7 @@ def f(line,occu_dict):
     nickName = info.get("nickName","-")
     occupation_id = info.get("occupation","-") #映射
     occupation = occu_dict.get(occupation_id,"-")
-    personal = info.get("personal","-")
+    personal = info.get("personal","-").replace("\n","").replace("\r","").replace("\t","")
     regTime = info.get("regTime","-")
     hometown = info.get("hometown",{})
     h_nation = hometown.get("province","-")
