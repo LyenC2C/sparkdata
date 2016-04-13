@@ -9,7 +9,11 @@ def valid_jsontxt(content):
     return res
 def f(x):
     s = x.strip().replace('\r\n','').replace("\u0000","").replace("\t"," ")
-    return json.loads(valid_jsontxt(s))
+    j = json.loads(valid_jsontxt(s))
+    if j.has_key("qun_id"):
+        return j
+    else:
+        return None
 
 
 def filter_qq(x,qid_dic):
@@ -70,6 +74,7 @@ if __name__ == '__main__':
     #filtered  [qunid,[1,qqid+'\001'+name]]
     rdd1 = sc.textFile("/data/develop/qq/group_member.json")\
             .map(lambda x:f(x))\
+            .filter(lambda x:x!=None)\
             .map(lambda j:[str(j["qq_id"]),[str(j["qun_id"]),j["name"]]])\
             .union(rdd_qid)\
             .groupByKey()\
