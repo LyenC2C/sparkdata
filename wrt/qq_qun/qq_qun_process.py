@@ -44,6 +44,7 @@ def f(line):
     result = []
     text = valid_jsontxt(line.replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", ""))
     ob = json.loads(valid_jsontxt(text))
+    if type(ob) != type({}): return None
     create_date = ob.get("create_date","-")
     title = ob.get("title","-").decode("utf-8")
     title_result = ""
@@ -71,7 +72,7 @@ def f(line):
 
 
 s = "/data/develop/qq/qun_info.json"
-rdd = sc.textFile(s).map(lambda x:f(x))
+rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/qq_qun_info')
 
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 qq_qun_process.py
