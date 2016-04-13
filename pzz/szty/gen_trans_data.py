@@ -56,7 +56,7 @@ def qqid_qun_group(x,y):
 def merge_group(x,y):
     dic  = {1:"",2:"",3:""}
     for each in y:
-        dic[each[0]] = each[1]
+        dic[each[0]] = str(each[1])
     return x+'\001'+dic[1]+'\001'+dic[2]+'\001'+dic[3]
 
 if __name__ == '__main__':
