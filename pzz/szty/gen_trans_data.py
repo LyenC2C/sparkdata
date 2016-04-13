@@ -25,9 +25,9 @@ def filter_qq(x,qid_dic):
 
 def filter_group(x,y):
     if 1 in y:
-        data = y
-        data.remove(1)
-        return data[0]
+        for each in y:
+            if each != 1:
+                return [x,each]
     else:
         return None
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
                 .mapValues(list)\
                 .map(lambda (x,y):filter_group(x,y))\
                 .filter(lambda x:x!=None)\
-                .map(lambda x:[x[0],[2,x[1]]])
+                .map(lambda (x,y):[x,[2,y]])
 
     rdd3.union(rdd_base).union(rdd_qqwb)\
             .groupByKey()\
