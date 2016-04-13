@@ -56,12 +56,12 @@ def qqid_qun_group(x,y):
 def merge_group(x,y):
     dic  = {1:"",2:"",3:""}
     for each in y:
-        dic[each[0]] = str(each[1])
+        dic[each[0]] = each[1]
     return x+'\001'+dic[1]+'\001'+dic[2]+'\001'+dic[3]
 
 if __name__ == '__main__':
     from pyspark import SparkContext
-    sc = SparkContext(appName="xzx_iteminfo_genbase")
+    sc = SparkContext(appName="szty_user")
     rdd_qid = sc.textFile("/user/yarn/service/szty/base_info.20160412.qid").map(lambda x:(x.strip(),1))
 
     #filtered  [qunid,[1,qqid+'\001'+name]]
