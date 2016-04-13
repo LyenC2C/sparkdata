@@ -58,7 +58,7 @@ if __name__ == '__main__':
     rdd_qid = sc.textFile("/user/yarn/service/szty/base_info.20160412.qid").map(lambda x:(x.strip(),1))
 
     #filtered  [qunid,[1,qqid+'\001'+name]]
-    rdd1 = sc.textFile("/data/develop/qq/group_member.json.test")\
+    rdd1 = sc.textFile("/data/develop/qq/group_member.json")\
             .map(lambda x:f(x))\
             .filter(lambda x:x!=None)\
             .map(lambda j:[str(j["qq_id"]),[str(j["qun_id"]),j["name"]]])\
