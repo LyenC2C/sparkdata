@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     #str(j["qq_id"])+'\001'+j["name"]+'\001'+j["qun_id"]+'\001'+j["title"]+'\001'+j["qun_text"]
     rdd3 = rdd1.union(rdd2).groupByKey()\
-            .map(lambda x:pro_group(x,y))\
+            .map(lambda (x,y):pro_group(x,y))\
             .flatMap(lambda x:x)\
             .map(lambda x:x.replace("|",""))\
             .map(lambda x:x.split("\001"))\
