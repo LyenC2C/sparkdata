@@ -18,11 +18,14 @@ def get_dict(x):
 def f(line,occu_dict):
     result = []
     # text = line.replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", "")
-    try:
-        ob = json.loads(valid_jsontxt(line))
-    except:
-        print valid_jsontxt(line)
+    # try:
+    #     ob = json.loads(valid_jsontxt(line))
+    # except:
+    #     print valid_jsontxt(line)
+    #     return None
+    if line == "" or line == None
         return None
+    ob = json.loads(valid_jsontxt(line))
     info = ob.get("info","-")
     if info == "-": return None
     id = info.get("id","-")
@@ -139,3 +142,5 @@ rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_qqweibo_user_info.py
+
+#LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user' OVERWRITE INTO TABLE t_qqweibo_user_info
