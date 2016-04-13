@@ -28,7 +28,7 @@ def f(line,occu_dict):
     isVIP = info.get("isVIP","-") #微博vip？
     isWbStar = info.get("isWbStar","-") #微博之星
     auth = info.get("auth","-") #微博认证等级 ，1是个人，2是机构
-    nickName = info.get("nickName","-")
+    nickName = info.get("nickName","-").replace("\n","").replace("\r","").replace("\t","")
     occupation_id = info.get("occupation","-") #映射
     occupation = occu_dict.get(occupation_id,"-")
     personal = info.get("personal","-").replace("\n","").replace("\r","").replace("\t","")
@@ -56,7 +56,8 @@ def f(line,occu_dict):
     tags = info.get("tags",[])
     tags_r = ""
     for tag in tags:
-        tags_r += valid_jsontxt(str(tag.get("category","-"))) + "_" + valid_jsontxt(str(tag.get("content","-")))
+        tags_r += valid_jsontxt(str(tag.get("category","-"))) + "_" + \
+                  valid_jsontxt(str(tag.get("content","-")).replace("\n","").replace("\r","").replace("\t",""))
     result.append(valid_jsontxt(str(id)))
     result.append(valid_jsontxt(str(certificationInfo)))
     result.append(valid_jsontxt(str(faceUrl)))
@@ -91,8 +92,8 @@ def f(line,occu_dict):
     for com in company:
         com_startYear = com.get("startYear","-")
         com_endYear = com.get("endYear","-")
-        com_comName = com.get("comName","-")
-        com_depName = com.get("depName","-")
+        com_comName = com.get("comName","-").replace("\n","").replace("\r","").replace("\t","")
+        com_depName = com.get("depName","-").replace("\n","").replace("\r","").replace("\t","")
         index = com.get("index")
         com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
@@ -112,7 +113,7 @@ def f(line,occu_dict):
         year = sch.get("year","-")
         background = sch.get("background","-")
         department = sch.get("department","-")
-        school = sch.get("school","-")
+        school = sch.get("school","-").replace("\n","").replace("\r","").replace("\t","")
         sch_dict[index] = [year,background,school,department]
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
