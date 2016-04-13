@@ -69,7 +69,7 @@ def f(line):
 
 
 s = "/data/develop/qq/qun_info.json"
-rdd = textFile(s).map(lambda x:f(x))
+rdd = sc.textFile(s).map(lambda x:f(x))
 rdd.saveAsTextFile('/user/wrt/qq_qun_info')
 
 #spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 qq_qun_process.py
