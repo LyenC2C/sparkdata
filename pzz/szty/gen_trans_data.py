@@ -68,13 +68,13 @@ if __name__ == '__main__':
     rdd1 = sc.textFile("/data/develop/qq/group_member.json")\
             .map(lambda x:f(x))\
             .filter(lambda x:x!=None)\
-            .map(lambda j:[str(j["qq_id"]),[str(j["qun_id"]),j["name"].encode("utf-8")]])\
+            .map(lambda j:[str(j["qq_id"]),[str(j["qun_id"]),j["name"]]])\
             .union(rdd_qid)\
             .groupByKey()\
             .mapValues(list)\
             .map(lambda (x,y):filter_group(x,y))\
             .filter(lambda x:x!=None)\
-            .map(lambda (x,y):[y[0],[1,x+'\001'+y[1]]])
+            .map(lambda (x,y):[y[0],[1,x+'\001'+y[1].encode("utf-8")]])
 
     #[qunid,[2,qun_id+'\001'+title+'\001'+qun_text]]
     rdd2 = sc.textFile("/data/develop/qq/qun_info.tsv/*")\
