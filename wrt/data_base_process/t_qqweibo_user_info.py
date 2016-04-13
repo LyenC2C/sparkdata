@@ -113,7 +113,7 @@ def f(line,occu_dict):
         year = sch.get("year","-")
         background = sch.get("background","-")
         department = sch.get("department","-")
-        school = sch.get("school","-").replace("\n","").replace("\r","").replace("\t","")
+        school = str(sch.get("school","-")).replace("\n","").replace("\r","").replace("\t","")
         sch_dict[index] = [year,background,school,department]
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
