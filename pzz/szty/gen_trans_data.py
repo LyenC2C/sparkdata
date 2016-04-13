@@ -16,13 +16,6 @@ def f(x):
         return None
 
 
-def filter_qq(x,qid_dic):
-    j = f(x)
-    if qid_dic.has_key(str(j["qq_id"])):
-        return [str(j["qun_id"]),[1,str(j["qq_id"])+'\001'+j["name"]]]
-    else:
-        return None
-
 def filter_group(x,y):
     if 1 in y:
         for each in y:
@@ -75,7 +68,7 @@ if __name__ == '__main__':
     rdd1 = sc.textFile("/data/develop/qq/group_member.json")\
             .map(lambda x:f(x))\
             .filter(lambda x:x!=None)\
-            .map(lambda j:[str(j["qq_id"]),[str(j["qun_id"]),j["name"]]])\
+            .map(lambda j:[str(j["qq_id"]),[str(j["qun_id"]),j["name"].encode("utf-8")]])\
             .union(rdd_qid)\
             .groupByKey()\
             .mapValues(list)\
