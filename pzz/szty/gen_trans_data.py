@@ -11,8 +11,6 @@ def f(x):
     s = x.strip().replace('\r\n','').replace("\u0000","").replace("\t"," ")
     return json.loads(valid_jsontxt(s))
 
-def filter_group_from_qq(x,y):
-
 
 def filter_qq(x,qid_dic):
     j = f(x)
