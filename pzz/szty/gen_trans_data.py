@@ -26,6 +26,14 @@ def filter_group(x,y):
     else:
         return None
 
+def filter_qq_qqwb_group(x,y):
+    if 1 in y:
+        for each in y:
+            if each != 1:
+                return [x,each]
+    else:
+        return None
+
 def pro_group(x,y):
     flag = 0
     qun_content = ""
@@ -43,9 +51,9 @@ def pro_group(x,y):
 def qqid_qun_group(x,y):
     res = ""
     for each in y:
-        res += '|'.join(each[1:])
-        res += '||'
-    res = res[:-2] if res[-2:] == '||' else res
+        res += '#'.join(each[1:])
+        res += '|'
+    res = res[:-1] if res[-1] == '|' else res
     return [x,res]
 
 def merge_group(x,y):
@@ -81,7 +89,7 @@ if __name__ == '__main__':
     rdd3 = rdd1.union(rdd2).groupByKey()\
             .map(lambda (x,y):pro_group(x,y))\
             .flatMap(lambda x:x)\
-            .map(lambda x:x.replace("|",""))\
+            .map(lambda x:x.replace("|","").replace("#",""))\
             .map(lambda x:x.split("\001"))\
             .map(lambda x:[x[0],x])\
             .groupByKey()\
@@ -98,7 +106,7 @@ if __name__ == '__main__':
                 .union(rdd_qid)\
                 .groupByKey()\
                 .mapValues(list)\
-                .map(lambda (x,y):filter_group(x,y))\
+                .map(lambda (x,y):filter_qq_qqwb_group(x,y))\
                 .filter(lambda x:x!=None)\
                 .map(lambda (x,y):[x,[2,y]])
 
