@@ -25,6 +25,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
 -- stored as textfile location '/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/';
 
 
+--ALTER TABLE t_base_ec_item_dev ADD COLUMNS  (paramap map<string, string>   COMMENT '商品参数表');
 
 -- LOAD DATA  INPATH '/commit/itemdata' OVERWRITE INTO TABLE t_base_ec_item_dev PARTITION (ds='20160216') ;
 

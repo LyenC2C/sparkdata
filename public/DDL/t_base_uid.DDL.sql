@@ -1,5 +1,9 @@
 CREATE  TABLE  if not exists t_base_uid (
-uid   String COMMENT ''
+uid   String COMMENT '',
+id1  String,
+id2 String,
+id3 String,
+id4 String
 )
 COMMENT ''
 PARTITIONED BY  (ds STRING )
