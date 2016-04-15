@@ -26,9 +26,7 @@ t1.tgender,
 t1.tage,
 t1.tname,
 t1.tloc
-
 from
-
  (
  select
 tb_id,
