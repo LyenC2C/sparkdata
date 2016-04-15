@@ -60,9 +60,9 @@ def f1(line):
     words = []
     # values = []
     dushu = '-'
-    for ln in title:
+    for i in range(len(title)):
         # if len(ln.split("_")) != 2: return None
-        word = uniform(ln) #所有字母变小写
+        word = uniform(title[i]) #所有字母变小写
         # value = float(ln.split("_")[1]) #匹配权值
         if title[i].encode('utf-8') == '度' and i != 0:
             if title[i-1].isdigit():
@@ -83,6 +83,8 @@ def f2(x,y):
             item_id2 = k2[0]
             son_bra1 = k1[2]
             son_bra2 = k1[2]
+            dushu1 = k1[3]
+            dushu2 = k2[3]
             if (dushu1 == dushu2 or (dushu1 == '-' or dushu2 == '-')) and\
                     (son_bra1 == son_bra2 or (son_bra1 == '-' or son_bra2 == '-')):
                 pipei_value = pipei(k1[1],k2[1])
