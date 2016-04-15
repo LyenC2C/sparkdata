@@ -79,7 +79,7 @@ def gen_item_base(x,y):
                 data = each[2]
                 break
     #return [status_flag,status_ts,data_flag,data_ts,data]
-    return str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
+    return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
 
 if __name__ == "__main__":
     if sys.argv[1] == "local":
@@ -103,7 +103,7 @@ if __name__ == "__main__":
                     .groupByKey()\
                     .mapValues(list)\
                     .map(lambda (x,y):gen_item_base(x,y))\
-                    .coalesce(1100)\
+                    .coalesce(2400)\
                     .saveAsTextFile(output_path)
 
         sc.stop()
