@@ -79,7 +79,35 @@ def gen_item_base(x,y):
                 data = each[2]
                 break
     #return [status_flag,status_ts,data_flag,data_ts,data]
-    return str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
+    return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
+
+def gen_item_inc(x,y):
+    #1:新进数据   2:库中数据
+    dic = {1:None,2:None}
+    for each in y:
+        dic[each[0]] = each[1]
+    if dic[1] == None:
+        [status_flag,status_ts,data_flag,data_ts,data] = dic[2]
+    elif dic[2] == None:
+        #[ts,flag,data]
+        [ts,flag,data] = dic[1]
+        status_flag = flag
+        status_ts = ts
+        data_flag = flag
+        data_ts = ts
+    else:
+        [ts,flag,data_1] = dic[1]
+        [status_flag,status_ts,data_flag,data_ts,data] = dic[2]
+        if int(ts) > int(status_ts):
+            status_flag = flag
+            status_ts = flag
+            if flag != 0:
+                data_flag = flag
+                data_ts = ts
+                data = data_1
+    return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
+
+
 
 if __name__ == "__main__":
     if sys.argv[1] == "local":
@@ -103,8 +131,47 @@ if __name__ == "__main__":
                     .groupByKey()\
                     .mapValues(list)\
                     .map(lambda (x,y):gen_item_base(x,y))\
-                    .coalesce(1100)\
                     .saveAsTextFile(output_path)
+
+        sc.stop()
+    elif sys.argv[1] == '-geninc':
+        from pyspark import SparkContext
+        sc = SparkContext(appName="iteminfo_base_inc")
+        input_base_path = sys.argv[2]
+        input_data_path = sys.argv[3]
+        output_path = sys.argv[4]
+        rdd_data = sc.textFile(input_data_path)\
+                .map(lambda x:pro_compress_line(x))\
+                .filter(lambda x:x!=None)\
+                .map(lambda (x,y):[x,[1,y]])
+        rdd_base = sc.textFile(input_base_path)\
+                .map(lambda x:x.split("\001"))\
+                .map(lambda x:[x[0],[2,x[1:]]])
+        rdd_data.union(rdd_base)\
+                .groupByKey()\
+                .map(lambda (x,y):gen_item_inc(x,y))\
+                .saveAsTextFile(output_path)
+
+        sc.stop()
+    elif sys.argv[1] == '-extract_xzx':
+        def f(x,dic):
+            return True if dic.has_key(x.split("\001")[0]) else False
+
+        from pyspark import SparkContext
+        input_id_path = sys.argv[2]
+        input_base_path = sys.argv[3]
+        output_path = sys.argv[4]
+        sc = SparkContext(appName="extract xzx iteminfo from base by "+input_id_path)
+
+        id_dic = sc.broadcast(
+                sc.textFile(input_id_path)\
+                    .map(lambda x:(x,1))\
+                    .collectAsMap()
+                )
+
+        sc.textFile(input_base_path)\
+                .filter(lambda x:f(x,id_dic.value))\
+                .saveAsTextFile(output_path)
 
         sc.stop()
 
