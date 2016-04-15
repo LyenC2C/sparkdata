@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE  if not exists t_base_ec_shop_dev (
+CREATE EXTERNAL TABLE  if not exists t_base_ec_shop_dev_new (
 shop_id STRING  COMMENT '店铺id' ,
 seller_id STRING  COMMENT '卖家id' ,
 shop_name STRING  COMMENT '店铺名称' ,
@@ -16,9 +16,12 @@ service_score FLOAT  COMMENT '服务分' ,
 wuliu_score FLOAT  COMMENT '物流分' ,
 location  String COMMENT '地址' ,
 ts STRING COMMENT '采集时间戳' ,
+desc_highGap  FLOAT COMMENT '描述分同行业比较' ,
+service_highGap FLOAT   COMMENT '服务分同行业比较' ,
+wuliu_highGap FLOAT   COMMENT '服务分同行业比较',
 is_online BIGINT COMMENT '1架上 0下架',
-shop_type  COMMENT '店铺类型 ',
-shop_certifi   COMMENT '店铺认证 '
+shop_type  String COMMENT '店铺类型',
+shop_certifi  String  COMMENT '店铺认证'
 )
 COMMENT '电商店铺基础信息表'
 PARTITIONED BY  (ds STRING )
