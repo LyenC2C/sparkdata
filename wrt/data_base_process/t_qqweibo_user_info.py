@@ -1,8 +1,8 @@
 #coding=utf-8
 __author__ = 'wrt'
-import sys
-import rapidjson as json
 from pyspark import SparkContext
+
+import rapidjson as json
 
 sc = SparkContext(appName="qqweibo_user_info")
 
@@ -23,7 +23,7 @@ def f(line,occu_dict):
     # except:
     #     print valid_jsontxt(line)
     #     return None
-    if line == "" or line == None
+    if line == "" or line == None:
         return None
     ob = json.loads(valid_jsontxt(line))
     info = ob.get("info","-")
@@ -138,7 +138,8 @@ s_occu = "/commit/qqweibo/userinfo/map/occu.map"
 s = "/commit/qqweibo/userinfo/qqweibo_user*"
 occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
     .filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)
+rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)\
+    .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):list(y)[0])
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_qqweibo_user_info.py
