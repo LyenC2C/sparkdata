@@ -165,7 +165,7 @@ if __name__ == "__main__":
 
         id_dic = sc.broadcast(
                 sc.textFile(input_id_path)\
-                    .map(lambda x:map(lambda x:(x,1)))\
+                    .map(lambda x:(x,1))\
                     .collectAsMap()
                 )
 
