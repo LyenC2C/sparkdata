@@ -83,6 +83,8 @@ def f2(x,y):
             item_id2 = k2[0]
             son_bra1 = k1[2]
             son_bra2 = k1[2]
+            dushu1 = k1[3]
+            dushu2 = k2[3]
             if (dushu1 == dushu2 or (dushu1 == '-' or dushu2 == '-')) and\
                     (son_bra1 == son_bra2 or (son_bra1 == '-' or son_bra2 == '-')):
                 pipei_value = pipei(k1[1],k2[1])
