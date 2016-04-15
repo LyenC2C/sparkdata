@@ -60,9 +60,9 @@ def f1(line):
     words = []
     # values = []
     dushu = '-'
-    for ln in title:
+    for i in range(len(title)):
         # if len(ln.split("_")) != 2: return None
-        word = uniform(ln) #所有字母变小写
+        word = uniform(title[i]) #所有字母变小写
         # value = float(ln.split("_")[1]) #匹配权值
         if title[i].encode('utf-8') == '度' and i != 0:
             if title[i-1].isdigit():
