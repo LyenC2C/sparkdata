@@ -1,5 +1,5 @@
 
-CREATE EXTERNAL TABLE  if not exists t_base_ec_item_dev (
+CREATE EXTERNAL TABLE  if not exists t_base_ec_item_dev_new (
 item_id STRING  COMMENT  '商品id',
 title  STRING   COMMENT '商品title',
 cat_id STRING  COMMENT '商品所属类目id',
@@ -16,7 +16,7 @@ off_time STRING COMMENT '下架时间',
 favor BIGINT COMMENT '收藏人数',
 seller_id STRING  COMMENT '店家id',
 shop_id STRING  COMMENT '店铺id',
-location  String COMMENT '地址' ,
+location  String COMMENT '店铺地址' ,
 ts STRING COMMENT '采集时间戳'  ,
 
 paramap map<string, string>   COMMENT '商品参数表' ,
