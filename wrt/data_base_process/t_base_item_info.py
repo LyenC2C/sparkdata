@@ -41,7 +41,7 @@ def get_cate_dict(line):
     return (ss[0],[ss[1],ss[3],ss[8]])
 
 
-def f(line,cate_dict,brand_dict):
+def f(line,cate_dict):
     ss = line.strip().split("\001")
     item_id = ss[0]
     is_online = ss[1]
