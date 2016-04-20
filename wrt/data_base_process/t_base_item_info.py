@@ -126,7 +126,7 @@ def quchong(x, y):
 
     # result = []
 
-s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-00000"
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-00000"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
@@ -134,4 +134,4 @@ rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/iteminfo_test')
 
 
-# spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 wine_iteminfo.py
+# spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
