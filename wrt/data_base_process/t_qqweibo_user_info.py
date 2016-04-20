@@ -131,7 +131,8 @@ def f(line,occu_dict):
     for i in range(3-i): #不足3个的补齐“-”
         for ls in range(4):
             result.append("-")
-    return "\001".join(result)
+    return result
+    # return "\001".join(result)
 
 
 s_occu = "/commit/qqweibo/userinfo/map/occu.map"
@@ -140,9 +141,12 @@ s = "/commit/qqweibo/userinfo/new-all"
 occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
     .filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)\
-    .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):list(y)[0])
+    .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):'\001'.join(list(y)[0]))
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_qqweibo_user_info.py
 
 #LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user' OVERWRITE INTO TABLE t_qqweibo_user_info
+
+
+#
