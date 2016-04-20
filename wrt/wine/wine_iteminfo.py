@@ -130,11 +130,11 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/commit/project/wine/3.m.baijiu.only.iteminfo.2016-04-06"
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-00000"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/baijiu_iteminfo_tmp')
 
-# spark-submit  --executor-memory 2G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
+# spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
