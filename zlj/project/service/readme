@@ -1,3 +1,16 @@
 
 
 业务表
+
+表压缩
+
+t_base_ec_item_sale_dev_new
+t_base_ec_item_daysale_dev_new
+
+新建业务表
+
+
+t_base_ec_sale_iteminfo  sale表+item表
+t_base_day_sale_iteminfo  daysale表+item表
+
+t_base_ec_feed_user_buy_info   feed表+item表+user表
