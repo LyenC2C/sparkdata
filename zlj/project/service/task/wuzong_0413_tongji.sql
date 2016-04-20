@@ -35,3 +35,6 @@ select word  from t_qqweibo_user_info
  LATERAL  VIEW explode(split(tags_r, '_'))t1  AS word
 )t
 ;
+
+
+
