@@ -6,7 +6,9 @@ import math
 import zlib
 import base64
 import time
+import rapidjson as json
 from pyspark import SparkContext
+
 
 sc = SparkContext(appName="t_base_item_info")
 
