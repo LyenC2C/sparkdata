@@ -60,7 +60,7 @@ def f(x):
     result.append(title)
     result.append(price)
     result.append(picurl)
-    return "\001".join([valid_jsontxt(str(i)) for i in result])
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
