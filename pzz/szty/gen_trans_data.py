@@ -73,7 +73,9 @@ def merge_group(x,y):
 if __name__ == '__main__':
     from pyspark import SparkContext
     sc = SparkContext(appName="szty_user")
+
     #rdd_qid = sc.textFile("/user/yarn/service/szty/base_info.20160412.qid").map(lambda x:(x.strip(),1))
+    #改为通用
     rdd_qid = sc.textFile("/user/yarn/service/szty/Temp.names.txt.id").map(lambda x:(x.strip(),1))
 
     #filtered  [qunid,[1,qqid+'\001'+name]]
