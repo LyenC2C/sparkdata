@@ -83,7 +83,7 @@ def f(line,cate_dict):
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     price_zone = value[1]
-    seller = ob.get('seller',"-")
+    seller = ob.get('seller',{})
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
     off_time = "-"
