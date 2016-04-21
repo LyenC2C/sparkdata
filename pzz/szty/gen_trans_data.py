@@ -34,6 +34,14 @@ def filter_qq_qqwb_group(x,y):
     else:
         return None
 
+def filter_qq_base_group(x,y):
+    if 1 in y:
+        for each in y:
+            if each != 1:
+                return [x,each]
+    else:
+        return None
+
 def pro_group(x,y):
     flag = 0
     qun_content = ""
@@ -65,7 +73,10 @@ def merge_group(x,y):
 if __name__ == '__main__':
     from pyspark import SparkContext
     sc = SparkContext(appName="szty_user")
-    rdd_qid = sc.textFile("/user/yarn/service/szty/base_info.20160412.qid").map(lambda x:(x.strip(),1))
+
+    #rdd_qid = sc.textFile("/user/yarn/service/szty/base_info.20160412.qid").map(lambda x:(x.strip(),1))
+    #改为通用
+    rdd_qid = sc.textFile("/user/yarn/service/szty/Temp.names.txt.id").map(lambda x:(x.strip(),1))
 
     #filtered  [qunid,[1,qqid+'\001'+name]]
     rdd1 = sc.textFile("/data/develop/qq/group_member.json")\
@@ -96,9 +107,20 @@ if __name__ == '__main__':
             .map(lambda (x,y):qqid_qun_group(x,y))\
             .map(lambda (x,y):[x,[3,y]])
 
+    '''原来是base已经挑好
     rdd_base = sc.textFile("/user/yarn/service/szty/base_info.20160412/*")\
                 .map(lambda x:x.split("\001"))\
                 .map(lambda x:[x[0],[1,'\001'.join(x[1:])]])
+    '''
+    #现修改为通用
+    rdd_base = sc.textFile("/user/yarn/qq/base_info.dir/part*")\
+                .map(lambda x:(x.split("\001")[0],x))\
+                .uion(rdd_qid)\
+                .groupByKey()\
+                .mapValues(list)\
+                .map(lambda (x,y):filter_qq_base_group(x,y))\
+                .filter(lambda x:x!=None)\
+                .map(lambda (x,y):[x,[1,y]])
 
     rdd_qqwb = sc.textFile("/user/yarn/qqwb/qq-qqwb.all.till20160328")\
                 .map(lambda x:x.split("\t"))\
