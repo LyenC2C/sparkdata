@@ -65,6 +65,6 @@ def f(x):
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
 rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/wrt/id_title_price_url')
+rdd.saveAsTextFile('/user/wrt/id_title_price_url_new')
 
-
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 id_title_price_url.py
