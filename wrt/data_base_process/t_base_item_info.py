@@ -85,6 +85,8 @@ def f(line,cate_dict):
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
     sku_info = "-"
+    # skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
+    # if skuProps != "-":
     result = []
     list.append(item_id)
     list.append(title)
@@ -107,8 +109,7 @@ def f(line,cate_dict):
     result.append(sku_info)
     result.append(ts)
     return (item_id,result)
-    # skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
-    # if skuProps != "-":
+
 def quchong(x, y):
     max = 0
     item_list = y
