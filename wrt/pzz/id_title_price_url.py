@@ -37,7 +37,7 @@ def valid_jsontxt(content):
     else:
         return content
 
-def f(x):
+def f(line):
     ss = line.strip().split("\001")
     item_id = ss[0]
     # is_online = ss[1] #0没有1上架2下架
