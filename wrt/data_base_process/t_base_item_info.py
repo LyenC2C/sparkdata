@@ -81,7 +81,7 @@ def f(line,cate_dict):
     for v in props:
         item_info_list.append(valid_jsontxt(v.get('name',"-")).replace(":","").replace(",","") \
                      +":" + valid_jsontxt(v.get('value',"-")).replace(":","").replace(",",""))
-        if valid_jsontxt('品牌') in valid_jsontxt(v['name']) and brand_name == "-" :
+        if valid_jsontxt('品牌') in valid_jsontxt(v.get('name',"-")) and brand_name == "-" :
             brand_name = v['value']
     item_info = ",".join(item_info_list)
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
