@@ -118,7 +118,7 @@ def f(line,cate_dict):
     result.append(sku_info)
     result.append(ts)
     # return (item_id,result)
-    return "\001".join([valid_jsontxt(str(i)) for i in result])
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def quchong(x, y):
     max = 0
