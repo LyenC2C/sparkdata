@@ -135,6 +135,6 @@ if __name__ == '__main__':
     rdd3.union(rdd_base).union(rdd_qqwb)\
             .groupByKey()\
             .map(lambda (x,y):merge_group(x,y))\
-            .saveAsTextFile("service/szty/result.20160412")
+            .saveAsTextFile("service/szty/Temp.names.txt.id.res.20160412")
 
 
