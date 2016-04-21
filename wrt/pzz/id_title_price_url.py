@@ -58,7 +58,7 @@ def f(line):
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
-    if picurl_list != type([]): picurl_y = "-"
+    if type(picurl_list) != type([]): picurl_y = "-"
     else: picurl_y = picurl_list[0]
     picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
     result.append(item_id)
