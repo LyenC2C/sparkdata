@@ -48,6 +48,7 @@ def f(line,cate_dict):
     item_id = ss[0]
     is_online = ss[1]
     ts = ss[2]
+    if (ss[5]) == "": return None
     line = decompress(ss[5])
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
