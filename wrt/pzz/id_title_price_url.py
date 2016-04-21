@@ -59,6 +59,7 @@ def f(line):
     price = value[0]
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
     if type(picurl_list) != type([]): picurl_y = "-"
+    elif len(picurl_list) == 0: picurl_y = "-"
     else: picurl_y = picurl_list[0]
     picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
     result.append(item_id)
