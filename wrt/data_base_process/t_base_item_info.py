@@ -86,6 +86,7 @@ def f(line,cate_dict):
     shopId = seller.get('shopId','-')
     sku_info = "-"
     # skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
+
     # if skuProps != "-":
     result = []
     list.append(item_id)
