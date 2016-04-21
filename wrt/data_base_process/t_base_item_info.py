@@ -18,9 +18,13 @@ def parse_price(price_dic):
     price_range='-'
     for value in price_dic:
         tmp=value['price']
-        v=0
-        if '-' in tmp:     v=float(tmp.split('-')[0])
-        else :             v=float(tmp)
+        v=""
+        if '-' in tmp:     v=tmp.split('-')[0]
+        else :             v=tmp
+        if v.isdigit():
+            v = float()
+        else:
+            v = 0.0
         if min>v:
             min=v
             price=v
