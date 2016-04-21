@@ -69,7 +69,7 @@ def f(line):
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-00000"
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
 rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/id_title_price_url_new')
 
