@@ -110,17 +110,17 @@ def f(line,cate_dict):
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
-    result.append(ts)
     result.append(item_info)
     result.append(sku_info)
+    result.append(ts)
     return (item_id,result)
 
 def quchong(x, y):
     max = 0
     item_list = y
     for ln in item_list:
-        if int(ln[-3]) > max:
-                max = int(ln[-3])
+        if int(ln[-1]) > max:
+                max = int(ln[-1])
                 y = ln
     result = y
     lv = []
