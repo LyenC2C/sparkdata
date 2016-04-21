@@ -114,7 +114,7 @@ if __name__ == '__main__':
     '''
     #现修改为通用
     rdd_base = sc.textFile("/user/yarn/qq/base_info.dir/part*")\
-                .map(lambda x:(x.split("\001")[0],'\001'.x[1:]))\
+                .map(lambda x:(x.split("\001")[0],'\001'.join(x[1:])))\
                 .union(rdd_qid)\
                 .groupByKey()\
                 .mapValues(list)\
