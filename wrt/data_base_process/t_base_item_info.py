@@ -65,7 +65,7 @@ def f(line,cate_dict):
     location = valid_jsontxt(itemInfoModel.get('location','-'))
     # item_id = itemInfoModel.get('itemId','-')
     title = itemInfoModel.get('title','-').replace("\n","")
-    favor = itemInfoModel.get('favcount','-')
+    favor = itemInfoModel.get('favcount','0')
     categoryId = itemInfoModel.get('categoryId','-')
     root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
     cat_name = cate_dict.get(categoryId,["-","-","-"])[0]
@@ -118,7 +118,7 @@ def f(line,cate_dict):
     result.append(sku_info)
     result.append(ts)
     # return (item_id,result)
-    return result
+    return "\001".join(result)
 
 def quchong(x, y):
     max = 0
