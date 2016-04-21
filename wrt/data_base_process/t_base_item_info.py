@@ -46,8 +46,10 @@ def get_cate_dict(line):
 def f(line,cate_dict):
     ss = line.strip().split("\001")
     item_id = ss[0]
-    is_online = ss[1]
+    is_online = ss[1] #0没有1上架2下架
     ts = ss[2]
+    data_flag = ss[3] #历史状态，0没有1上架2下架（当天新商品没有的时候，他保持不变）
+    data_ts = ss[4] #历史状态时间
     if (ss[5]) == "": return None
     line = decompress(ss[5])
     ss = line.strip().split("\t",2)
@@ -84,6 +86,8 @@ def f(line,cate_dict):
     seller = ob.get('seller',"-")
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
+    off_time = "-"
+    if is_online == 0 and data_flag == 2: off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
     # skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
 
