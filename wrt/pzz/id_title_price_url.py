@@ -17,9 +17,13 @@ def parse_price(price_dic):
     price_range='-'
     for value in price_dic:
         tmp=value['price']
-        v=0
-        if '-' in tmp:     v=float(tmp.split('-')[0])
-        else :             v=float(tmp)
+        v=""
+        if '-' in tmp:     v=tmp.split('-')[0]
+        else :             v=tmp
+        if v.replace('.',"").isdigit():
+            v = float(v)
+        else:
+            v = 0.0
         if min>v:
             min=v
             price=v
@@ -53,8 +57,10 @@ def f(line):
     title = ob.get("itemInfoModel").get("title")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
-    picurl_list = ob.get("itemInfoModel").get("picsPath")
-    picurl_y = picurl_list[0]
+    picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
+    if type(picurl_list) != type([]): picurl_y = "-"
+    elif len(picurl_list) == 0: picurl_y = "-"
+    else: picurl_y = picurl_list[0]
     picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
     result.append(item_id)
     result.append(title)
@@ -63,7 +69,7 @@ def f(line):
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-00000"
 rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/id_title_price_url_new')
 
