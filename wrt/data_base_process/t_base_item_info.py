@@ -110,9 +110,9 @@ def f(line,cate_dict):
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
+    result.append(ts)
     result.append(item_info)
     result.append(sku_info)
-    result.append(ts)
     return (item_id,result)
 
 def quchong(x, y):
@@ -139,3 +139,4 @@ rdd.saveAsTextFile('/user/wrt/temp/iteminfo_test')
 
 
 # spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
+#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_test' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160421');
