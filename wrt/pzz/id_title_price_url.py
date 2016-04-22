@@ -44,7 +44,7 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
+    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
 
 def replace_text(content):
     return content.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
@@ -58,15 +58,18 @@ def f(line):
     # data_ts = ss[4] #历史状态时间
     if (ss[5]) == "": return None
     line = decompress(ss[5])
+    #return line.decode("utf-8")
     ss = line.strip().split('\t',2)
+    #return ss[2].decode("utf-8")
     ob = json.loads(valid_jsontxt(ss[2]))
+    return ob
+    '''
     result = []
     # item_id = valid_jsontxt(ss[1])
     title = ob.get("itemInfoModel").get("title","-")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = str(value[0])
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
-    # if
     if type(picurl_list) != type([]): picurl_y = "-"
     elif len(picurl_list) == 0: picurl_y = "-"
     else: picurl_y = picurl_list[0]
@@ -76,6 +79,7 @@ def f(line):
     result.append(price)
     result.append(picurl)
     return "\001".join([str(valid_jsontxt(i)) for i in result])
+    '''
 
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
