@@ -58,7 +58,7 @@ def f(line):
     #return line.decode("utf-8")
     ss = line.strip().split('\t',2)
     #return ss[2].decode("utf-8")
-    line_s = valid_jsontxt(ss[2].replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", ""))
+    line_s = valid_jsontxt(ss[2].decode("utf-8").replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", ""))
     ob = json.loads(line_s)
     # return ob
     result = []
