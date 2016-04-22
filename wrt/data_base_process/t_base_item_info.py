@@ -18,9 +18,13 @@ def parse_price(price_dic):
     price_range='-'
     for value in price_dic:
         tmp=value['price']
-        v=0
-        if '-' in tmp:     v=float(tmp.split('-')[0])
-        else :             v=float(tmp)
+        v=""
+        if '-' in tmp:     v=tmp.split('-')[0]
+        else :             v=tmp
+        if v.isdigit():
+            v = float()
+        else:
+            v = 0.0
         if min>v:
             min=v
             price=v
@@ -61,7 +65,7 @@ def f(line,cate_dict):
     location = valid_jsontxt(itemInfoModel.get('location','-'))
     # item_id = itemInfoModel.get('itemId','-')
     title = itemInfoModel.get('title','-').replace("\n","")
-    favor = itemInfoModel.get('favcount','-')
+    favor = itemInfoModel.get('favcount','0')
     categoryId = itemInfoModel.get('categoryId','-')
     root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
     cat_name = cate_dict.get(categoryId,["-","-","-"])[0]
@@ -77,8 +81,8 @@ def f(line,cate_dict):
     for v in props:
         item_info_list.append(valid_jsontxt(v.get('name',"-")).replace(":","").replace(",","") \
                      +":" + valid_jsontxt(v.get('value',"-")).replace(":","").replace(",",""))
-        if valid_jsontxt('品牌') in valid_jsontxt(v['name']) and brand_name == "-" :
-            brand_name = v['value']
+        if valid_jsontxt('品牌') in valid_jsontxt(v.get('name',"-")) and brand_name == "-" :
+            brand_name = v.get('value',"-")
     item_info = ",".join(item_info_list)
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
@@ -114,7 +118,7 @@ def f(line,cate_dict):
     result.append(sku_info)
     result.append(ts)
     # return (item_id,result)
-    return result
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def quchong(x, y):
     max = 0
