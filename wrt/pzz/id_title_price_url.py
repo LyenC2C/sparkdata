@@ -46,9 +46,6 @@ def valid_jsontxt(content):
         res = content.encode("utf-8")
     return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
 
-def replace_text(content):
-    return content.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
-
 def f(line):
     ss = line.strip().split("\001")
     item_id = ss[0]
@@ -62,8 +59,7 @@ def f(line):
     ss = line.strip().split('\t',2)
     #return ss[2].decode("utf-8")
     ob = json.loads(valid_jsontxt(ss[2]))
-    return ob
-    '''
+    # return ob
     result = []
     # item_id = valid_jsontxt(ss[1])
     title = ob.get("itemInfoModel").get("title","-")
@@ -79,8 +75,6 @@ def f(line):
     result.append(price)
     result.append(picurl)
     return "\001".join([str(valid_jsontxt(i)) for i in result])
-    '''
-
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
 rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
