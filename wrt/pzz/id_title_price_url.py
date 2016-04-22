@@ -57,7 +57,7 @@ def f(line):
     if (ss[5]) == "": return None
     line = decompress(ss[5])
     ss = line.strip().split('\t',2)
-    ob = json.loads(valid_jsontxt(ss[2]))
+    ob = json.loads(ss[2])
     result = []
     # item_id = valid_jsontxt(ss[1])
     title = ob.get("itemInfoModel").get("title")
