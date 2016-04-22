@@ -62,7 +62,7 @@ def f(line):
     # item_id = valid_jsontxt(ss[1])
     title = ob.get("itemInfoModel").get("title")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-    price = value[0]
+    price = str(value[0])
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
     if type(picurl_list) != type([]): picurl_y = "-"
     elif len(picurl_list) == 0: picurl_y = "-"
@@ -72,7 +72,7 @@ def f(line):
     result.append(title)
     result.append(price)
     result.append(picurl)
-    return "\001".join([str(valid_jsontxt(i)) for i in result])
+    return "\001".join([valid_jsontxt(i) for i in result])
 
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
