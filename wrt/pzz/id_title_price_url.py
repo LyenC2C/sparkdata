@@ -44,7 +44,8 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    return res#.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res.replace('\n',"").replace("\r","")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -58,8 +59,8 @@ def f(line):
     #return line.decode("utf-8")
     ss = line.strip().split('\t',2)
     #return ss[2].decode("utf-8")
-    line_s = valid_jsontxt(ss[2].decode("utf-8").replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", ""))
-    ob = json.loads(line_s)
+    # line_s = valid_jsontxt(ss[2].decode("utf-8").replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", ""))
+    ob = json.loads(ss[2])
     # return ob
     result = []
     # item_id = valid_jsontxt(ss[1])
