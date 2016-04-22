@@ -57,7 +57,7 @@ def f(line):
     ob = json.loads(valid_jsontxt(ss[2]))
     result = []
     # item_id = valid_jsontxt(ss[1])
-    title = ob.get("itemInfoModel").get("title")
+    title = ob.get("itemInfoModel").get("title","-")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = str(value[0])
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
