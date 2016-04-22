@@ -35,20 +35,14 @@ def decompress(out):
     data = zlib.decompress(decode)
     return data
 
-# def valid_jsontxt(content):
-#     if type(content) == type(u""):
-#         return content.encode("utf-8")
-#     else:
-#         return content
-
 def valid_jsontxt(content):
-    res = content
     if type(content) == type(u""):
-        res = content.encode("utf-8")
-    if type(res) == type(""):
-        return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
+        return content.encode("utf-8")
     else:
-        return res
+        return content
+
+def replace_text(content):
+    return content.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -60,7 +54,7 @@ def f(line):
     if (ss[5]) == "": return None
     line = decompress(ss[5])
     ss = line.strip().split('\t',2)
-    ob = json.loads(ss[2])
+    ob = json.loads(valid_jsontxt(ss[2]))
     result = []
     # item_id = valid_jsontxt(ss[1])
     title = ob.get("itemInfoModel").get("title")
@@ -72,10 +66,10 @@ def f(line):
     else: picurl_y = picurl_list[0]
     picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
     result.append(item_id)
-    result.append(title)
+    result.append(replace_text(title))
     result.append(price)
-    result.append(picurl)
-    return "\001".join([valid_jsontxt(i) for i in result])
+    result.append(replace_text(picurl))
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
