@@ -58,11 +58,12 @@ def f(line):
     #return line.decode("utf-8")
     ss = line.strip().split('\t',2)
     #return ss[2].decode("utf-8")
-    ob = json.loads(ss[2])
+    line_s = valid_jsontxt(ss[2].replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", ""))
+    ob = json.loads(line_s)
     # return ob
     result = []
     # item_id = valid_jsontxt(ss[1])
-    title = ob.get("itemInfoModel",{}).get("title","-").replace("\n","")
+    title = ob.get("itemInfoModel",{}).get("title","-")#.'replace(\n","")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = str(value[0])
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
