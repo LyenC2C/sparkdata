@@ -17,14 +17,15 @@ favor BIGINT COMMENT '收藏人数',
 seller_id STRING  COMMENT '店家id',
 shop_id STRING  COMMENT '店铺id',
 location  String COMMENT '店铺地址' ,
-ts STRING COMMENT '采集时间戳'  ,
+
 
 paramap map<string, string>   COMMENT '商品参数表' ,
-sku  map<string, string>  COMMENT'sku  21433_89866585|1627207_3232479:price_quant,21433_89866585|1627207_3232479:price_quant'
+sku  map<string, string>  COMMENT'sku  21433_89866585|1627207_3232479:price_quant,21433_89866585|1627207_3232479:price_quant',
+ts STRING COMMENT '采集时间戳'
 )
 COMMENT '电商商品基础信息表'
 PARTITIONED BY  (ds STRING )
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   COLLECTION ITEMS TERMINATED BY ','   MAP KEYS TERMINATED BY ':' ;
 -- stored as textfile location '/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/';
 
 
