@@ -14,3 +14,7 @@ t_base_ec_sale_iteminfo  sale表+item表
 t_base_day_sale_iteminfo  daysale表+item表
 
 t_base_ec_feed_user_buy_info   feed表+item表+user表
+
+
+品牌表
+t_base_ec_brand    加入品牌地点

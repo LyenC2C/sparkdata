@@ -16,7 +16,7 @@ t2.brand_id       ,
 t2.brand_name     ,
 t2.bc_type        ,
 t2.price          ,
-t1.tgender,
+t1.tgender   ,
 t1.tage,
 t1.tname,
 t1.tloc
