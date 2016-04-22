@@ -44,7 +44,7 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res#.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -62,7 +62,7 @@ def f(line):
     # return ob
     result = []
     # item_id = valid_jsontxt(ss[1])
-    title = ob.get("itemInfoModel").get("title","-")
+    title = ob.get("itemInfoModel",{}).get("title","-").replace("\n","")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = str(value[0])
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
