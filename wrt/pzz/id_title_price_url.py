@@ -35,11 +35,16 @@ def decompress(out):
     data = zlib.decompress(decode)
     return data
 
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else:
+#         return content
 def valid_jsontxt(content):
+    res = content
     if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+        res = content.encode("utf-8")
+    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
 
 def replace_text(content):
     return content.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
@@ -61,14 +66,15 @@ def f(line):
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = str(value[0])
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
+    # if
     if type(picurl_list) != type([]): picurl_y = "-"
     elif len(picurl_list) == 0: picurl_y = "-"
     else: picurl_y = picurl_list[0]
     picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
     result.append(item_id)
-    result.append(replace_text(title))
+    result.append(title)
     result.append(price)
-    result.append(replace_text(picurl))
+    result.append(picurl)
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
