@@ -8,7 +8,7 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\\","")
+    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
 
 def gen_uid_feedid(line):
     try:
