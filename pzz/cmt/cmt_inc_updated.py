@@ -120,7 +120,7 @@ def parse_cmt_v3(line_s):
         #return [[[usermark,[feedid,"\001".join(l)]],[]],user_dic.keys]
         return [feed_ls,user_dic.keys(),itemid]
     else :
-        print 'not a json line',line_s
+        print 'not a json line',line_s.encode("utf-8")
 
     return None
 
