@@ -8,7 +8,7 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "").replace("\r", "")
 
 def gen_uid_feedid(line):
     try:
@@ -120,7 +120,7 @@ def parse_cmt_v3(line_s):
         #return [[[usermark,[feedid,"\001".join(l)]],[]],user_dic.keys]
         return [feed_ls,user_dic.keys(),itemid]
     else :
-        print 'not a json line',line
+        print 'not a json line',line_s.encode("utf-8")
 
     return None
 
