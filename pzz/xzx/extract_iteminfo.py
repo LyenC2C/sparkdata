@@ -38,8 +38,8 @@ if __name__ == "__main__":
         sc = SparkContext(appName="xzx_iteminfo_extract")
         input_path = sys.argv[2]
         output_path = sys.argv[3]
-        id_dic = sc.broadcast(sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_house").map(lambda x:(x.strip(),None)).collectAsMap())
-        rdd = sc.textFile(input_path)
+        id_dic = sc.broadcast(sc.textFile(input_path).map(lambda x:(x.strip(),None)).collectAsMap())
+        rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_house")
         rdd.map(lambda x:filter_line(x,id_dic.value))\
             .filter(lambda x:x!=None)\
             .saveAsTextFile(output_path)
