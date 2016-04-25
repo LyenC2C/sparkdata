@@ -35,11 +35,17 @@ def decompress(out):
     data = zlib.decompress(decode)
     return data
 
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else:
+#         return content
 def valid_jsontxt(content):
+    res = content
     if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+        res = content.encode("utf-8")
+    # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res.replace('\n',"").replace("\r","")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -50,13 +56,17 @@ def f(line):
     # data_ts = ss[4] #历史状态时间
     if (ss[5]) == "": return None
     line = decompress(ss[5])
+    #return line.decode("utf-8")
     ss = line.strip().split('\t',2)
-    ob = json.loads(valid_jsontxt(ss[2]))
+    #return ss[2].decode("utf-8")
+    # line_s = valid_jsontxt(ss[2].decode("utf-8").replace("\\n", "").replace("\\r", "").replace("\\t", "").replace("\u0001", ""))
+    ob = json.loads(ss[2])
+    # return ob
     result = []
     # item_id = valid_jsontxt(ss[1])
-    title = ob.get("itemInfoModel").get("title")
+    title = ob.get("itemInfoModel",{}).get("title","-")#.'replace(\n","")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-    price = value[0]
+    price = str(value[0])
     picurl_list = ob.get("itemInfoModel",{}).get("picsPath",[])
     if type(picurl_list) != type([]): picurl_y = "-"
     elif len(picurl_list) == 0: picurl_y = "-"
@@ -68,9 +78,8 @@ def f(line):
     result.append(picurl)
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
-
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
 rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/wrt/id_title_price_url_new')
+rdd.saveAsTextFile('/user/wrt/id_title_price_url_new_0422')
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 id_title_price_url.py

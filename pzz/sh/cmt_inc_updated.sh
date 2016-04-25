@@ -44,7 +44,7 @@ hadoop fs -rmr $all_feed_output
 hadoop fs -rmr $new_feed_output
 hadoop fs -rmr $tmp_data
 hadoop fs -rmr ${nouid_data}
-spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 100 ${workspace_path}/pzz/cmt/cmt_inc_updated.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data ${user_data} ${nouid_data}
+spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 140 ${workspace_path}/pzz/cmt/cmt_inc_updated.py -gen_data_inc ${all_feed_input}/part* $new_data_input $all_feed_output $new_feed_output $tmp_data ${user_data} ${nouid_data}
 echo "spark job finished."
 
 #本地临时文件
