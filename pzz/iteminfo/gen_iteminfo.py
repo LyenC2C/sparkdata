@@ -103,9 +103,9 @@ def gen_item_inc(x,y):
             status_flag = dic[1][0]
             status_ts = dic[1][1]
             if dic[1][2] == '0' and dic[2][2] == '1':
-                [data_flag,data_ts,data] = dic[2][2:4]
+                [data_flag,data_ts,data] = dic[2][2:]
             else:
-                [data_flag,data_ts,data] = dic[1][2:4]
+                [data_flag,data_ts,data] = dic[1][2:]
 
     return [str(x),str(status_flag),str(status_ts),str(data_flag),str(data_ts),data]
     #return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
