@@ -21,25 +21,6 @@ sc=SparkContext(appName="iter_inc")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 path=sys.argv[1]
-# def valid_jsontxt(content):
-#     if type(content) == type(u""):
-#         return content.encode("utf-8")
-#     else :
-#         return content
-def parse_price(price_dic):
-    min=1000000000.0
-    price='0'
-    price_range='-'
-    for value in price_dic:
-        tmp=value['price']
-        v=0
-        if '-' in tmp:     v=float(tmp.split('-')[0])
-        else :             v=float(tmp)
-        if min>v:
-            min=v
-            price=v
-            if '-' in tmp: price_range=tmp
-    return [price,price_range]
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -50,35 +31,36 @@ def try_parse(line,flag):
         return parse(line,flag)
     except:return None
 
+
 def p(line):
     ob=json.loads(valid_jsontxt(line))
-
+    item_id=ob['skuid']
+    product=ob['product']
     item_title=ob['title']
+    brand_id=product['brand']
     table=ob['table']
     table_map=[]
-    for  i in table['list']:
-        key=i.get['key']
-        value=i.get['value']
-        table_map.append(key+":"+value)
-
+    # for  i in table:
+    #     key=i['key']
+    #     value=i['value']
+    #     table_map.append(key+":"+value)
     u_jd=ob.get('u_jd','-')
-    brand_id=ob['brand']
-    cat_list=ob['cat']
-    cat1=cat_list[0]
-    cat2=cat_list[1]
-    cat3=cat_list[2]
-    cat_name=ob['catName']
-    cat1_name=cat_name[0]
-    cat2_name=cat_name[1]
-    cat3_name=cat_name[2]
-
-
+    p_price=ob['price']['p']
+    m_price=ob['price']['m']
+    cat1=ob['cate1']
+    cat2=ob['cate2']
+    cat3=ob['cate3']
+    cat1_name=''
+    cat2_name=''
+    cat3_name=''
     detail=ob['detail']
     detail_map=[]
     for  i in detail:
-        key=i.get['key']
-        value=i.get['value']
+        key=i['key']
+        value=i['value']
         detail_map.append(key+":"+value)
+    return [item_id,item_title,brand_id,u_jd,p_price,m_price,cat1,cat1_name,cat2,cat2_name,cat3,cat3_name,','.join(detail_map),'\t'.join(table_map)]
+
 
 def parse(line,flag):
     ts=''
@@ -210,22 +192,6 @@ if __name__ == "__main__":
         print comment
         print '-insert argvs:\n argv[1]:file or dir input\n argv[2]:ds  \n'
         print '-inc      argvs:\n argv[1]:file or dir input\n argv[2]:ds_1  \n argv[3] ds\n'
-    elif sys.argv[1]=='-insert':
-        filepath=sys.argv[2]
-        ds=sys.argv[3]
-        rdd=sc.textFile(filepath,100)\
-            .map(lambda x:parse(x,'insert')).filter(lambda x: x is not None)\
-            .map(lambda x:fun1(x,ds))
-        df=hiveContext.sql('select * from t_base_ec_item_dev limit 1')
-        schema1=df.schema
-        ddf=hiveContext.createDataFrame(rdd,schema1)
-        hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        # sql='''
-        # insert overwrite table t_base_ec_item_dev partition(ds=%s)
-        # select * from tmptable
-        # '''
-        hiveContext.sql(sql_insert%(ds))
-
     elif sys.argv[1]=='-inc':
         filepath=sys.argv[2]
         ds_1=sys.argv[3]
@@ -234,8 +200,6 @@ if __name__ == "__main__":
         hiveContext.sql('use wlbase_dev')
         df=hiveContext.sql('select * from t_base_ec_item_dev where ds=%s'%ds_1)
         schema1=df.schema
-        # rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
-        #                              x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         rdd1=df.map(lambda x:(x.item_id,[x.item_id,x.title,x.cat_id,x.cat_name,x.root_cat_id,x.root_cat_name,x.brand_id,x.brand_name,
                                      x.bc_type,x.price,x.price_zone,x.is_online,x.off_time,x.favor,x.seller_id,x.shop_id,x.location, x.ts]))
         rdd2=rdd.union(rdd1).groupByKey()
