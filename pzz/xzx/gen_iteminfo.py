@@ -79,10 +79,12 @@ def gen_item_base(x,y):
                 data = each[2]
                 break
     #return [status_flag,status_ts,data_flag,data_ts,data]
-    return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
+    return [str(x),str(status_flag),str(status_ts),str(data_flag),str(data_ts),data]
+    #return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
 
 def gen_item_inc(x,y):
     #1:新进数据   2:库中数据
+    #[status_flag,status_ts,data_flag,data_ts,data]
     dic = {1:None,2:None}
     for each in y:
         dic[each[0]] = each[1]
@@ -92,25 +94,18 @@ def gen_item_inc(x,y):
         [status_flag,status_ts,data_flag,data_ts,data] = dic[2]
     #只有新进数据
     elif dic[2] == None:
-        #[ts,flag,data]
-        [ts,flag,data] = dic[1]
-        status_flag = flag
-        status_ts = ts
-        data_flag = flag
-        data_ts = ts
+        [status_flag,status_ts,data_flag,data_ts,data] = dic[2]
     #两个都存在
     else:
-        [ts,flag,data_1] = dic[1]
-        [status_flag,status_ts,data_flag,data_ts,data] = dic[2]
-        if int(ts) > int(status_ts):
-            status_flag = flag
-            status_ts = flag
-            if flag != 0:
-                data_flag = flag
-                data_ts = ts
-                data = data_1
-    return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
+        status_flag = dic[1][0]
+        status_ts = dic[1][1]
+        if dic[1][2] == 0 and dic[2][2] == 1:
+            [data_flag,data_ts,data] = dic[2][2:4]
+        else:
+            [data_flag,data_ts,data] = dic[1][2:4]
 
+    return [str(x),str(status_flag),str(status_ts),str(data_flag),str(data_ts),data]
+    #return str(x)+'\001'+str(status_flag)+'\001'+str(status_ts)+'\001'+str(data_flag)+'\001'+str(data_ts)+'\001'+data
 
 
 if __name__ == "__main__":
@@ -135,28 +130,35 @@ if __name__ == "__main__":
                     .groupByKey()\
                     .mapValues(list)\
                     .map(lambda (x,y):gen_item_base(x,y))\
+                    .map(lambda x:"\001".join(x))\
                     .saveAsTextFile(output_path)
 
         sc.stop()
+    #[str(x),str(status_flag),str(status_ts),str(data_flag),str(data_ts),data]
     elif sys.argv[1] == '-geninc':
         from pyspark import SparkContext
         sc = SparkContext(appName="iteminfo_base_inc")
-        input_base_path = sys.argv[2]
-        input_data_path = sys.argv[3]
+        input_base_path = sys.argv[3]
+        input_data_path = sys.argv[2]
         output_path = sys.argv[4]
         rdd_data = sc.textFile(input_data_path)\
                 .map(lambda x:pro_compress_line(x))\
                 .filter(lambda x:x!=None)\
-                .map(lambda (x,y):[x,[1,y]])
+                .groupByKey()\
+                .mapValues(list)\
+                .map(lambda (x,y):gen_item_base(x,y))\
+                .map(lambda x:[x[0],[1,x[1:]]])
         rdd_base = sc.textFile(input_base_path)\
                 .map(lambda x:x.split("\001"))\
                 .map(lambda x:[x[0],[2,x[1:]]])
         rdd_data.union(rdd_base)\
                 .groupByKey()\
                 .map(lambda (x,y):gen_item_inc(x,y))\
+                .map(lambda x:"\001".join(x))\
                 .saveAsTextFile(output_path)
 
         sc.stop()
+
     elif sys.argv[1] == '-extract_xzx':
         def f(x,dic):
             return True if dic.has_key(x.split("\001")[0]) else False
