@@ -8,11 +8,10 @@ price STRING COMMENT '商品价格',
 price_zone STRING  COMMENT '商品价格区间',
 is_online BIGINT COMMENT '1架上 0下架',
 off_time STRING COMMENT '下架时间',
-favor BIGINT COMMENT '收藏人数',
+
 seller_id STRING  COMMENT '店家id',
 shop_id STRING  COMMENT '店铺id',
 location  String COMMENT '地址' ,
-ts STRING COMMENT '采集时间戳'  ,
 
 brand_id STRING COMMENT '品牌id',
 brand_name STRING COMMENT '品牌名称',
@@ -24,7 +23,9 @@ cat3 String ,
 cat3_name String ,
 u_jd String ,  -- 京东自营
 table_list  map<string, string>   COMMENT '商品参数表' ,
-paramap map<string, string>   COMMENT '商品参数表'
+paramap map<string, string>   COMMENT '商品参数表',
+ts STRING COMMENT '采集时间戳'
+
 )
 COMMENT '京东电商商品基础信息表'
 PARTITIONED BY  (ds STRING )
