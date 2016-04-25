@@ -21,8 +21,8 @@ def parse_price(price_dic):
         v=""
         if '-' in tmp:     v=tmp.split('-')[0]
         else :             v=tmp
-        if v.isdigit():
-            v = float()
+        if v.replace('.',"").isdigit():
+            v = float(v)
         else:
             v = 0.0
         if min>v:
@@ -41,6 +41,8 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else:
         return content
+
+
 
 def get_cate_dict(line):
     ss = line.strip().split("\001")
@@ -93,7 +95,7 @@ def f(line,cate_dict):
     off_time = "-"
     if is_online == 0 and data_flag == 2: off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
-    # skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
+    skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
 
     # if skuProps != "-":
     result = []
@@ -140,7 +142,7 @@ s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
 # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-rdd.saveAsTextFile('/user/wrt/temp/iteminfo_test')
+rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
 
 # spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
