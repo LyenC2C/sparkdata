@@ -21,8 +21,8 @@ def parse_price(price_dic):
         v=""
         if '-' in tmp:     v=tmp.split('-')[0]
         else :             v=tmp
-        if v.isdigit():
-            v = float()
+        if v.replace('.',"").isdigit():
+            v = float(v)
         else:
             v = 0.0
         if min>v:
@@ -41,6 +41,8 @@ def valid_jsontxt(content):
         return content.encode("utf-8")
     else:
         return content
+
+
 
 def get_cate_dict(line):
     ss = line.strip().split("\001")
@@ -93,7 +95,7 @@ def f(line,cate_dict):
     off_time = "-"
     if is_online == 0 and data_flag == 2: off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
-    # skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
+    skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
 
     # if skuProps != "-":
     result = []
