@@ -47,7 +47,7 @@ def pro_compress_line(line):
 
     #return itemid,[ts,falg,data]
     #return [ls[1],[int(ls[0]),flag,compress(line.strip())]]
-    if len(ls[1]) >= 8 and len(ls[1]) <= 14:
+    if len(ls[1]) >= 5 and len(ls[1]) <= 14:
         try:
             return [ls[1],[int(ls[0]),flag,compress(line.strip().encode("utf-8"))]]
         except Exception,e:
@@ -86,8 +86,11 @@ def gen_item_inc(x,y):
     dic = {1:None,2:None}
     for each in y:
         dic[each[0]] = each[1]
+
+    #只有库中数据
     if dic[1] == None:
         [status_flag,status_ts,data_flag,data_ts,data] = dic[2]
+    #只有新进数据
     elif dic[2] == None:
         #[ts,flag,data]
         [ts,flag,data] = dic[1]
@@ -95,6 +98,7 @@ def gen_item_inc(x,y):
         status_ts = ts
         data_flag = flag
         data_ts = ts
+    #两个都存在
     else:
         [ts,flag,data_1] = dic[1]
         [status_flag,status_ts,data_flag,data_ts,data] = dic[2]
