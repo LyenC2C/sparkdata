@@ -10,7 +10,7 @@ ds=$1
 
 USE wlbase_dev;
 
-LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.$ds/"  INTO TABLE t_base_ec_item_feed_dev_inc PARTITION (ds='$1');
+LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.$ds"  INTO TABLE t_base_ec_item_feed_dev_inc_new PARTITION (ds='$1');
 
 
 DROP  TABLE  IF EXISTS   t_base_ec_item_feed_dev_inc_tmp;
@@ -53,7 +53,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
           SUBSTRING (regexp_replace(f_date,'-',''),0,8)  as ds ,
           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), SUBSTRING (f_date,0,10)) AS datediff,
           sku
-        FROM t_base_ec_item_feed_dev_inc
+        FROM t_base_ec_item_feed_dev_inc_new
         WHERE ds='$ds' and item_id IS NOT NULL AND f_date IS NOT NULL AND regexp_replace(f_date, '-', '') > 20150101
 
       ) t2 ON t1.item_id = t2.item_id;
