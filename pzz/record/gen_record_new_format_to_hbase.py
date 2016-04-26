@@ -71,7 +71,7 @@ if __name__ == '__main__':
     '''
 
     #预留后期扩展
-    misson = '-info'
+    mission = '-info'
     inputpath = sys.argv[1]
     outputpath = sys.argv[2]
     if mission == "-info":
