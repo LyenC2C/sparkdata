@@ -69,9 +69,12 @@ if __name__ == '__main__':
             .map(lambda (uid,linels):format(uid,linels))
     rdd1.saveAsTextFile("/data/develop/portrait/feedrecord_csv_hbase.dir.20151222")
     '''
+
+    #预留后期扩展
+    misson = '-info'
     inputpath = sys.argv[1]
     outputpath = sys.argv[2]
-    if mission == "info":
+    if mission == "-info":
         sc = SparkContext(appName="gen hbase data "+inputpath)
         sc.textFile(inputpath)\
             .map(lambda x:format_info(x))\
