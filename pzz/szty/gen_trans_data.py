@@ -76,7 +76,9 @@ if __name__ == '__main__':
 
     #rdd_qid = sc.textFile("/user/yarn/service/szty/base_info.20160412.qid").map(lambda x:(x.strip(),1))
     #改为通用
-    rdd_qid = sc.textFile("/user/yarn/service/szty/Temp.names.txt.id").map(lambda x:(x.strip(),1))
+    input_qqid = sys.argv[1]
+    output_path = sys.argv[2]
+    rdd_qid = sc.textFile(input_qqid).map(lambda x:(x.strip(),1))
 
     #filtered  [qunid,[1,qqid+'\001'+name]]
     rdd1 = sc.textFile("/data/develop/qq/group_member.json")\
@@ -136,6 +138,6 @@ if __name__ == '__main__':
     rdd3.union(rdd_base).union(rdd_qqwb)\
             .groupByKey()\
             .map(lambda (x,y):merge_group(x,y))\
-            .saveAsTextFile("service/szty/Temp.names.txt.id.res.20160412")
+            .saveAsTextFile(output_path)
 
 
