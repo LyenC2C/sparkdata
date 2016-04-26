@@ -27,6 +27,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
       brand_name,
       bc_type,
       price,
+      shop_id,
       location
     FROM (SELECT
             cast(item_id AS BIGINT) item_id,
@@ -38,11 +39,12 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
             brand_name,
             bc_type,
             price,
+            shop_id,
             location
           FROM t_base_ec_item_dev
           WHERE ds = 20160333
           ) t1
-      JOIN
+      RIGHT  JOIN
       (
         SELECT
           cast(item_id AS BIGINT)      item_id,
