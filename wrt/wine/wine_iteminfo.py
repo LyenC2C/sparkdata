@@ -31,7 +31,7 @@ def get_cate_dict(line):
     ss = line.strip().split("\001")
     return (ss[0],[ss[1],ss[3]])
 
-def get_tk_dict(x):
+def get_tk_dict(line):
     ss = line.strip().split("\t")
     return (ss[0],ss[1])
 
