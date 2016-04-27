@@ -118,7 +118,7 @@ def f(line,cate_dict,tk_dict):
     result.append(pin_id)
     # result.append((is_online))
     # result.append(off_time)
-    result.append(int(favor))
+    result.append(pinming)
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
