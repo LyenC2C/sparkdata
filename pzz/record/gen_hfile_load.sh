@@ -1,10 +1,13 @@
 source ~/.bashrc
 
+input_path=$1
+hfile_path=$2
+
 hbase org.apache.hadoop.hbase.mapreduce.ImportTsv \
     -Dimporttsv.separator="," \
     -Dimporttsv.columns=HBASE_ROW_KEY,info:v,info:item \
-    -Dimporttsv.bulk.output=/data/develop/ecportrait/hfile_record_new.20160408.updated.1\
+    -Dimporttsv.bulk.output=$hfile_path \
     ec_record_new \
-    /data/develop/ecportrait/record_csv_hbase.20160408.updated.dir/part-01*
+    $input_path/*
 
-hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles /data/develop/ecportrait/hfile_record_new.20160408.updated.1  ec_record_new
+hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles $hfile_path  ec_record_new
