@@ -68,6 +68,7 @@ def f(line,cate_dict):
     brand_name = '-'
     xiangxing = "-"
     dushu = "-"
+    pinming = "-"
     jinghan = "500ml"
     props=ob.get('props',[])
     for v in props:
@@ -84,6 +85,8 @@ def f(line,cate_dict):
                 is_jinkou = "2"
             else:
                 is_jinkou = "1"
+        if valid_jsontxt('品名') == valid_jsontxt(v['name']):
+            pinming = v['value']
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     price_zone=value[1]
@@ -106,7 +109,7 @@ def f(line,cate_dict):
     result.append(dushu)
     result.append(jinghan)
     result.append(str(price))
-    result.append((price_zone))
+    result.append(pinming)
     # result.append((is_online))
     # result.append(off_time)
     result.append(int(favor))
@@ -130,7 +133,7 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-00000"
+s = "/commit/project/wine/3.m.baijiu.only.iteminfo.2016-04-06"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
