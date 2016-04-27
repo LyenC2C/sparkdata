@@ -33,7 +33,7 @@ def get_cate_dict(line):
 
 def get_tk_dict(line):
     ss = line.strip().split("\t")
-    return (ss[0],ss[1])
+    return (valid_jsontxt(ss[0]),ss[1])
 
 def f(line,cate_dict,tk_dict):
     ss = line.strip().split("\t",2)
