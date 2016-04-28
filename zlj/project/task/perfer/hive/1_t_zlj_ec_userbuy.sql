@@ -20,11 +20,12 @@ CREATE TABLE t_zlj_ec_userbuy
       brand_name,
       cast(price AS DOUBLE )     price,
       user_id,
+      shop_id,
 
       round(log2(cast(price AS FLOAT)) *pow(0.8, (datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), concat_ws('-',substring(ds,1,4),substring(ds,5,2),substring(ds,7,2)))) / 10.0) * 50, 4) AS score
 
     FROM
-      t_base_ec_record_dev
+      t_base_ec_record_dev_new
 
       where item_id rlike '^\\d+$' and brand_id  rlike '^\\d+$' and user_id   rlike '^\\d+$'
       ;
