@@ -27,7 +27,7 @@ CREATE TABLE t_zlj_ec_userbuy
     FROM
       t_base_ec_record_dev_new
 
-      where item_id rlike '^\\d+$' and brand_id  rlike '^\\d+$' and user_id   rlike '^\\d+$'
+      where CAST(item_id as int)>0   and  CAST(brand_id as int)>0   and CAST(user_id as int)>0
       ;
 
 EOF
