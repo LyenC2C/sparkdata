@@ -199,7 +199,7 @@ FROM
           substring(ds, 0, 6) AS m
 
         FROM t_base_ec_record_dev_wine
-        WHERE brand_id = 4537002
+        WHERE brand_id =   4537002
       ) t1
     GROUP BY user_id
   ) t ;

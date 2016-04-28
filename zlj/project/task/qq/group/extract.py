@@ -2422,7 +2422,7 @@ def scl():
     北京协和医学院	协和
 北京第二外国语学院	BISU 北二外
 中国科学院大学	国科大 中科院 UCAS
-北京政法职业学院	政法学院
+北京政法职业学院
 北京北大方正软件职业技术学院
 天津商业大学	天商	TUC
 天津市职业大学
@@ -2666,16 +2666,16 @@ def scl():
 新疆维吾尔医学专科学校	新疆医专
 新疆机电职业技术学院
 新疆师范高等专科学校
-    清华大学  清华
+清华大学  清华
 北京大学  北大   PKU
 浙江大学  浙大   ZJU
 厦门大学  厦大  XMU
-中南大学  中南   CSU
+中南大学  CSU
 西华大学  西华  XHU
 中山大学  中大
 武汉大学  武大  WHU
 北京电影学院  北影
-复旦大学  复旦
+复旦大学  复旦  FUDAN
 华中科技大学  华中大 华科  HUST
 南京大学  南大  NJU
 东南大学  东大
@@ -2690,9 +2690,9 @@ def scl():
 上海大学  上大  SHU
 苏州大学  苏大
 中国人民大学  人大
-上海交通大学  交通大学  交大  上海交大
+上海交通大学  交通大学    上海交大
 华南理工大学  华南理工  华工  华工大 SCUT
-西南交通大学  交通大学  交大  西南交大
+西南交通大学  交通大学    西南交大
 吉林大学  吉大  JLU
 华东师范大学  华东师大  ECNU
 武汉理工大学  武理工 WUT
@@ -2727,7 +2727,7 @@ def scl():
 海南大学  海大  HNU
 华东理工大学  华东理工  华理  ECUST
 合肥工业大学  合工大
-长安大学  长大
+长安大学
 西安电子科技大学  西军电 西电
 南京理工大学  南理工 NJUST
 河南大学  河大  HENU
@@ -2798,8 +2798,8 @@ def scl():
 三峡大学  CTGU
 宁波大学  宁大
 中南林业科技大学  中南林 林科大 CSUFT
-上海海事大学  海大  上海海大  SMU
-大连海事大学  海大，大连海大 DMU
+上海海事大学     上海海大  SMU
+大连海事大学   大连海大 DMU
 北京工商大学  北工商 BTBU
 东华理工大学  东理  东华理工
 河南理工大学  河南理工  HPU
@@ -2863,7 +2863,7 @@ def scl():
 南京农业大学  南农  南农大
 西安科技大学  西科大 XUST
 浙江工商大学  浙商大
-西安外事学院  外事
+西安外事学院
 南通大学  通大
 天津科技大学  天科大  天津科大   TUST
 厦门大学嘉庚学院  厦大  XMU
@@ -2890,7 +2890,7 @@ def scl():
 兰州交通大学  兰州交大  LJU
 河北工程大学  河北工程  HUE
 临沂大学  临大
-沈阳工业大学  沈工大 工大
+沈阳工业大学  沈工大
 江西师范大学  江西师大  JXNU
 国际关系学院  国关  UIR
 大连交通大学  大连交大  大连交通
@@ -3035,7 +3035,7 @@ def scl():
 云南师范大学  云南师大  云师大 YNNU
 北京理工大学珠海学院  北理珠 ZHBIT
 长春大学  CCU
-江西农业大学  江农  农大  江西农大
+江西农业大学  江农    江西农大
 仰恩大学  仰大    YEU
 洛阳师范学院  洛师  LNU
 青岛农业大学  青农  QAU
@@ -3867,7 +3867,7 @@ def scl():
 青海民族大学  青海民大  QNU
 安阳师范学院人文管理学院
 黑龙江东方学院 东方学院
-石家庄理工职业学院 理工学院
+石家庄理工职业学院
 海南经贸职业技术学院  海经贸
 广州体育学院  广体
 广州航海学院  广航  GMI
@@ -4048,7 +4048,7 @@ def scl():
 辽宁石化职业技术学院  锦州石油化校
 辽宁铁道职业技术学院  辽宁铁职院
 湖南理工学院南湖学院
-广东财经大学华商学院  广财华商  华商
+广东财经大学华商学院  广财华商
 广州珠江职业技术学院
 大庆师范学院  大庆师院
 常州纺织服装职业技术学院
@@ -4272,7 +4272,7 @@ def scl():
 辽宁商贸职业学院
 焦作师范高等专科学校  焦作师专
 山东财经大学燕山学院
-大连理工大学盘锦校区  大工盘锦 大盘
+大连理工大学盘锦校区  大工盘锦
 烟台汽车工程职业学院  烟台汽车工程学院
 贵州大学科技学院  贵大科技学院
 浙江东方职业技术学院
@@ -5149,9 +5149,15 @@ def f_s(line):
         return lv
 
 # rdd=sc.textFile('/user/zlj/edu_s').map(lambda x:f(x))
-rdd=sc.textFile('/user/wrt/qq_qun_info/part-0000*').map(lambda x:f_s(x)).repartition(150).\
+rdd=sc.textFile('/user/wrt/qq_qun_info/').map(lambda x:f_s(x)).repartition(150).\
     filter(lambda x:x is not None).map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
     .saveAsTextFile('/user/zlj/qq/qqgroup_school')
+
+
+rdd=sc.textFile('/user/zlj/qq/edu').map(lambda x:f_s(x)).repartition(150).\
+    filter(lambda x:x is not None).map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
+    .saveAsTextFile('/user/zlj/qq/edu_school')
+
 
 
 rdd.filter(lambda x:x is not None).map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
