@@ -22,7 +22,7 @@ def valid_jsontxt(content):
 
 def f1(line):
     ss = line.strip().split("\t",1)
-    # if len(ss) != 2: return [None]
+    if len(ss) != 2: return [None]
     ts = ss[0]
     zhengwen = ss[1]
     l = len(zhengwen)
