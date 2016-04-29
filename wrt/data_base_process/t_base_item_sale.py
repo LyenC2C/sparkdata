@@ -30,7 +30,8 @@ def f1(line):
     end = l-2
     text = zhengwen[star+1:end]
     text2 = text.replace(",]","]")
-    ob = json.loads(valid_jsontxt(text2))
+    text3 = valid_jsontxt(text2)
+    ob = json.loads(text3)
     if type(ob) !=  type({}):
         return [None]
     auctions = ob["auctions"]
