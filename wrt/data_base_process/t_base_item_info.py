@@ -115,11 +115,11 @@ def f(line,cate_dict):
     result.append(brandId)
     result.append(brand_name)
     result.append(BC_type)
-    result.append(price)
+    result.append(str(price))
     result.append(price_zone)
-    result.append(is_online)
+    result.append(str(is_online))
     result.append(off_time)
-    result.append(favor)
+    result.append(str(favor))
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
@@ -127,7 +127,7 @@ def f(line,cate_dict):
     result.append(sku_info)
     result.append(ts)
     # return (item_id,result)
-    return "\001".join([str(valid_jsontxt(str(i))) for i in result])
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def quchong(x, y):
     max = 0
