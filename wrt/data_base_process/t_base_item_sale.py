@@ -19,7 +19,7 @@ def valid_jsontxt(content):
 def f1(line):
     ss = line.strip().split("\t",1)
     ts = ss[0]
-    zhengwen = ss[3]
+    zhengwen = ss[1]
     l = len(zhengwen)
     ob = json.loads(valid_jsontxt(zhengwen[zhengwen.find("({") + 1:l-2].replace(",]","]")))
     if type(ob) !=  type({}):
@@ -123,4 +123,4 @@ rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): quchong_2
 
 rdd.saveAsTextFile('/user/wrt/sale_tmp')
 
-# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_wrt_base_ec_item_sale.py
+# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py
