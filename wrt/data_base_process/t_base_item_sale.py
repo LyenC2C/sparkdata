@@ -29,7 +29,8 @@ def f1(line):
     star = zhengwen.find("({")
     end = l-2
     text = zhengwen[star+1:end]
-    ob = json.loads(valid_jsontxt(text.replace(",]","]")))
+    text2 = text.replace(",]","]")
+    ob = json.loads(valid_jsontxt(text2))
     if type(ob) !=  type({}):
         return [None]
     auctions = ob["auctions"]
