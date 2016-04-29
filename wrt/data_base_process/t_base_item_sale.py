@@ -22,11 +22,13 @@ def valid_jsontxt(content):
 
 def f1(line):
     ss = line.strip().split("\t",1)
-    if len(ss) != 2: return [None]
+    # if len(ss) != 2: return [None]
     ts = ss[0]
     zhengwen = ss[1]
     l = len(zhengwen)
-    ob = json.loads(valid_jsontxt(zhengwen[zhengwen.find("({") + 1:l-2].replace(",]","]")))
+    star = zhengwen.find("({")
+    end = l-2
+    ob = json.loads(valid_jsontxt(zhengwen[ star + 1:end].replace(",]","]")))
     if type(ob) !=  type({}):
         return [None]
     auctions = ob["auctions"]
@@ -152,5 +154,5 @@ rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): quchong_2
 rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
 rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
 
-# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py
+# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py 20160424 20160425 20160424
 #LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_dev PARTITION (ds='20160424');
