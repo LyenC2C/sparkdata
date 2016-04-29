@@ -115,11 +115,11 @@ def f(line,cate_dict):
     result.append(brandId)
     result.append(brand_name)
     result.append(BC_type)
-    result.append(str(price))
-    result.append((price_zone))
-    result.append((is_online))
+    result.append(price)
+    result.append(price_zone)
+    result.append(is_online)
     result.append(off_time)
-    result.append(int(favor))
+    result.append(favor)
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
@@ -127,7 +127,7 @@ def f(line,cate_dict):
     result.append(sku_info)
     result.append(ts)
     # return (item_id,result)
-    return "\001".join([str(valid_jsontxt(i)) for i in result])
+    return "\001".join([str(valid_jsontxt(str(i))) for i in result])
 
 def quchong(x, y):
     max = 0
@@ -152,5 +152,5 @@ rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
 
-# spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
 #LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160421');
