@@ -122,3 +122,5 @@ rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda 
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): quchong_2(x, y)).filter(lambda x:x!=None)
 
 rdd.saveAsTextFile('/user/wrt/sale_tmp')
+
+# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_wrt_base_ec_item_sale.py
