@@ -11,3 +11,11 @@ COMMENT ''
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
+
+
+
+CREATE  TABLE  if not exists t_zlj_temp (
+id1   String COMMENT 'id',
+id2   String COMMENT 'id'
+)
+PARTITIONED BY  (ds STRING )

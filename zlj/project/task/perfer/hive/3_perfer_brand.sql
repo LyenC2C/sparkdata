@@ -2,7 +2,7 @@
 
 
 
-/home/hadoop/hive/bin/hive<<EOF
+/home/zlj/hive/bin/hive<<EOF
 
 
 set hive.exec.reducers.bytes.per.reducer=500000000;

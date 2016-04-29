@@ -1,4 +1,4 @@
-CREATE TABLE t_base_ec_record_dev_wine
+CREATE TABLE t_base_ec_record_dev_wine_0407
   AS
     SELECT
       item_id,
@@ -17,11 +17,18 @@ CREATE TABLE t_base_ec_record_dev_wine
       bc_type,
       price,
       location
-    FROM t_base_ec_record_dev
-    WHERE root_cat_id = 50008141;
+    FROM t_base_ec_record_dev_new
+    WHERE cat_id in ( 50008144,50013052) and ds>20151230;
+
 
 -- 4537002  „Ú÷›¿œΩ—
 
+
+select id1 ,id2 ,w, t3.info as t1info ,t4.info as t2info from
+(select t1.id1 ,t2.info,t1.id2,w  from  infer t1 join t2 emp on t1.id1=t2.id)
+t3
+  join emp t4 on  t3.id2=t4.id
+;
 
 CREATE TABLE t_base_ec_record_dev_wine_userid
   AS
@@ -192,7 +199,7 @@ FROM
           substring(ds, 0, 6) AS m
 
         FROM t_base_ec_record_dev_wine
-        WHERE brand_id = 4537002
+        WHERE brand_id =   4537002
       ) t1
     GROUP BY user_id
   ) t ;

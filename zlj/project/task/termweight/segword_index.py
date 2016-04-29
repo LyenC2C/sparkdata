@@ -24,11 +24,14 @@ dic=broadcastVal.value
 path='/hive/warehouse/wlbase_dev.db/t_base_ec_item_title_cut/ds=20151225/*'
 t1=sc.textFile(path).map(lambda x: [i for  i in x.split('\001')[1].split() if  x not in dic]).flatMap(lambda x:x).map(lambda x :(x,1))\
     .reduceByKey(lambda x,y:x+y).sortBy(lambda x: x[1]).zipWithIndex().map(lambda x:" ".join([x[0][0],str(x[0][1]),str(x[1])])).coalesce(2).saveAsTextFile('/user/zlj/data/aliwordseg_wordindex_1225')
+
+
 t1.zipWithIndex().map(lambda x:" ".join([x[0][0],str(x[0][1]),str(x[1])])).coalesce(2).saveAsTextFile('/user/zlj/data/aliwordseg_wordindex_1225')
 
 
+rs=sc.textFile().filter(lambda x:'' in x)
 
-
+for i in rs.collect():print i
 # sc.textFile('/user/zlj/tmp/sd').coalesce(2).saveAsTextFile('/user/zlj/aliwordseg_wordindex_1225')
 # rdd1=hiveContext.sql(sql).map(lambda x:[x[0],1.0*x[1],1.0*x[2],1.0*x[3]])
 # rdd=rdd1.map(lambda x: x[1:]).repartition(100)

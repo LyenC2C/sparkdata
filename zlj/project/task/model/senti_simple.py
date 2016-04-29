@@ -20,7 +20,12 @@ http://rzcoding.blog.163.com/blog/static/22228101720131019104850984/
 
 
 posdict = [line.strip() for line in open('D:\\data\\review\\posdict.txt', 'r')]
+
+posdict.extend([line.strip() for line in open('D:\\data\\review\\BosonNLP_sentiment_score_p', 'r')])
 negdict = [line.strip() for line in open('D:\\data\\review\\negdict.txt', 'r')]
+
+negdict.extend([line.strip() for line in open('D:\\data\\review\\BosonNLP_sentiment_score_n', 'r')])
+
 mostdict = [line.strip() for line in open('D:\\data\\review\\most.txt', 'r')]
 verydict = [line.strip() for line in open('D:\\data\\review\\very.txt', 'r')]
 moredict = [line.strip() for line in open('D:\\data\\review\\more.txt', 'r')]
@@ -127,8 +132,43 @@ def sentiment_score(segtmp):
 
 
 
-s='我  很 傻 很 蠢'
+# s='我  很 傻 很 蠢'
 
 
 # print s.split()
-print (sentiment_score(s.split()))
+from collections import Counter
+fw=open('D:\\workdata\\baijiu_sg_senti','w')
+
+lv=[]
+import collections as coll
+dic=coll.defaultdict(list)
+
+count=0
+
+for line in open("D:\\workdata\\-commit-weibo_zlj_0406_time.txt_seg"):
+    # if ++count >10:break
+    ls=line.split()
+    date=ls[0]
+    if len(date)!=4:continue
+    brand=""
+    tt=sentiment_score(ls[1:])
+    # print tt
+    score=tt[0]-tt[1]
+    if  score >=1:
+        rs= '1'
+    elif  score <=-1:
+        rs ='2'
+    else:
+        rs ='0'
+    dic[date].append(rs)
+    # lv.append(rs)
+
+for k,v in dic.iteritems():
+    v.append('0')
+    v.append('1')
+    v.append('2')
+    print k," ".join(sorted([i+"_"+str(j) for i,j in Counter(''.join(v)).most_common()]))
+# s=Counter(''.join(lv))
+#
+# print s.most_common()
+    # fw.write(rs+'\n')

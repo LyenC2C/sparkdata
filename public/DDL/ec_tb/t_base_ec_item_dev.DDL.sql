@@ -17,7 +17,10 @@ favor BIGINT COMMENT '收藏人数',
 seller_id STRING  COMMENT '店家id',
 shop_id STRING  COMMENT '店铺id',
 location  String COMMENT '地址' ,
-ts STRING COMMENT '采集时间戳'
+ts STRING COMMENT '采集时间戳'  ,
+
+paramap map<string, string>   COMMENT '商品参数表' ,
+sku  map<string, string>  COMMENT'sku  21433_89866585|1627207_3232479:price_quant,21433_89866585|1627207_3232479:price_quant'
 )
 COMMENT '电商商品基础信息表'
 PARTITIONED BY  (ds STRING )
@@ -25,6 +28,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
 -- stored as textfile location '/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev/';
 
 
+--ALTER TABLE t_base_ec_item_dev ADD COLUMNS  (paramap map<string, string>   COMMENT '商品参数表');
 
 -- LOAD DATA  INPATH '/commit/itemdata' OVERWRITE INTO TABLE t_base_ec_item_dev PARTITION (ds='20160216') ;
 

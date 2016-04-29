@@ -33,10 +33,10 @@ def f_coding(x):
         return x.decode("utf-8")
     else:
         return x
-dim_limit=10
-brand_limit=10
-shop_limit=10
-brandtag_limit=10
+dim_limit=8
+brand_limit=8
+shop_limit=5
+brandtag_limit=8
 def dim():
     sql_dim='''
     SELECT
@@ -316,8 +316,8 @@ if __name__ == "__main__":
         rdd_tag=hmm_tag()
         rdd_cat_tags=cat_tags()
         # rdd_qq=qq()
-        rdd=rdd_dim.union(rdd_brand).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).union(rdd_tag).union(rdd_cat_tags).coalesce(2000)\
+        rdd=rdd_dim.union(rdd_brand).repartition(200).union(rdd_price).union(rdd_shop).union(rdd_car)\
+            .union(rdd_house).repartition(200).union(rdd_tag).union(rdd_cat_tags).coalesce(2000)\
             # .union(rdd_qq).union(rdd_brandtag)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y)).coalesce(1000)

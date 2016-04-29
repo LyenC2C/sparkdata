@@ -26,22 +26,28 @@ def parse_price(price_dic):
             price=v
             if '-' in tmp: price_range=tmp
     return [price,price_range]
+
 def get_cate_dict(line):
     ss = line.strip().split("\001")
     return (ss[0],[ss[1],ss[3]])
 
-def f(line,cate_dict):
+def get_tk_dict(line):
+    ss = line.strip().split("\t")
+    return (valid_jsontxt(ss[0]),ss[1])
+
+def f(line,cate_dict,tk_dict):
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
     ts = ss[0]
     # item_id = ss[1]
     txt = valid_jsontxt(ss[2])
-    ob=json.loads(txt)
-    itemInfoModel=ob.get('itemInfoModel',"-")
+    ob = json.loads(txt)
+    if type(ob) != type({}): return None
+    itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
     item_id = itemInfoModel.get('itemId','-')
-    title = itemInfoModel.get('title','-')
+    title = itemInfoModel.get('title','-').replace("\n","")
     favor = itemInfoModel.get('favcount','-')
     categoryId = itemInfoModel.get('categoryId','-')
     cate_rootid = cate_dict.get(categoryId,["-","-"])[1]
@@ -62,10 +68,13 @@ def f(line,cate_dict):
         is_jinkou = "1"
     trackParams = ob.get('trackParams',{})
     BC_type = trackParams.get('BC_type','-')
+    if BC_type != 'B': return None
     brandId = trackParams.get('brandId','-')
     brand_name = '-'
     xiangxing = "-"
     dushu = "-"
+    pinming = "-"
+    jinghan = "500ml"
     props=ob.get('props',[])
     for v in props:
         if valid_jsontxt("香型") in valid_jsontxt(v["name"]):
@@ -73,18 +82,23 @@ def f(line,cate_dict):
         if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
             brand_name = v['value']
         if valid_jsontxt('度数') == valid_jsontxt(v['name']):
-            dushu = filter(str.isdigit, valid_jsontxt(v['value']))
+            dushu = filter(str.isdigit, valid_jsontxt(v['value']))[:2]
+        if valid_jsontxt('净含量') == valid_jsontxt(v['name']):
+            jinghan = v['value']
         if valid_jsontxt('产地') == valid_jsontxt(v['name']):
             if valid_jsontxt('中国') in valid_jsontxt(v['value']):
                 is_jinkou = "2"
             else:
                 is_jinkou = "1"
-    value=parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-    price=value[0]
+        if valid_jsontxt('品名') == valid_jsontxt(v['name']):
+            pinming = valid_jsontxt(v['value'])
+    pin_id = tk_dict.get(pinming,"-")
+    value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+    price = value[0]
     price_zone=value[1]
     seller=ob.get('seller',"-")
     seller_id=seller.get('userNumId','-')
-    shopId=seller.get('shopId','-')
+    shopId = seller.get('shopId','-')
     result = []
     # result.append(item_id)
     result.append(title)
@@ -99,11 +113,12 @@ def f(line,cate_dict):
     result.append(BC_type)
     result.append(xiangxing)
     result.append(dushu)
+    result.append(jinghan)
     result.append(str(price))
-    result.append((price_zone))
+    result.append(pin_id)
     # result.append((is_online))
     # result.append(off_time)
-    result.append(int(favor))
+    result.append(pinming)
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
@@ -124,11 +139,13 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/commit/project/wine/wine_shopid.0309.shopitem.2016-03-09.iteminfo.2016-03-09"
+s = "/commit/project/wine/3.m.baijiu.only.iteminfo.2016-04-06"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
+s_tk = "/user/wrt/lzlj_tongkuan_dict"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
+tk_dict = sc.broadcast(sc.textFile(s_tk).map(lambda x: get_tk_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
+rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict,tk_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-rdd.saveAsTextFile('/user/wrt/wine_iteminfo_tmp')
+rdd.saveAsTextFile('/user/wrt/temp/baijiu_iteminfo_tmp')
 
-# spark-submit  --executor-memory 2G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py
+# spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 wine_iteminfo.py

@@ -15,7 +15,10 @@ desc_score FLOAT  COMMENT '描述分' ,
 service_score FLOAT  COMMENT '服务分' ,
 wuliu_score FLOAT  COMMENT '物流分' ,
 location  String COMMENT '地址' ,
-ts STRING COMMENT '采集时间戳'
+ts STRING COMMENT '采集时间戳' ,
+is_online BIGINT COMMENT '1架上 0下架',
+shop_type  COMMENT '店铺类型 ',
+shop_certifi   COMMENT '店铺认证 '
 )
 COMMENT '电商店铺基础信息表'
 PARTITIONED BY  (ds STRING )

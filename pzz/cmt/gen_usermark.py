@@ -39,7 +39,8 @@ def uidmark(line):
             for i in ils:
                 rls.append(i["userId"] + '\t' + i["userMark"])
         return rls
-    except:
+    except Exception,e:
+        print line.strip(),e
         return None
 
 

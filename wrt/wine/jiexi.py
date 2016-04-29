@@ -21,7 +21,7 @@ def f(line):
     title = ob["title"]
     xiangxin = ob["xiangxin"]
     shengfeng = ob["shengfeng"]
-    brand = ob ["brand"]
+    brand = ob["brand"]
     product_place = ob["product_place"]
     dushu = ob["dushu"]
     guige = ob["guige"]
@@ -39,6 +39,13 @@ def f(line):
     lv.append(valid_jsontxt(str(product_place)))
     lv.append(valid_jsontxt(str(dushu)))
     lv.append(valid_jsontxt(str(guige)))
-    return "\001".join(lv)
-rdd = sc.textFile("/user/zlj/temp/jindong_jiu.json").map(lambda x:f(x))
-rdd.saveAsTextFile('/user/wrt/jingdong_jiu')
+    return lv
+
+def quchong(x, y):
+    y = y[0]
+    result = [x] + y
+    return "\001".join(result)
+
+rdd_c = sc.textFile("/user/zlj/temp/jindong_jiu.json").map(lambda x:f(x)).map(lambda x:(x[0],x[1:]))
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
+rdd.saveAsTextFile('/user/wrt/jd_jiu_uniq')
