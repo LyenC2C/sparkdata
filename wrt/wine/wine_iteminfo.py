@@ -26,11 +26,16 @@ def parse_price(price_dic):
             price=v
             if '-' in tmp: price_range=tmp
     return [price,price_range]
+
 def get_cate_dict(line):
     ss = line.strip().split("\001")
     return (ss[0],[ss[1],ss[3]])
 
-def f(line,cate_dict):
+def get_tk_dict(line):
+    ss = line.strip().split("\t")
+    return (valid_jsontxt(ss[0]),ss[1])
+
+def f(line,cate_dict,tk_dict):
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
     ts = ss[0]
@@ -68,6 +73,7 @@ def f(line,cate_dict):
     brand_name = '-'
     xiangxing = "-"
     dushu = "-"
+    pinming = "-"
     jinghan = "500ml"
     props=ob.get('props',[])
     for v in props:
@@ -84,6 +90,9 @@ def f(line,cate_dict):
                 is_jinkou = "2"
             else:
                 is_jinkou = "1"
+        if valid_jsontxt('品名') == valid_jsontxt(v['name']):
+            pinming = valid_jsontxt(v['value'])
+    pin_id = tk_dict.get(pinming,"-")
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     price_zone=value[1]
@@ -106,10 +115,10 @@ def f(line,cate_dict):
     result.append(dushu)
     result.append(jinghan)
     result.append(str(price))
-    result.append((price_zone))
+    result.append(pin_id)
     # result.append((is_online))
     # result.append(off_time)
-    result.append(int(favor))
+    result.append(pinming)
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
@@ -130,10 +139,12 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-00000"
+s = "/commit/project/wine/3.m.baijiu.only.iteminfo.2016-04-06"
 s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
+s_tk = "/user/wrt/lzlj_tongkuan_dict"
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
+tk_dict = sc.broadcast(sc.textFile(s_tk).map(lambda x: get_tk_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
+rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict,tk_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/baijiu_iteminfo_tmp')
 

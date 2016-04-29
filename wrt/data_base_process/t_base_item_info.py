@@ -18,7 +18,7 @@ def parse_price(price_dic):
     price_range='-'
     for value in price_dic:
         tmp=value['price']
-        v=""
+        v = ""
         if '-' in tmp:     v=tmp.split('-')[0]
         else :             v=tmp
         if v.replace('.',"").isdigit():
@@ -37,10 +37,17 @@ def decompress(out):
     return data
 
 def valid_jsontxt(content):
+    res = content
     if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+        res = content.encode("utf-8")
+    # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res.replace('\n',"").replace("\r","")
+
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else:
+#         return content
 
 
 
@@ -60,8 +67,8 @@ def f(line,cate_dict):
     line = decompress(ss[5])
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
-    txt = valid_jsontxt(ss[2])
-    ob = json.loads(txt)
+    # txt = valid_jsontxt(ss[2])
+    ob = json.loads(ss[2])
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
@@ -109,10 +116,10 @@ def f(line,cate_dict):
     result.append(brand_name)
     result.append(BC_type)
     result.append(str(price))
-    result.append((price_zone))
-    result.append((is_online))
+    result.append(price_zone)
+    result.append(str(is_online))
     result.append(off_time)
-    result.append(int(favor))
+    result.append(str(favor))
     result.append(seller_id)
     result.append(shopId)
     result.append(location)
@@ -145,5 +152,5 @@ rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
 
-# spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
-#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_test' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160421');
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
+#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160421');
