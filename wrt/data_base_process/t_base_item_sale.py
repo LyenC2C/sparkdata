@@ -31,7 +31,7 @@ def f1(line):
         lv = []
         item_id = auction["aid"]
         amount = auction["amount"]
-        tohtal = auction["total"]
+        total = auction["total"]
         qu = auction["qu"]
         st = auction["st"]
         inSale = auction["inSale"]
