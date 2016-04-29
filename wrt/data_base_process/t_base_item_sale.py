@@ -19,6 +19,7 @@ def valid_jsontxt(content):
 def f1(line):
     ss = line.strip().split("\t",1)
     ts = ss[0]
+    if len(zhengwen) != 2: return [None]
     zhengwen = ss[1]
     l = len(zhengwen)
     ob = json.loads(valid_jsontxt(zhengwen[zhengwen.find("({") + 1:l-2].replace(",]","]")))
