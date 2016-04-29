@@ -114,7 +114,7 @@ def quchong_2(x, y):
 
 
 s1 = "/commit/itemsold/20160424"
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=20160421"
+s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=20160424"
 # s3 =
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
