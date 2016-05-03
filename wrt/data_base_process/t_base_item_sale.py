@@ -10,6 +10,10 @@ import rapidjson as json
 from pyspark import SparkContext
 sc = SparkContext(appName="t_base_item_sale")
 
+yesterday = sys.argv[1]
+today = sys.argv[2]
+iteminfo_day = sys.argv[3]
+
 def valid_jsontxt(content):
     if type(content) == type(u""):
         return content.encode("utf-8")
@@ -22,7 +26,12 @@ def f1(line):
     ts = ss[0]
     zhengwen = ss[1]
     l = len(zhengwen)
-    ob = json.loads(valid_jsontxt(zhengwen[zhengwen.find("({") + 1:l-2].replace(",]","]")))
+    star = zhengwen.find("({")
+    end = l-2
+    text = zhengwen[star+1:end]
+    text2 = text.replace(",]","]")
+    text3 = valid_jsontxt(text2)
+    ob = json.loads(text3)
     if type(ob) !=  type({}):
         return [None]
     auctions = ob["auctions"]
@@ -63,6 +72,9 @@ def f2(line):
     #return [item_id,s_price,bc_type]
     # return lv
     return lv
+def f3(line):
+    ss = line.strip().split('\001')
+    return ss
 
 def quchong_1(x, y):
     max = 0
@@ -98,8 +110,8 @@ def quchong_2(x, y):
         #     lv.append(str(valid_jsontxt(ln)))
         # return "\001".join(lv)
         #return str(x) + "\001" + str(len(item_list)) + '\001' + str(type(y)) + "\001" + str(len(lv))
-        #return (x, y)
-        return "\001".join(y)
+        return (x, y)
+        # return "\001".join(y)
     elif len(item_list[0]) > 2:
         y = item_list[0]
         # result = [x] + y
@@ -108,20 +120,42 @@ def quchong_2(x, y):
         #     lv.append(str(valid_jsontxt(ln)))
         # # return str(type(x)) + "\001" + str(len(item_list)) + "\001" + str(len(item_list[0]))
         # return "\001".join(lv)
-        return "\001".join(y)
+        # return "\001".join(y)
+        return (x, y)
     else:
         return None
 
+def quchong_3(x, y):
+    max = 0
+    item_list = y
+    if len(item_list) == 1:
+        ln = item_list[0]
+        if ln[8] == '2': ln[8] = '0'#flag
+        else: ln[8] = '1'
+        y = ln
+    else:
+        for ln in item_list:
+            if int(ln[9]) > max:
+                max = int(ln[9])
+                y = ln
+    result = y
+    lv = []
+    for ln in result:
+        lv.append(str(valid_jsontxt(ln)))
+    return "\001".join(lv)
 
-s1 = "/commit/itemsold/20160424"
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=20160424"
-# s3 =
+
+s1 = "/commit/itemsold/" + today
+s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=" + iteminfo_day
+s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + yesterday
+
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
 rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
-# rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
+rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): quchong_2(x, y)).filter(lambda x:x!=None)
+rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
+rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
 
-rdd.saveAsTextFile('/user/wrt/sale_tmp')
-
-# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py
+# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py 20160424 20160425 20160424
+#LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_dev PARTITION (ds='20160424');

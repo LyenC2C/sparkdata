@@ -2692,7 +2692,7 @@ def scl():
 中国人民大学  人大
 上海交通大学  交通大学    上海交大
 华南理工大学  华南理工  华工  华工大 SCUT
-西南交通大学  交通大学    西南交大
+西南交通大学  西南交大
 吉林大学  吉大  JLU
 华东师范大学  华东师大  ECNU
 武汉理工大学  武理工 WUT
@@ -2700,7 +2700,7 @@ def scl():
 湖南大学  湖大  HNU
 深圳大学  深大  SZU
 重庆大学  CQU
-西安交通大学  交通大学   西安交大  西交大 XJTU
+西安交通大学  西安交大  西交大 XJTU
 江南大学  江大
 哈尔滨工业大学 哈工大  HIT
 中国科学技术大学  中国科技大学  中国科大  中科大
@@ -5088,6 +5088,12 @@ def addword(word):
     jieba.suggest_freq(word,True)
 
 
+for line in  sc.broadcast(sc.parallelize(scl().split('\n')).collect()).value:
+  if len(line)<2:continue
+  lv=[i.strip() for i in line.split()]
+  for w in lv: addword(w)
+  for  i in lv:school_map[i]=lv[0]
+
 
 for line in scl().split('\n'):
     if len(line)<2:continue
@@ -5099,7 +5105,7 @@ for line in scl().split('\n'):
 for line in zhuanye().split('\n'):
     if len(line)<2:continue
     lv=[i.strip() for i in line.split()]
-    for w in lv: addword(w)
+    # for w in lv: addword(w)
     for  i in lv:zhuanye_map.add(i)
 
 
@@ -5113,6 +5119,7 @@ def valid_jsontxt(content):
 
 def find_school(line):
     lv=[valid_jsontxt(i) for i in jieba.cut(line)]
+    print ' '.join(lv)
     sc=set()
     for i in lv:
         if school_map.has_key(i):
@@ -5130,8 +5137,12 @@ def find_zhuanye(line):
 # for  i in words:
 #     if school_map.has_key(i):
 #         print school_map.get(i)
-
+flag=0
 def f_z(line):
+    global flag
+    if flag==0:
+        jieba.load_userdict('/tmp/testdic')
+        flag=1
     lv=line.split('\001')
     # sc=find_school(valid_jsontxt('\t'.join([lv[3],lv[5]])))
     sc=find_zhuanye(valid_jsontxt('\t'.join([lv[3],lv[5]])))
@@ -5139,62 +5150,92 @@ def f_z(line):
     else :
         lv.append('\t'.join(sc))
         return lv
-def f_s(line):
+
+
+
+
+flag=0
+def f_qz(line):
+    global flag
+    if flag==0:
+        jieba.load_userdict('/tmp/testdic')
+        flag=1
     lv=line.split('\001')
     # sc=find_school(valid_jsontxt('\t'.join([lv[3],lv[5]])))
-    sc=find_school(valid_jsontxt('\t'.join([lv[3],lv[5]])))
+    sc=find_zhuanye(valid_jsontxt('\t'.join([lv[-1]])))
     if len(sc)<1: return None
     else :
         lv.append('\t'.join(sc))
         return lv
 
+
+
+flag=0
+def f_s(line):
+  global flag
+  if flag==0:
+      jieba.load_userdict('/tmp/testdic')
+      flag=1
+  lv=line.split('\001')
+  sc=find_school('\t'.join([lv[3],lv[5]]))
+  if len(sc)<1: return None
+  else :
+      lv.append('\t'.join(sc))
+      return lv
+
+
+# valid_jsontxt('\t'.join([lv[3],lv[5]]))
+
+# def f_s(line):
+#     lv=line
+#     # sc=find_school(valid_jsontxt('\t'.join([lv[3],lv[5]])))
+#     sc=find_school(valid_jsontxt('\t'.join([lv[3],lv[5]])))
+#     if len(sc)<1: return None
+#     else :
+#         lv.append('\t'.join(sc))
+#         return lv
+
+
+tt=sc.textFile('/user/wrt/qq_qun_info/').map(lambda x:x.split('\001')).filter(lambda x:'5164864'==x[0]).map(lambda x:'\001'.join(x))\
+  .saveAsTextFile('/user/zlj/qq/qqgroup_school_onecase')
+
+# tt.repartition(1).map(lambda x:u'\001'.join(x)).map(lambda x:f_s(x)).take(10)
+
+
+jieba.load_userdict('/tmp/testdic')
+
+
+
+# f_s(tt.map(lambda x:'\001'.join(x)).take(1)[0])
+
+
+
 # rdd=sc.textFile('/user/zlj/edu_s').map(lambda x:f(x))
-rdd=sc.textFile('/user/wrt/qq_qun_info/').map(lambda x:f_s(x)).repartition(150).\
+rdd=sc.textFile('/user/wrt/qq_qun_info/')
+rdd.repartition(150).map(lambda x:f_s(x)).\
     filter(lambda x:x is not None).map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
     .saveAsTextFile('/user/zlj/qq/qqgroup_school')
 
 
-rdd=sc.textFile('/user/zlj/qq/edu').map(lambda x:f_s(x)).repartition(150).\
-    filter(lambda x:x is not None).map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
-    .saveAsTextFile('/user/zlj/qq/edu_school')
-
-
-
-rdd.filter(lambda x:x is not None).map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
-    .saveAsTextFile('/user/zlj/qq/qqgroup_zhuanye')
 
 
 
 
 
-# sc.textFile('/user/zlj/qq/edu').map(lambda x:f(x))\
-#     .repartition(150).filter(lambda x:x is not None).\
-#     map(lambda x:'\001'.join([valid_jsontxt(i) for i in x])).saveAsTextFile('/user/zlj/qq/edu_school')
-# rdd.map(lambda x:find_school(x)).take(10)
+sc.textFile('/user/wrt/qq_qun_info/').repartition(100).map(lambda x:f_z(x)).\
+  filter(lambda x:x is not None).\
+  map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
+  .saveAsTextFile('/user/zlj/qq/qqgroup_zhuanye')
 
 
 
-# me=sc.textFile('/user/wrt/qun_member_info').map(lambda x:(x.split('\001')[-2],1))
-#
-# group=sc.textFile('/user/zlj/qq/qqgroup_school').map(lambda x: (x.split('\001')[0],1))
-# group.join(me)
+
+# sc.textFile('/hive/warehouse/wlbase_dev.db/qun_member_info/ds=info').repartition(100).map(lambda x:f_qz(x)).\
+#   filter(lambda x:x is not None).\
+#   map(lambda x:'\001'.join([valid_jsontxt(i) for i in x]))\
+#   .saveAsTextFile('/user/zlj/qq/qqmember_zhuanye')
 
 
-# import  json
-#
-# fw=open('E:\\tempdata\\school_s','w')
-# for line in open('E:\\tempdata\\school'):
-#     ob=json.loads(line)
-#     s=ob['lemmaCroppedTitle']
-#     school_s=valid_jsontxt(ob['jiancheng'])
-#     rs=[]
-#     lv=school_s.split('、')
-#     for i in lv:
-#         rs.extend(i.split('（'))
-#     rs1='\t'.join([i.replace('）','').replace(')','') for i in rs if len(i)>0])
-#
-#
-#     fw.write(s+'\t'+rs1+ '\n')
 
 
 
