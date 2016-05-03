@@ -54,3 +54,8 @@ hiveContext.registerDataFrameAsTable(rdd_age,'rdd_age')
 
 hiveContext.sql("use wlbase_dev")
 hiveContext.sql("create table t_zlj_qq_age as select * from rdd_age  ")
+
+
+
+sc.textFile('/data/develop/ec/tb/user/userinfo.20160429.format/').\
+    map(lambda x:int(x.split('\001')[2])).sum()

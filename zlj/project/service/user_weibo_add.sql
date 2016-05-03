@@ -19,6 +19,10 @@ join t_base_uid t2   where t2.ds='tb-qqwb'  and t3.id=t2.id1
 )t4  on  t1.tb_id=t4.tb_id  and t1.ds='20160310' ;
 
 
+
+-- select * from t_base_uid where  ds='tb-qqwb' limit 10;
+
+
 -- select count(1) from t_base_user_info_s t1
 --
 --  join
