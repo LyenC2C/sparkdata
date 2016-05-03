@@ -25,6 +25,7 @@ def f1(line):
     if len(ss) != 2: return [None]
     ts = ss[0]
     zhengwen = ss[1]
+    if zhengwen == "<!DOCTYPE html>": return [None]
     # l = len(zhengwen)
     star = zhengwen.find("({") + 1
     end = zhengwen.rfind("})") + 1
@@ -35,6 +36,7 @@ def f1(line):
     ob = json.loads(text3)
     if type(ob) !=  type({}):
         return [None]
+    if not ob.has_key("auctions"): return [None]
     auctions = ob["auctions"]
     result = []
     for auction in auctions:
