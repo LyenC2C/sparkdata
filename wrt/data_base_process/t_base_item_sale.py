@@ -12,7 +12,7 @@ from pyspark import SparkConf
 
 conf = SparkConf()
 conf.set("spark.akka.frameSize","70")
-sc = SparkContext(appName="t_base_item_sale")
+sc = SparkContext(appName="t_base_item_sale",conf = conf)
 
 yesterday = sys.argv[1]
 today = sys.argv[2]
