@@ -25,10 +25,11 @@ def f1(line):
     if len(ss) != 2: return [None]
     ts = ss[0]
     zhengwen = ss[1]
-    l = len(zhengwen)
-    star = zhengwen.find("({")
-    end = l-2
-    text = zhengwen[star+1:end]
+    # l = len(zhengwen)
+    star = zhengwen.find("({") + 1
+    end = zhengwen.rfind("})") + 1
+    # end = l-2
+    text = zhengwen[star:end]
     text2 = text.replace(",]","]")
     text3 = valid_jsontxt(text2)
     ob = json.loads(text3)
