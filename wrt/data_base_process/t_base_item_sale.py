@@ -8,6 +8,7 @@ import base64
 import time
 import rapidjson as json
 from pyspark import SparkContext
+from pyspark import SparkConf
 
 conf = SparkConf()
 conf.set("spark.akka.frameSize","70")
