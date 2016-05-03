@@ -9,7 +9,7 @@ def get_p_dict(line):
     return (ss[0],ss[1])
 def f(line,p_dict):
     ss = line.strip().split("\001")
-    ss[6] = p_dict.get(ss[6],"") + ss[6]
+    ss[6] = p_dict.get(ss[6],"") + "\t" + ss[6]
     return "\001".join(ss)
 
 s_p = '/user/wrt/city_pro'
