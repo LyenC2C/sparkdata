@@ -14,5 +14,7 @@ def f(line,p_dict):
 
 s_p = '/user/wrt/city_pro'
 rdd = sc.textFile("/data/develop/ec/tb/user/userinfo.20160429.format")
-p_dict = sc.broadcast(sc.textFile().map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
+p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd.map(lambda x:f(x,p_dict)).saveAsTextFile("/user/wrt/temp/tb_userinfo")
+
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 city_province.py
