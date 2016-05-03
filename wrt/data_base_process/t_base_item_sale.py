@@ -8,6 +8,9 @@ import base64
 import time
 import rapidjson as json
 from pyspark import SparkContext
+
+conf = SparkConf()
+conf.set("spark.akka.frameSize","70")
 sc = SparkContext(appName="t_base_item_sale")
 
 yesterday = sys.argv[1]
