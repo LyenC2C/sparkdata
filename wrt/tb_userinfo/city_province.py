@@ -18,3 +18,4 @@ p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambd
 rdd.map(lambda x:f(x,p_dict)).saveAsTextFile("/user/wrt/temp/tb_userinfo")
 
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 city_province.py
+# LOAD DATA  INPATH '/user/wrt/temp/tb_userinfo' OVERWRITE INTO TABLE t_base_ec_tb_userinfo PARTITION (ds='20160503');
