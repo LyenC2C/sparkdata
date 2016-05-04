@@ -5,8 +5,8 @@ yesterday = sys.argv[1]
 today = sys.argv[2]
 
 sc = SparkContext(appName="cal_daysale " + yesterday)
-s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + today
+s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + yesterday
+s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + today
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
