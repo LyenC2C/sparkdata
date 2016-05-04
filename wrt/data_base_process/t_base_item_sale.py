@@ -10,13 +10,15 @@ import rapidjson as json
 from pyspark import SparkContext
 from pyspark import SparkConf
 
+yesterday = sys.argv[1]
+today = sys.argv[2]
+iteminfo_day = sys.argv[3]
+
 conf = SparkConf()
 conf.set("spark.akka.frameSize","70")
 sc = SparkContext(appName="t_base_item_sale_" + today,conf = conf)
 
-yesterday = sys.argv[1]
-today = sys.argv[2]
-iteminfo_day = sys.argv[3]
+
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
