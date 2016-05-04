@@ -4,8 +4,8 @@ pre_path='/home/wrt/sparkdata'
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
 
-zuotian='20160429'
-qiantian='20160428'
+zuotian='20160430'
+qiantian='20160429'
 
 hfs -rmr /user/wrt/sale_tmp
 
