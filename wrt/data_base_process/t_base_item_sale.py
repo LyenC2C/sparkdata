@@ -8,7 +8,11 @@ import base64
 import time
 import rapidjson as json
 from pyspark import SparkContext
-sc = SparkContext(appName="t_base_item_sale")
+from pyspark import SparkConf
+
+conf = SparkConf()
+conf.set("spark.akka.frameSize","70")
+sc = SparkContext(appName="t_base_item_sale",conf = conf)
 
 yesterday = sys.argv[1]
 today = sys.argv[2]
@@ -25,15 +29,18 @@ def f1(line):
     if len(ss) != 2: return [None]
     ts = ss[0]
     zhengwen = ss[1]
-    l = len(zhengwen)
-    star = zhengwen.find("({")
-    end = l-2
-    text = zhengwen[star+1:end]
+    if zhengwen == "<!DOCTYPE html>": return [None]
+    # l = len(zhengwen)
+    star = zhengwen.find("({") + 1
+    end = zhengwen.rfind("})") + 1
+    # end = l-2
+    text = zhengwen[star:end]
     text2 = text.replace(",]","]")
     text3 = valid_jsontxt(text2)
     ob = json.loads(text3)
     if type(ob) !=  type({}):
         return [None]
+    if not ob.has_key("auctions"): return [None]
     auctions = ob["auctions"]
     result = []
     for auction in auctions:
