@@ -1,4 +1,13 @@
 INSERT OVERWRITE TABLE  t_base_user_info_s  PARTITION(ds='20160418')
+
+SELECT
+tb_id,
+max(tgender),
+max(tage),
+max(tname),
+max(tloc)
+from
+(
 select
 t1.tb_id ,
 case when LENGTH(t1.tgender)<1 then t4.tgender else t1.tgender end as tgender,
@@ -16,10 +25,26 @@ t2.uid  as tb_id , CAST(t3.gender-1 as string) as tgender, (2016-b_year )  as ta
 from t_qqweibo_user_info t3
 
 join t_base_uid t2   where t2.ds='tb-qqwb'  and t3.id=t2.id1
-)t4  on  t1.tb_id=t4.tb_id  and t1.ds='20160310' ;
+)t4  on  t1.tb_id=t4.tb_id  and t1.ds='20160310'
+ )t group by tb_id;
 
 
 
+
+select COUNT(1) from
+(
+
+select
+t2.uid  as tb_id , CAST(t3.gender-1 as string) as tgender, (2016-b_year )  as tage , nickname  as tname ,concat_ws('\t',l_provincename , l_city) as tloc
+from t_qqweibo_user_info t3
+
+join t_base_uid t2   where t2.ds='tb-qqwb'  and t3.id=t2.id1
+)t4 ;
+
+
+select  COUNT(1) from t_base_user_info_s where    ds=20160418 ;
+
+select COUNT(1) from (select  tb_id  from t_base_user_info_s where    ds=20160418 group by tb_id)t ;
 -- select * from t_base_uid where  ds='tb-qqwb' limit 10;
 
 
