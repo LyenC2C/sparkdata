@@ -16,16 +16,16 @@ def valid_jsontxt(content):
 def yes_sale(line):
     ss = line.strip().split('\001')
     itemid = ss[0]
-    item_price = float(ss[3])
-    item_sale = int(ss[6])
+    item_price = float(ss[2])
+    item_sale = int(ss[4])
     flag = "yes"
     return (itemid,[item_price,item_sale,flag])
 
 def tod_sale(line):
     ss = line.strip().split('\001')
     itemid = ss[0]
-    item_price = float(ss[3])
-    item_sale = int(ss[6])
+    item_price = float(ss[2])
+    item_sale = int(ss[4])
     flag = "tod"
     return (itemid,[item_price,item_sale,flag])
 
