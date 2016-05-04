@@ -211,3 +211,7 @@ if __name__ == "__main__":
         # s
         # '''
         hiveContext.sql(sql_insert%(ds))
+
+# for i in rs:
+#     if  i =='\\N':
+#         print len(i)
