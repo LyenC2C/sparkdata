@@ -15,16 +15,8 @@ $pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160424
 
 sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian
 
-zuotian='20160430'
-qiantian='20160501'
-
-hfs -rmr /user/wrt/sale_tmp
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120\
-$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160424
-sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian
-
 zuotian='20160501'
-qiantian='20160502'
+qiantian='20160430'
 
 hfs -rmr /user/wrt/sale_tmp
 spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120\
@@ -32,7 +24,15 @@ $pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160424
 sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian
 
 zuotian='20160502'
-qiantian='20160503'
+qiantian='20160501'
+
+hfs -rmr /user/wrt/sale_tmp
+spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120\
+$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160424
+sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian
+
+zuotian='20160503'
+qiantian='20160502'
 
 hfs -rmr /user/wrt/sale_tmp
 spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120\
