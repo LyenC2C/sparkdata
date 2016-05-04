@@ -12,7 +12,7 @@ from pyspark import SparkConf
 
 conf = SparkConf()
 conf.set("spark.akka.frameSize","70")
-sc = SparkContext(appName="t_base_item_sale",conf = conf)
+sc = SparkContext(appName="t_base_item_sale_" + today,conf = conf)
 
 yesterday = sys.argv[1]
 today = sys.argv[2]
@@ -168,9 +168,10 @@ rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
 
 """
 hfs -rmr /user/wrt/sale_tmp
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py 20160426 20160427 20160424
-LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_dev PARTITION (ds='20160424');
-insert into table t_base_ec_item_sold_dev PARTITION (ds='20160426')
+spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py 20160428 20160429 20160424
+LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_dev PARTITION (ds='20160428');
+LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE wlservice.t_wrt_sold_tmp PARTITION (ds='20160428');
+insert into table t_base_ec_item_sold_dev PARTITION (ds='20160428')
 select
 t2.item_id,
 t2.price,
@@ -183,9 +184,9 @@ t2.start,
 t2.cp_flag,
 t2.ts
 from
-(select * from t_base_ec_item_sold_dev where ds = 20160425)t1
+(select * from t_base_ec_item_sold_dev where ds = 20160427)t1
 join
-(select * from wlservice.t_wrt_sold_tmp where ds = 20160426)t2
+(select * from wlservice.t_wrt_sold_tmp where ds = 20160428)t2
 on
 t1.item_id = t2.item_id
 """
