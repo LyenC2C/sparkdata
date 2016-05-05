@@ -260,6 +260,26 @@ def cat_tags():
     '''
     rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('cat_tags',x.cat_tags)))
     return rdd
+
+
+# tgender                 string
+# tage                    int
+# tname                   string
+# tloc                    string
+# alipay                  string
+# buycnt                  string
+# verify                  string
+# regtime                 string
+# nick                    string
+def user_profile():
+    sql_tag='''
+    select
+    *
+    from
+    t_base_user_info_s_tbuserinfo
+    '''
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile','\t'.join([str(valid_jsontxt(i)).replace('None','') for i in x[1:]]))))
+    return rdd
 schema1 = StructType([
     StructField("uid", StringType(), True),
     StructField("dim", StringType(), True),
@@ -271,6 +291,7 @@ schema1 = StructType([
     StructField("house", StringType(), True),
     StructField("tfidftags", StringType(), True),
     StructField("cat_tags", StringType(), True),
+    StructField("user_profile", StringType(), True),
     StructField("qq", StringType(), True)
         ])
 def mergeinfo(uid,info):
@@ -289,6 +310,7 @@ def mergeinfo(uid,info):
     lv.append(m.get('house',''))
     lv.append(m.get('tfidftags',''))
     lv.append(m.get('cat_tags',''))
+    lv.append(m.get('user_profile',''))
     lv.append(m.get('qq',''))
     return lv
 
@@ -315,17 +337,18 @@ if __name__ == "__main__":
         rdd_house=house()
         rdd_tag=hmm_tag()
         rdd_cat_tags=cat_tags()
+        rdd_user_profile=user_profile()
         # rdd_qq=qq()
         rdd=rdd_dim.union(rdd_brand).repartition(200).union(rdd_price).union(rdd_shop).union(rdd_car)\
-            .union(rdd_house).repartition(200).union(rdd_tag).union(rdd_cat_tags).coalesce(2000)\
+            .union(rdd_house).repartition(200).union(rdd_tag).union(rdd_cat_tags).union(rdd_user_profile).coalesce(2000)\
             # .union(rdd_qq).union(rdd_brandtag)
         # rdd=rdd_dim.union(rdd_brand)
         rdd1=rdd.groupByKey().map(lambda (x,y): mergeinfo(x,y)).coalesce(1000)
         ddf=hiveContext.createDataFrame(rdd1,schema1)
         hiveContext.registerDataFrameAsTable(ddf,'tmptable')
-        hiveContext.sql('drop table if exists t_zlj_user_tag_join')
+        hiveContext.sql('drop table if exists t_zlj_user_tag_join_t')
         hiveContext.sql('''
-        create table  t_zlj_user_tag_join
+        create table  t_zlj_user_tag_join_t
         as
         select * from  tmptable
         ''')

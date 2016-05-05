@@ -59,3 +59,6 @@ hiveContext.sql("create table t_zlj_qq_age as select * from rdd_age  ")
 
 sc.textFile('/data/develop/ec/tb/user/userinfo.20160429.format/').\
     map(lambda x:int(x.split('\001')[2])).sum()
+
+sc.textFile('/hive/warehouse/wlbase_dev.db/t_base_user_info_s_tbuserinfo/000012_0').\
+    map(lambda x:x.split('\001')).take(10)
