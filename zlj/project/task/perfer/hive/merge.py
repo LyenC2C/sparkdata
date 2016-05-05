@@ -271,6 +271,10 @@ def cat_tags():
 # verify                  string
 # regtime                 string
 # nick                    string
+
+def f_int_str(x):
+    if type(x)==type(1):return str(x)
+    else :return x
 def user_profile():
     sql_tag='''
     select
@@ -278,8 +282,10 @@ def user_profile():
     from
     t_base_user_info_s_tbuserinfo
     '''
-    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile','\t'.join([str(valid_jsontxt(i)).replace('None','') for i in x[1:]]))))
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile','\t'.join([f_int_str(i).replace('None','') for i in x[1:]]))))
+    # rdd.map(lambda x:x[1]).saveAsTextFile('/user/zlj/tmp/tes')
     return rdd
+
 schema1 = StructType([
     StructField("uid", StringType(), True),
     StructField("dim", StringType(), True),
