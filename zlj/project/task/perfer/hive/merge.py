@@ -261,6 +261,16 @@ def cat_tags():
     rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('cat_tags',x.cat_tags)))
     return rdd
 
+
+# tgender                 string
+# tage                    int
+# tname                   string
+# tloc                    string
+# alipay                  string
+# buycnt                  string
+# verify                  string
+# regtime                 string
+# nick                    string
 def user_profile():
     sql_tag='''
     select

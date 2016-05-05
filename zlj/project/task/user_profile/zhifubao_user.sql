@@ -27,3 +27,6 @@ case when  t1.tloc is not null  then t1.tloc else t2.location end as  tloc,
 alipay,buycnt,verify,regtime,nick
 from t_base_user_info_s t1  left join  t_base_ec_tb_userinfo  t2
 on t1.ds=20160310 and t1.tb_id=t2.uid ;
+
+
+-- select rt,COUNT(1) from (SELECT split(regtime,'.')[0] as rt from t_base_ec_tb_userinfo )t group by rt
