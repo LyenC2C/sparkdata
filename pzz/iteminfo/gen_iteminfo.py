@@ -158,7 +158,7 @@ if __name__ == "__main__":
                 .groupByKey()\
                 .map(lambda (x,y):gen_item_inc(x,y))\
                 .map(lambda x:"\001".join(x))\
-                .coalesce(2600)\
+                .coalesce(1600)\
                 .saveAsTextFile(output_path)
 
         sc.stop()
