@@ -5,8 +5,8 @@ yesterday = sys.argv[1]
 today = sys.argv[2]
 
 sc = SparkContext(appName="cal_daysale " + yesterday)
-s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + yesterday
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=" + today
+s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + yesterday
+s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + today
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -16,16 +16,20 @@ def valid_jsontxt(content):
 def yes_sale(line):
     ss = line.strip().split('\001')
     itemid = ss[0]
-    item_price = float(ss[3])
-    item_sale = int(ss[6])
+    if not ss[1].replace(".","").isdigit(): ss[1] = 0.0
+    item_price = float(ss[1])
+    if not ss[3].isdigit(): ss[3] = 0
+    item_sale = int(ss[3])
     flag = "yes"
     return (itemid,[item_price,item_sale,flag])
 
 def tod_sale(line):
     ss = line.strip().split('\001')
     itemid = ss[0]
-    item_price = float(ss[3])
-    item_sale = int(ss[6])
+    if not ss[1].replace(".","").isdigit(): ss[1] = 0.0
+    item_price = float(ss[1])
+    if not ss[3].isdigit(): ss[3] = 0
+    item_sale = int(ss[3])
     flag = "tod"
     return (itemid,[item_price,item_sale,flag])
 
@@ -54,4 +58,4 @@ def cal(x,y):
 rdd1 = sc.textFile(s1).map(lambda x:yes_sale(x))
 rdd2 = sc.textFile(s2).map(lambda x:tod_sale(x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):cal(x,y))
-rdd.coalesce(40).saveAsTextFile('/user/wrt/daysale_tmp')
+rdd.coalesce(200).saveAsTextFile('/user/wrt/daysale_tmp')

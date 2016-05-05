@@ -10,13 +10,15 @@ import rapidjson as json
 from pyspark import SparkContext
 from pyspark import SparkConf
 
-conf = SparkConf()
-conf.set("spark.akka.frameSize","70")
-sc = SparkContext(appName="t_base_item_sale",conf = conf)
-
 yesterday = sys.argv[1]
 today = sys.argv[2]
 iteminfo_day = sys.argv[3]
+
+conf = SparkConf()
+conf.set("spark.akka.frameSize","70")
+sc = SparkContext(appName="t_base_item_sale_" + today,conf = conf)
+
+
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -29,9 +31,11 @@ def f1(line):
     if len(ss) != 2: return [None]
     ts = ss[0]
     zhengwen = ss[1]
-    if zhengwen == "<!DOCTYPE html>": return [None]
+    # if zhengwen == "<!DOCTYPE html>": return [None]
     # l = len(zhengwen)
-    star = zhengwen.find("({") + 1
+    star = zhengwen.find("({")# + 1
+    if star == -1: return [None]
+    else: star += 1
     end = zhengwen.rfind("})") + 1
     # end = l-2
     text = zhengwen[star:end]
@@ -164,5 +168,27 @@ rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): quchong_2
 rdd_final = rdd.union(rdd3).groupByKey().mapValues(list).map(lambda (x, y):quchong_3(x, y)).coalesce(200)
 rdd_final.saveAsTextFile('/user/wrt/sale_tmp')
 
-# spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py 20160424 20160425 20160424
-#LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_dev PARTITION (ds='20160424');
+"""
+hfs -rmr /user/wrt/sale_tmp
+spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_base_item_sale.py 20160428 20160429 20160424
+LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_dev PARTITION (ds='20160428');
+LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE wlservice.t_wrt_sold_tmp PARTITION (ds='20160428');
+insert into table t_base_ec_item_sold_dev PARTITION (ds='20160428')
+select
+t2.item_id,
+t2.price,
+t2.amount,
+t2.total,
+t2.qu,
+t2.st,
+t2.insale,
+t2.start,
+t2.cp_flag,
+t2.ts
+from
+(select * from t_base_ec_item_sold_dev where ds = 20160427)t1
+join
+(select * from wlservice.t_wrt_sold_tmp where ds = 20160428)t2
+on
+t1.item_id = t2.item_id
+"""
