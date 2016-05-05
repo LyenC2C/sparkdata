@@ -272,17 +272,14 @@ def cat_tags():
 # regtime                 string
 # nick                    string
 
-def f_int_str(x):
-    if type(x)==type(1):return str(x)
-    else :return x
 def user_profile():
     sql_tag='''
     select
-    *
+    tb_id ,concat_ws('\002',cast(tgender as string),cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) as user_profile
     from
     t_base_user_info_s_tbuserinfo
     '''
-    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile','\t'.join([f_int_str(i).replace('None','') for i in x[1:]]))))
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile',x.user_profile)))
     # rdd.map(lambda x:x[1]).saveAsTextFile('/user/zlj/tmp/tes')
     return rdd
 
