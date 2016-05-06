@@ -5196,6 +5196,7 @@ def f_s(line):
 #         return lv
 
 
+sc.textFile().mapPartitions()
 tt=sc.textFile('/user/wrt/qq_qun_info/').map(lambda x:x.split('\001')).filter(lambda x:'5164864'==x[0]).map(lambda x:'\001'.join(x))\
   .saveAsTextFile('/user/zlj/qq/qqgroup_school_onecase')
 

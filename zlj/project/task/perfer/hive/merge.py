@@ -261,15 +261,28 @@ def cat_tags():
     rdd=hiveContext.sql(sql_tag).map(lambda x:(x.user_id,('cat_tags',x.cat_tags)))
     return rdd
 
+
+# tgender                 string
+# tage                    int
+# tname                   string
+# tloc                    string
+# alipay                  string
+# buycnt                  string
+# verify                  string
+# regtime                 string
+# nick                    string
+
 def user_profile():
     sql_tag='''
     select
-    *
+    tb_id ,concat_ws('\002',cast(tgender as string),cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) as user_profile
     from
     t_base_user_info_s_tbuserinfo
     '''
-    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile','\t'.join([str(valid_jsontxt(i)).replace('None','') for i in x[1:]]))))
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile',x.user_profile)))
+    # rdd.map(lambda x:x[1]).saveAsTextFile('/user/zlj/tmp/tes')
     return rdd
+
 schema1 = StructType([
     StructField("uid", StringType(), True),
     StructField("dim", StringType(), True),
