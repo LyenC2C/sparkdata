@@ -13,7 +13,7 @@ Created on Nov 30, 2014
 '''
 
 import networkx as nx
-from Segmentation import Segmentation
+# from Segmentation import Segmentation
 import numpy as np
 
 class TextRank4Keyword(object):
