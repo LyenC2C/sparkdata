@@ -39,7 +39,7 @@ def get_laiyuan_dict(line):
     ss = line.strip().split("\t")
     return (ss[0],ss[1])
 
-def f(line,cate_dict,get_country_dict,laiyuan_dict):
+def f(line,cate_dict,laiyuan_dict):
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
     ts = ss[0]
