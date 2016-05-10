@@ -55,6 +55,7 @@ def f(x):
     price = ob.get("price","-")
     rateCounts = ob.get("comment_count","-")
     item_count = "1"
+    ts = "-"
     if cate_name == "卫生巾" or cate_name == "纸尿片":
         if "包" in title:
             # tt = title.decode("utf-8")
