@@ -70,7 +70,7 @@ def f(line,cate_dict,laiyuan_dict):
         cate_name = "电饭煲"
     if cate_name == "纸尿裤/拉拉裤/纸尿片":
         cate_name = "纸尿片"
-    cate_name = "面部护理套装"
+    # cate_name = "面部护理套装"
     # cate_root_name = cate_dict.get(categoryId,["-","-"])[1]
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
@@ -145,6 +145,20 @@ def f(line,cate_dict,laiyuan_dict):
                         else: break
                     if item_count == "": item_count = "1"
                     break
+    if cate_name == "面膜":
+        if "片" in title:
+            # tt = title.decode("utf-8")
+            i = title.find("片")
+            if i >= 0:
+                i = i-1
+                item_count = ""
+                while(title[i].isdigit() and i > 0):
+                    item_count = title[i] + item_count
+                    if i > 0: i = i - 1
+                    else: break
+            if item_count == "": item_count = '-'
+        else:
+            item_count = "-"
     result.append(title)
     # result.append(categoryId)
     result.append(cate_name)
@@ -188,7 +202,7 @@ cate_dict = rdd1.value
 # country_dict = rdd2.value
 rdd3 = sc.broadcast(sc.textFile(laiyuan_dim).map(lambda x: get_laiyuan_dict(x)).filter(lambda x:x!=None).collectAsMap())
 laiyuan_dict = rdd3.value
-rdd_c = sc.textFile(s2).map(lambda x: f(x,cate_dict,laiyuan_dict)).filter(lambda x:x!=None)
+rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict,laiyuan_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_patch')
 
