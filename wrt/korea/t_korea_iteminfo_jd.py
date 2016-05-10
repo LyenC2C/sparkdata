@@ -145,4 +145,4 @@ s_jd = "/commit/project/hanguo3/han.jingdong.iteminfo.search"
 s_ymt = "/commit/project/hanguo3/han.yangmatou*"
 s_yh = "/commit/project/hanguo3/yunhou.han.key.3.json"
 rdd = sc.textFile(s_yh).map(lambda x: f(x)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_ymt')
+rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_yh')
