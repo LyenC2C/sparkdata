@@ -44,10 +44,10 @@ def f(line,cate_dict,get_country_dict):
     ob = json.loads(txt)
     if type(ob) != type({}): return None
     itemInfoModel = ob.get('itemInfoModel',"-")
+    if itemInfoModel == "-": return None
     seller = ob.get('seller',{})
     rateInfo = ob.get('rateInfo',{})
     rateCounts = rateInfo.get('rateCounts',"-")
-    if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
     shopId = seller.get('shopId','-')
     seller_id = seller.get('userNumId','-')
