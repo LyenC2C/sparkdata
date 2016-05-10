@@ -106,7 +106,7 @@ def f(line,cate_dict,laiyuan_dict):
                 if i <= 0: continue
                 else:
                     i = i + 3
-                    if i > len(title):continue
+                    if i >= len(title):continue
                     item_count = ""
                     while(title[i].isdigit() and i < len(title)):
                         item_count = item_count + title[i]
