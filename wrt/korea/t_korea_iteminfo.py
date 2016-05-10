@@ -70,6 +70,7 @@ def f(line,cate_dict,laiyuan_dict):
         cate_name = "电饭煲"
     if cate_name == "纸尿裤/拉拉裤/纸尿片":
         cate_name = "纸尿片"
+    cate_name = "面部护理套装"
     # cate_root_name = cate_dict.get(categoryId,["-","-"])[1]
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
@@ -177,6 +178,7 @@ def quchong(x, y):
 
 
 s = "/commit/project/hanguo3/han.tbtm.iteminfo"
+s2 = "/commit/project/hanguo3/han.tbtm.iteminfo.patch"
 s_dim = "/commit/project/tmallint/dim.subcat.final.json"
 b_country = "/commit/project/tmallint/brand.json"
 laiyuan_dim = "/commit/project/hanguo3/han.tbtm.iteminfo.shoptype"
@@ -186,9 +188,9 @@ cate_dict = rdd1.value
 # country_dict = rdd2.value
 rdd3 = sc.broadcast(sc.textFile(laiyuan_dim).map(lambda x: get_laiyuan_dict(x)).filter(lambda x:x!=None).collectAsMap())
 laiyuan_dict = rdd3.value
-rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict,laiyuan_dict)).filter(lambda x:x!=None)
+rdd_c = sc.textFile(s2).map(lambda x: f(x,cate_dict,laiyuan_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo')
+rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_patch')
 
 
 #spark-submit  --executor-memory 3G  --driver-memory 5G  --total-executor-cores 40 t_korea_iteminfo.py
