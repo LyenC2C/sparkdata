@@ -89,7 +89,7 @@ def f(line,cate_dict,laiyuan_dict):
     # item_count = "-"
     # if cate_name in ["榨汁机","电饭煲"]:
     item_count = "1"
-    if cate_name == "卫生巾":
+    if cate_name == "卫生巾" or cate_name == "纸尿片":
         if "包" in title:
             # tt = title.decode("utf-8")
             i = title.find("包")
@@ -107,6 +107,35 @@ def f(line,cate_dict,laiyuan_dict):
                 if i <= 0: continue
                 else:
                     i = i + len(ln)
+                    if i >= len(title):continue
+                    item_count = ""
+                    while(title[i].isdigit()):
+                        item_count = item_count + title[i]
+                        if i < len(title) - 1: i += 1
+                        else: break
+                    if item_count == "": item_count = "1"
+                    break
+    if cate_name == "洗发水":
+        if "瓶" in title or "支" in title:
+            # tt = title.decode("utf-8")
+            for ln in ["瓶","支"]:
+                i = title.find(ln)
+                if i < 0: continue
+                else:
+                    i = i - 1
+                    item_count = ""
+                    while(title[i].isdigit()):
+                        item_count = title[i] + item_count
+                        if i > 0: i = i - 1
+                        else: break
+                    if item_count == "": item_count = '1'
+                    break
+        elif "*" in title or "X" in title or "x" in title:
+            for ln in ["*","X","x"]:
+                i = title.find(ln)
+                if i <= 0: continue
+                else:
+                    i = i + 1
                     if i >= len(title):continue
                     item_count = ""
                     while(title[i].isdigit()):
