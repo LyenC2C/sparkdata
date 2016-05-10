@@ -204,7 +204,7 @@ rdd3 = sc.broadcast(sc.textFile(laiyuan_dim).map(lambda x: get_laiyuan_dict(x)).
 laiyuan_dict = rdd3.value
 rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict,laiyuan_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_patch')
+rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo')
 
 
 #spark-submit  --executor-memory 3G  --driver-memory 5G  --total-executor-cores 40 t_korea_iteminfo.py
