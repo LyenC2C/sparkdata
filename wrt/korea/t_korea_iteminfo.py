@@ -39,6 +39,7 @@ def f(line,cate_dict,get_country_dict):
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
     ts = ss[0]
+    item_id = ss[1]
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) != type({}): return None
@@ -114,5 +115,5 @@ rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo')
 
 
-#spark-submit  --executor-memory 8G  --driver-memory 10G  --total-executor-cores 80 t_korea_iteminfo.py
+#spark-submit  --executor-memory 3G  --driver-memory 5G  --total-executor-cores 40 t_korea_iteminfo.py
 
