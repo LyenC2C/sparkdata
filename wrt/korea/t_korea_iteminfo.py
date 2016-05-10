@@ -92,8 +92,8 @@ def f(line,cate_dict,laiyuan_dict):
     if cate_name == "卫生巾":
         if "包" in title:
             # tt = title.decode("utf-8")
-            i = title.find("包") - 1
-            if i > 0:
+            i = title.find("包")
+            if i >= 0:
                 i = i-1
                 item_count = ""
                 while(title[i].isdigit() and i > 0):
