@@ -43,15 +43,15 @@ def f(line,cate_dict,get_country_dict):
     ob = json.loads(txt)
     if type(ob) != type({}): return None
     itemInfoModel = ob.get('itemInfoModel',"-")
+    seller = ob.get('seller',{})
+    rateInfo = ob.get('rateInfo',{})
+    rateCounts = rateInfo.get('rateCounts',"-")
     if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
-    item_id = itemInfoModel.get('itemId','-')
-    title = itemInfoModel.get('title','-').replace("\n","")
-    favor = itemInfoModel.get('favcount','-')
-    seller=ob.get('seller',"-")
     shopId = seller.get('shopId','-')
     seller_id = seller.get('userNumId','-')
     categoryId = itemInfoModel.get('categoryId','-')
+    title = itemInfoModel.get('title','-').replace("\n","").replace("\r","")
     cate_name = cate_dict.get(categoryId,["-","-"])[0]
     cate_root_name = cate_dict.get(categoryId,["-","-"])[1]
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
@@ -59,7 +59,7 @@ def f(line,cate_dict,get_country_dict):
     price_zone = value[1]
     trackParams = ob.get('trackParams',{})
     BC_type = trackParams.get('BC_type','-')
-    if BC_type == 'C': return None
+    # if BC_type == 'C': return None
     brandId = trackParams.get('brandId','-')
     brand_name = '-'
     props=ob.get('props',[])
@@ -69,18 +69,21 @@ def f(line,cate_dict,get_country_dict):
     country = get_country_dict.get(valid_jsontxt(brand_name),"-")
     result = []
     # result.append(item_id)
+    item_count = "-"
     result.append(title)
     result.append(categoryId)
     result.append(cate_name)
     result.append(cate_root_name)
+    result.append(BC_type)
     result.append(brandId)
     result.append(brand_name)
     result.append(str(price))
     result.append((price_zone))
-    result.append(int(favor))
+    result.append(rateCounts)
     result.append(seller_id)
     result.append(shopId)
     result.append(country)
+    result.append(item_count)
     result.append(location)
     result.append(ts)
     return (item_id,result)
@@ -99,7 +102,7 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-s = "/commit/project/tmallint/info.item.source.20160401.2016-04-01"
+s = "/commit/project/hanguo3/han.tbtm.iteminfo"
 s_dim = "/commit/project/tmallint/dim.subcat.final.json"
 b_country = "/commit/project/tmallint/brand.json"
 rdd1 = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap())
