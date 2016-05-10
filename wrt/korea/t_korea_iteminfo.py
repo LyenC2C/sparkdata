@@ -196,11 +196,12 @@ s2 = "/commit/project/hanguo3/han.tbtm.iteminfo.patch"
 s_dim = "/commit/project/tmallint/dim.subcat.final.json"
 b_country = "/commit/project/tmallint/brand.json"
 laiyuan_dim = "/commit/project/hanguo3/han.tbtm.iteminfo.shoptype"
+laiyuan_dim2 = "/commit/project/hanguo3/han.tbtm.iteminfo.shoptype.patch"
 rdd1 = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap())
 cate_dict = rdd1.value
 # rdd2 = sc.broadcast(sc.textFile(b_country).map(lambda x: get_country_dict(x)).filter(lambda x:x!=None).collectAsMap())
 # country_dict = rdd2.value
-rdd3 = sc.broadcast(sc.textFile(laiyuan_dim).map(lambda x: get_laiyuan_dict(x)).filter(lambda x:x!=None).collectAsMap())
+rdd3 = sc.broadcast(sc.textFile(laiyuan_dim2).map(lambda x: get_laiyuan_dict(x)).filter(lambda x:x!=None).collectAsMap())
 laiyuan_dict = rdd3.value
 rdd_c = sc.textFile(s2).map(lambda x: f(x,cate_dict,laiyuan_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
