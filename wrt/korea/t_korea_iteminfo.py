@@ -98,19 +98,21 @@ def f(line,cate_dict,laiyuan_dict):
                 item_count = ""
                 while(title[i].isdigit() and i > 0):
                     item_count = title[i] + item_count
-                    i = i - 1
+                    if i > 0: i = i - 1
+                    else: break
             if item_count == "": item_count = '1'
         elif "片*" in title or "p*" in title or "片x" in title or "片X" in title:
             for ln in ["片*","p*","片x","片X"]:
                 i = title.find(ln)
                 if i <= 0: continue
                 else:
-                    i = i + 3
+                    i = i + len(ln)
                     if i >= len(title):continue
                     item_count = ""
-                    while(title[i].isdigit() and i < len(title)):
+                    while(title[i].isdigit()):
                         item_count = item_count + title[i]
-                        i = i + 3
+                        if i < len(title) - 1: i += 1
+                        else: break
                     if item_count == "": item_count = "1"
                     break
     result.append(title)
