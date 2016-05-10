@@ -19,7 +19,7 @@ def f(x):
     for ob in pdlist:
         item_id = ob.get("item_id","-")
         title = ob.get("title","-")
-        key = valid_jsontxt(ob.get("search_info","{}").get("key","-"))
+        key = valid_jsontxt(ob.get("key","-"))
         cate_name = "-"
         brand_name = "-"
         if "润膏" in key:
