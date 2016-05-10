@@ -142,6 +142,6 @@ def f(x):
 
 
 s_jd = "/commit/project/hanguo3/han.jingdong.iteminfo.search"
-# s_ymt = "han.yangmatou*"
-rdd = sc.textFile("han.yangmatou*").map(lambda x: f(x)).filter(lambda x:x!=None)
+s_ymt = "/commit/project/hanguo3/han.yangmatou*"
+rdd = sc.textFile(s_ymt).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_ymt')
