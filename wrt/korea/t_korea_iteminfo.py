@@ -101,8 +101,8 @@ def f(line,cate_dict,laiyuan_dict):
                     if i > 0: i = i - 1
                     else: break
             if item_count == "": item_count = '1'
-        elif "片*" in title or "p*" in title or "片x" in title or "片X" in title:
-            for ln in ["片*","p*","片x","片X"]:
+        elif "片*" in title or "p*" in title or "P*" in title or "片x" in title or "片X" in title:
+            for ln in ["片*","p*","P*","片x","片X"]:
                 i = title.find(ln)
                 if i <= 0: continue
                 else:
