@@ -14,7 +14,7 @@ def valid_jsontxt(content):
 
 def f(x):
     result = []
-    ob = json.loads(x)
+    ob = json.loads(valid_jsontxt(x))
     item_id = ob.get("item_id","-")
     title = ob.get("title","-")
     key = valid_jsontxt(ob.get("key","-"))
