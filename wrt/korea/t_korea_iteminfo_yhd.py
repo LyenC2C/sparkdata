@@ -147,5 +147,5 @@ def f(x):
 
 
 s_yhd = "/commit/project/hanguo3/yhd.4.iteminfo"
-rdd = sc.textFile(s_yh).flatMap(lambda x: f(x)).filter(lambda x:x!=None)
+rdd = sc.textFile(s_yhd).flatMap(lambda x: f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_yhd')
