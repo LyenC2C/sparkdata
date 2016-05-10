@@ -36,7 +36,7 @@ def get_cate_dict(line):
 #     return (ob["brand"],ob["country_name"])
 
 def get_laiyuan_dict(line):
-    ob = json.loads(valid_jsontxt(line.strip()))
+    ss = line.strip().split("\t")
     return (ss[0],ss[1])
 
 def f(line,cate_dict,get_country_dict,laiyuan_dict):
