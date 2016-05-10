@@ -31,11 +31,15 @@ def get_cate_dict(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     return (ob["sub_category_id"],[ob["sub_category_name"],ob["category_name"]])
 
-def get_country_dict(line):
-    ob = json.loads(valid_jsontxt(line.strip()))
-    return (ob["brand"],ob["country_name"])
+# def get_country_dict(line):
+#     ob = json.loads(valid_jsontxt(line.strip()))
+#     return (ob["brand"],ob["country_name"])
 
-def f(line,cate_dict,get_country_dict):
+def get_laiyuan_dict(line):
+    ob = json.loads(valid_jsontxt(line.strip()))
+    return (ss[0],ss[1])
+
+def f(line,cate_dict,get_country_dict,laiyuan_dict):
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
     ts = ss[0]
@@ -53,15 +57,26 @@ def f(line,cate_dict,get_country_dict):
     seller_id = seller.get('userNumId','-')
     categoryId = itemInfoModel.get('categoryId','-')
     title = itemInfoModel.get('title','-').replace("\n","").replace("\r","")
-    cate_name = cate_dict.get(categoryId,["-","-"])[0]
-    cate_root_name = cate_dict.get(categoryId,["-","-"])[1]
+    cate_name = valid_jsontxt(cate_dict.get(categoryId,["-","-"])[0])
+    if cate_name == "-": return None
+    if cate_name in ["护垫","产妇卫生巾"]:
+        cate_name = "卫生巾"
+    if cate_name == "原汁机":
+        cate_name = "榨汁机"
+    if cate_name == "洗护套装":
+        cate_name = "洗发水"
+    if cate_name == "电煲/电锅类配件":
+        cate_name = "电饭煲"
+    if cate_name == "纸尿裤/拉拉裤/纸尿片":
+        cate_name = "纸尿片"
+    # cate_root_name = cate_dict.get(categoryId,["-","-"])[1]
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     price_zone = value[1]
     trackParams = ob.get('trackParams',{})
-    BC_type = trackParams.get('BC_type','-')
+    laiyuan = laiyuan_dict.get(shopId,"-")
     # if BC_type == 'C': return None
-    brandId = trackParams.get('brandId','-')
+    # brandId = trackParams.get('brandId','-')
     brand_name = '-'
     props=ob.get('props',[])
     for v in props:
@@ -71,12 +86,13 @@ def f(line,cate_dict,get_country_dict):
     result = []
     # result.append(item_id)
     item_count = "-"
+    # if cate_name in ["榨汁机"
     result.append(title)
-    result.append(categoryId)
+    # result.append(categoryId)
     result.append(cate_name)
-    result.append(cate_root_name)
-    result.append(BC_type)
-    result.append(brandId)
+    # result.append(cate_root_name)
+    result.append(laiyuan)
+    # result.append(brandId)
     result.append(brand_name)
     result.append(str(price))
     result.append((price_zone))
@@ -106,11 +122,14 @@ def quchong(x, y):
 s = "/commit/project/hanguo3/han.tbtm.iteminfo"
 s_dim = "/commit/project/tmallint/dim.subcat.final.json"
 b_country = "/commit/project/tmallint/brand.json"
+laiyuan_dim = "/commit/project/hanguo3/han.tbtm.iteminfo.shoptype"
 rdd1 = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap())
 cate_dict = rdd1.value
-rdd2 = sc.broadcast(sc.textFile(b_country).map(lambda x: get_country_dict(x)).filter(lambda x:x!=None).collectAsMap())
-country_dict = rdd2.value
-rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict,country_dict)).filter(lambda x:x!=None)
+# rdd2 = sc.broadcast(sc.textFile(b_country).map(lambda x: get_country_dict(x)).filter(lambda x:x!=None).collectAsMap())
+# country_dict = rdd2.value
+rdd3 = sc.broadcast(sc.textFile(laiyuan_dim).map(lambda x: get_laiyuan_dict(x)).filter(lambda x:x!=None).collectAsMap())
+laiyuan_dict = rdd3.value
+rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict,laiyuan_dict)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo')
 
