@@ -1,6 +1,7 @@
 #coding:utf-8
 __author__ = 'wrt'
 import sys
+import re
 import rapidjson as json
 from pyspark import SparkContext
 
@@ -85,8 +86,30 @@ def f(line,cate_dict,laiyuan_dict):
     # country = get_country_dict.get(valid_jsontxt(brand_name),"-")
     result = []
     # result.append(item_id)
-    item_count = "-"
-    # if cate_name in ["榨汁机"
+    # item_count = "-"
+    # if cate_name in ["榨汁机","电饭煲"]:
+    item_count = "1"
+    if cate_name == "卫生巾":
+        if "包" in title:
+            # tt = title.decode("utf-8")
+            i = title.find("包") - 1
+            if i > 0:
+                i = i-1
+                item_count = ""
+                while(title[i].isdigit()):
+                    item_count = title[i] + item_count
+            if item_count == "": item_count = '1'
+        elif "片*" in title or "p*" in title or "片x" in title or "片X" in title:
+            for ln in ["片*","p*","片x","片X"]:
+                i = title.find(ln)
+                if i <= 0: continue
+                else:
+                    i = i+1
+                    item_count = ""
+                    while(title[i].isdigit()):
+                        item_count = item_count + title[i]
+                    if item_count == "": item_count = "1"
+                    break
     result.append(title)
     # result.append(categoryId)
     result.append(cate_name)
