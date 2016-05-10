@@ -57,7 +57,7 @@ def f(line,cate_dict,laiyuan_dict):
     shopId = seller.get('shopId','-')
     seller_id = seller.get('userNumId','-')
     categoryId = itemInfoModel.get('categoryId','-')
-    title = itemInfoModel.get('title','-').replace("\n","").replace("\r","")
+    title = valid_jsontxt(itemInfoModel.get('title','-').replace("\n","").replace("\r",""))
     cate_name = valid_jsontxt(cate_dict.get(categoryId,["-","-"])[0])
     if cate_name == "-": return None
     if cate_name in ["护垫","产妇卫生巾"]:
@@ -96,18 +96,21 @@ def f(line,cate_dict,laiyuan_dict):
             if i > 0:
                 i = i-1
                 item_count = ""
-                while(title[i].isdigit()):
+                while(title[i].isdigit() and i > 0):
                     item_count = title[i] + item_count
+                    i = i - 1
             if item_count == "": item_count = '1'
         elif "片*" in title or "p*" in title or "片x" in title or "片X" in title:
             for ln in ["片*","p*","片x","片X"]:
                 i = title.find(ln)
                 if i <= 0: continue
                 else:
-                    i = i+1
+                    i = i + 3
+                    if i > len(title):continue
                     item_count = ""
-                    while(title[i].isdigit()):
+                    while(title[i].isdigit() and i < len(title)):
                         item_count = item_count + title[i]
+                        i = i + 3
                     if item_count == "": item_count = "1"
                     break
     result.append(title)
