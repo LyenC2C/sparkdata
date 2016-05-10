@@ -50,10 +50,13 @@ def f(x):
     if "福库" in key:
         cate_name = "电饭煲"
         brand_name = "福库"
-    laiyuan = "jd"
+    if "兰芝" in key:
+        cate_name = "面部护理套装"
+        brand_name = "兰芝"
+    laiyuan = "ymt"
     price_zone = "-"
     price = ob.get("price","-")
-    rateCounts = ob.get("comment_count","-")
+    rateCounts = "-"#ob.get("comment_count","-")
     item_count = "1"
     ts = "-"
     if cate_name == "卫生巾" or cate_name == "纸尿片":
@@ -138,6 +141,7 @@ def f(x):
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
-s = "/commit/project/hanguo3/han.jingdong.iteminfo.search"
-rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_jd')
+s_jd = "/commit/project/hanguo3/han.jingdong.iteminfo.search"
+s_ymt = "han.yangmatou.iteminfo*"
+rdd = sc.textFile(s_ymt).map(lambda x: f(x)).filter(lambda x:x!=None)
+rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_ymt')
