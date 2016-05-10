@@ -24,7 +24,7 @@ FROM
   (
   SELECT shop_id, shop_name
   FROM t_base_ec_shop_dev
-  WHERE ds='20160407'
+  WHERE ds='20160331'
   )t2
 
 JOIN
