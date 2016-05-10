@@ -58,7 +58,7 @@ def f(x):
         laiyuan = "yhd"
         price_zone = "-"
         price = ob.get("price","-")
-        rateCounts = ob.get("comment_count","-").split()[0]
+        rateCounts = ob.get("comment_count","-")
         item_count = "1"
         ts = "-"
         if cate_name == "卫生巾" or cate_name == "纸尿片":
