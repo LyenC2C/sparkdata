@@ -46,7 +46,7 @@ def quchong(x,y):
 
 
 
-s = "/commit/project/tmallint/sold.item.source.20160401"
+s = "/commit/project/hanguo3/han.tbtm.amount"
 rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd_f = rdd.groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
 rdd_f.saveAsTextFile('/user/wrt/temp/t_korea_itemsale')
