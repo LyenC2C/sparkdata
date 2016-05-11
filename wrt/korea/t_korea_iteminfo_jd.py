@@ -16,7 +16,7 @@ def get_sku_dict(x):
     ob = json.loads(valid_jsontxt(x))
     product = ob.get("product","-")
     if product == "-": return [None]
-    item_id = str(product.get("item_id","-"))
+    item_id = str(product.get("skuid","-"))
     if item_id == "-": return [None]
     skus = product.get("colorSize",[])
     if skus == []: return [None]
@@ -68,7 +68,7 @@ def f(x,sku_dict):
     if "兰芝" in key:
         cate_name = "面部护理套装"
         brand_name = "兰芝"
-    laiyuan = "yh"
+    laiyuan = "jd"
     price_zone = "-"
     price = ob.get("price","-")
     rateCounts = ob.get("comment_count","-")#.split()[0]
