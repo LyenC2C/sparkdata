@@ -169,8 +169,8 @@ s_jd = "/commit/project/hanguo3/han.jingdong.iteminfo.search"
 s_ymt = "/commit/project/hanguo3/han.yangmatou*"
 s_yh = "/commit/project/hanguo3/yunhou.han.key.3.json"
 s_dim = "/commit/project/hanguo3/han.jingdong.iteminfo"
-rdd1 = sc.broadcast(sc.textFile(s_dim).flatMap(lambda x: y(x)).filter(lambda x:x!=None).collectAsMap())
+rdd1 = sc.broadcast(sc.textFile(s_dim).flatMap(lambda x: get_sku_dict(x)).filter(lambda x:x!=None).collectAsMap())
 sku_dict = rdd1.value
-rdd_c = sc.textFile(s_jd).map(lambda x: f(x)).filter(lambda x: x != None)
+rdd_c = sc.textFile(s_jd).map(lambda x: f(x,sku_dict)).filter(lambda x: x != None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_yh')
