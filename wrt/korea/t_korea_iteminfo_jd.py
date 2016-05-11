@@ -12,10 +12,25 @@ def valid_jsontxt(content):
     else:
         return content
 
-def f(x):
+def get_sku_dict(x):
+    ob = json.loads(valid_jsontxt(x))
+    product = ob.get("product","-")
+    if product == "-": return [None]
+    item_id = str(product.get("item_id","-"))
+    if item_id == "-": return [None]
+    skus = product.get("colorSize",[])
+    if skus == []: return [N    one]
+    result = []
+    for sku in skus:
+        skuid = str(sku.get("SkuId"))
+        result.append((skuid,item_id))
+    return result
+
+def f(x,sku_dict):
     result = []
     ob = json.loads(valid_jsontxt(x))
-    item_id = ob.get("item_id","-")
+    skuid = ob.get("item_id","-")
+    item_id = sku_dict.get(skuid,skuid)
     title = ob.get("title","-")
     key = valid_jsontxt(ob.get("key","-"))
     cate_name = "-"
@@ -128,21 +143,34 @@ def f(x):
             if item_count == "": item_count = '-'
         else:
             item_count = "-"
-    result.append(item_id)
+    result.append(skuid)
     result.append(title)
     result.append(cate_name)
     result.append(laiyuan)
     result.append(brand_name)
     result.append(str(price))
-    result.append((price_zone))
+    result.append(item_id)# result.append((price_zone))
     result.append(rateCounts)
     result.append(item_count)
     result.append(ts)
-    return "\001".join([str(valid_jsontxt(i)) for i in result])
+    # return "\001".join([str(valid_jsontxt(i)) for i in result])
+    return (item_id,result)
 
+def quchong(x,y):
+    max = 0
+    item_list = y
+    for ln in item_list:
+        if int(ln[7]) > max:
+                max = int(ln[7])
+                y = ln
+    return "\001".join([str(valid_jsontxt(i)) for i in y])
 
 s_jd = "/commit/project/hanguo3/han.jingdong.iteminfo.search"
 s_ymt = "/commit/project/hanguo3/han.yangmatou*"
 s_yh = "/commit/project/hanguo3/yunhou.han.key.3.json"
-rdd = sc.textFile(s_yh).map(lambda x: f(x)).filter(lambda x:x!=None)
+s_dim = "/commit/project/hanguo3/han.jingdong.iteminfo"
+rdd1 = sc.broadcast(sc.textFile(s_dim).flatMap(lambda x: y(x)).filter(lambda x:x!=None).collectAsMap())
+sku_dict = rdd1.value
+rdd_c = sc.textFile(s_jd).map(lambda x: f(x)).filter(lambda x: x != None)
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_yh')
