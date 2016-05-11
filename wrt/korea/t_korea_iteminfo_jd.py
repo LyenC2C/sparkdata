@@ -19,7 +19,7 @@ def get_sku_dict(x):
     item_id = str(product.get("item_id","-"))
     if item_id == "-": return [None]
     skus = product.get("colorSize",[])
-    if skus == []: return [N    one]
+    if skus == []: return [None]
     result = []
     for sku in skus:
         skuid = str(sku.get("SkuId"))
