@@ -71,7 +71,7 @@ def f(x,sku_dict):
     laiyuan = "yh"
     price_zone = "-"
     price = ob.get("price","-")
-    rateCounts = ob.get("comment_count","-").split()[0]
+    rateCounts = ob.get("comment_count","-")#.split()[0]
     item_count = "1"
     ts = "-"
     if cate_name == "卫生巾" or cate_name == "纸尿片":
@@ -173,4 +173,4 @@ rdd1 = sc.broadcast(sc.textFile(s_dim).flatMap(lambda x: get_sku_dict(x)).filter
 sku_dict = rdd1.value
 rdd_c = sc.textFile(s_jd).map(lambda x: f(x,sku_dict)).filter(lambda x: x != None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
-rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_yh')
+rdd.saveAsTextFile('/user/wrt/temp/t_korea_iteminfo_jd')
