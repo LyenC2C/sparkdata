@@ -157,7 +157,7 @@ def f(x,sku_dict):
     return (item_id,result)
 
 def quchong(x,y):
-    max = 0
+    max = -1
     item_list = y
     for ln in item_list:
         if int(ln[7]) > max:
