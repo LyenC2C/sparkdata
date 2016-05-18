@@ -39,7 +39,7 @@ if __name__ == '__main__':
 			.saveAsTextFile(sys.argv[3])
 		sc.stop()
 	'''
-	if 1:
+	if sys.argv[1] == '-format':
 		sc = SparkContext(appName="pyspark taobao uinfo")
 		sc.textFile(sys.argv[2])\
 			.map(lambda x:map_line(x))\
