@@ -13,7 +13,8 @@ def f(line,p_dict):
     return "\001".join(ss)
 
 s_p = '/user/wrt/city_pro'
-rdd = sc.textFile("/data/develop/ec/tb/user/userinfo.20160429.format")
+# rdd = sc.textFile("/data/develop/ec/tb/user/userinfo.20160429.format")
+rdd = sc.textFile("/data/develop/ec/tb/user/userinfo.20160518.format")
 p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd.map(lambda x:f(x,p_dict)).saveAsTextFile("/user/wrt/temp/tb_userinfo")
 
