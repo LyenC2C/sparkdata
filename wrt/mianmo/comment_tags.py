@@ -29,6 +29,7 @@ def f(line):
         if tag_id == "-":
             result.append(None)
         else:
+            lv.append(item_id)
             lv.append(tag_id)
             lv.append(count)
             lv.append(tag)
@@ -40,4 +41,4 @@ rdd = textFile("/commit/project/mianmo/mianmo.item.tags")
 rdd1 = rdd.flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/comment_tags')
 
-# spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 tb_tm_jiexi.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 comment_tags.py
