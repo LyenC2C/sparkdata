@@ -37,7 +37,7 @@ def f(line):
             result.append("\001".join(lv))
     return result
 
-rdd = textFile("/commit/project/mianmo/mianmo.item.tags")
+rdd = sc.textFile("/commit/project/mianmo/mianmo.item.tags")
 rdd1 = rdd.flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/comment_tags')
 
