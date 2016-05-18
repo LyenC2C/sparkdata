@@ -103,7 +103,6 @@ def f(line,cate_dict):
     if is_online == 0 and data_flag == 2: off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
     skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
-
     # if skuProps != "-":
     result = []
     result.append(item_id)
@@ -153,4 +152,4 @@ rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
 
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
-#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160421');
+#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160513');
