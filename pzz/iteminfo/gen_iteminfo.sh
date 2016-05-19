@@ -9,7 +9,7 @@ echo "\targv[1]:-genbase, 形成基础仓库.  argv[2]:inputpath   argv[3]:outpu
 hadoop fs -rmr $4
 spark_large $workspace_path/iteminfo/gen_iteminfo.py $1 $2 $3 $4
 
-#hadoop fs -rmr /hive/warehouse/wlbase_dev.db/t_base_ec_item_house_last_version/*
-#hadoop fs -mv $3/* /hive/warehouse/wlbase_dev.db/t_base_ec_item_house_last_version/
-#hadoop fs -rmr $3/*
-#hadoop fs -mv $4/* $3/
+hadoop fs -rmr /hive/warehouse/wlbase_dev.db/t_base_ec_item_house_last_version/*
+hadoop fs -mv $3/* /hive/warehouse/wlbase_dev.db/t_base_ec_item_house_last_version/
+hadoop fs -rmr $3/*
+hadoop fs -mv $4/* $3/
