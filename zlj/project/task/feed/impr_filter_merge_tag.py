@@ -236,10 +236,10 @@ neg_set    =set([i.strip().decode('utf-8') for  i in neg_line.split()])
 
 
 emo_set=set()
-emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
-neg_set_bc=sc.broadcast(emo_rdd)
-emo_set=set(neg_set_bc.value)
-emo_set=emo_set-neg_set-degree_set
+# emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
+# neg_set_bc=sc.broadcast(emo_rdd)
+# emo_set=set(neg_set_bc.value)
+emo_set=neg_emo_set|pos_emo_set
 
 people = ["朋友","宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
 
@@ -429,13 +429,6 @@ if __name__ == "__main__":
 # test
 
 # rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
-
-
-
-
-
-
-
 
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
