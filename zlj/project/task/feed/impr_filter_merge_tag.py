@@ -45,6 +45,7 @@ impr_c  修改后的属性情感词 商品:柔软:正负面:否定词
 schema1 = StructType([
     StructField("item_id", StringType(), True),
     StructField("user_id", StringType(), True),
+    StructField("feed_id", StringType(), True),
     StructField("impr", StringType(), True),
     StructField("neg_pos", StringType(), True),
     StructField("impr_c", StringType(), True)
@@ -365,7 +366,7 @@ def getfield(x,dic):
             else: neg=-1
 
             if(len(ls)<1):ls.append(i)
-            return [item_id,user_id,'|'.join(ls),neg,'|'.join(rs)]
+            return [item_id,user_id,feed_id,'|'.join(ls),neg,'|'.join(rs)]
         except:return None
     # return feed+'\t'+'|'.join(ls)
 
@@ -410,11 +411,11 @@ if __name__ == "__main__":
         filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
         filter_impr_dic=sc.broadcast(filter_impr_dic)
         rdd=sc.textFile(path).repartition(100).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
-        rdd.saveAsTextFile(out_path)
-        # df=hiveContext.createDataFrame(rdd,schema1)
-        # hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-        # hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v5_1')
-        # hiveContext.sql('create table t_zlj_feed2015_parse_v5_1 as select * from temp_zlj')
+        # rdd.saveAsTextFile(out_path)
+        df=hiveContext.createDataFrame(rdd,schema1)
+        hiveContext.registerDataFrameAsTable(df,'temp_zlj')
+        hiveContext.sql('drop table  if EXISTS t_zlj_feed2016_parse_v1')
+        hiveContext.sql('create table t_zlj_feed2016_parse_v1 as select * from temp_zlj')
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
