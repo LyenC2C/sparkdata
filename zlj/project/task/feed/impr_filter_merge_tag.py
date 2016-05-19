@@ -324,10 +324,10 @@ def getfield(x,dic):
     lv=x.split()
     rs=[]
     ls=[]
-    if len(lv)!=3: return None
+    if len(lv)!=4: return None
     else:
         try:
-            item_id,user_id,impr=lv
+            item_id,user_id,feed_id,impr=lv
             neg=0 #默认中评
             for i in impr.split('|'):
                 ts=i.split(',')
@@ -397,39 +397,53 @@ def pos_neg(words):
     return flag,'_'.join(str(i) for i in [neg*degree,neg_emo,pos_emo]),neg_word
 
 
+
+
+if __name__ == "__main__":
+    hiveContext.sql('use wlbase_dev')
+    if sys.argv[1] == '-h':
+        print 'args:  in_path  out_path \n'
+    else:
+        path=sys.argv[1]
+        out_path=sys.arg[2]
+        filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
+        filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
+        filter_impr_dic=sc.broadcast(filter_impr_dic)
+        rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+        rdd.saveAsTextFile(out_path)
+        # df=hiveContext.createDataFrame(rdd,schema1)
+        # hiveContext.registerDataFrameAsTable(df,'temp_zlj')
+        # hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v5_1')
+        # hiveContext.sql('create table t_zlj_feed2015_parse_v5_1 as select * from temp_zlj')
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
 # path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
 # path='/user/zlj/data/feed_2015_alicut_parsev4/*'
-path='/user/zlj/data/feed_2015_alicut_parsev5_re'
+# path='/user/zlj/nlp/t_zlj_feed_parse_data_0517_cut_parse/part-00000_parse_part-00000'
 # path='/user/zlj/data/feed_2015_alicut_parsev5_re/part-00000'
 # path='/user/zlj/data/1'
 
-filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
+
 
 # test
 
 # rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
 
-filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
 
 
-filter_impr_dic=sc.broadcast(filter_impr_dic)
 
 
+
+
+
+# path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
+# path='/user/zlj/data/feed_2015_alicut_parsev3/*'
+
+# path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
+# path='/user/zlj/data/feed_2015_alicut_parsev4/*'
+
+# path='/user/zlj/data/feed_2015_alicut_parsev5_re/part-00000'
+# path='/user/zlj/data/1'
 # rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
 # rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
-
-hiveContext.sql('use wlbase_dev')
-
-
-
-rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
-df=hiveContext.createDataFrame(rdd,schema1)
-hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v5_1')
-hiveContext.sql('create table t_zlj_feed2015_parse_v5_1 as select * from temp_zlj')
-
-
-

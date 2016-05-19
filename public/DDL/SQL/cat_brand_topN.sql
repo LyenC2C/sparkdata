@@ -26,3 +26,16 @@ group by  brand_id,brand_name,root_cat_id,root_cat_name
 where rn <10
 
 ;
+
+
+SELECT * from
+(
+SELECT
+cate_name,  tag1  ,count(1) as num ,  ROW_NUMBER() OVER (PARTITION BY cate_name ORDER BY num  DESC) AS rn
+FROM
+t_tc_korea_10allusertag
+GROUP  cate_name ,tag1
+
+)t where rn <50
+
+
