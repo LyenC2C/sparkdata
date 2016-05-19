@@ -405,11 +405,11 @@ if __name__ == "__main__":
         print 'args:  in_path  out_path \n'
     else:
         path=sys.argv[1]
-        out_path=sys.arg[2]
+        out_path=sys.argv[2]
         filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
         filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
         filter_impr_dic=sc.broadcast(filter_impr_dic)
-        rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+        rdd=sc.textFile(path).repartition(100).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
         rdd.saveAsTextFile(out_path)
         # df=hiveContext.createDataFrame(rdd,schema1)
         # hiveContext.registerDataFrameAsTable(df,'temp_zlj')
