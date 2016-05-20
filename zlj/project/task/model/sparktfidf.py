@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'zlj'
 import sys
 
@@ -20,33 +20,33 @@ from pyspark.mllib.feature import HashingTF
 from pyspark.mllib.feature import IDF
 from pyspark.mllib.feature import IDFModel
 
-
-
 sc = SparkContext()
 
+sc.textFile('/user/zlj/nlp/enterprise_cut/').map(lambda x: x.split()).flatMap(lambda x: x).map(lambda x: (x, 1)) \
+    .reduceByKey(lambda a, b: a + b).map(lambda (x, y): x + '\t' + str(y)).saveAsTextFile(
+    '/user/zlj/nlp/enterprise_cut_count')
 
-path='/hive/warehouse/wlbase_dev.db/t_zlj_base_ec_item_title_cut/ds=20160216/part-00000'
+path = '/hive/warehouse/wlbase_dev.db/t_zlj_base_ec_item_title_cut/ds=20160216/part-00000'
 # Load documents (one per line).
 #  = sc.textFile(path).map(lambda line: line.split('\001')[-1].split('\t'))
 
-doc=sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x:(x[0],x[1].split()+[x[0]+'_doc']))
+doc = sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x: (x[0], x[1].split() + [x[0] + '_doc']))
 
-hashingTF = HashingTF(numFeatures=1<<22)
+hashingTF = HashingTF(numFeatures=1 << 22)
 # [].extend([x[0] for i in xrange(7)])
 
 hashingTF.indexOf()
-ts= doc.mapValues(hashingTF.transform)
-tf = hashingTF.transform(doc.map(lambda x:x[-1]).repartition(10))
+ts = doc.mapValues(hashingTF.transform)
+tf = hashingTF.transform(doc.map(lambda x: x[-1]).repartition(10))
 
-index_doc=doc.map(lambda x:(x[0],hashingTF.indexOf(x[0]),[hashingTF.indexOf(i) for i in x[1]]))
+index_doc = doc.map(lambda x: (x[0], hashingTF.indexOf(x[0]), [hashingTF.indexOf(i) for i in x[1]]))
 
-
-idf1=IDFModel()
+idf1 = IDFModel()
 tf.cache()
-idf = IDF(minDocFreq=1).fit(ts.map(lambda x:x[-1]).repartition(10))
+idf = IDF(minDocFreq=1).fit(ts.map(lambda x: x[-1]).repartition(10))
 
-ll=ts.mapValues(idf.transform)
+ll = ts.mapValues(idf.transform)
 
 # tsidf=ts.map(lambda x:(x[0],idf.transform(x[1])))
 
-tfidf = idf.transform(ts.map(lambda x:x[-1]).repartition(10))
+tfidf = idf.transform(ts.map(lambda x: x[-1]).repartition(10))

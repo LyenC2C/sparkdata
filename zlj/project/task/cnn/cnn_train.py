@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'zlj'
 import sys
 
@@ -18,14 +18,13 @@ from keras.layers.normalization import BatchNormalization
 
 
 
-
-
 def word_simialr_score(s1, s2):
     score = 0
     for j in range(len(s1)):
         if s1[j] == s2[j]:
             score += 1
     return score
+
 
 def words_simmilar_score(word, words):
     word_score = {}
@@ -37,6 +36,7 @@ def words_simmilar_score(word, words):
             word_score[ws].append(Word)
     return word_score
 
+
 np.random.seed(123)
 model_path = './model/type4_model.d5'
 
@@ -46,9 +46,9 @@ cPickle.dump()
 
 chars.append('A')
 
-char_map={}
-for index,w in enumerate(chars):
-    char_map[w]=index
+char_map = {}
+for index, w in enumerate(chars):
+    char_map[w] = index
 
 f = h5py.File('./model/type4_train_mean_std.h5', 'r')
 x_mean = f['x_mean'][:]
@@ -70,32 +70,32 @@ model.add(Dense(512, 1250, activation='softmax'))
 model.load_weights(model_path)
 model.compile(loss='categorical_crossentropy', optimizer='adagrad')
 
-
 batch_size = 128
 nb_classes = 10
 nb_epoch = 12
 
+import os
 
-import  os
 
-def load_data(path,limit ):
+def load_data(path, limit):
     imgs = os.listdir(path)
     num = len(imgs)
-    data = np.empty((num,3,32,32),dtype="float32")
-    label = np.empty((num,),dtype="uint8")
+    data = np.empty((num, 3, 32, 32), dtype="float32")
+    label = np.empty((num,), dtype="uint8")
     for i in range(num):
-        img = 255-cv2.imread(path+imgs[i])
-        r_im=cv2.resize(img, (32, 32)).transpose()
-        arr = np.asarray(r_im,dtype="float32")
-        data[i,:] = arr
+        img = 255 - cv2.imread(path + imgs[i])
+        r_im = cv2.resize(img, (32, 32)).transpose()
+        arr = np.asarray(r_im, dtype="float32")
+        data[i, :] = arr
         label[i] = int(imgs[i].split('-')[0])
-    return (data,np.array(label))
+    return (data, np.array(label))
 
 
-(X_train, y_train)=load_data('D:\workdata\code\o')
-(X_test, y_test)=load_data('test')
+(X_train, y_train) = load_data('D:\workdata\code\o')
+(X_test, y_test) = load_data('test')
 
 from keras.utils import np_utils
+
 Y_train = np_utils.to_categorical(y_train, nb_classes)
 Y_test = np_utils.to_categorical(y_test, nb_classes)
 
@@ -110,7 +110,8 @@ nb_pool = 2
 nb_conv = 3
 
 from keras.datasets import mnist
-(X_train, y_train), (X_test, y_test),(m,n) = mnist.load_data()
+
+(X_train, y_train), (X_test, y_test), (m, n) = mnist.load_data()
 #
 # X_train = X_train.reshape(X_train.shape[0], 1, img_rows, img_cols)
 # X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
@@ -125,8 +126,6 @@ from keras.datasets import mnist
 # # convert class vectors to binary class matrices
 # Y_train = np_utils.to_categorical(y_train, nb_classes)
 Y_test = np_utils.to_categorical(y_test, nb_classes)
-
-
 
 model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
           verbose=1, validation_data=(X_test, Y_test))
