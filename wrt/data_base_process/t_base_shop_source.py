@@ -10,8 +10,8 @@ def f(line):
     ss = line.strip().split("\t")
     shop_id = ss[0]
     url = shop_id.split('.')
-    if len(url) < 3:
-        return None
+    # if len(url) < 3:
+    #     return None
     if url[1] == "taobao":
         source = "tb"
     elif url[1] == "tmall":
@@ -29,3 +29,5 @@ def f(line):
 rdd = sc.textFile("/commit/taobao/shop/shopinfo/shop.domain.20160421")
 rdd1 = rdd.map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd1.saveAsTextFile('/user/wrt/temp/shop_source')
+
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shop_source.py
