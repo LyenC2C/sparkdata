@@ -35,3 +35,5 @@ def f(line):
 
 rdd = sc.textFile("/commit/project/ynfqqwb").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/temp/ynfqqwb_tags")
+
+#spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 qqweibo_tags.py
