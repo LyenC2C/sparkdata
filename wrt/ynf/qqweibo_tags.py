@@ -14,12 +14,13 @@ def valid_jsontxt(content):
 
 def f(line):
     if line == "" or line == None:
-        return None
+        return [None]
     ob = json.loads(valid_jsontxt(line))
     info = ob.get("info","-")
-    if info == "-": return None
+    if info == "-": return [None]
     id = valid_jsontxt(info.get("id","-"))
     tags = info.get("tags",[])
+    if tags == []: return [None]
     tags_r = ""
     result = []
     for tag in tags:
