@@ -49,7 +49,7 @@ tf=docs.map(lambda x:count([word_index_bc[i] for i in x]))
 tf.cache()
 idf = IDF(minDocFreq=1).fit(tf)
 tfidf = idf.transform(tf)
-tfidf.map(lambda x:'\t'.join(['_'.join([index_word_bc[i],str(w)]) for  i ,w in enumerate(x.toArray()) if w>0])).\
+tfidf.repartition(10).map(lambda x:'\t'.join(['_'.join([index_word_bc[i],str(w)]) for  i ,w in zip(x.indices,x.values)])).\
     saveAsTextFile('/commit/project/wxtitle/wxtitle_cut_tfidf')
 
 
