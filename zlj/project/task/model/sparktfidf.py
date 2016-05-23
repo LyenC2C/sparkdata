@@ -22,7 +22,7 @@ sc = SparkContext(appName="cmt")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-path = '/commit/project/wxtitle/wxtitle_cut/part-00000'
+path = '/commit/project/wxtitle/wxtitle_cut/'
 
 # doc = sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x: (x[0], x[1].split() + [x[0] + '_doc']))
 
