@@ -50,7 +50,7 @@ tf.cache()
 idf = IDF(minDocFreq=1).fit(tf)
 tfidf = idf.transform(tf)
 tfidf.repartition(10).map(lambda x:'\t'.join(['_'.join([index_word_bc[i],str(w)]) for  i ,w in zip(x.indices,x.values)])).\
-    saveAsTextFile('/commit/project/wxtitle/wxtitle_cut_tfidf')
+    filter(lambda x:len(x)>2).saveAsTextFile('/commit/project/wxtitle/wxtitle_cut_tfidf')
 
 
 
