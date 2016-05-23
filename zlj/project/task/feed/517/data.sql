@@ -33,3 +33,7 @@ where  root_cat_id in (
 t_base_ec_item_feed_dev
 
  )t2 on t1.feed_id =t2.feed_id  ;
+
+
+
+ 

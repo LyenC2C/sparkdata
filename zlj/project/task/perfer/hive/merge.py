@@ -279,7 +279,7 @@ def user_profile():
     from
     t_base_user_info_s_tbuserinfo
     '''
-    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile',x.user_profile)))
+    rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile',x.user_profile))).filter(lambda x:len(x[1][1])>2)
     # rdd.map(lambda x:x[1]).saveAsTextFile('/user/zlj/tmp/tes')
     return rdd
 

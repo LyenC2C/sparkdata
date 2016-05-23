@@ -428,17 +428,5 @@ if __name__ == "__main__":
 
 
 
-# test
-
-# rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
-
-# path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
-# path='/user/zlj/data/feed_2015_alicut_parsev3/*'
-
-# path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
-# path='/user/zlj/data/feed_2015_alicut_parsev4/*'
-
-# path='/user/zlj/data/feed_2015_alicut_parsev5_re/part-00000'
-# path='/user/zlj/data/1'
-# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
-# rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
+sc.textFile('/commit/project/wxtitle_cut/').map(lambda x:x.split()).flatMap(lambda x:x).map(lambda x:(x,1))\
+    .reduceByKey(lambda a,b:a+b).map(lambda (x,y):'\t'.join([x,str(y)])).saveAsTextFile('/commit/project/wxtitle_cut_count')
