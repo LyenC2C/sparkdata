@@ -11,23 +11,22 @@ from pyspark.sql.types import *
 import time
 import rapidjson as json
 
-sc = SparkContext(appName="cmt")
-sqlContext = SQLContext(sc)
-hiveContext = HiveContext(sc)
+
 
 from pyspark import SparkContext
 from pyspark.mllib.feature import IDF
 from  pyspark.mllib.linalg import *
 from collections import Counter
 
+sc = SparkContext(appName="cmt")
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
 
-
-sc = SparkContext()
 path = '/commit/project/wxtitle/wxtitle_cut/part-00000'
 
-doc = sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x: (x[0], x[1].split() + [x[0] + '_doc']))
+# doc = sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x: (x[0], x[1].split() + [x[0] + '_doc']))
 
-docs = sc.textFile(path).map(lambda x:x.split())
+docs = sc.textFile(path).map(lambda x:x.split()).repartition(10)
 
 words=docs.flatMap(lambda x:x).distinct().collect()
 
