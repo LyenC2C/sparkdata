@@ -44,7 +44,8 @@ size=len(words_bc)
 def count(v):
     id=size
     dict= sorted(Counter(v).iteritems(), key=lambda d:d[0])
-    return Vectors.sparse(id,[i[0] for i in dict ],[i[1] for i in dict ])
+    s=sum([i[1] for i in dict ])
+    return Vectors.sparse(id,[i[0] for i in dict ],[i[1]/s for i in dict ])
 tf=docs.map(lambda x:count([word_index_bc[i] for i in x]))
 tf.cache()
 idf = IDF(minDocFreq=1).fit(tf)
