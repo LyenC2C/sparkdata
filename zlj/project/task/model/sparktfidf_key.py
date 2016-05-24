@@ -22,11 +22,11 @@ sc = SparkContext(appName="cmt")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-path = '/user/zlj/nlp/t_zlj_item_title/part-00000'
+path = '/commit/project/wxtitle/wxtitle_cut/'
 
 # doc = sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x: (x[0], x[1].split() + [x[0] + '_doc']))
 
-docs = sc.textFile(path).map(lambda x:x.split('\001')).map(lambda x:[x[0]+"_doc"].extend(x[1].split())).repartition(100)
+docs = sc.textFile(path).map(lambda x:x.split()).repartition(100)
 
 words=docs.flatMap(lambda x:x).distinct().collect()
 
@@ -44,6 +44,7 @@ size=len(words_bc)
 def count(v):
     id=size
     dict= sorted(Counter(v).iteritems(), key=lambda d:d[0])
+    # s=sum([i[1] for i in dict ])
     return Vectors.sparse(id,[i[0] for i in dict ],[i[1] for i in dict ])
 tf=docs.map(lambda x:count([word_index_bc[i] for i in x]))
 tf.cache()
