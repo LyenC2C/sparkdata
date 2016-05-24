@@ -26,7 +26,7 @@ path = '/user/zlj/nlp/t_zlj_item_title/part-00000'
 
 # doc = sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x: (x[0], x[1].split() + [x[0] + '_doc']))
 
-docs = sc.textFile(path).map(lambda x:x.split('\001')).map(lambda x:[x[0]+"_doc"].extend(x[1].split())).repartition(100)
+docs = sc.textFile(path).map(lambda x:x.split('\001')).map(lambda x:x[1].split()+[x[0]+"_doc"]).repartition(100)
 
 words=docs.flatMap(lambda x:x).distinct().collect()
 
