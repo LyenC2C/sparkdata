@@ -22,7 +22,7 @@ sc = SparkContext(appName="cmt")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-path = '/user/zlj/nlp/t_zlj_item_title/part-00000'
+path = '/user/zlj/nlp/t_zlj_item_title/'
 
 # doc = sc.textFile(path).map(lambda line: line.split('\001')).map(lambda x: (x[0], x[1].split() + [x[0] + '_doc']))
 
@@ -50,7 +50,7 @@ tf.cache()
 idf = IDF(minDocFreq=1).fit(tf)
 tfidf = idf.transform(tf)
 tfidf.repartition(20).map(lambda x:'\t'.join(['_'.join([index_word_bc[i],str(w)]) for  i ,w in zip(x.indices,x.values)])).\
-    filter(lambda x:len(x)>2).saveAsTextFile('/commit/project/wxtitle/wxtitle_cut_tfidf')
+    filter(lambda x:len(x)>2).saveAsTextFile('/user/zlj/nlp/t_zlj_item_title_tfidf')
 
 
 
