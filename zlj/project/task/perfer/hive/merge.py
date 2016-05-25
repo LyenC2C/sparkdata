@@ -37,6 +37,14 @@ dim_limit=8
 brand_limit=8
 shop_limit=5
 brandtag_limit=8
+
+
+# def normal():
+#     s=''.split('|')
+#     v=sum([float(i.split('_')[-1])  for i in s])
+#     rs=[]
+#     for v in s:
+
 def dim():
     sql_dim='''
     SELECT
@@ -275,7 +283,8 @@ def cat_tags():
 def user_profile():
     sql_tag='''
     select
-    tb_id ,concat_ws('\002',cast(tgender as string),cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) as user_profile
+    tb_id ,concat_ws('\002',
+    case when tgender is not null then cast(tgender as string) else '_' end  ,cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) as user_profile
     from
     t_base_user_info_s_tbuserinfo
     '''

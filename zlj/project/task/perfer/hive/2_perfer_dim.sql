@@ -24,5 +24,15 @@ CREATE TABLE t_zlj_ec_perfer_dim
       GROUP BY user_id, root_cat_id,root_cat_name
       ) t
 
+      join
+      (
+      SELECT
+      user_id, root_cat_id,root_cat_name, round(sum(score),2) AS f
+      FROM
+      t_zlj_ec_userbuy
+
+      GROUP BY user_id
+      )
+
       ;
 EOF
