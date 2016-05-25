@@ -60,10 +60,10 @@ tfidf=docs.map(lambda x:(x[0],[ word_index_bc[w] for w in x[1]]))\
     .map(lambda x:(x[0],[(k,v*idf_bc.get(k,0.1)) for k,v in Counter(x[1]).iteritems()]))
 
 # sc.parallelize(tf.take(10)).map(lambda x:idf.transform(x))
-tfidf.map(lambda x:x[0]+':'+' '.join([ index_word_bc.get(i,i)+'_'+str(w) for  i ,w in x[1]])).\
+tfidf.map(lambda x:x[0][0]+':'+' '.join([ index_word_bc.get(i,i)+'_'+str(w) for  i ,w in x[1]])).\
     filter(lambda x:len(x)>2).saveAsTextFile('/user/zlj/nlp/t_zlj_item_title_tfidf')
 #
 
-
+tfidf.map(lambda x:' '.join([ index_word_bc.get(i,i)+'_'+str(w) for  i ,w in x[1]]))
 
 
