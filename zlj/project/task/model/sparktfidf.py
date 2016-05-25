@@ -64,6 +64,5 @@ tfidf.map(lambda x:x[0][0]+':'+' '.join([ index_word_bc.get(i,i)+'_'+str(w) for 
     filter(lambda x:len(x)>2).saveAsTextFile('/user/zlj/nlp/t_zlj_item_title_tfidf')
 #
 
-tfidf.map(lambda x:' '.join([ index_word_bc.get(i,i)+'_'+str(w) for  i ,w in x[1]]))
 
 
