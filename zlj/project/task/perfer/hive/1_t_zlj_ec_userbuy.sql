@@ -42,7 +42,7 @@ FROM t_zlj_ec_userbuy_info t1 JOIN
   (
     SELECT
       user_id,
-      (sum(score)-count(1)) AS sum_score
+      sum(score) AS sum_score
     FROM t_zlj_ec_userbuy_info
     GROUP BY user_id
 
