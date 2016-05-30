@@ -1,6 +1,7 @@
 #coding=utf-8
 __author__ = 'wrt'
 from pyspark import SparkContext
+import sys
 
 sc = SparkContext(appName="city_province")
 
@@ -27,10 +28,10 @@ def map_line(line,p_dict):
 # def quchong(line):
 
 
-
+s = "/commit/taobao/userinfo/tbuid." + sys.argv[1]
 s_p = '/user/wrt/city_pro'
 p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile(sys.argv[1]).map(lambda x:map_line(x)).filter(lambda x:x!=None)
+rdd = sc.textFile(s).map(lambda x:map_line(x,p_dict)).filter(lambda x:x!=None)
 # rdd_c = sc.textFile("")
 rdd.saveAsTextFile("/user/wrt/temp/tb_userinfo")
 
