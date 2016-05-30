@@ -42,7 +42,7 @@ s_c = "/hive/warehouse/wlbase_dev.db/t_base_ec_tb_userinfo/ds=20160530"
 s = "/commit/taobao/userinfo/tbuid." + sys.argv[1]
 s_p = '/user/wrt/city_pro'
 p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile(s).map(lambda x:map_line(x,p_dict)).filter(lambda x:x!=None).map(lambda x:x[0],x)
+rdd = sc.textFile(s).map(lambda x:map_line(x,p_dict)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd_c = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_tb_userinfo/ds=20160530")\
     .map(lambda x:(x.splite("\001")[0],x.split("\001")))
 rdd_r = rdd.union(rdd_c).groupByKey().mapValues(list).map(lambda (x, y):'\001'.join(y[0])).filter(lambda x:x!=None)
