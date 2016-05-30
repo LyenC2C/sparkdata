@@ -14,7 +14,7 @@ def valid_jsontxt(content):
 
 def get_p_dict(line):
     ss = line.strip().split("\t")
-    return (ss[0],ss[1])
+    return (valid_jsontxt(ss[0]),valid_jsontxt(ss[1]))
 
 def map_line(line,p_dict):
     try:
@@ -26,8 +26,8 @@ def map_line(line,p_dict):
         verify = j['verify']
         regtime = j['regtime']
         nick = j['nick']
-        location = j['location']
-        location = p_dict.get(valid_jsontxt(location),"") + "\t" + location
+        city = j['location']
+        location = p_dict.get(valid_jsontxt(city),"") + "\t" + city
         return '\001'.join([uid,alipay,buycnt,verify,regtime,nick,location])
     except:
         pass
@@ -35,12 +35,15 @@ def map_line(line,p_dict):
 # def quchong(line):
 
 
+
 s_c = ""
 s = "/commit/taobao/userinfo/tbuid." + sys.argv[1]
 s_p = '/user/wrt/city_pro'
 p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:map_line(x,p_dict)).filter(lambda x:x!=None)
-# rdd_c = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_tb_userinfo/ds=20160530").map(lambda x:x.splite("\001")[0])
+# rdd_c = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_tb_userinfo/ds=20160530")\
+# .map(lambda x:(x.splite("\001")[0],x.split("\001")[1:])
+rdd_r = rdd.union(rdd_c).groupByKey().mapValues(list).map(lambda (x, y): quchong_2(x, y)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/temp/tb_userinfo")
 
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 tb_userinfo.py 20160423
