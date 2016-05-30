@@ -23,14 +23,15 @@
 create TABLE  t_base_user_info_s_tbuserinfo_t as
 SELECT
 tb_id,
-case when LENGTH(tgender)<1 then "" else tgender end as tgender ,
-case when tage is null  then -1 else tage end as tage ,
-case when LENGTH(tname)<1 then "" else tname end as tname ,
-case when LENGTH(alipay)<1 then "" else alipay end as alipay ,
-case when LENGTH(buycnt)<1 then "" else buycnt end as buycnt ,
-case when LENGTH(verify)<1 then "" else verify end as verify ,
-case when LENGTH(regtime)<1 then "" else regtime end as regtime ,
-case when LENGTH(nick)<1 then "" else nick end as nick
+case when LENGTH(max(tgender))<1 then "" else max(tgender) end as tgender ,
+case when max(tage) is null  then -1 else max(tage) end as tage ,
+case when LENGTH(max(tname))<1 then "" else max(tname) end as tname ,
+case when LENGTH(max(tloc))<1 then "" else max(tloc) end as tloc ,
+case when LENGTH(max(alipay))<1 then "" else max(alipay) end as alipay ,
+case when LENGTH(max(buycnt))<1 then "" else max(buycnt) end as buycnt ,
+case when LENGTH(max(verify))<1 then "" else max(verify) end as verify ,
+case when LENGTH(max(regtime))<1 then "" else max(regtime) end as regtime ,
+case when LENGTH(max(nick))<1 then "" else max(nick) end as nick
 FROM
 (
 SELECT
@@ -42,10 +43,15 @@ case when verify is not null then verify else "" end as verify ,
 case when regtime is not null then  regtime else "" end as regtime ,
 case when nick is not null then nick else "" end as nick
 from t_base_user_info_s t1  left join  t_base_ec_tb_userinfo  t2
-on t1.ds=20160310 and t1.tb_id=t2.uid
+on t1.ds=20160310 and t1.tb_id=t2.uid and t2.ds=20160503
 
- )t ;
+ )t group by  tb_id;
 
 
 -- select concat_ws('&&',cast(tgender as string),cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) from t_base_user_info_s_tbuserinfo limit 10
 -- select rt,COUNT(1) from (SELECT split(regtime,'.')[0] as rt from t_base_ec_tb_userinfo )t group by rt
+
+select COUNT(1) from t_base_user_info_s where ds=20160310
+
+391448818
+
