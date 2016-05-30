@@ -5,6 +5,13 @@ import sys
 
 sc = SparkContext(appName="city_province")
 
+def valid_jsontxt(content):
+    res = content
+    if type(content) == type(u""):
+        res = content.encode("utf-8")
+    return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").\
+        replace("\001", "").replace("\\r", "").replace("\r", "")
+
 def get_p_dict(line):
     ss = line.strip().split("\t")
     return (ss[0],ss[1])
@@ -28,6 +35,7 @@ def map_line(line,p_dict):
 # def quchong(line):
 
 
+s_c = ""
 s = "/commit/taobao/userinfo/tbuid." + sys.argv[1]
 s_p = '/user/wrt/city_pro'
 p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
@@ -35,6 +43,6 @@ rdd = sc.textFile(s).map(lambda x:map_line(x,p_dict)).filter(lambda x:x!=None)
 # rdd_c = sc.textFile("")
 rdd.saveAsTextFile("/user/wrt/temp/tb_userinfo")
 
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 tb_userinfo.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 tb_userinfo.py 20160423
 # LOAD DATA  INPATH '/user/wrt/temp/tb_userinfo' OVERWRITE INTO TABLE t_base_ec_tb_userinfo PARTITION (ds='20160530');
 #始终使用20160530这个分区,其他分区无效
