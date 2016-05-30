@@ -29,14 +29,11 @@ FROM
 
 JOIN
   (
-
-  SELECT user_id, shop_id, round(sum(score),2) AS f
+  SELECT user_id, shop_id, round(sum(score)/max(sum_score),2) AS f
   FROM
-
   t_zlj_ec_userbuy
   GROUP BY user_id, shop_id
   )t1 ON t1.shop_id =t2.shop_id
-
 ;
 
 EOF

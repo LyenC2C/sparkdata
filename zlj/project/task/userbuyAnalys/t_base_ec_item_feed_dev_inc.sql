@@ -41,8 +41,8 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
             price,
             shop_id,
             location
-          FROM t_base_ec_item_dev
-          WHERE ds = 20160333
+          FROM t_base_ec_item_dev_new
+          WHERE ds = 20160513
           ) t1
       RIGHT  JOIN
       (

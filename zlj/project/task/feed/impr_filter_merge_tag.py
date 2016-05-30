@@ -45,6 +45,7 @@ impr_c  修改后的属性情感词 商品:柔软:正负面:否定词
 schema1 = StructType([
     StructField("item_id", StringType(), True),
     StructField("user_id", StringType(), True),
+    StructField("feed_id", StringType(), True),
     StructField("impr", StringType(), True),
     StructField("neg_pos", StringType(), True),
     StructField("impr_c", StringType(), True)
@@ -236,10 +237,10 @@ neg_set    =set([i.strip().decode('utf-8') for  i in neg_line.split()])
 
 
 emo_set=set()
-emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
-neg_set_bc=sc.broadcast(emo_rdd)
-emo_set=set(neg_set_bc.value)
-emo_set=emo_set-neg_set-degree_set
+# emo_rdd=sc.textFile('/user/zlj/data/emo_all').collect()
+# neg_set_bc=sc.broadcast(emo_rdd)
+# emo_set=set(neg_set_bc.value)
+emo_set=neg_emo_set|pos_emo_set
 
 people = ["朋友","宝宝","妈","爸","爷","老爹","我爹","奶奶","我奶","舅","外甥","叔","父","母亲","婶","姨","儿子","女儿","女婿","公公","婆","姥","哥","弟","姐","妹","老公","丈夫","妻子","媳妇","朋友","孙子"]
 
@@ -324,10 +325,10 @@ def getfield(x,dic):
     lv=x.split()
     rs=[]
     ls=[]
-    if len(lv)!=3: return None
+    if len(lv)!=4: return None
     else:
         try:
-            item_id,user_id,impr=lv
+            item_id,user_id,feed_id,impr=lv
             neg=0 #默认中评
             for i in impr.split('|'):
                 ts=i.split(',')
@@ -365,7 +366,7 @@ def getfield(x,dic):
             else: neg=-1
 
             if(len(ls)<1):ls.append(i)
-            return [item_id,user_id,'|'.join(ls),neg,'|'.join(rs)]
+            return [item_id,user_id,feed_id,'|'.join(ls),neg,'|'.join(rs)]
         except:return None
     # return feed+'\t'+'|'.join(ls)
 
@@ -397,39 +398,35 @@ def pos_neg(words):
     return flag,'_'.join(str(i) for i in [neg*degree,neg_emo,pos_emo]),neg_word
 
 
+
+
+if __name__ == "__main__":
+    hiveContext.sql('use wlbase_dev')
+    if sys.argv[1] == '-h':
+        print 'args:  in_path  out_path \n'
+    else:
+        path=sys.argv[1]
+        out_path=sys.argv[2]
+        filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
+        filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
+        filter_impr_dic=sc.broadcast(filter_impr_dic)
+        # rdd=sc.textFile(path).repartition(100).filter(lambda x:u'默认' not in x and u'好评' not in x).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+        rdd=sc.textFile(path).repartition(100).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
+        # rdd.saveAsTextFile(out_path)
+        df=hiveContext.createDataFrame(rdd,schema1)
+        hiveContext.registerDataFrameAsTable(df,'temp_zlj')
+        hiveContext.sql('drop table  if EXISTS t_zlj_feed2016_parse_v1')
+        hiveContext.sql('create table t_zlj_feed2016_parse_v1 as select * from temp_zlj')
 # path='/user/zlj/data/feed_2015_alicut_parse/parse_split_clean_cut_part-00000_0002'
 # path='/user/zlj/data/feed_2015_alicut_parsev3/*'
 
 # path='/user/zlj/data/feed_2015_alicut_parsev4/parse_cut_part-00000'
 # path='/user/zlj/data/feed_2015_alicut_parsev4/*'
-path='/user/zlj/data/feed_2015_alicut_parsev5_re'
+# path='/user/zlj/nlp/t_zlj_feed_parse_data_0517_cut_parse/part-00000_parse_part-00000'
 # path='/user/zlj/data/feed_2015_alicut_parsev5_re/part-00000'
 # path='/user/zlj/data/1'
 
-filter_path='/user/zlj/data/feed_2015_alicut_parse_rank_1/part-00000'
-
-# test
-
-# rdd=sc.textFile(path).map(lambda x:x.split()).filter(lambda x:len(x)!=5).filter(lambda x:x[1]=='257393629511')
-
-filter_impr_dic=sc.textFile(filter_path).map(lambda x:x.split()).filter(lambda x: int(x[0])>17).map(lambda x:(x[-1],1)).collectAsMap()
 
 
-filter_impr_dic=sc.broadcast(filter_impr_dic)
-
-
-# rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None).map(lambda x: '\t'.join([ f_coding(i) for i in x]))
-# rdd.saveAsTextFile('/user/zlj/data/feed_2015_alicut_parse_emo_test')
-
-hiveContext.sql('use wlbase_dev')
-
-
-
-rdd=sc.textFile(path).map(lambda x:getfield(x,filter_impr_dic.value)).filter(lambda x:x is not None)
-df=hiveContext.createDataFrame(rdd,schema1)
-hiveContext.registerDataFrameAsTable(df,'temp_zlj')
-hiveContext.sql('drop table  if EXISTS t_zlj_feed2015_parse_v5_1')
-hiveContext.sql('create table t_zlj_feed2015_parse_v5_1 as select * from temp_zlj')
-
-
-
+sc.textFile('/commit/project/wxtitle_cut/').map(lambda x:x.split()).flatMap(lambda x:x).map(lambda x:(x,1))\
+    .reduceByKey(lambda a,b:a+b).map(lambda (x,y):'\t'.join([x,str(y)])).saveAsTextFile('/commit/project/wxtitle_cut_count')
