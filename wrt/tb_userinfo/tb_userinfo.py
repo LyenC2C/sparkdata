@@ -27,7 +27,7 @@ def map_line(line,p_dict):
         regtime = j['regtime']
         nick = j['nick']
         location = j['location']
-        location = p_dict.get(location,"") + "\t" + location
+        location = p_dict.get(valid_jsontxt(location),"") + "\t" + location
         return '\001'.join([uid,alipay,buycnt,verify,regtime,nick,location])
     except:
         pass
