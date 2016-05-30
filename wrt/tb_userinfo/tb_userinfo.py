@@ -1,7 +1,7 @@
 #coding=utf-8
 __author__ = 'wrt'
 from pyspark import SparkContext
-import sys
+import sys,rapidjson as json
 
 sc = SparkContext(appName="city_province")
 
@@ -40,7 +40,7 @@ s = "/commit/taobao/userinfo/tbuid." + sys.argv[1]
 s_p = '/user/wrt/city_pro'
 p_dict = sc.broadcast(sc.textFile(s_p).map(lambda x: get_p_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:map_line(x,p_dict)).filter(lambda x:x!=None)
-rdd_c = sc.textFile("")
+rdd_c = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_tb_userinfo/ds=20160530").map(lambda x:x.splite("\001")[0])
 rdd.saveAsTextFile("/user/wrt/temp/tb_userinfo")
 
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 tb_userinfo.py 20160423
