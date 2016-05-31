@@ -20,7 +20,8 @@ hc.sql('use wlservice ')
 
 def f(x):
     ls=[]
-    for k,v in x.items():ls.append((k,v))
+    for k,v in x.items():
+        ls.append((k,v))
     return ls
 
 

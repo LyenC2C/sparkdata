@@ -1,126 +1,106 @@
 
 注册时间统计
-1999    544
-2000    3039
-2001    6356
-2002    11113
-2003    86083
-2004    1050620
-2005    2585137
-2006    4789702
-2007    6071697
-2008    10252632
-2009    13515717
-2010    19084003
-2011    26518059
-2012    37101293
-2013    45785487
-2014    50789132
-2015    46739253
-2016    1911634
 
-
-select tm,count(1) as t  from (select split(regtime,'\\.')[0] as tm  from wlbase_dev.t_base_ec_tb_userinfo ) t group by tm ;
-
-
-0       73221090
-1       193080411
-
-select alipay ,count(1) from t_base_ec_tb_userinfo group by alipay;
+1999    788
+2000    4427
+2001    9240
+2002    16263
+2003    155749
+2004    1903755
+2005    4658765
+2006    8775658
+2007    11173746
+2008    19022550
+2009    24986334
+2010    36135384
+2011    49749215
+2012    52924072
+2013    82925560
+2014    77751008
+2015    69651814
+select tm,count(1) as t  from (select split(regtime,'\\.')[0] as tm  from wlbase_dev.t_base_ec_tb_userinfo where ds=20160530 ) t group by tm ;
 
 
 
-        235701730
-内蒙古  314996
-贵州    273125
-广东    3889066
-西藏    27248
-台湾    29470
-江西    699406
-浙江    2867667
-陕西    650537
-海南    146039
-上海    1908984
-安徽    905974
-湖南    934243
-江苏    2845395
-福建    1323332
-河南    1131904
-新疆    203799
-甘肃    260385
-辽宁    944247
-宁夏    128359
-山西    585204
-黑龙江  599729
-澳门    920
-香港    8540
-广西    706775
-重庆    617672
-青海    39967
-四川    1184089
-天津    514648
-山东    1810005
-湖北    1033405
-云南    364541
-吉林    404272
-北京    2080815
-河北    1165013
-select loc,count(1) as t  from (select split(location,'\\s+')[0] as loc  from wlbase_dev.t_base_ec_tb_userinfo ) t group by loc ;
+0       126294034
+1       313550299
+
+select alipay ,count(1) from t_base_ec_tb_userinfo  where ds=20160530 group by alipay;
 
 
 
-VIP等级0        124246189
-VIP等级1        46219034
-VIP等级2        56005734
-VIP等级3        24985600
-VIP等级4        12057040
-VIP等级5        2642319
-VIP等级6        145585
+        384301033
+台湾    50365
+安徽    1633274
+广西    1277271
+吉林    729035
+云南    664170
+海南    265526
+澳门    1706
+香港    15685
+福建    2396378
+宁夏    231354
+北京    3781184
+浙江    5252489
+广东    7001249
+贵州    494924
+湖北    1879097
+陕西    1179811
+江西    1261029
+江苏    5208176
+新疆    371446
+山西    1051518
+河北    2086289
+辽宁    1723157
+青海    72539
+天津    940920
+重庆    1122886
+湖南    1689462
+黑龙江  1087111
+四川    2149341
+甘肃    470080
+河南    2025348
+上海    3536991
+西藏    48943
+内蒙古  567621
+山东    3276921
+select loc,count(1) as t  from (select split(location,'\\s+')[0] as loc  from wlbase_dev.t_base_ec_tb_userinfo where ds=20160530 ) t group by loc ;
 
-select verify,count(1) as t  from  wlbase_dev.t_base_ec_tb_userinfo   group by verify ;
+
+
+VIP等级0        187221425
+VIP等级1        77572911
+VIP等级2        100048017
+VIP等级3        46609978
+VIP等级4        23042921
+VIP等级5        5074175
+VIP等级6        274901
+
+select verify,count(1) as t  from  wlbase_dev.t_base_ec_tb_userinfo  where ds=20160530   group by verify ;
 
 
 
-NULL	613746
-0	2444003
-1	5240475
-2	11825146
-3	24029020
-4	41231387
-5	52281070
-6	50175457
-7	38397098
-8	24722696
-9	11415863
-10	3338871
-11	529331
-12	49002
-13	6357
-14	1416
-15	437
-16	103
-17	16
-18	7
-select loc,count(1) as t  from (select  CAST (log2(buycnt) as int) as loc  from wlbase_dev.t_base_ec_tb_userinfo ) t group by loc ;
+
+NULL    1145999
+0       2164666
+1       5006111
+2       13015271
+3       31619207
+4       63815988
+5       88878206
+6       88695176
+7       69684736
+8       46287897
+9       21920048
+10      6473953
+11      1026695
+12      94700
+13      12033
+14      2657
+15      777
+16      176
+17      28
+18      14
+select loc,count(1) as t  from (select  CAST (log2(buycnt) as int) as loc  from wlbase_dev.t_base_ec_tb_userinfo where ds=20160530 ) t group by loc ;
 
 
-CREATE TABLE wlservice.t_lzh_wine_yangjiusalemon
-  AS
-    SELECT
-      y.item_id,
-      y.title,
-      SUBSTRING(y.ds, 0, 6) date,
-      sum(y.day_sold) AS    num
-    FROM
-      (SELECT *
-       FROM
-         (SELECT
-            item_id,
-            brand_id,
-            brand_name
-          FROM t_base_ec_item_dev
-          WHERE cat_id = '50008144') t1
-         LEFT JOIN t_base_ec_item_daysale_dev t2
-           ON t1.item_id = t2.item_id) y
-    GROUP BY y.item_id, y.title, SUBSTRING(y.ds, 0, 6)
-    ORDER BY brand_id DESC

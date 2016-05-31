@@ -18,6 +18,18 @@
 -- select count(1) from t_base_user_info_s where    ds=20160418;
 
 
+SELECT
+*
+from
+t_base_user_info_s_tbuserinfo_t
+where
+tage>0   and
+
+LENGTH(tgender)>0 and
+LENGTH(tname)>0  and
+LENGTH(alipay)>0 limit 100
+;
+
 --
 
 create TABLE  t_base_user_info_s_tbuserinfo_t as
@@ -51,7 +63,10 @@ on t1.ds=20160310 and t1.tb_id=t2.uid and t2.ds=20160503
 -- select concat_ws('&&',cast(tgender as string),cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) from t_base_user_info_s_tbuserinfo limit 10
 -- select rt,COUNT(1) from (SELECT split(regtime,'.')[0] as rt from t_base_ec_tb_userinfo )t group by rt
 
-select COUNT(1) from t_base_user_info_s where ds=20160310
-
-391448818
-
+-- select COUNT(1) from t_base_user_info_s where ds=20160310
+--
+-- 391448818
+--
+-- 391448818
+--
+-- select count(1) from (select * from  t_base_ec_tb_userinfo where ds=20160503 group by uid)t ;
