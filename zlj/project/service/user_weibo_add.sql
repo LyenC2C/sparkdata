@@ -60,13 +60,13 @@ join t_base_uid t2   where t2.ds='tb-qqwb'  and t3.id=t2.id1
 -- join t_base_uid t2   where t2.ds='tb-qqwb'  and t3.id=t2.id1
 -- )t4  on  t1.tb_id=t4.tb_id ;
 
-
- select count(1) from  t_base_user_info_s  where ds=20160418  and  length(tgender)>0 ;
- 76703156
-
-
-  select count(1) from  t_base_user_info_s  where ds=20160418  and  length(tage)>0 ;
- 56424359
-
-   select count(1) from  t_base_user_info_s  where ds=20160418  and  length(tname)>0 ;
-   56093685
+--
+--  select count(1) from  t_base_user_info_s  where ds=20160418  and  length(tgender)>0 ;
+--  76703156
+--
+--
+--   select count(1) from  t_base_user_info_s  where ds=20160418  and  length(tage)>0 ;
+--  56424359
+--
+--    select count(1) from  t_base_user_info_s  where ds=20160418  and  length(tname)>0 ;
+--    56093685

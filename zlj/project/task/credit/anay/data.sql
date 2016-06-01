@@ -67,6 +67,7 @@ select alipay ,count(1) from t_base_ec_tb_userinfo  where ds=20160530 group by a
 select loc,count(1) as t  from (select split(location,'\\s+')[0] as loc  from wlbase_dev.t_base_ec_tb_userinfo where ds=20160530 ) t group by loc ;
 
 
+# 消费等级
 
 VIP等级0        187221425
 VIP等级1        77572911
@@ -80,7 +81,7 @@ select verify,count(1) as t  from  wlbase_dev.t_base_ec_tb_userinfo  where ds=20
 
 
 
-
+# 购买次数
 NULL    1145999
 0       2164666
 1       5006111

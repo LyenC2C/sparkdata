@@ -44,5 +44,7 @@ select para,count(1) from (select paramap["适合肤质"]  as para  from  t_tianxian
 
 
 SELECT * from
-(select para,count(1) as num
- from (select paramap["化妆品净含量"]  as para  from  t_tianxiang_feed_item_tmp_id_map)t group by para) t2 order by num desc limit 100;
+(
+select para,count(1) as num
+ from (select paramap["化妆品净含量"]  as para  from  t_tianxiang_feed_item_tmp_id_map)t group by para
+ ) t2 order by num desc limit 100;
