@@ -21,3 +21,7 @@ from t_tianxiang_feed_item t1
 
 join wlbase_dev.t_base_user_info_s t2
 on t1.user_id=t2.tb_id and t2.ds=20160310 ;
+
+
+-- 用户商品和评价关联
+t_zlj_feed2016_parse_v1
