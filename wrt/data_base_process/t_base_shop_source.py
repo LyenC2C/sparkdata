@@ -12,7 +12,9 @@ def f(line):
     url = ss[1].split('.')
     if len(url) < 3:
         return None
-    if url[1] == "taobao":
+    if ss[1] == "store.taobao.com":
+        source = "offline"
+    elif url[1] == "taobao":
         source = "tb"
     elif url[1] == "tmall":
         if url[0] == "chaoshi":
@@ -22,11 +24,11 @@ def f(line):
         else:
             source = "tmall"
     else:
-        source = "else"
+            source = "else"
     return shop_id + "\001" + source
 
 
-rdd = sc.textFile("/commit/taobao/shop/shopinfo/shop.domain.20160421")
+rdd = sc.textFile("/commit/taobao/shop/shopinfo/domain/shop.domain.20160524")
 rdd1 = rdd.map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd1.saveAsTextFile('/user/wrt/temp/shop_source')
 
