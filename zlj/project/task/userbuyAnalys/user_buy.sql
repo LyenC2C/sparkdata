@@ -27,7 +27,9 @@ from t_zlj_analys_userbuy_count t1  join t_base_ec_tb_userinfo t2  on t1.user_id
 
 -- 7320514468      3.5887637183E10
 
-select sum(num),sum(buycnt) from t_zlj_tmp
+select sum(num),sum(buycnt) from t_zlj_tmp;
 
 
 SELECT flag,count(1) from (select cast(log(buycnt) as int ) as flag  from t_zlj_tmp)t group by flag;
+
+
