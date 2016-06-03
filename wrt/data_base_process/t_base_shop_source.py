@@ -8,6 +8,7 @@ sc = SparkContext(appName="shop_source")
 
 def f(line):
     ss = line.strip().split("\t")
+    if len(ss) != 2: return None
     shop_id = ss[0]
     url = ss[1].split('.')
     if len(url) < 3:
