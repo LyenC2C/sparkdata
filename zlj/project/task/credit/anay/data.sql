@@ -105,3 +105,4 @@ NULL    1145999
 select loc,count(1) as t  from (select  CAST (log2(buycnt) as int) as loc  from wlbase_dev.t_base_ec_tb_userinfo where ds=20160530 ) t group by loc ;
 
 
+select * from t_zlj_user_tag_join_t where length(cat_tags)>20 and  cat_tags like "%ÓĞ³µ%"   limit  1000;
