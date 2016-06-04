@@ -182,13 +182,13 @@ if __name__ == "__main__":
         #output_cmt_inc_data_nouid = sys.argv[5]
         #output_all_uid_feedids = sys.argv[6]
         #output_all_uid_marks = sys.argv[7]
-        uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160514"
-        uid_mark = "/data/develop/ec/tb/cmt/uid_mark_freq.json.0526"
+        uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160530"
+        uid_mark = "/data/develop/ec/tb/cmt/uid_mark_freq.json.20160530"
         cmt_input_data = "/commit/comments/tmp/*/*"
-        output_cmt_inc_data = "/data/develop/ec/tb/cmt/cmt_inc_data.uid.20160530"
-        output_cmt_inc_data_nouid = "/data/develop/ec/tb/cmt/cmt_inc_data.nouid.20160530"
-        output_all_uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160530"
-        output_all_uid_marks = "/data/develop/ec/tb/cmt/uid_mark_freq.json.20160530"
+        output_cmt_inc_data = "/data/develop/ec/tb/cmt/cmt_inc_data.uid.20160603"
+        output_cmt_inc_data_nouid = "/data/develop/ec/tb/cmt/cmt_inc_data.nouid.20160603"
+        output_all_uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160603"
+        output_all_uid_marks = "/data/develop/ec/tb/cmt/uid_mark_freq.json.20160603"
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data)
 
         #历史uid-feedid [uid,feedidls]
@@ -280,7 +280,7 @@ if __name__ == "__main__":
                     .union(rdd_uid_feedids)\
                     .groupByKey()\
                     .map(lambda (x,y):merge_res_uid_feedids(x,y))\
-                    .coalesce(300)\
+                    .coalesce(500)\
                     .saveAsTextFile(output_all_uid_feedids)
 
         #result: uid_mark_freq:
