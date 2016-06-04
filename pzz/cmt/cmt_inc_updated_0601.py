@@ -175,13 +175,13 @@ if __name__ == "__main__":
         print comment
 
     elif sys.argv[1] == '-gen_data_inc':
-        uid_feedids = sys.argv[1]
-        uid_mark = sys.argv[2]
-        cmt_input_data = sys.argv[3]
-        output_cmt_inc_data = sys.argv[4]
-        output_cmt_inc_data_nouid = sys.argv[5]
-        output_all_uid_feedids = sys.argv[6]
-        output_all_uid_marks = sys.argv[7]
+        #uid_feedids = sys.argv[1]
+        #uid_mark = sys.argv[2]
+        #cmt_input_data = sys.argv[3]
+        #output_cmt_inc_data = sys.argv[4]
+        #output_cmt_inc_data_nouid = sys.argv[5]
+        #output_all_uid_feedids = sys.argv[6]
+        #output_all_uid_marks = sys.argv[7]
         uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160514"
         uid_mark = "/data/develop/ec/tb/cmt/uid_mark_freq.json.0526"
         cmt_input_data = "/commit/comments/tmp/*/*"
