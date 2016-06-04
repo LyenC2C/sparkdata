@@ -266,11 +266,13 @@ if __name__ == "__main__":
                     #.map(lambda x:'\001'.join(x[1]))
 
         rdd_cmt_inc_uid.map(lambda x:'\001'.join(x))\
+                    .coalesce(300)\
                     .saveAsTextFile(output_cmt_inc_data)
 
         #result: 新增无uid评论数据
         rdd_cmt_inc_nouid = rdd_cmt_inc.filter(lambda x:x[0] == 2)\
                     .map(lambda x:x[1])\
+                    .coalesce(300)\
                     .saveAsTextFile(output_cmt_inc_data_nouid)
 
         #result: 新uid-feedids
@@ -278,10 +280,12 @@ if __name__ == "__main__":
                     .union(rdd_uid_feedids)\
                     .groupByKey()\
                     .map(lambda (x,y):merge_res_uid_feedids(x,y))\
+                    .coalesce(300)\
                     .saveAsTextFile(output_all_uid_feedids)
 
         #result: uid_mark_freq:
         rdd_uid_mark_merge.map(lambda x:json.dumps(x))\
+                        .coalesce(100)\
                         .saveAsTextFile(output_all_uid_marks)
 
 
