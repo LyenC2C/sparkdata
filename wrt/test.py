@@ -12,7 +12,7 @@ def get_id_dict(x):
 def f(line,id_dict):
     ss = line.strip().split("\001")
     item_id = ss[0]
-    if len(ss) != 11: return None
+    if len(ss) != 12: return None
     if not id_dict.has_key(item_id): return None
     sold = ss[6]
     flag = ss[10]
