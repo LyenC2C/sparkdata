@@ -21,7 +21,7 @@ def f(line,id_dict):
 
 id_dict = sc.broadcast(sc.textFile("/hive/warehouse/wlservice.db/t_lzh_outdoorid").\
     map(lambda x: (x.strip(),None)).filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=20151027/part*")\
+rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/*/part*")\
     .map(lambda x:f(x,id_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/outdoor_sold_tmp')
 
