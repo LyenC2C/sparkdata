@@ -8,6 +8,7 @@ data_dir=/data/develop/ec/tb/cmt/tmpdata
 data_nouid_dir=/data/develop/ec/tb/cmt/tmpdata.nouid
 user_dir=/data/develop/ec/tb/cmt/user
 commit_dir=/commit/comments
+item_inc_dir=/data/develop/ec/tb/cmt/item_inc
 feed_bck_dir=/commit_feedbck/cmt
 
 #workspace path
@@ -16,17 +17,20 @@ workspace_path=/mnt/raid1/pzz/workspace/sparkdata
 #table
 table=t_base_ec_item_feed_dev
 
-#任务id
-mission_id=$1
 #输入数据
-mission_data="/commit/comments/"$1"/*"
+mission_data=$1
+#任务id
+mission_id=$2
 #上次任务id
-lastmission_id=$2
+lastmission_id=$3
+
+hadoop fs -mv /commit/comments/tmp/* /commit/comments/
+hadoop fs -mv ${mission_data} /commit/comments/tmp/
 
 #获取输入参数
 uid_feed_input=${uid_feedls_dir}/all_uid_mark_feedids.${lastmission_id}
 uid_mark_input=${uid_markls_dir}/uid_mark_freq.json.${lastmission_id}
-new_data_input=$mission_data
+new_data_input=/commit/comments/tmp/*/*
 
 uid_feed_output=${uid_feedls_dir}/all_uid_mark_feedids.${mission_id}
 uid_mark_output=${uid_markls_dir}/uid_mark_freq.json.${mission_id}
@@ -34,7 +38,7 @@ uid_mark_output=${uid_markls_dir}/uid_mark_freq.json.${mission_id}
 uid_data_output=${data_dir}/cmt_inc_data.uid.${mission_id}
 nouid_data_output=${data_nouid_dir}/cmt_inc_data.nouid.${mission_id}
 user_data=${user_dir}/user.${mission_id}
-item_itc_num_output=${feed_bck_dir}/inc_item_num.${mission_id}
+item_itc_num_output=${item_inc_dir}/item_inc_num.${mission_id}
 
 start_t=`date`
 echo "Mission start at:"${start_t}
@@ -51,8 +55,9 @@ hadoop fs -rmr ${uid_feed_output}
 hadoop fs -rmr ${uid_mark_output}
 hadoop fs -rmr ${uid_data_output}
 hadoop fs -rmr ${nouid_data_output}
+hadoop fs -rmr ${item_itc_num_output}
 
-spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 140 ${workspace_path}/pzz/cmt/cmt_inc_updated_0601.py\
+spark-submit --executor-memory 12g --driver-memory 20g --total-executor-cores 160 ${workspace_path}/pzz/cmt/cmt_inc_updated_0601.py\
  -gen_data_inc ${uid_feed_input} ${uid_mark_input} ${new_data_input} ${uid_data_output} ${nouid_data_output} ${uid_feed_output} ${uid_mark_output} ${item_itc_num_output}
 echo "spark job finished."
 
@@ -62,7 +67,7 @@ local_tmp_inc_data=${workspace_path}/../../hdfs_merge_tmp/cmt_inc_data.${mission
 local_nouid_data=${workspace_path}/../../hdfs_merge_tmp/local_nouid_data.${mission_id}.partall
 
 #合并文件
-echo "2/5 cat and put result data  dir.."$tmp_data
+echo "2/5 cat and put result data  dir.."${uid_data_output}
 hadoop fs -cat ${item_itc_num_output}/part* > ${local_tmp_item_inc_num}
 hadoop fs -rmr ${item_itc_num_output}/part*
 hadoop fs -put ${local_tmp_item_inc_num} ${item_itc_num_output}/
@@ -78,20 +83,20 @@ hadoop fs -chmod -R 775 ${uid_data_output}
 
 #数据分区
 echo "3/5 inc data partitions.."
-hadoop fs -rmr ${tmp_data}.partitions
-spark-submit  --master spark://cs220:7077  --total-executor-cores  40 --executor-memory  4g --driver-memory 4g --class MultipleText  ${workspace_path}/pzz/sh/partition_spark.jar  ${tmp_data} ${tmp_data}.partitions
+hadoop fs -rmr ${uid_data_output}.partitions
+spark-submit  --master spark://cs220:7077  --total-executor-cores  40 --executor-memory  4g --driver-memory 4g --class MultipleText  ${workspace_path}/pzz/sh/partition_spark.jar  ${uid_data_output} ${uid_data_output}.partitions
 
 #插入hive
 echo "4/5 mv partitions to hive.."
-sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${tmp_data}.partitions ${table}
+sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${uid_data_output}.partitions ${table}
 
 #echo "insert hive"
-#sh ${workspace_path}/pzz/sh/feed.Dynamic_partitions.sql ${tmp_data}.test
+#sh ${workspace_path}/pzz/sh/feed.Dynamic_partitions.sql ${uid_data_output}.test
 
 #反馈商品评论增量
 echo "5/5 feed back item feed inc number to commit.."
-hadoop fs -rmr /commit_feedbck/cmt/inc_item_num.${mission_id}
-hadoop fs -cp $new_feed_output /commit_feedbck/cmt/
+hadoop fs -rmr ${feed_bck_dir}/inc_item_num.${mission_id}
+hadoop fs -cp $item_inc_dir ${feed_bck_dir}
 
 echo "mission FINISH! "$1
 end_t=`date`
