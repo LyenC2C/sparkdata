@@ -1,9 +1,4 @@
 
-
-
-
-
-
 set hive.exec.reducers.bytes.per.reducer=500000000;
 use wlbase_dev;
 
