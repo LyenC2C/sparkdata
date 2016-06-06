@@ -37,6 +37,8 @@ def f(line):
     ss = text.strip().split("\t",2)
     if len(ss) != 3: return None
     ob = json.loads(ss[2])
+    itemInfoModel = ob.get('itemInfoModel',"-")
+    if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location', '-'))
     seller = ob.get("seller",[])
     if seller == []: return None
