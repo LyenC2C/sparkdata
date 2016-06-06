@@ -68,6 +68,7 @@ def f(line):
         return None
     weitaoId = seller.get("weitaoId", "-")
     shopTitle = seller.get("shopTitle", "--")
+    if len(evaluateInfo) < 3: evaluateInfo =["0.0","0.0","0.0"]
     desc_score = evaluateInfo[0].get("score", '0.0')
     service_score = evaluateInfo[1].get("score", '0.0')
     wuliu_score = evaluateInfo[2].get("score", '0.0')
