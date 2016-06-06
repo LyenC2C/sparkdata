@@ -57,7 +57,7 @@ hadoop fs -rmr ${uid_data_output}
 hadoop fs -rmr ${nouid_data_output}
 hadoop fs -rmr ${item_itc_num_output}
 
-spark-submit --executor-memory 10g --driver-memory 20g --total-executor-cores 140 ${workspace_path}/pzz/cmt/cmt_inc_updated_0601.py\
+spark-submit --executor-memory 12g --driver-memory 20g --total-executor-cores 160 ${workspace_path}/pzz/cmt/cmt_inc_updated_0601.py\
  -gen_data_inc ${uid_feed_input} ${uid_mark_input} ${new_data_input} ${uid_data_output} ${nouid_data_output} ${uid_feed_output} ${uid_mark_output} ${item_itc_num_output}
 echo "spark job finished."
 
