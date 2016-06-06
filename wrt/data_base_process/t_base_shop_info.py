@@ -68,9 +68,12 @@ def f(line):
         return None
     weitaoId = seller.get("weitaoId", "-")
     shopTitle = seller.get("shopTitle", "--")
-    desc_score = evaluateInfo[0].get("score", '0.0').split()[0]
-    service_score = evaluateInfo[1].get("score", '0.0').split()[0]
-    wuliu_score = evaluateInfo[2].get("score", '0.0').split()[0]
+    desc_score = evaluateInfo[0].get("score", '0.0')
+    service_score = evaluateInfo[1].get("score", '0.0')
+    wuliu_score = evaluateInfo[2].get("score", '0.0')
+    if not desc_score.replace(".","").isdigit(): desc_score = '0.0'
+    if not service_score.replace(".","").isdigit(): service_score = '0.0'
+    if not wuliu_score.replace(".","").isdigit(): wuliu_score = '0.0'
     star = '99'
     list = []
     list.append(shopId)
