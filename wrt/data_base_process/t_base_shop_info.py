@@ -92,8 +92,9 @@ def quchong(x,y):
     result = y[0]
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
-
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
 rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None).groupbykey().mapValues(list)\
     .map(lambda (x, y):quchong(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
+
+#spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shop_info.py
