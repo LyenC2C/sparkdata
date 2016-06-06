@@ -17,6 +17,10 @@ sc = SparkContext(appName="t_base_shop_info" )
 #         return content.encode("utf-8")
 #     else:
 #         return content
+def decompress(out):
+    decode = base64.b64decode(out)
+    data = zlib.decompress(decode)
+    return data
 
 def valid_jsontxt(content):
     res = content
