@@ -12,16 +12,16 @@ def get_id_dict(x):
 def f(line,id_dict):
     ss = line.strip().split("\001")
     item_id = ss[0]
-    if len(ss) != 12: return None
+    if len(ss) != 11: return None
     if not id_dict.has_key(item_id): return None
     sold = ss[6]
     flag = ss[10]
-    ds = ss[11]
-    return item_id + "\001" + sold + "\001" + flag + "\001" + ds
+    ts = ss[9]
+    return item_id + "\001" + sold + "\001" + flag + "\001" + ts
 
 id_dict = sc.broadcast(sc.textFile("/hive/warehouse/wlservice.db/t_lzh_outdoorid").\
     map(lambda x: (x.strip(),None)).filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/*/part*")\
+rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_sale_dev/ds=20161027/part*")\
     .map(lambda x:f(x,id_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/outdoor_sold_tmp')
 
