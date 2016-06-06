@@ -10,7 +10,7 @@ ds=$1
 
 USE wlbase_dev;
 
-LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.$ds/"  INTO TABLE t_base_ec_item_feed_dev_inc_new PARTITION (ds='$1');
+LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$ds/"  INTO TABLE t_base_ec_item_feed_dev_inc_new PARTITION (ds='$1');
 
 
 DROP  TABLE  IF EXISTS   t_base_ec_item_feed_dev_inc_tmp;

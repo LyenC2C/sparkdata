@@ -24,6 +24,8 @@ def valid_jsontxt(content):
 '''
 data  hdfs:/commit/taobao/shop/shopinfo/info
 wiki  http://gitlab.zhishu.com/crawler/datawiki/blob/master/taobao/shop.info.md
+
+店铺额外信息整理
 '''
 
 def shopinfo(x):
