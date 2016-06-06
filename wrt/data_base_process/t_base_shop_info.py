@@ -56,6 +56,7 @@ def f(line):
             if item['track'] == 'Button-AllItem':
                 item_count = item.get('value', '0')
     fansCount = seller.get("fansCount", "0")
+    if not fansCount.isdigit(): fansCount = "0"
     try:
         t = seller.get("goodRatePercentage", "0.0").replace('%', '')
         if (t.replace('.', '').isdigit()):
