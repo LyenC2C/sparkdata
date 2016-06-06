@@ -31,3 +31,9 @@ ON t1.item_id = t2.item_id AND t2.ds = 20160530;
 
 
 select * from t_zlj_credit_house_feed_data where rand()*100<0.5  limit 10000
+
+
+
+SELECT *
+FROM t_base_ec_item_feed_dev
+WHERE ds>20160101 and  content LIKE '%КЂзг%' limit 100;
