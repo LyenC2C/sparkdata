@@ -147,9 +147,9 @@ def match_mark(x,y):
         if dic[1] != None and dic[2] != None:
             ls = dic[2][1].split("\001")
             ls[3] = dic[1]
-            return [1,ls]
+            return [1,ls,ls[0]]
         elif dic[1] == None and dic[2] != None:
-            return [2,dic[2][1]]
+            return [2,dic[2][1],ls[0]]
         else:
             return None
     except Exception,e:
@@ -167,6 +167,13 @@ def merge_res_uid_feedids(x,y):
         res += '\001'.join(set(resls))
     return res
 
+def cal_item_inc_num(x,y):
+    dic = {1:0,2:0}
+    for each in y:
+        dic[each] += 1
+    return x + '\t'+str(dic[1])+'\t'+str(dic[1]+dic[2])
+
+
 if __name__ == "__main__":
     if sys.argv[1] == '-h':
         comment = '-gen_his_user_feedid \t argv[2]:output dir \t 提取库里uid feedid' + \
@@ -175,13 +182,15 @@ if __name__ == "__main__":
         print comment
 
     elif sys.argv[1] == '-gen_data_inc':
-        #uid_feedids = sys.argv[1]
-        #uid_mark = sys.argv[2]
-        #cmt_input_data = sys.argv[3]
-        #output_cmt_inc_data = sys.argv[4]
-        #output_cmt_inc_data_nouid = sys.argv[5]
-        #output_all_uid_feedids = sys.argv[6]
-        #output_all_uid_marks = sys.argv[7]
+        uid_feedids = sys.argv[2]
+        uid_mark = sys.argv[3]
+        cmt_input_data = sys.argv[4]
+        output_cmt_inc_data = sys.argv[5]
+        output_cmt_inc_data_nouid = sys.argv[6]
+        output_all_uid_feedids = sys.argv[7]
+        output_all_uid_marks = sys.argv[8]
+        output_item_inc_num = sys.argv[9]
+        '''
         uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160530"
         uid_mark = "/data/develop/ec/tb/cmt/uid_mark_freq.json.20160530"
         cmt_input_data = "/commit/comments/tmp/*/*"
@@ -189,6 +198,9 @@ if __name__ == "__main__":
         output_cmt_inc_data_nouid = "/data/develop/ec/tb/cmt/cmt_inc_data.nouid.20160603"
         output_all_uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160603"
         output_all_uid_marks = "/data/develop/ec/tb/cmt/uid_mark_freq.json.20160603"
+        output_item_inc_num = "/commit_feedbck/cmt/inc_item_num.20160603"
+        '''
+
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data)
 
         #历史uid-feedid [uid,feedidls]
@@ -266,13 +278,13 @@ if __name__ == "__main__":
                     #.map(lambda x:'\001'.join(x[1]))
 
         rdd_cmt_inc_uid.map(lambda x:'\001'.join(x))\
-                    .coalesce(300)\
+                    .coalesce(200)\
                     .saveAsTextFile(output_cmt_inc_data)
 
         #result: 新增无uid评论数据
         rdd_cmt_inc_nouid = rdd_cmt_inc.filter(lambda x:x[0] == 2)\
                     .map(lambda x:x[1])\
-                    .coalesce(300)\
+                    .coalesce(200)\
                     .saveAsTextFile(output_cmt_inc_data_nouid)
 
         #result: 新uid-feedids
@@ -280,13 +292,18 @@ if __name__ == "__main__":
                     .union(rdd_uid_feedids)\
                     .groupByKey()\
                     .map(lambda (x,y):merge_res_uid_feedids(x,y))\
-                    .coalesce(500)\
+                    .coalesce(300)\
                     .saveAsTextFile(output_all_uid_feedids)
 
         #result: uid_mark_freq:
         rdd_uid_mark_merge.map(lambda x:json.dumps(x))\
                         .coalesce(100)\
                         .saveAsTextFile(output_all_uid_marks)
+
+        #reuslt:item inc num:
+        rdd_item_inc_num = rdd_cmt_inc.map(lambda (x,y,z):[y,x])\
+                        .map(lambda (x,y):cal_item_inc_num(x,y))
+        rdd_item_inc_num.saveAsTextFile(output_item_inc_num)
 
 
 
