@@ -17,17 +17,20 @@ workspace_path=/mnt/raid1/pzz/workspace/sparkdata
 #table
 table=t_base_ec_item_feed_dev
 
-#任务id
-mission_id=$1
 #输入数据
-mission_data="/commit/comments/"$1"/*"
+mission_data=$1
+#任务id
+mission_id=$2
 #上次任务id
-lastmission_id=$2
+lastmission_id=$3
+
+hadoop fs -mv /commit/comments/tmp/* /commit/comments/
+hadoop fs -mv ${mission_data} /commit/comments/tmp/
 
 #获取输入参数
 uid_feed_input=${uid_feedls_dir}/all_uid_mark_feedids.${lastmission_id}
 uid_mark_input=${uid_markls_dir}/uid_mark_freq.json.${lastmission_id}
-new_data_input=$mission_data
+new_data_input=/commit/comments/tmp/*/*
 
 uid_feed_output=${uid_feedls_dir}/all_uid_mark_feedids.${mission_id}
 uid_mark_output=${uid_markls_dir}/uid_mark_freq.json.${mission_id}
