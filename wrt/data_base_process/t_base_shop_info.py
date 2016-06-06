@@ -12,11 +12,18 @@ from pyspark import SparkContext
 
 sc = SparkContext(appName="t_base_shop_info" )
 
+# def valid_jsontxt(content):
+#     if type(content) == type(u""):
+#         return content.encode("utf-8")
+#     else:
+#         return content
+
 def valid_jsontxt(content):
+    res = content
     if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+        res = content.encode("utf-8")
+    # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res.replace('\n',"").replace("\r","")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -81,11 +88,12 @@ def f(line):
     list.append(ts)
     return (shopId, list)
 
-# def quchong(x,y):
-
+def quchong(x,y):
+    result = y[0]
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
 s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
 rdd = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None).groupbykey().mapValues(list)\
-    .map(lambda (x, y):"\001".join(y[0]))
+    .map(lambda (x, y):quchong(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
