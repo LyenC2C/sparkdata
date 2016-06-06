@@ -56,6 +56,7 @@ def f(line):
             if item['track'] == 'Button-AllItem':
                 item_count = item.get('value', '0')
     fansCount = seller.get("fansCount", "0")
+    if not fansCount.isdigit(): fansCount = "0"
     try:
         t = seller.get("goodRatePercentage", "0.0").replace('%', '')
         if (t.replace('.', '').isdigit()):
@@ -67,9 +68,13 @@ def f(line):
         return None
     weitaoId = seller.get("weitaoId", "-")
     shopTitle = seller.get("shopTitle", "--")
-    desc_score = evaluateInfo[0].get("score", '0.0').split()[0]
-    service_score = evaluateInfo[1].get("score", '0.0').split()[0]
-    wuliu_score = evaluateInfo[2].get("score", '0.0').split()[0]
+    if len(evaluateInfo) < 3: evaluateInfo =["0.0","0.0","0.0"]
+    desc_score = evaluateInfo[0].get("score", '0.0')
+    service_score = evaluateInfo[1].get("score", '0.0')
+    wuliu_score = evaluateInfo[2].get("score", '0.0')
+    if not desc_score.replace(".","").isdigit(): desc_score = '0.0'
+    if not service_score.replace(".","").isdigit(): service_score = '0.0'
+    if not wuliu_score.replace(".","").isdigit(): wuliu_score = '0.0'
     star = '99'
     list = []
     list.append(shopId)
