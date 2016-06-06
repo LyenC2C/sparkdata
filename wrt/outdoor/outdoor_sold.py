@@ -23,9 +23,8 @@ def valid_jsontxt(content):
         return content
 
 def f1(line):
-    ss = line.strip().split("\t",1)
-    if len(ss) != 2: return [None]
-    zhengwen = ss[1]
+    # ss = line.strip().split("\t",1)
+    zhengwen = line.strip()
     # if zhengwen == "<!DOCTYPE html>": return [None]
     # l = len(zhengwen)
     star = zhengwen.find("({")# + 1
@@ -55,6 +54,8 @@ def f1(line):
 rdd = sc.textFile('/commit/project/lzhoutdoor/lzh.outdoorid.amount').flatMap(lambda x:f1(x)).filter(lambda x:x!=None)\
     .map(lambda x:"\t".join(x))
 rdd.saveAsTextFile('/user/wrt/outdoor_sold_now')
+
+#spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
 
 """
 hfs -rmr /user/wrt/sale_tmp
