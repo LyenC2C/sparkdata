@@ -1,86 +1,90 @@
  #!/bin/sh
 source ~/.bashrc
-pre_path='/home/wrt/sparkdata'
+#pre_path='/home/wrt/sparkdata'
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
 
-zuotian='20160520'
-qiantian='20160516'
+./item_sold.sh 20160527 20160526 20160530
 
-hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
 
-hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
-spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
-$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
-sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
 
-zuotian='20160521'
-qiantian='20160520'
-
-hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
-spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
-$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
-sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
-
-zuotian='20160522'
-qiantian='20160521'
-
-hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
-spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
-$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
-sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
-
-zuotian='20160523'
-qiantian='20160522'
-
-hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
-spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
-$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
-sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
-
-zuotian='20160524'
-qiantian='20160523'
-
-hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
-spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
-$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
-sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
-
-zuotian='20160525'
-qiantian='20160524'
-
-hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
-spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
-$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
-sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
-
-hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
-spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
-$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
-sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
+#zuotian='20160520'
+#qiantian='20160516'
+#
+#hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
+#    sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
+#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+#$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
+#sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
+#
+#zuotian='20160521'
+#qiantian='20160520'
+#
+#hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
+#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+#$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
+#sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
+#
+#zuotian='20160522'
+#qiantian='20160521'
+#
+#hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
+#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+#$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
+#sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
+#
+#zuotian='20160523'
+#qiantian='20160522'
+#
+#hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
+#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+#$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
+#sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
+#
+#zuotian='20160524'
+#qiantian='20160523'
+#
+#hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
+#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+#$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
+#sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
+#
+#zuotian='20160525'
+#qiantian='20160524'
+#
+#hfs -rmr /user/wrt/sale_tmp >> ./log_date/log_$zuotian 2>&1
+#spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 \
+#$pre_path/wrt/data_base_process/t_base_item_sale.py $qiantian $zuotian 20160513 >> ./log_date/log_$zuotian 2>&1
+#sh $pre_path/wrt/data_base_process/t_base_item_sale.sql $zuotian >> ./log_date/log_$zuotian 2>&1
+#
+#hadoop fs -rm -r /user/wrt/daysale_tmp >> ./log_daysale/log_$qiantian 2>&1
+#spark-submit  --total-executor-cores  80   --executor-memory  8g  --driver-memory 10g \
+#$pre_path/wrt/data_base_process/cal_daysale.py $qiantian $zuotian >> ./log_daysale/log_$qiantian 2>&1
+#sh $pre_path/wrt/data_base_process/cal_daysale.sql $qiantian >> ./log_daysale/log_$qiantian 2>&1
 
 #zuotian='20160526'
 #qiantian='20160525'
