@@ -1,9 +1,9 @@
+today=$1
 hive<<EOF
 use wlbase_dev;
-today=$1
 LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds=$today);
 
-insert into table t_base_ec_item_dev_new partitions(ds=$today)
+insert into table t_base_ec_item_dev_new PARTITION(ds=$today)
 select
 t1.item_id,
 t1.title,
