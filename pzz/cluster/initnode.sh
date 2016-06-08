@@ -10,5 +10,5 @@ do
 	#cmd_hive="ALTER TABLE wlbase_dev.${table} add PARTITION (ds='${i}');${cmd_hive}"
 done
 
-chown -R yarn:yarn /mnt/hdfs/data*
+#chown -R yarn:yarn /mnt/hdfs/data*
 

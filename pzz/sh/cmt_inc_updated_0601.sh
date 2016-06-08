@@ -63,8 +63,8 @@ echo "spark job finished."
 
 #本地临时文件
 local_tmp_item_inc_num=${workspace_path}/../../hdfs_merge_tmp/item_inc_num.${mission_id}.partall
-local_tmp_inc_data=${workspace_path}/../../hdfs_merge_tmp/cmt_inc_data.${mission_id}.partall
-local_nouid_data=${workspace_path}/../../hdfs_merge_tmp/local_nouid_data.${mission_id}.partall
+local_tmp_inc_data=${workspace_path}/../../hdfs_merge_tmp/cmt_inc_data.uid.${mission_id}.partall
+local_nouid_data=${workspace_path}/../../hdfs_merge_tmp/cmt_inc_data.nouid.${mission_id}.partall
 
 #合并文件
 echo "2/5 cat and put result data  dir.."${uid_data_output}
