@@ -55,7 +55,7 @@ case when verify is not null then verify else "" end as verify ,
 case when regtime is not null then  regtime else "" end as regtime ,
 case when nick is not null then nick else "" end as nick
 from t_base_user_info_s t1  left join  t_base_ec_tb_userinfo  t2
-on t1.ds=20160310 and t1.tb_id=t2.uid and t2.ds=20160503
+on t1.ds=20160310 and t1.tb_id=t2.uid and t2.ds=20160608
 
  )t group by  tb_id;
 
@@ -78,15 +78,16 @@ case when LENGTH(max(nick))<1 then null else max(nick) end as nick
 FROM
 (
 SELECT
-tb_id,CAST ( cast(tgender as int) as String ) as tgender,tage,tname,
+uid as tb_id,CAST ( cast(tgender as int) as String ) as tgender,
+case when tage<10 or tage>70 then null else tage end tage  ,tname,
 case when  t2.location is not null  then t2.location else  t1.tloc end as  tloc,
-case when alipay is not null then  alipay else "" end as alipay ,
+case when alipay like '%ÒÑÍ¨¹ý%'   then  1 else 0 end as alipay ,
 case when buycnt is not null then  buycnt else "" end as buycnt ,
 case when verify is not null then   verify else "" end as verify ,
 case when regtime is not null then  regtime else "" end as regtime ,
 case when nick is not null then nick else "" end as nick
-from t_base_user_info_s t1  full join  t_base_ec_tb_userinfo  t2
-on t1.ds=20160418 and t1.tb_id=t2.uid and t2.ds=20160530
+from t_base_user_info_s t1  RIGHT OUTER join  t_base_ec_tb_userinfo  t2
+on t1.ds=20160418 and t1.tb_id=t2.uid and t2.ds=20160608
 
  )t group by  tb_id;
 
@@ -94,31 +95,15 @@ on t1.ds=20160418 and t1.tb_id=t2.uid and t2.ds=20160530
 
 
 
+SELECT  COUNT(1) from (select uid from t_base_ec_tb_userinfo where ds=20160608 group by uid)t
+
+
 create TABLE  t_base_user_info_s_tbuserinfo_t as
 select  t1.*,prov as tel_prov,city as tel_city from t_base_user_info_s_tbuserinfo_t_20160418 t1 left join t_base_ec_loc t2  on t1.tb_id=t2.user_id;
 
 
-select
 
 
-from
-(
-select sum(day_sold ) day_soldf,sum(day_sold_price) totsold,t2.cat_id,t2.cat_name,substring(t1.ds,0,6) m,
-from t_wrt_mask_daysale t1 join t_wrt_mask_iteminfo t2
-on t1.item_id=t2.item_id and t2.ds='20160527'
-group by cat_id ,cat_name  ,substring(t1.ds,0,6)
-
-)t1
-JOIN
-(
-select sum(day_sold ) day_soldf,sum(day_sold_price) totsold,t2.cat_id,t2.cat_name,substring(t1.ds,0,6) m
-from t_wrt_mask_daysale t1 join t_wrt_mask_iteminfo t2
-on t1.item_id=t2.item_id and t2.ds='20160527'
-group by cat_id ,cat_name  ,substring(t1.ds,0,6)
-
-)t2
-
-on t1.cat_id =t2.cat_id and t1.m=t2.m
 
 
 
