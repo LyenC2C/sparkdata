@@ -41,6 +41,7 @@ def f1(line):
     text = zhengwen[star:end]
     text2 = text.replace(",]","]")
     text3 = valid_jsontxt(text2)
+    if text3 == '': return [None]
     ob = json.loads(text3)
     if type(ob) !=  type({}):
         return [None]

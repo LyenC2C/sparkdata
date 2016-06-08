@@ -13,19 +13,8 @@ WHERE content LIKE '%×°ÐÞ%';
 
 
 -- 2199229
-CREATE TABLE t_zlj_credit_house_feed_data_item AS
-SELECT
- t1.*,
- t2.cat_id,
- cat_name,
- root_cat_id,
- root_cat_name,
- price,
- bc_type,
- brand_name,
- title
-FROM t_zlj_credit_house_feed_data t1 JOIN t_base_ec_item_dev_new   t2
-ON t1.item_id = t2.item_id AND t2.ds = 20160530;
+
+
 
 
 

@@ -65,6 +65,8 @@ EOF
 
 hadoop fs -cat /hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_inc_tmp/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
+hadoop fs -rm  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/cmt_inc_data_$ds
+
 hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds

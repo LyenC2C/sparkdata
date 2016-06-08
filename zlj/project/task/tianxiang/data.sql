@@ -4,7 +4,8 @@ create table  t_tianxiang_feed_item as
 select  /*+ mapjoin(t1)*/
 
 t1.*,
-t2.user_id,t2.sku as buy_sku,rate_type,crawl_type
+t2.user_id,t2.sku as buy_sku,rate_type,crawl_type,
+t2.ds as fds
 from
 
 t_wrt_mask_iteminfo t1 join
