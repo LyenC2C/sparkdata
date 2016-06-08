@@ -149,6 +149,7 @@ def match_mark(x,y):
             ls[3] = dic[1]
             return [1,ls,ls[0]]
         elif dic[1] == None and dic[2] != None:
+            ls = dic[2][1].split("\001")
             return [2,dic[2][1],ls[0]]
         else:
             return None
@@ -302,6 +303,7 @@ if __name__ == "__main__":
 
         #reuslt:item inc num:
         rdd_item_inc_num = rdd_cmt_inc.map(lambda (x,y,z):[y,x])\
+                        .groupByKey()\
                         .map(lambda (x,y):cal_item_inc_num(x,y))
         rdd_item_inc_num.saveAsTextFile(output_item_inc_num)
 
