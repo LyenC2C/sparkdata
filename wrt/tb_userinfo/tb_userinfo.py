@@ -26,7 +26,7 @@ def f(x,p_dict):
     verify=ob.get('verify','-')
     regtime=ob.get('regtime','-')
     nick=ob.get('nick','-')
-    city = ob['location']
+    city = ob.get('location',"-")
     location = p_dict.get(valid_jsontxt(city),"") + "\t" + city
     return (uid,[uid,alipay,buycnt,verify,regtime,nick,location])
 
