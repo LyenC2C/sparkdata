@@ -69,9 +69,9 @@ def f(line):
     weitaoId = seller.get("weitaoId", "-")
     shopTitle = seller.get("shopTitle", "--")
     if len(evaluateInfo) < 3: evaluateInfo =[{},{},{}]
-    desc_score = evaluateInfo[0].get("score", '0.0')
-    service_score = evaluateInfo[1].get("score", '0.0')
-    wuliu_score = evaluateInfo[2].get("score", '0.0')
+    desc_score = evaluateInfo[0].get("score", '0.0') + "\t" + evaluateInfo[0].get("highGap", '0.0')
+    service_score = evaluateInfo[1].get("score", '0.0')+ "\t" + evaluateInfo[1].get("highGap", '0.0')
+    wuliu_score = evaluateInfo[2].get("score", '0.0')+ "\t" + evaluateInfo[2].get("highGap", '0.0')
     # if not desc_score.replace(".","").isdigit(): desc_score = '0.0'
     # if not service_score.replace(".","").isdigit(): service_score = '0.0'
     # if not wuliu_score.replace(".","").isdigit(): wuliu_score = '0.0'
@@ -108,5 +108,5 @@ rdd_c = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')
 
-#spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shop_info.py
+#spark-submit  --executor-memory 18G  --driver-memory 18G  --total-executor-cores 240 t_base_shop_info.py
 #LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev PARTITION (ds='20160606');
