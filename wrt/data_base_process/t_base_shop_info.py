@@ -72,9 +72,9 @@ def f(line):
     desc_score = evaluateInfo[0].get("score", '0.0') + "\t" + evaluateInfo[0].get("highGap", '0.0')
     service_score = evaluateInfo[1].get("score", '0.0')+ "\t" + evaluateInfo[1].get("highGap", '0.0')
     wuliu_score = evaluateInfo[2].get("score", '0.0')+ "\t" + evaluateInfo[2].get("highGap", '0.0')
-    if not desc_score.replace(".","").replace("-","").strip().isdigit(): desc_score = '0.0  0.0'
-    if not service_score.replace(".","").replace("-","").strip().isdigit(): service_score = '0.0  0.0'
-    if not wuliu_score.replace(".","").replace("-","").strip().isdigit(): wuliu_score = '0.0  0.0'
+    if not desc_score.replace(".","").replace("-","").replace("\t","").replace(" ","").isdigit(): desc_score = '0.0  0.0'
+    if not service_score.replace(".","").replace("-","").replace("\t","").replace(" ","").isdigit(): service_score = '0.0  0.0'
+    if not wuliu_score.replace(".","").replace("-","").replace("\t","").replace(" ","").isdigit(): wuliu_score = '0.0  0.0'
     star = '99'
     list = []
     list.append(shopId)
@@ -103,10 +103,10 @@ def quchong(x,y):
     result = y[0]
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-0000*"
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
 rdd_c = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x,y))
-rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp_000')
+rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')
 
 #spark-submit  --executor-memory 18G  --driver-memory 18G  --total-executor-cores 240 t_base_shop_info.py
 #LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev PARTITION (ds='20160606');
