@@ -72,9 +72,9 @@ def f(line):
     desc_score = evaluateInfo[0].get("score", '0.0') + "\t" + evaluateInfo[0].get("highGap", '0.0')
     service_score = evaluateInfo[1].get("score", '0.0')+ "\t" + evaluateInfo[1].get("highGap", '0.0')
     wuliu_score = evaluateInfo[2].get("score", '0.0')+ "\t" + evaluateInfo[2].get("highGap", '0.0')
-    # if not desc_score.replace(".","").isdigit(): desc_score = '0.0'
-    # if not service_score.replace(".","").isdigit(): service_score = '0.0'
-    # if not wuliu_score.replace(".","").isdigit(): wuliu_score = '0.0'
+    if not desc_score.replace(".","").replace("-","").strip().isdigit(): desc_score = '0.0  0.0'
+    if not service_score.replace(".","").replace("-","").strip().isdigit(): service_score = '0.0  0.0'
+    if not wuliu_score.replace(".","").replace("-","").strip().isdigit(): wuliu_score = '0.0  0.0'
     star = '99'
     list = []
     list.append(shopId)
