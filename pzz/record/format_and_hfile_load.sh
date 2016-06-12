@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 source ~/.bashrc
 
 #workspace path
@@ -6,6 +7,8 @@ workspace_path=/mnt/raid1/pzz/workspace/sparkdata
 input_path=$1
 csv_path=$2
 hfile_path=$3
+hadoop fs -rmr $csv_path
+hadoop fs -rmr $hfile_path
 spark_middle $workspace_path/pzz/record/gen_record_new_format_to_hbase.py $input_path $csv_path
 
 

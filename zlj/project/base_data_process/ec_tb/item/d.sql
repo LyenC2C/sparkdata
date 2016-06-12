@@ -70,3 +70,6 @@ ON t1.cat_id=t2.cate_id
 
 -- ds=from_unixtime(unix_timestamp()-86400,'yyyyMMdd'));
 
+
+
+select * from t_base_ec_item_dev
