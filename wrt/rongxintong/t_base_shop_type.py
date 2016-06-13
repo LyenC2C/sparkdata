@@ -61,7 +61,7 @@ def shoptype(x):
 
 # rdd1=sc.textFile('/commit/taobao/shop/shopinfo/info').filter(lambda x:'noshop' not in x).map(lambda x:shopinfo(x))
 
-rdd2=sc.textFile('/commit/taobao/shop/shopinfo/type/shop.type.20160530')\
+rdd2=sc.textFile('/commit/taobao/shop/shopinfo/type/shop.type.20160602')\
     .filter(lambda x:'noshop' not in x).map(lambda x:shoptype(x)).filter(lambda x:x!=None)
 
 # rdd3=rdd1.join(rdd2)
