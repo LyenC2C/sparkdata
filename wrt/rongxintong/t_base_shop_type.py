@@ -51,8 +51,9 @@ def shoptype(x):
     shop_id=ob.get('shop_id','-')
     if len(shop_id)<2:return  None
     for k,v  in ob.items():
-        item_info_list.append(valid_jsontxt(k).replace(":","").replace(",","") \
-                         +":" + valid_jsontxt(v))
+        if valid_jsontxt(k) != "shop_id":
+            item_info_list.append(valid_jsontxt(k).replace(":","").replace(",","") \
+                            +":" + valid_jsontxt(v))
     shoptype_info = ",".join(item_info_list)
     return shop_id + "\001" + shoptype_info
     # return (shop_id,shoptype_info)
