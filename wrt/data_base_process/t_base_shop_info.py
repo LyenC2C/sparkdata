@@ -109,9 +109,9 @@ def f(line):
     list.append(desc_highGap)
     list.append(service_highGap)
     list.append(wuliu_highGap)
-    list.appned(is_online)
-    list.appned(shop_type)
-    list.appned(shop_certifi)
+    list.append(is_online)
+    list.append(shop_type)
+    list.append(shop_certifi)
     return (shopId, list)
 
 def quchong(x,y):
