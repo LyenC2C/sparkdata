@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+source ~/.bashrc
+
 today=$1
 
 hfs -rmr /user/wrt/temp/iteminfo_tmp
