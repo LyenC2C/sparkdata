@@ -1,4 +1,9 @@
 today=$1
+
+hfs -rmr /user/wrt/temp/iteminfo_tmp
+spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
+
+
 hive<<EOF
 use wlbase_dev;
 LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds=$today);
@@ -17,13 +22,13 @@ t1.bc_type,
 t1.price,
 t1.price_zone,
 t1.is_online,
-t1.off_time,
+"-1",
 t1.favor,
 t1.seller_id,
 t1.shop_id,
 t1.location,
 t1.paramap,
-null,
+t1.paramap,
 t1.ts
 from
 (select * from t_base_ec_item_dev where ds = 20160333)t1
