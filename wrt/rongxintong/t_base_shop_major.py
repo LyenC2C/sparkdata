@@ -20,3 +20,6 @@ def f(line):
 
 rdd = sc.textFile("/commit/project/sichuanseller/sichuan.sellerid.info").map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/shop_major_tmp')
+
+#spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shop_major.py
+#LOAD DATA  INPATH '/user/wrt/temp/shop_major_tmp' OVERWRITE INTO TABLE t_base_shop_major
