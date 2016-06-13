@@ -16,3 +16,9 @@
 用户商品购买记录表：[wlbase_dev][t_base_ec_record_dev_new]
     更新至20160608
     通通新旧商品库合并，6.8 找回join丢失商品并更新至表
+
+店铺信息表:[wlbase_dev][t_base_ec_record_dev_new]
+更新至:20160613 更新内容:新建表的第一个分区  更新日期:20160613
+
+商品信息表:[wlbase_dev][t_base_ec_item_dev_new]
+更新至:20160613 更新内容:20160607到20160613 更新日期:20160613
