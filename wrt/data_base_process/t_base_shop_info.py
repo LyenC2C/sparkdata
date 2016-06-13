@@ -69,12 +69,21 @@ def f(line):
     weitaoId = seller.get("weitaoId", "-")
     shopTitle = seller.get("shopTitle", "--")
     if len(evaluateInfo) < 3: evaluateInfo =[{},{},{}]
-    desc_score = evaluateInfo[0].get("score", '0.0') + "\t" + evaluateInfo[0].get("highGap", '0.0')
-    service_score = evaluateInfo[1].get("score", '0.0')+ "\t" + evaluateInfo[1].get("highGap", '0.0')
-    wuliu_score = evaluateInfo[2].get("score", '0.0')+ "\t" + evaluateInfo[2].get("highGap", '0.0')
-    if not desc_score.replace(".","").replace("-","").replace("\t","").replace(" ","").isdigit(): desc_score = '0.0  0.0'
-    if not service_score.replace(".","").replace("-","").replace("\t","").replace(" ","").isdigit(): service_score = '0.0  0.0'
-    if not wuliu_score.replace(".","").replace("-","").replace("\t","").replace(" ","").isdigit(): wuliu_score = '0.0  0.0'
+    desc_score = evaluateInfo[0].get("score", '0.0')
+    desc_highGap = evaluateInfo[0].get("highGap", '0.0')
+    service_score = evaluateInfo[1].get("score", '0.0')
+    service_highGap = evaluateInfo[1].get("highGap", '0.0')
+    wuliu_score = evaluateInfo[2].get("score", '0.0')
+    wuliu_highGap = evaluateInfo[2].get("highGap", '0.0')
+    if not desc_score.replace(".","").strip().isdigit(): desc_score = '0.0'
+    if not service_score.replace(".","").strip().isdigit(): service_score = '0.0'
+    if not wuliu_score.replace(".","").strip().isdigit(): wuliu_score = '0.0'
+    if not desc_highGap.replace(".","").replace("-","").strip().isdigit(): desc_highGap = '0.0'
+    if not service_highGap.replace(".","").replace("-","").strip().isdigit(): service_highGap = '0.0'
+    if not wuliu_highGap.replace(".","").replace("-","").strip().isdigit(): wuliu_highGap = '0.0'
+    is_online = "0"
+    shop_type = "-"
+    shop_certifi = '-'
     star = '99'
     list = []
     list.append(shopId)
@@ -97,6 +106,12 @@ def f(line):
     list.append(wuliu_score)
     list.append(location)
     list.append(ts)
+    list.append(desc_highGap)
+    list.append(service_highGap)
+    list.append(wuliu_highGap)
+    list.appned(is_online)
+    list.appned(shop_type)
+    list.appned(shop_certifi)
     return (shopId, list)
 
 def quchong(x,y):
@@ -109,4 +124,4 @@ rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')
 
 #spark-submit  --executor-memory 18G  --driver-memory 18G  --total-executor-cores 240 t_base_shop_info.py
-#LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev PARTITION (ds='20160606');
+#LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev PARTITION (ds='20160613');
