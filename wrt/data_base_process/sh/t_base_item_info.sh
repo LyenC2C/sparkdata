@@ -3,7 +3,7 @@ source ~/.bashrc
 
 today=$1
 
-hadoop fs -rmr /user/wrt/temp/iteminfo_tmp
+hfs -rmr /user/wrt/temp/iteminfo_tmp
 spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
 
 hive<<EOF
