@@ -68,5 +68,7 @@ rdd2=sc.textFile('/commit/taobao/shop/shopinfo/type/shop.type.20160530')\
 
 # rdd3.map(lambda (x,y):y[0]+[y[1]]).map(lambda x:'\001'.join(x)).saveAsTextFile('/commit/taobao/shop/shopinfo_joindata')
 
-rdd.saveAsTextFile('/user/wrt/temp/shop_type_tmp')
+rdd2.saveAsTextFile('/user/wrt/temp/shop_type_tmp')
 
+
+#spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shop_type.py
