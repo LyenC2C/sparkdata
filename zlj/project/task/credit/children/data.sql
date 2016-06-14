@@ -6,10 +6,10 @@
 CREATE TABLE t_zlj_credit_children_feed_data AS
 SELECT *
 FROM t_base_ec_item_feed_dev
-WHERE content LIKE '%º¢×Ó%' or content LIKE '%¶ù×Ó%'  or content LIKE '%Å®¶ù%'  or   content LIKE '%Ó¤¶ù%';
+WHERE content LIKE '%ï¿½ï¿½ï¿½ï¿½%' or content LIKE '%ï¿½ï¿½ï¿½ï¿½%'  or content LIKE '%Å®ï¿½ï¿½%'  or   content LIKE '%Ó¤ï¿½ï¿½%';
 
 
--- ÆÀÂÛ ÍÚ¾òÓÃ»§ 27176178
+-- ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¾ï¿½ï¿½Ã»ï¿½ 27176178
 SELECT count(1) from (SELECT user_id from t_zlj_credit_children_feed_data group by user_id)t ;
 
 
@@ -64,6 +64,8 @@ SELECT
 user_id, count(1)*0.5 as s
 FROM t_zlj_credit_children_feed_record_data group by user_id,root_cat_id
 )t group by user_id ;
+
+
 
 
 SELECT  score,COUNT(1)  FROM  t_zlj_credit_children_feed_record_data_usercat_score group by score
