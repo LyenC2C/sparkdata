@@ -302,7 +302,7 @@ if __name__ == "__main__":
                         .saveAsTextFile(output_all_uid_marks)
 
         #reuslt:item inc num:
-        rdd_item_inc_num = rdd_cmt_inc.map(lambda (x,y,z):[y,x])\
+        rdd_item_inc_num = rdd_cmt_inc.map(lambda (x,y,z):[z,x])\
                         .groupByKey()\
                         .map(lambda (x,y):cal_item_inc_num(x,y))
         rdd_item_inc_num.saveAsTextFile(output_item_inc_num)
