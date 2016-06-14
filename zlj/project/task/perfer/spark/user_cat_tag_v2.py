@@ -3636,11 +3636,11 @@ import math
 def f(x):
     if ( str(x.price).replace('.','').isdigit()):
         price=float(x.price)
-        root_cat_id=x.cate_level2_id
+        root_cat_id=str(x.cate_level2_id)
         user_id=x.user_id
         if price<1.1:return None
         score=round(math.log(price),2)
-        print root_cat_id,a
+        # print root_cat_id,a
         if not a.has_key(root_cat_id):return None
         tags=a.get(root_cat_id).decode('utf-8')
         lv=[]
