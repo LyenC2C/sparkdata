@@ -7,6 +7,8 @@ echo "\targv[1]:-genbase, 形成基础仓库.  argv[2]:inputpath   argv[3]:outpu
     \targv[1]:-geninc, 每日新增数据.  argv[2]:input data path   argv[3]:input base path  argv[4]:outputpath"
 #spark_middle $workspace_path/iteminfo/gen_iteminfo.py $1 $2 $3 $4
 
+mission_data=$1
+
 hadoop fs -mv /commit/iteminfo/house_tmp/* /commit/iteminfo/
 hadoop fs -mv ${mission_data} /commit/iteminfo/house_tmp/
 
