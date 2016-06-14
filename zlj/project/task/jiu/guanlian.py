@@ -10,6 +10,7 @@ sc = SparkContext(appName="test")
 
 sqlContext = SQLContext(sc)
 
+from pyspark.mllib.feature import Normalizer
 
 buy=sqlContext.read.json("/user/hadoop/service/jiu/jiu.sp.item.2.cmt.t.cat.dec.uid.sq.his.nw")
 buy.printSchema()

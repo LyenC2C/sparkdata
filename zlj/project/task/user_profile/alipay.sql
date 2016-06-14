@@ -41,7 +41,7 @@ tb_id,
 case when LENGTH(max(tgender))<1 then null else max(tgender) end as tgender ,
 case when max(tage) is null  then null else max(tage) end as tage ,
 case when LENGTH(max(tname))<1 then null else max(tname) end as tname ,
-case when LENGTH(max(tloc))<1 then null else max(tloc) end as tloc ,
+case when LENGTH(max(tloc))<2 then null else max(tloc) end as tloc ,
 case when LENGTH(max(alipay))<1 then null else max(alipay) end as alipay ,
 case when LENGTH(max(buycnt))<1 then null else max(buycnt) end as buycnt ,
 case when LENGTH(max(verify))<1 then null else max(verify) end as verify ,
@@ -71,7 +71,20 @@ SELECT  COUNT(1) from (select uid from t_base_ec_tb_userinfo where ds=20160608 g
 
 
 create TABLE  t_base_user_info_s_tbuserinfo_t as
-select  t1.*,prov as tel_prov,city as tel_city from t_base_user_info_s_tbuserinfo_t_20160418 t1 left join t_base_ec_loc t2  on t1.tb_id=t2.user_id;
+select tb_id ,
+tgender   ,
+case when tage<10 or tage>80 then 0 else tage end as tage  ,
+tname     ,
+tloc      ,
+alipay    ,
+buycnt    ,
+verify    ,
+regtime   ,
+nick      ,
+prov as tel_prov,city as tel_city from
+
+t_base_user_info_s_tbuserinfo_t_20160418 t1 left join t_base_ec_loc t2  on t1.tb_id=t2.user_id
+;
 
 
 
