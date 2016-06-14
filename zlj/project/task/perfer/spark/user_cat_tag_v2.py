@@ -3640,6 +3640,7 @@ def f(x):
         user_id=x.user_id
         if price<1.1:return None
         score=round(math.log(price),2)
+        print root_cat_id,a
         if not a.has_key(root_cat_id):return None
         tags=a.get(root_cat_id).decode('utf-8')
         lv=[]
