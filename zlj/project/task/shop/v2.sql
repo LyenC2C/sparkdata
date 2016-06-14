@@ -353,3 +353,6 @@ CREATE TABLE t_zlj_shop_result_rank_v2 AS
         JOIN t_zlj_shop_quant_rank_v2 t4 ON t1.shop_id = t4.shop_id
         JOIN t_zlj_shop_grow_rank_v2 t5 ON t1.shop_id = t5.shop_id
     ) t;
+
+
+select user_id,root_cat_id,cate_level2_id,price  from t_zlj_ec_userbuy  t1 join t_base_ec_dim t2 on t1.cat_id=t2.cate_id where cate_level2_id is not null
