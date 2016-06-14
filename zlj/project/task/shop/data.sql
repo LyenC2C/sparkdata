@@ -10,7 +10,9 @@ shop_id ,shop_name ,5*desc_highgap/100.0 + 2*service_highgap/100.0 +1*wuliu_high
 from
 t_base_ec_shop_dev_new
 where ds=20160613 and bc_type='B'
-)t1 join t_base_shop_major t2 on t1.shop_id=t2.shop_id ;
+)t1 join t_base_shop_major t2 on t1.shop_id=t2.shop_id
+
+;
 
 
 
@@ -71,8 +73,7 @@ t_zlj_shop_sold_num_rank t2 on t1.shop_id=t2.shop_id
 join t_zlj_shop_sold_price_rank t3 on t1.shop_id=t3.shop_id
 join t_zlj_shop_quant_rank t4 on t1.shop_id=t4.shop_id
 )t
-
-
+;
 
 
 -- limit 100;
