@@ -6,8 +6,8 @@
 
 -- 打分排序
 
-DROP TABLE IF EXISTS t_zlj_shop_desc_score_rank_v3;
-CREATE TABLE t_zlj_shop_desc_score_rank_v3 AS
+DROP TABLE IF EXISTS t_zlj_shop_desc_score_rank_v4;
+CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
 
   SELECT
     t_origin.*,
@@ -18,7 +18,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v3 AS
       SELECT
 
         main_cat_name,
-        max(desc_score) - min(desc_score) AS len,
+        8 - min(desc_score) AS len,
         min(desc_score)                   AS smin
       FROM
 
@@ -37,7 +37,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v3 AS
                 5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613 AND location like '%四川%'
+              WHERE ds = 20160613
             ) t1 left  JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
         ) tn
@@ -65,7 +65,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v3 AS
             5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613 AND location like '%四川%'
+          WHERE ds = 20160613
         ) t1 left JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
@@ -75,9 +75,9 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v3 AS
 
 -- 成长性v3
 
-DROP TABLE IF EXISTS t_zlj_shop_grow_rank_v3;
+DROP TABLE IF EXISTS t_zlj_shop_grow_rank_v4;
 
-CREATE TABLE t_zlj_shop_grow_rank_v3 AS
+CREATE TABLE t_zlj_shop_grow_rank_v4 AS
   SELECT
     t_origin.*,
     (t_origin.growing_score - t_normal.smin) / t_normal.len AS nor_growing_s ,
@@ -116,7 +116,7 @@ CREATE TABLE t_zlj_shop_grow_rank_v3 AS
                 credit * 100.0 / (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613 AND location like '%四川%'
+              WHERE ds = 20160613
             ) t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
         ) tn
       GROUP BY main_cat_name
@@ -145,7 +145,7 @@ CREATE TABLE t_zlj_shop_grow_rank_v3 AS
             credit * 100.0 / (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613 AND location like '%四川%'
+          WHERE ds = 20160613
         ) t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
@@ -159,9 +159,9 @@ CREATE TABLE t_zlj_shop_grow_rank_v3 AS
 
 
 -- 销量排序v3
-DROP TABLE IF EXISTS t_zlj_shop_sold_num_rank_v3;
+DROP TABLE IF EXISTS t_zlj_shop_sold_num_rank_v4;
 
-CREATE TABLE t_zlj_shop_sold_num_rank_v3 AS
+CREATE TABLE t_zlj_shop_sold_num_rank_v4 AS
 
   SELECT
 
@@ -214,9 +214,9 @@ CREATE TABLE t_zlj_shop_sold_num_rank_v3 AS
 
 
 -- 销售额排序v3
-DROP TABLE IF EXISTS t_zlj_shop_sold_price_rank_v3;
+DROP TABLE IF EXISTS t_zlj_shop_sold_price_rank_v4;
 
-CREATE TABLE t_zlj_shop_sold_price_rank_v3 AS
+CREATE TABLE t_zlj_shop_sold_price_rank_v4 AS
 
   SELECT
 
@@ -270,9 +270,9 @@ CREATE TABLE t_zlj_shop_sold_price_rank_v3 AS
 
 
 -- 库存排序v3
-DROP TABLE IF EXISTS t_zlj_shop_quant_rank_v3;
+DROP TABLE IF EXISTS t_zlj_shop_quant_rank_v4;
 
-CREATE TABLE t_zlj_shop_quant_rank_v3 AS
+CREATE TABLE t_zlj_shop_quant_rank_v4 AS
 
   SELECT
 
@@ -326,8 +326,8 @@ CREATE TABLE t_zlj_shop_quant_rank_v3 AS
 
 
 
-DROP TABLE IF EXISTS t_zlj_shop_result_rank_v3;
-CREATE TABLE t_zlj_shop_result_rank_v3 AS
+DROP TABLE IF EXISTS t_zlj_shop_result_rank_v5;
+CREATE TABLE t_zlj_shop_result_rank_v5 AS
   SELECT
     *,
     ROW_NUMBER()
@@ -354,14 +354,14 @@ CREATE TABLE t_zlj_shop_result_rank_v3 AS
         total_month ,
         nor_total_month_s,
 
-        nor_desc_s * 2 + nor_sold_score * 2 + nor_sold_price_score * 3 + nor_quant_score * 1 + nor_growing_s *3*log2(total_month) + nor_credit_s*3*log2(total_month)+ nor_total_month_s*0.5
+        nor_desc_s * 4 + nor_sold_score * 2 + nor_sold_price_score * 3 + nor_quant_score * 1 + nor_growing_s *3 + nor_credit_s*3+ nor_total_month_s*0.5
           AS sum_score
       FROM
-        t_zlj_shop_desc_score_rank_v3 t1 JOIN
+        (select * from t_zlj_shop_desc_score_rank_v4 where bc_type='C') t1 JOIN
         t_zlj_shop_sold_num_rank_v3 t2 ON t1.shop_id = t2.shop_id
         JOIN t_zlj_shop_sold_price_rank_v3 t3 ON t1.shop_id = t3.shop_id
         JOIN t_zlj_shop_quant_rank_v3 t4 ON t1.shop_id = t4.shop_id
-        JOIN t_zlj_shop_grow_rank_v3 t5 ON t1.shop_id = t5.shop_id
+        JOIN t_zlj_shop_grow_rank_v4 t5 ON t1.shop_id = t5.shop_id
     ) t;
 
 
