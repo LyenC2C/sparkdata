@@ -27,7 +27,7 @@ def valid_jsontxt(content):
     if type(content) == type(u""):
         res = content.encode("utf-8")
     # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
-    return res.replace('\n',"").replace("\r","")
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -118,10 +118,10 @@ def quchong(x,y):
     result = y[0]
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
+s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part-0000*"
 rdd_c = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x,y))
-rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')
+rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp_000')
 
 #spark-submit  --executor-memory 18G  --driver-memory 18G  --total-executor-cores 240 t_base_shop_info.py
 #LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp_000' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='20160613');
