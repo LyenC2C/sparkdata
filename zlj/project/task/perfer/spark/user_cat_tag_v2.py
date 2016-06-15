@@ -3653,7 +3653,7 @@ def f(x):
 # rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 hiveContext.sql('use wlbase_dev')
 rdd=hiveContext.sql('select user_id,root_cat_id,cate_level2_id,price  from t_base_ec_dim  t1 join  t_zlj_ec_userbuy t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null')\
-    .map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
+    .repartition(150).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
 
 def sort_limit(y):
