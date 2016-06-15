@@ -7,10 +7,7 @@ import zlib
 import base64
 import time
 import rapidjson as json
-from pyspark import SparkContext
 
-
-sc = SparkContext(appName="t_base_item_info")
 
 def parse_price(price_dic):
     min=1000000000.0
@@ -141,15 +138,28 @@ def quchong(x, y):
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
+
     # result = []
+if __name__ == "__main__":
+    if argv[1] == "-local":
+        cate_dict = {}
+        for line in open("../../public/data/cate_dim"):
+            ss = line.strip().split("\001")
+            cate_dict[ss[0]] = [ss[1],ss[3],ss[8]]
+        for line in sys.stdin:
+            print f(line,cate_dict)
+    if argv[1] == "-spark":
+        from pyspark import SparkContext
+        sc = SparkContext(appName="t_base_item_info")
+        s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
+        s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
+        cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
+        rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
+        # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
+        rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
-s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
-cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
-# rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
+# hfs -rmr /user/wrt/temp/iteminfo_tmp
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py -spark
+#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
 
 
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
-#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160513');
