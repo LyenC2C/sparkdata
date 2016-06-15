@@ -3,24 +3,47 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 sc = SparkContext(appName="title_price_picurl")
-s1 = "/user/wrt/item_info_new"
+s1 = "/commit/iteminfo/20160422/id.nohas.tmp.sort.id.iteminfo"
 s2 = "/comment/iteminfoorg"
+#def valid_jsontxt(content):
+#    if type(content) == type(u""):
+#        return content.encode("utf-8")
+#    else:
+#        return content
 def valid_jsontxt(content):
+    res = content
     if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+        res = content.encode("utf-8")
+    return res.replace('\n',"").replace("\r","")
+#def parse_price(price_dic):
+#    min=1000000000.0
+#    price='0'
+#    price_range='-'
+#    for value in price_dic:
+#        tmp=value['price']
+#        v=0
+#        if '-' in tmp:
+#            v=(float(tmp.split('-')[0])+float(tmp.split('-')[1]))/2.0
+#        else :
+#            v=float(tmp)
+#        if min>v:
+#            min=v
+#            price=v
+#            if '-' eturn "\001".join([str(valid_jsontxt(i)) for i in result])in tmp: price_range=tmp
+#    return [price,price_range]
 def parse_price(price_dic):
     min=1000000000.0
     price='0'
     price_range='-'
     for value in price_dic:
         tmp=value['price']
-        v=0
-        if '-' in tmp:
-            v=(float(tmp.split('-')[0])+float(tmp.split('-')[1]))/2.0
-        else :
-            v=float(tmp)
+        v=""
+        if '-' in tmp:     v=tmp.split('-')[0]
+        else :             v=tmp
+        if v.replace('.',"").isdigit():
+            v = float(v)
+        else:
+            v = 0.0
         if min>v:
             min=v
             price=v
@@ -33,17 +56,19 @@ def f_new(line):
         ob = json.loads(valid_jsontxt(ss[2]))
         result = []
         item_id = valid_jsontxt(ss[1])
-        title = ob.get("itemInfoModel").get("title")
+        title = ob.get("itemInfoModel",{}).get("title","-")
         value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-        price = value[0]
+        price = str(value[0])
         picurl_list = ob.get("itemInfoModel").get("picsPath")
         picurl_y = picurl_list[0]
         picurl = picurl_y.replace("img.alicdn.com","gw.alicdn.com")
+	result.append(item_id)
         result.append(title)
         result.append(price)
         result.append(picurl)
-        result.append("new")
-        return (item_id,result)
+        #result.append("new")
+        #return (item_id,result)
+	return "\001".join([str(valid_jsontxt(i)) for i in result])
     except Exception,e:
         print e
         return None
@@ -83,7 +108,7 @@ def quchong(x,y):
     # return x
 
 rdd1 = sc.textFile(s1).map(lambda x: f_new(x)).filter(lambda x:x!=None)
-rdd2 = sc.textFile(s2).map(lambda x: f_old(x)).filter(lambda x:x!=None)
+#rdd2 = sc.textFile(s2).map(lambda x: f_old(x)).filter(lambda x:x!=None)
 #print rdd.count()
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
-rdd.saveAsTextFile('/user/wrt/id_title_price_url')
+#rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
+rdd1.saveAsTextFile('/user/wrt/id_title_price_url_0423')
