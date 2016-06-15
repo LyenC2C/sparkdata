@@ -3652,16 +3652,17 @@ def f(x):
 # path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t/'
 # rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 hiveContext.sql('use wlbase_dev')
-rdd=hiveContext.sql('select user_id,root_cat_id,cate_level2_id,price  from t_base_ec_dim  t1 join  t_zlj_ec_userbuy t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null')\
+rdd=hiveContext.sql('select user_id,root_cat_id,cate_level2_id,price  from t_base_ec_dim  t1 join  t_zlj_ec_userbuy_test t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null')\
     .repartition(150).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
-rdd1=rdd.reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
+rdd1=rdd.repartition(150).reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
 
 def sort_limit(y):
     lv=[]
     for i in y:
         lv.append(i.split('_'))
-    ts=[i for index, i in enumerate(sorted(lv, key=lambda t: float(t[-1]), reverse=True)) if index < 11]
-    return''.join([i[0]+'_'+i[1] for i in ts])
+    ts=[(i[0],float(i[1])) for index, i in enumerate(sorted(lv, key=lambda t: float(t[-1]), reverse=True)) if index < 11]
+    v=sum([v for k,v in ts])
+    return''.join([i[0]+'_'+round(i[1]/v,4) for i in ts])
 
 rdd2=rdd1.groupByKey().map(lambda (x,y):(x,sort_limit(y))).repartition(100)
 schema1 = StructType([
