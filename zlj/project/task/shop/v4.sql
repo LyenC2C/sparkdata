@@ -18,7 +18,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
       SELECT
 
         main_cat_name,
-        8 - min(desc_score) AS len,
+        max(desc_score) - min(desc_score) AS len,
         min(desc_score)                   AS smin
       FROM
 
@@ -37,7 +37,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
                 5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613
+              WHERE ds = 20160613 and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
             ) t1 left  JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
         ) tn
@@ -65,7 +65,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
             5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613
+          WHERE ds = 20160613 and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
         ) t1 left JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
@@ -92,9 +92,9 @@ CREATE TABLE t_zlj_shop_grow_rank_v4 AS
         main_cat_name,
         max(growing_score) - min(growing_score) AS len,
         min(growing_score)                      AS smin,
-          max(credit) - min(credit) AS credit_len,
+        max(credit) - min(credit) AS credit_len,
         min(credit)                      AS credit_smin ,
-    max(total_month) - min(total_month) AS total_month_len,
+        max(total_month) - min(total_month) AS total_month_len,
         min(total_month)                      AS total_month_smin
       FROM
 
@@ -116,8 +116,8 @@ CREATE TABLE t_zlj_shop_grow_rank_v4 AS
                 credit * 100.0 / (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613
-            ) t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
+              WHERE ds = 20160613  and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
+            ) t1 left  JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
         ) tn
       GROUP BY main_cat_name
 
@@ -145,8 +145,8 @@ CREATE TABLE t_zlj_shop_grow_rank_v4 AS
             credit * 100.0 / (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613
-        ) t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
+          WHERE ds = 20160613  and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
+        ) t1 left  JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
       ON t_normal.main_cat_name = t_origin.main_cat_name;
@@ -334,7 +334,14 @@ CREATE TABLE t_zlj_shop_result_rank_v5 AS
     OVER (PARTITION BY main_cat_name
       ORDER BY sum_score DESC) AS rn
   FROM
+
+
     (
+      SELECT  * ,
+        nor_desc_s * 4 + nor_sold_score * 2 + nor_sold_price_score * 3 + nor_quant_score * 1 + nor_growing_s *3 + nor_credit_s*3+ nor_total_month_s*0.5
+          AS sum_score
+      from
+      (
       SELECT
         t1.shop_id,
         t1.main_cat_name,
@@ -342,27 +349,47 @@ CREATE TABLE t_zlj_shop_result_rank_v5 AS
         desc_score,
         nor_desc_s,
         tsnu ,
-        nor_sold_score,
+        case when  nor_sold_score is null then 0.0 else nor_sold_score end nor_sold_score ,
         tsmo,
-        nor_sold_price_score,
+        case when  nor_sold_price_score is null then 0.0 else nor_sold_price_score end nor_sold_price_score ,
         trenu,
-        nor_quant_score,
+        case when  nor_quant_score is null then 0.0 else nor_quant_score end nor_quant_score ,
         growing_score,
         nor_growing_s,
         credit,
         nor_credit_s,
         total_month ,
-        nor_total_month_s,
+        nor_total_month_s
 
-        nor_desc_s * 4 + nor_sold_score * 2 + nor_sold_price_score * 3 + nor_quant_score * 1 + nor_growing_s *3 + nor_credit_s*3+ nor_total_month_s*0.5
-          AS sum_score
       FROM
-        (select * from t_zlj_shop_desc_score_rank_v4 where bc_type='C') t1 JOIN
-        t_zlj_shop_sold_num_rank_v3 t2 ON t1.shop_id = t2.shop_id
-        JOIN t_zlj_shop_sold_price_rank_v3 t3 ON t1.shop_id = t3.shop_id
-        JOIN t_zlj_shop_quant_rank_v3 t4 ON t1.shop_id = t4.shop_id
-        JOIN t_zlj_shop_grow_rank_v4 t5 ON t1.shop_id = t5.shop_id
-    ) t;
+        (select * from t_zlj_shop_desc_score_rank_v4) t1
+
+        left JOIN t_zlj_shop_sold_num_rank_v4 t2 ON t1.shop_id = t2.shop_id
+        left JOIN t_zlj_shop_sold_price_rank_v4 t3 ON t1.shop_id = t3.shop_id
+        left JOIN t_zlj_shop_quant_rank_v4 t4 ON t1.shop_id = t4.shop_id
+        left JOIN t_zlj_shop_grow_rank_v4 t5 ON t1.shop_id = t5.shop_id
+    ) t
+
+  )t1
+;
+
+
+DROP TABLE IF EXISTS t_zlj_shop_result_rank_v3;
+CREATE TABLE t_zlj_shop_result_rank_v3 AS
+SELECT  t1.* , ROW_NUMBER()
+        OVER (PARTITION BY main_cat_name
+          ORDER BY sum_score DESC) AS rn1
+  from
+t_zlj_shop_result_rank_v5
+ t1
+JOIN
+(SELECT shop_id FROM
+t_base_ec_shop_dev_new
+WHERE ds = 20160613 AND LOCATION LIKE '%四川%'
+AND desc_highgap<100 AND service_highgap<100  AND wuliu_highgap<100
+)
+
+t2 on t1.shop_id=t2.shop_id;
 
 
 select user_id,root_cat_id,cate_level2_id,price  from t_zlj_ec_userbuy  t1 join t_base_ec_dim t2 on t1.cat_id=t2.cate_id where cate_level2_id is not null
