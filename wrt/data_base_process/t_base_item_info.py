@@ -38,7 +38,7 @@ def valid_jsontxt(content):
     if type(content) == type(u""):
         res = content.encode("utf-8")
     # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
-    return res.replace('\n',"").replace("\r","")
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 # def valid_jsontxt(content):
 #     if type(content) == type(u""):
@@ -141,14 +141,14 @@ def quchong(x, y):
 
     # result = []
 if __name__ == "__main__":
-    if argv[1] == "-local":
+    if sys.argv[1] == "-local":
         cate_dict = {}
         for line in open("../../public/data/cate_dim"):
             ss = line.strip().split("\001")
             cate_dict[ss[0]] = [ss[1],ss[3],ss[8]]
         for line in sys.stdin:
             print f(line,cate_dict)
-    if argv[1] == "-spark":
+    if sys.argv[1] == "-spark":
         from pyspark import SparkContext
         sc = SparkContext(appName="t_base_item_info")
         s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
