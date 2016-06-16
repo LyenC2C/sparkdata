@@ -51,11 +51,14 @@ def cal(x,y):
             today_info = twodays[0]
         day_sold = max(today_info[1] - yesterday_info[1], 0)
         day_sold_price = float(day_sold) * yesterday_info[0]
-    return str(valid_jsontxt(x)) + "\001" + str(day_sold) + "\001" + str(day_sold_price)
+    if day_sold == 0:
+        return None
+    else:
+        return str(valid_jsontxt(x)) + "\001" + str(day_sold) + "\001" + str(day_sold_price)
 
 # rdd1 = textFile(s1).map(lambda x:(x.split('\001')[0],x.split('\001')[1:]))
 # rdd2 = textFile(s2).map(lambda x:(x.split('\001')[0],x.split('\001')[1:]))
 rdd1 = sc.textFile(s1).map(lambda x:yes_sale(x))
 rdd2 = sc.textFile(s2).map(lambda x:tod_sale(x))
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):cal(x,y))
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):cal(x,y)).filter(lambda x:x!=None)
 rdd.coalesce(200).saveAsTextFile('/user/wrt/daysale_tmp')
