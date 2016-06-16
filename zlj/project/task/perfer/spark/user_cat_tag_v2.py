@@ -3662,7 +3662,7 @@ def sort_limit(y):
         lv.append(i.split('_'))
     ts=[(i[0],float(i[1])) for index, i in enumerate(sorted(lv, key=lambda t: float(t[-1]), reverse=True)) if index < 11]
     v=sum([v for k,v in ts])
-    return''.join([i[0]+'_'+str(round(i[1]/v,4)) for i in ts])
+    return '\t'.join([i[0]+'_'+str(round(i[1]/v,4)) for i in ts])
 
 rdd2=rdd1.groupByKey().map(lambda (x,y):(x,sort_limit(y))).repartition(100)
 schema1 = StructType([

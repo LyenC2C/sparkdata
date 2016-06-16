@@ -37,7 +37,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v3 AS
                 5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613 AND location like '%四川%'
+              WHERE ds = 20160613 AND location like '%四川%'   and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
             ) t1 left  JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
         ) tn
@@ -65,7 +65,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v3 AS
             5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613 AND location like '%四川%'
+          WHERE ds = 20160613 AND location like '%四川%'   and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
         ) t1 left JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
@@ -116,8 +116,8 @@ CREATE TABLE t_zlj_shop_grow_rank_v3 AS
                 credit * 100.0 / (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613 AND location like '%四川%'
-            ) t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
+              WHERE ds = 20160613 AND location like '%四川%'  and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
+            ) t1  left JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
         ) tn
       GROUP BY main_cat_name
 
@@ -145,8 +145,8 @@ CREATE TABLE t_zlj_shop_grow_rank_v3 AS
             credit * 100.0 / (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613 AND location like '%四川%'
-        ) t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
+          WHERE ds = 20160613 AND location like '%四川%'  and  desc_highgap<100 and service_highgap<100  and wuliu_highgap<100
+        ) t1  left JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
       ON t_normal.main_cat_name = t_origin.main_cat_name;
