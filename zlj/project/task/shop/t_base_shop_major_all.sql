@@ -12,11 +12,10 @@ CREATE TABLE t_base_shop_major_all AS SELECT
 
 CREATE TABLE t_base_shop_major_all AS
 
-
 SELECT q.*
 FROM (
        SELECT
-         p.shop_id,p.shop_name,p.industry_name,rank() over(partition BY p.shop_id ORDER BY shopsalmon DESC) rk
+         p.shop_id,p.shop_name,p.industry_name as main_cat_name,rank() over(partition BY p.shop_id ORDER BY shopsalmon DESC) rk
        FROM
          (
            SELECT
@@ -52,7 +51,7 @@ FROM (
                                item_id,
                                day_sold,
                                day_sold_price daysmo
-                             FROM t_base_ec_item_daysale_dev_new) t
+                             FROM t_base_ec_item_daysale_dev_new where (day_sold_price/day_sold)<50000 ) t
                           GROUP BY item_id) t1
                          JOIN
                          (SELECT
