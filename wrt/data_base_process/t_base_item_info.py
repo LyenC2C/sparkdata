@@ -78,6 +78,7 @@ def f(line,cate_dict):
     root_cat_name = cate_dict.get(categoryId,["-","-","-"])[2]
     trackParams = ob.get('trackParams',{})
     BC_type = trackParams.get('BC_type','-')
+    if BC_type != 'B' and BC_type != 'C': BC_type = "-"
     brandId = trackParams.get('brandId','-')
     # brand_name = brand_dict.get(brandId,"-")
     brand_name = "-"
