@@ -42,7 +42,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
             shop_id,
             location
           FROM t_base_ec_item_dev_new
-          WHERE ds = 20160530
+          WHERE ds = 20160615
           ) t1
        JOIN
       (
@@ -52,7 +52,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
           user_id,
           length(content)              content_length,
           annoy,
-          SUBSTRING (regexp_replace(f_date,'-',''),0,8)  as ds ,
+          SUBSTRING (regexp_replace(f_date,'-',''),0,8)  as dsn ,
           datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), SUBSTRING (f_date,0,10)) AS datediff,
           sku
         FROM t_base_ec_item_feed_dev_inc_new

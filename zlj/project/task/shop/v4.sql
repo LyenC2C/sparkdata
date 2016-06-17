@@ -27,7 +27,9 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
               SELECT
                 shop_id,
                 shop_name,
-                5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
+                log2((12 * (2016 - YEAR(starts)) + MONTH(starts)))*(
+                  5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0
+                +5*desc_score/5.0+5*service_score/5.0+5*wuliu_score/5.0 ) AS desc_score
               FROM
                 t_base_ec_shop_dev_new
               WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
@@ -57,7 +59,9 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
             shop_id,
             shop_name,
             bc_type,
-            5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0 AS desc_score
+           log2((12 * (2016 - YEAR(starts)) + MONTH(starts)))*(
+                  5 * desc_highgap / 100.0 + 2 * service_highgap / 100.0 + 1 * wuliu_highgap / 100.0
+                +5*desc_score/5.0+5*service_score/5.0+5*wuliu_score/5.0 ) AS desc_score
           FROM
             t_base_ec_shop_dev_new
           WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
@@ -107,7 +111,7 @@ CREATE TABLE t_zlj_shop_grow_rank_v4 AS
               SELECT
                 shop_id,
                 shop_name,
-                credit * 100                                 AS credit,
+                log2((12 * (2016 - YEAR(starts)) + MONTH(starts)))*credit * 100                                 AS credit,
                 (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS total_month,
                 log2((12 * (2016 - YEAR(starts)) + MONTH(starts))) * credit * 100.0 /
                 (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
@@ -139,7 +143,7 @@ CREATE TABLE t_zlj_shop_grow_rank_v4 AS
           SELECT
             shop_id,
             shop_name,
-            credit * 100                                 AS credit,
+            log2((12 * (2016 - YEAR(starts)) + MONTH(starts)))*credit * 100                                 AS credit,
             (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS total_month,
             log2((12 * (2016 - YEAR(starts)) + MONTH(starts))) * credit * 100.0 /
             (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
@@ -457,10 +461,54 @@ CREATE TABLE t_zlj_shop_result_rank_v3 AS
     t2 ON t1.shop_id = t2.shop_id;
 
 
-SELECT
-  user_id,
-  root_cat_id,
-  cate_level2_id,
-  price
-FROM t_zlj_ec_userbuy t1 JOIN t_base_ec_dim t2 ON t1.cat_id = t2.cate_id
-WHERE cate_level2_id IS NOT NULL
+DROP TABLE IF EXISTS t_zlj_shop_result_rank_v3_zj;
+CREATE TABLE t_zlj_shop_result_rank_v3_zj AS
+  SELECT
+    t1.*,
+    ROW_NUMBER()
+    OVER (PARTITION BY main_cat_name
+      ORDER BY sum_score DESC) AS rn1
+  FROM
+    t_zlj_shop_result_rank_v5
+    t1
+    JOIN
+    (SELECT shop_id
+     FROM
+       t_base_ec_shop_dev_new
+     WHERE ds = 20160613 AND LOCATION LIKE '%浙江%'
+           AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+    )
+
+    t2 ON t1.shop_id = t2.shop_id;
+
+
+
+DROP TABLE IF EXISTS t_zlj_shop_result_rank_v3_gz;
+CREATE TABLE t_zlj_shop_result_rank_v3_gz
+AS
+  SELECT
+    t1.*,
+    ROW_NUMBER()
+    OVER (PARTITION BY main_cat_name
+      ORDER BY sum_score DESC) AS rn1
+  FROM
+    t_zlj_shop_result_rank_v5
+    t1
+    JOIN
+    (
+      SELECT shop_id
+     FROM
+       t_base_ec_shop_dev_new
+     WHERE ds = 20160613 AND LOCATION LIKE '%广州%'
+           AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+    )
+    t2 ON t1.shop_id = t2.shop_id;
+
+	SELECT * FROM         t_base_ec_shop_dev_new      WHERE ds = 20160613 and shop_name='百分之一／城市轻文艺'
+-- SELECT
+--   user_id,
+--   root_cat_id,
+--   cate_level2_id,
+--   price
+-- FROM t_zlj_ec_userbuy t1 JOIN t_base_ec_dim t2 ON t1.cat_id = t2.cate_id
+-- WHERE cate_level2_id IS NOT NULL
