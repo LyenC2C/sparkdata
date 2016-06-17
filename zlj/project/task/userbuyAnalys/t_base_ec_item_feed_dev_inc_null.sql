@@ -15,6 +15,9 @@ LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$ds/"  INTO 
 
 DROP  TABLE  IF EXISTS   t_base_ec_item_feed_dev_inc_tmp;
 
+
+INSERT INTO TABLE t_base_ec_record_dev_new_617 PARTITION (dsn)
+
 CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
   AS
     SELECT
@@ -28,7 +31,8 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
       bc_type,
       price,
       shop_id,
-      location
+      location,
+      case when cat_id is null then 'wrong' else 'right' end as ds
     FROM (SELECT
             cast(item_id AS BIGINT) item_id,
             title,
@@ -44,9 +48,17 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
           FROM t_base_ec_item_dev_new
           WHERE ds = 20160530
           ) t1
-       JOIN
+      RIGHT  JOIN
       (
         SELECT
+        item_id,
+        feed_id,
+        user_id,
+        content_length,
+        annoy,
+        ds,
+      datediff,
+      sku
           cast(item_id AS BIGINT)      item_id,
           feed_id,
           user_id,
@@ -59,6 +71,9 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
         WHERE ds='$ds' and item_id IS NOT NULL AND f_date IS NOT NULL
 
       ) t2 ON t1.item_id = t2.item_id;
+
+
+
 
 
 EOF
