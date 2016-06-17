@@ -10,6 +10,9 @@ CREATE TABLE t_base_shop_major_all AS SELECT
 
 
 
+
+DROP  TABLE   t_base_shop_major_all ;
+
 CREATE TABLE t_base_shop_major_all AS
 
 SELECT q.*
