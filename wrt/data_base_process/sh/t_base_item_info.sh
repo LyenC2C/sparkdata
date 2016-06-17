@@ -5,7 +5,7 @@ today=$1
 
 hfs -rmr /user/wrt/temp/iteminfo_tmp
 spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_base_item_info.py
+$pre_path/wrt/data_base_process/t_base_item_info.py -spark
 
 hive<<EOF
 

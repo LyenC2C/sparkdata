@@ -27,7 +27,7 @@ def valid_jsontxt(content):
     if type(content) == type(u""):
         res = content.encode("utf-8")
     # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
-    return res.replace('\n',"").replace("\r","")
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -123,5 +123,5 @@ rdd_c = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')
 
-#spark-submit  --executor-memory 18G  --driver-memory 18G  --total-executor-cores 240 t_base_shop_info.py
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_base_shop_info.py
 #LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp_000' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='20160613');
