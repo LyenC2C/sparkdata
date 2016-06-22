@@ -1,7 +1,7 @@
 
 
 
--- 收藏数
+-- 收藏数,商品数
 
 create table t_zlj_shop_item_count_favor as
 
