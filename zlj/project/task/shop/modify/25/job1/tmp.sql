@@ -1,7 +1,25 @@
+
+
+CREATE  table t_zlj_shop_baseinfo_rn as
+
 SELECT
-  u1.*,
+  u1.main_cat_name,
+  u1.shop_id,
+  u1.shop_name,
+  u1.desc_score_rk,
+  u1.desc_score,
+  u1.service_score_rk,
+  u1.service_score,
+  u1.wuliu_score_rk,
+  u1.wuliu_score,
+  u1.credit_maincat_rk,
+  u1.credit,
+  u1.fans_count_rk,
+  u1.fans_count,
+  u1.shop_mouths_rk,
+  u1.shop_mouths,
   u2.credit_loc_rk,
-  u2.total_maincat_rn
+  u2.total_locat_rn
 FROM
   (
     SELECT
@@ -38,7 +56,7 @@ FROM
              ROW_NUMBER()
              OVER (PARTITION BY main_cat_name
                ORDER BY shopn DESC)         AS shop_mouths_rk,
-             shopn                             shop_mouths_rk
+             shopn                             shop_mouths
            FROM
              (SELECT
                 r.*,
@@ -85,4 +103,4 @@ FROM
        GROUP BY location) y12
         ON y11.location = y12.location
   ) u2
-    ON u1.shop_id = u2.shop_id
+    ON u1.shop_id = u2.shop_id;
