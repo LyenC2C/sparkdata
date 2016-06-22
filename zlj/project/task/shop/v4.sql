@@ -32,7 +32,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
                 +5*desc_score/5.0+5*service_score/5.0+5*wuliu_score/5.0 ) AS desc_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+              WHERE ds = 20160615
             ) t1 LEFT JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
         ) tn
@@ -64,7 +64,7 @@ CREATE TABLE t_zlj_shop_desc_score_rank_v4 AS
                 +5*desc_score/5.0+5*service_score/5.0+5*wuliu_score/5.0 ) AS desc_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+          WHERE ds = 20160615
         ) t1 LEFT JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
@@ -117,7 +117,7 @@ CREATE TABLE t_zlj_shop_grow_rank_v4 AS
                 (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+              WHERE ds = 20160615
             ) t1 LEFT JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
         ) tn
       GROUP BY main_cat_name
@@ -149,7 +149,7 @@ CREATE TABLE t_zlj_shop_grow_rank_v4 AS
             (12 * (2016 - YEAR(starts)) + MONTH(starts)) AS growing_score
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+          WHERE ds = 20160615
         ) t1 LEFT JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
 
     ) t_origin
@@ -346,7 +346,7 @@ CREATE TABLE t_zlj_shop_itemnum_rank_v4 AS
                 count(1) AS item_num
               FROM
                 t_base_ec_shop_dev_new
-              WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+              WHERE ds = 20160615 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
               GROUP BY shop_id
             )
             t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
@@ -370,7 +370,7 @@ CREATE TABLE t_zlj_shop_itemnum_rank_v4 AS
             count(1) AS item_num
           FROM
             t_base_ec_shop_dev_new
-          WHERE ds = 20160613 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
+          WHERE ds = 20160615 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
           GROUP BY shop_id
         )
         t1 JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id
@@ -379,6 +379,8 @@ CREATE TABLE t_zlj_shop_itemnum_rank_v4 AS
       ON t_normal.main_cat_name = t_origin.main_cat_name;
 
 
+
+-- 最终结果
 DROP TABLE IF EXISTS t_zlj_shop_result_rank_v5;
 CREATE TABLE t_zlj_shop_result_rank_v5 AS
   SELECT
@@ -454,7 +456,7 @@ CREATE TABLE t_zlj_shop_result_rank_v3 AS
     (SELECT shop_id
      FROM
        t_base_ec_shop_dev_new
-     WHERE ds = 20160613 AND LOCATION LIKE '%四川%'
+     WHERE ds = 20160615 AND LOCATION LIKE '%四川%'
            AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
     )
 
@@ -475,7 +477,7 @@ CREATE TABLE t_zlj_shop_result_rank_v3_zj AS
     (SELECT shop_id
      FROM
        t_base_ec_shop_dev_new
-     WHERE ds = 20160613 AND LOCATION LIKE '%浙江%'
+     WHERE ds = 20160615 AND LOCATION LIKE '%浙江%'
            AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
     )
 
@@ -499,12 +501,12 @@ AS
       SELECT shop_id
      FROM
        t_base_ec_shop_dev_new
-     WHERE ds = 20160613 AND LOCATION LIKE '%广州%'
+     WHERE ds = 20160615 AND LOCATION LIKE '%广州%'
            AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
     )
     t2 ON t1.shop_id = t2.shop_id;
 
-	SELECT * FROM         t_base_ec_shop_dev_new      WHERE ds = 20160613 and shop_name='百分之一／城市轻文艺'
+	SELECT * FROM         t_base_ec_shop_dev_new      WHERE ds = 20160615 and shop_name='百分之一／城市轻文艺'
 -- SELECT
 --   user_id,
 --   root_cat_id,

@@ -2,21 +2,13 @@
 
 
 
-CREATE TABLE t_zlj_shop_join_major AS
-  SELECT
-    t1.*,
-    CASE WHEN main_cat_name IS NULL
-      THEN '-'
-    ELSE main_cat_name END AS main_cat_name
-  FROM
-    (
-      SELECT *
-      FROM
-        t_base_ec_shop_dev_new
-      WHERE ds = 20160615 AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
-    ) t1 LEFT JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id ;
 
 
+
+-- 收藏数
+SELECT sum(favor)
+  FROM t_base_ec_item_dev_new
+      WHERE ds = 20160615  and shop_id='65525181' ;
 
 
 SELECT  * FROM
@@ -41,17 +33,9 @@ SELECT bc_type,max(cast(credit as bigint ) )      FROM         t_base_ec_shop_de
 
 
    SELECT  * from  t_base_ec_shop_dev_new       WHERE ds = 20160615  and credit=20  limit 100;
--- 店铺信用等级增长
 
 
-SELECT cat_name,count(1)
-from t_base_ec_item_dev_new where ds=20160615 and shop_id='57299948' group by cat_name ;
 
-SELECT
-  substring(ds,0,6) as m, avg(credit) as a_credit ,avg(fans_count)  ,shop_id ,shop_name
-  FROM
-    t_base_ec_shop_dev where shop_id in ('104820621','103569798','57299948')
-group by substring(ds,0,6) ,shop_id ,shop_name;
 
 
 
@@ -68,14 +52,24 @@ join
 (
 select shop_id,user_id
 from  t_base_ec_record_dev_new
-where shop_id in ('104820621','103569798','57299948')
+
 )t2 on t1.tb_id=t2.user_id ;
+
+
+
+
+
+
 
 
 SELECT  shop_id, count(1),verify
   FROM  t_zlj_shop_shop_user_level_verify group by shop_id ,verify
 
 ;
+
+
+
+
 
 
 create table t_zlj_shop_shop_57299948_day_sold as
@@ -103,13 +97,13 @@ group by substring(ds,0,6) ;
 
 
 
-SELECT  /*+ mapjoin(t2)*/
-sum(day_sold),sum(day_sold_price) ,substring(ds,0,6)
-
-from (SELECT  * from  t_base_ec_item_daysale_dev_new  ) t1  join
-  (SELECT
-  item_id ,shop_id
-  FROM
-    t_base_ec_item_dev_new where ds=20160615  and shop_id='57299948'
-    )t2  on  t1.item_id =t2.item_id
-group by substring(ds,0,6) ;
+-- SELECT  /*+ mapjoin(t2)*/
+-- sum(day_sold),sum(day_sold_price) ,substring(ds,0,6)
+--
+-- from (SELECT  * from  t_base_ec_item_daysale_dev_new  ) t1  join
+--   (SELECT
+--   item_id ,shop_id
+--   FROM
+--     t_base_ec_item_dev_new where ds=20160615  and shop_id='57299948'
+--     )t2  on  t1.item_id =t2.item_id
+-- group by substring(ds,0,6) ;

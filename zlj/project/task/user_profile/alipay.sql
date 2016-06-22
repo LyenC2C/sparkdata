@@ -31,7 +31,7 @@ LENGTH(alipay)>0 limit 100
 ;
 
 
-## t_base_user_info_s   20160310  的数据  391448818
+## t_base_user_info_s   20160310  ??????  391448818
 
 
 
@@ -53,7 +53,7 @@ SELECT
 uid as tb_id,CAST ( cast(tgender as int) as String ) as tgender,
 case when tage<10 or tage>70 then null else tage end tage  ,tname,
 case when  t2.location is not null  then t2.location else  t1.tloc end as  tloc,
-case when alipay like '%已通过%'   then  1 else 0 end as alipay ,
+case when alipay like '%?????%'   then  1 else 0 end as alipay ,
 case when buycnt is not null then  buycnt else "" end as buycnt ,
 case when verify is not null then   verify else "" end as verify ,
 case when regtime is not null then  regtime else "" end as regtime ,
