@@ -1,3 +1,7 @@
+
+
+-- 店铺表关联店铺主营业务
+
 DROP  table  if EXISTS  t_zlj_shop_join_major;
 
 CREATE TABLE t_zlj_shop_join_major AS

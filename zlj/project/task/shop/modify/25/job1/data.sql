@@ -170,7 +170,6 @@ join
 from t_zlj_shop_join_major
 group by main_cat_name)y2
 on y1.main_cat_name=y2.main_cat_name
-
 ;
 
 
