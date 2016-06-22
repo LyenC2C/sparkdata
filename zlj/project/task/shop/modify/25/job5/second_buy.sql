@@ -1,12 +1,15 @@
 -- 二次购买
 
+
+
 create table t_zlj_shop_second_buy as
 
 SELECT  t1.* ,t2.main_cat_name
 from
 (SELECT
  shop_id, sum(case when num >1 then 1 else 0 end ) as buy_second ,
- sum(case when num =1 then 1 else 0 end ) as buy_first
+ sum(case when num =1 then 1 else 0 end ) as buy_first ,
+ round( sum(case when num >1 then 1 else 0 end )*100 /COUNT(1),2 ) as sec_retio
 FROM
 (
 select shop_id,tb_id ,COUNT(1) as num  from t_zlj_shop_shop_user_level_verify
@@ -18,11 +21,11 @@ group by shop_id,tb_id
 ;
 
 
-SELECT  100*buy_second/(buy_second+buy_first)  as sec_retio,main_cat_name
-FROM t_zlj_shop_second_buy  where main_cat_name='3C数码' limit 100;
+-- SELECT  100*buy_second/(buy_second+buy_first)  as sec_retio,main_cat_name
+-- FROM t_zlj_shop_second_buy  where main_cat_name='3C数码' limit 100;
 
 
-shop_id =65525181 ;
+-- shop_id =65525181 ;
 
 -- 行业二次购买率
 
