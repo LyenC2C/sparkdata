@@ -96,7 +96,7 @@ sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${uid_data_output}.partit
 #反馈商品评论增量
 echo "5/5 feed back item feed inc number to commit.."
 hadoop fs -rmr ${feed_bck_dir}/inc_item_num.${mission_id}
-hadoop fs -cp $item_inc_dir ${feed_bck_dir}
+hadoop fs -cp ${item_itc_num_output} ${feed_bck_dir}
 
 echo "mission FINISH! "$1
 end_t=`date`
