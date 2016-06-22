@@ -12,7 +12,7 @@ group by t1.mon,t2.shop_id;
 
 
 
---创建14个店铺的指定时间的商品日销量表
+-- 创建14个店铺的指定时间的商品日销量表
 create table t_wrt_tmp_14shop_totalsold as
 select
 /*+ mapjoin(t2)*/

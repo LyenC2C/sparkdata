@@ -57,7 +57,7 @@ group by shop_id ,alipay
 -- 单独拿出一个店铺
 create TABLE  t_zlj_tmp as
 SELECT  *
-FROM t_zlj_shop_shop_user_level_verify_1 where shop_id =65525181 ;
+FROM t_zlj_shop_shop_user_level_verify where shop_id =65525181 ;
 
 
 
