@@ -9,7 +9,7 @@ DROP TABLE  IF EXISTS  t_wrt_shop_sold_top15_item;
 
 
 
-CREATE TABLE  t_wrt_shop_sold_top15_item as
+CREATE TABLE  t_wrt_shop_may_sold_top15_item as
 
 SELECT
   shop_id,
