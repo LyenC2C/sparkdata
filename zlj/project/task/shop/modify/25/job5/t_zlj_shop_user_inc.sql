@@ -1,5 +1,6 @@
 --  店铺用户月增长
 -- job 跑的很慢,所以慎重。 一个月跑一次
+-- 下个月增加一个月
 
 
 CREATE TABLE IF NOT EXISTS t_zlj_shop_user_inc AS

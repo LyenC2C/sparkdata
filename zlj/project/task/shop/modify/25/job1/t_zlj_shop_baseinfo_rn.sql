@@ -103,7 +103,8 @@ CREATE TABLE t_zlj_shop_baseinfo_rn AS
            location,
            COUNT(1) AS total_rn
          FROM t_zlj_shop_join_major
-         GROUP BY location) y12
+         GROUP BY location
+        ) y12
           ON y11.location = y12.location
     ) u2
       ON u1.shop_id = u2.shop_id;
