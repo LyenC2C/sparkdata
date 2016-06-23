@@ -1,39 +1,58 @@
 -- 二次购买
 
-create table t_zlj_shop_second_buy as
-
-SELECT  t1.* ,t2.main_cat_name
-from
-(SELECT
- shop_id, sum(case when num >1 then 1 else 0 end ) as buy_second ,
- sum(case when num =1 then 1 else 0 end ) as buy_first
-FROM
-(
-select shop_id,tb_id ,COUNT(1) as num  from t_zlj_shop_shop_user_level_verify
-
-group by shop_id,tb_id
- )t group by shop_id
- )t1
- join t_base_shop_major_all  t2  on t1.shop_id =t2.shop_id
-;
 
 
-SELECT  100*buy_second/(buy_second+buy_first)  as sec_retio,main_cat_name
-FROM t_zlj_shop_second_buy  where main_cat_name='3C数码' limit 100;
+CREATE TABLE t_zlj_shop_second_buy AS
+
+  SELECT
+    t1.*,
+    t2.main_cat_name
+  FROM
+    (SELECT
+       shop_id,
+       sum(CASE WHEN num > 1
+         THEN 1
+           ELSE 0 END)                            AS buy_second,
+       sum(CASE WHEN num = 1
+         THEN 1
+           ELSE 0 END)                            AS buy_first,
+       round(sum(CASE WHEN num > 1
+         THEN 1
+                 ELSE 0 END) * 100 / COUNT(1), 2) AS sec_retio
+     FROM
+       (
+         SELECT
+           shop_id,
+           tb_id,
+           COUNT(1) AS num
+         FROM t_zlj_shop_shop_user_level_verify
+
+         GROUP BY shop_id, tb_id
+       ) t
+     GROUP BY shop_id
+    ) t1
+    JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id;
 
 
-shop_id =65525181 ;
+-- SELECT  100*buy_second/(buy_second+buy_first)  as sec_retio,main_cat_name
+-- FROM t_zlj_shop_second_buy  where main_cat_name='3C数码' limit 100;
+
+
+-- shop_id =65525181 ;
 
 -- 行业二次购买率
 
-SELECT
-main_cat_name, avg(sec_retio)
-FROM
-(
-SELECT  100*buy_second/(buy_second+buy_first)  as sec_retio,main_cat_name
-FROM t_zlj_shop_second_buy
-)t group by main_cat_name ;
-
+-- SELECT
+--   main_cat_name,
+--   avg(sec_retio) as avg_sec_retio
+-- FROM
+--   (
+--     SELECT
+--       100 * buy_second / (buy_second + buy_first) AS sec_retio,
+--       main_cat_name
+--     FROM t_zlj_shop_second_buy
+--   ) t
+-- GROUP BY main_cat_name;
 
 
 --  行业平均购买
