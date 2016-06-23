@@ -1,12 +1,15 @@
 
 
 
+
 -- 店铺用户的等级分布
 
-create table t_zlj_shop_user_verify_statis as
+CREATE TABLE t_zlj_shop_user_verify_statis AS
 
-SELECT  shop_id, count(1) as verify_num,verify
-  FROM  t_zlj_shop_shop_user_level_verify
+  SELECT
+    shop_id,
+    count(1) AS verify_num,
+    verify
+  FROM t_zlj_shop_shop_user_level_verify
 
-  group by shop_id ,verify
-;
+  GROUP BY shop_id, verify;

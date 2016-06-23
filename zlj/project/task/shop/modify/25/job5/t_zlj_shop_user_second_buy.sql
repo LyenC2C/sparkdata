@@ -42,17 +42,17 @@ CREATE TABLE t_zlj_shop_second_buy AS
 
 -- 行业二次购买率
 
-SELECT
-  main_cat_name,
-  avg(sec_retio)
-FROM
-  (
-    SELECT
-      100 * buy_second / (buy_second + buy_first) AS sec_retio,
-      main_cat_name
-    FROM t_zlj_shop_second_buy
-  ) t
-GROUP BY main_cat_name;
+-- SELECT
+--   main_cat_name,
+--   avg(sec_retio) as avg_sec_retio
+-- FROM
+--   (
+--     SELECT
+--       100 * buy_second / (buy_second + buy_first) AS sec_retio,
+--       main_cat_name
+--     FROM t_zlj_shop_second_buy
+--   ) t
+-- GROUP BY main_cat_name;
 
 
 --  行业平均购买
