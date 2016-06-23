@@ -39,3 +39,14 @@ sum(CASE WHEN tage >= 10 AND tage <= 24
   sum(CASE WHEN tage >= 50 AND tage <= 69
     THEN 1 else 0  END) level6
 FROM t_zlj_shop_shop_user_level_verify_1  where tage>10 and tage <80 group by shop_id  ;
+
+-- SELECT  * FROM  t_zlj_shop_user_inc where shop_id=65525181
+
+-- 65525181
+--
+-- 10-24  level1 24698
+-- 25-29  level2 25957
+-- 30-34  level3 28812
+-- 35-39  level4 31811
+-- 40-49  level5 33655
+-- 50-69  level6 33939
