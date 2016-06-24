@@ -15,8 +15,8 @@ group by item_id,shop_id)t
 where rn <16;
 
 create table t_wrt_guangdong_sale as
-select t1.item_id,t1.shop_id,t1.loc,t1.bc_type,sum(t2.day_sold) as sold,sum(day_sold_price) as sales FROM
-(select item_id,shop_id,substr(location,3,2)as loc,bc_type from wlbase_dev.t_base_ec_item_dev_new
+select t1.item_id,t1.shop_id,t1.loc,t1.bc_type,max(t1.root_cat_name),sum(t2.day_sold) as sold,sum(day_sold_price) as sales FROM
+(select item_id,shop_id,substr(location,3,2)as loc,bc_type,root_cat_name from wlbase_dev.t_base_ec_item_dev_new
 where ds = 20160621 and substr(location,1,2) = '广东')t1
 join
 (select * from wlbase_dev.t_base_ec_item_daysale_dev_new where ds > 20160000 and ds < 20160600)t2
@@ -98,5 +98,22 @@ select * from t_base_ec_shop_dev_new where ds = 20160622
 ON
 tt1.shop_id = tt2.shop_id
 )tdt
-where sales > 1200000.0 or sales < 20000000.0
+where sales > 1200000.0 and sales < 20000000.0
 
+
+--广东跨境电商店铺数量   各品类 销量  销售额
+--全国占比
+select count(1) from
+(select * from t_base_ec_shop_dev_new where ds = 20160622 and ds = 20160622 and substr(location,1,2) = '广东')t1
+ join
+(select shop_id from t_base_shop_type where shop_type['globalgou'] = 'True' or shop_type['tmhk'] = 'True')t2
+ON
+t1.shop_id = t2.shop_id;
+
+
+
+(select * from wlservice.t_wrt_guangdong_sale)t1
+ join
+(select shop_id from t_base_shop_type where shop_type['globalgou'] = 'True' or shop_type['tmhk'] = 'True')t2
+ON
+t1.shop_id = t2.shop_id
