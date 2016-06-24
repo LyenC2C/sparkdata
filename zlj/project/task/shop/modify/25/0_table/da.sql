@@ -1,0 +1,1 @@
+select * from  FROM t_base_ec_shop_dev_new   WHERE ds = 20160615 and location like '%广东%';
