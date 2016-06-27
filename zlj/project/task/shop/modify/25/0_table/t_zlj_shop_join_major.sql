@@ -19,3 +19,8 @@ CREATE TABLE t_zlj_shop_join_major AS
       WHERE ds = 20160615
             AND desc_highgap < 100 AND service_highgap < 100 AND wuliu_highgap < 100
     ) t1 LEFT JOIN t_base_shop_major_all t2 ON t1.shop_id = t2.shop_id;
+
+
+
+
+
