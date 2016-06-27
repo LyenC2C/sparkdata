@@ -120,7 +120,7 @@ def f(line,occu_dict):
         # schoolId = sch.get("schoolId",[])
         index = sch.get("index")
         year = sch.get("year","-")
-        # background = valid_jsontxt(str(sch.get("background","-")))
+        background = valid_jsontxt(str(sch.get("background","-")))
         # if background not in background_list: background = "-"
         # background_list.index(background)
         department = sch.get("department","-")
