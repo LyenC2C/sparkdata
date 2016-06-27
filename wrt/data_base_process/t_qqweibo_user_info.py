@@ -126,7 +126,7 @@ def f(line,occu_dict):
         department = sch.get("department","-")
         school = str(sch.get("school","-")).replace("\n","").replace("\r","").replace("\t","")
         sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
-    sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = True)
+    sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = False)
     i = 0
     for ln in sch_list[:3]: #排好序后的前三位
         i += 1
