@@ -23,8 +23,8 @@ CREATE TABLE t_zlj_ec_perfer_shop
 FROM
   (
   SELECT shop_id, shop_name
-  FROM t_base_ec_shop_dev
-  WHERE ds='20160331'
+  FROM t_base_ec_shop_dev_new
+  WHERE ds='$shop_ds'
   )t2
 
 JOIN
