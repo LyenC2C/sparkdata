@@ -7,10 +7,11 @@ import rapidjson as json
 sc = SparkContext(appName="qqweibo_user_info")
 
 def valid_jsontxt(content):
+    res = content
     if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+        res = content.encode("utf-8")
+    # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def get_dict(x):
     ss = x.split("\t")
@@ -114,11 +115,14 @@ def f(line,occu_dict):
             result.append("-")
     school = info.get("school",[])
     sch_dict = {}
+    background_list = ["博士","硕士","大学","高中","初中","小学","-"]
     for sch in school:
         # schoolId = sch.get("schoolId",[])
         index = sch.get("index")
         year = sch.get("year","-")
-        background = sch.get("background","-")
+        # background = valid_jsontxt(str(sch.get("background","-")))
+        # if background not in background_list: background = "-"
+        # background_list.index(background)
         department = sch.get("department","-")
         school = str(sch.get("school","-")).replace("\n","").replace("\r","").replace("\t","")
         sch_dict[index] = [year,background,school,department]
@@ -144,7 +148,7 @@ rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)\
     .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):'\001'.join(list(y)[0]))
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
 
-#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_qqweibo_user_info.py
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_qqweibo_user_info.py
 
 #LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user' OVERWRITE INTO TABLE t_qqweibo_user_info
 
