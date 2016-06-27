@@ -44,6 +44,7 @@ def f(line):
     if seller == []: return None
     evaluateInfo = seller.get("evaluateInfo", [])
     shopId = seller.get("shopId", "-")
+    if not shopId.isdigit(): return None
     seller_id = seller.get("userNumId", "-")
     seller_name = seller.get("nick", "-")
     credit = seller.get("creditLevel", "-")
@@ -123,5 +124,6 @@ rdd_c = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')
 
+#hfs -rmr /user/wrt/temp/shopinfo_tmp
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_base_shop_info.py
-#LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp_000' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='20160613');
+#LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='20160622');
