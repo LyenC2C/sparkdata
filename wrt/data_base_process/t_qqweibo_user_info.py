@@ -30,7 +30,7 @@ def f(line,occu_dict):
     info = ob.get("info","-")
     if info == "-": return None
     id = info.get("id","-")
-    certificationInfo = ob.get("certificationInfo","-").replace("\n","").replace("\r","").replace("\t","") #认证信息
+    certificationInfo = ob.get("certificationInfo","-") #认证信息
     faceUrl = info.get("faceUrl","-")
     gender = info.get("gender","-") #性别，1是男，2是女，0好像也是男
     isVIP = info.get("isVIP","-") #微博vip？
@@ -65,7 +65,7 @@ def f(line,occu_dict):
     tags_r = ""
     for tag in tags:
         tags_r += valid_jsontxt(str(tag.get("category","-"))) + "_" + \
-                  valid_jsontxt(str(tag.get("content","-")).replace("\n","").replace("\r","").replace("\t",""))
+                  valid_jsontxt(str(tag.get("content","-")))
     result.append(valid_jsontxt(str(id)))
     result.append(valid_jsontxt(str(certificationInfo)))
     result.append(valid_jsontxt(str(faceUrl)))
@@ -126,8 +126,8 @@ def f(line,occu_dict):
         if background not in background_list: background = "-"
         index = background_list.index(background) #讲学历大小按照顺序排列好，作为下标
         department = sch.get("department","-")
-        school = str(sch.get("school","-")).replace("\n","").replace("\r","").replace("\t","")
-        if com_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
+        school = str(sch.get("school","-"))
+        if sch_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
         sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = False)
     i = 0
