@@ -100,8 +100,8 @@ def f(line,occu_dict):
     for com in company:
         com_startYear = com.get("startYear","-")
         com_endYear = com.get("endYear","-")
-        com_comName = com.get("comName","-").replace("\n","").replace("\r","").replace("\t","")
-        com_depName = com.get("depName","-").replace("\n","").replace("\r","").replace("\t","")
+        com_comName = com.get("comName","-")
+        com_depName = com.get("depName","-")
         index = com.get("index")
         com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
@@ -118,14 +118,14 @@ def f(line,occu_dict):
     background_list = ["博士","硕士","大学","高中","初中","小学","-"]
     for sch in school:
         # schoolId = sch.get("schoolId",[])
-        index = sch.get("index")
+        # index = sch.get("index")
         year = sch.get("year","-")
         background = valid_jsontxt(str(sch.get("background","-")))
-        # if background not in background_list: background = "-"
-        # background_list.index(background)
+        if background not in background_list: background = "-"
+        index = background_list.index(background) #讲学历大小按照顺序排列好，作为下标
         department = sch.get("department","-")
         school = str(sch.get("school","-")).replace("\n","").replace("\r","").replace("\t","")
-        sch_dict[index] = [year,background,school,department]
+        sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
     for ln in sch_list[:3]: #排好序后的前三位
