@@ -98,11 +98,12 @@ def f(line,occu_dict):
     company = info.get("company",[])
     com_dict = {}
     for com in company:
-        com_startYear = com.get("startYear","-")
+        com_startYear = str(com.get("startYear","-"))
         com_endYear = com.get("endYear","-")
         com_comName = com.get("comName","-")
         com_depName = com.get("depName","-")
-        index = com.get("index")
+        if com_startYear.isdigit(): index = int(com_startYear)
+        else: index = 0
         com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
