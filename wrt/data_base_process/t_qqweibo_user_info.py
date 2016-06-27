@@ -102,8 +102,9 @@ def f(line,occu_dict):
         com_endYear = com.get("endYear","-")
         com_comName = com.get("comName","-")
         com_depName = com.get("depName","-")
-        if com_startYear.isdigit(): index = int(com_startYear)
-        else: index = 0
+        if com_startYear.isdigit(): index = float(com_startYear) #按照入职年份排序来入表
+        else: index = 0.0
+        if com_dict.has_key(index): index = index + 0.1 #避免同下标覆盖
         com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
@@ -126,6 +127,7 @@ def f(line,occu_dict):
         index = background_list.index(background) #讲学历大小按照顺序排列好，作为下标
         department = sch.get("department","-")
         school = str(sch.get("school","-")).replace("\n","").replace("\r","").replace("\t","")
+        if com_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
         sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = False)
     i = 0
