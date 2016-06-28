@@ -7,12 +7,16 @@ CREATE TABLE t_zlj_credit_user_price_statis AS
     min(price) AS min_p,
     avg(price) AS avg_p
   FROM t_base_ec_record_dev_new_simple
-  GROUP BY user_id
-;
+  GROUP BY user_id;
 
 
-
-SELECT  times ,count(1) from (SELECT cast(times/10 as int )  times from t_zlj_credit_user_price_statis where times>100)t group by times;
+SELECT
+  times,
+  count(1)
+FROM (SELECT cast(times / 10 AS INT) times
+      FROM t_zlj_credit_user_price_statis
+      WHERE times > 100) t
+GROUP BY times;
 
 SELECT
   level1,
@@ -20,6 +24,8 @@ SELECT
 FROM (SELECT CAST(log2(max_p) AS INT) level1
       FROM t_zlj_credit_user_price_statis) t
 GROUP BY level1;
+
+
 SELECT
   level1,
   COUNT(1)
@@ -38,16 +44,17 @@ SELECT
   CASE WHEN level1 > 0 AND level1 < 5
     THEN 'level1'
   WHEN level1 > 4 AND level1 < 8
-    THEN   'level2'
+    THEN 'level2'
   WHEN level1 > 7
-    THEN   'level3'
+    THEN 'level3'
   WHEN level1 < 1
-    THEN   'level0' END AS max_level
+    THEN 'level0' END AS max_level
 FROM
   (SELECT
      t.*,
-     log2(max_p)  level1
+     log2(max_p) level1
    FROM t_zlj_credit_user_price_statis t
-  ) y limit 10;
+  ) y
+LIMIT 10;
 ;
 
