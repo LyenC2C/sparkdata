@@ -1,38 +1,53 @@
-create table t_zlj_credit_user_price_statis  as
-select  user_id , COUNT(1) as times, sum(price) as sum_p ,  max(price) as max_p, min(price) as min_p ,avg(price) as avg_p
-from t_base_ec_record_dev_new_simple  group by user_id ;
+CREATE TABLE t_zlj_credit_user_price_statis AS
+  SELECT
+    user_id,
+    COUNT(1)   AS times,
+    sum(price) AS sum_p,
+    max(price) AS max_p,
+    min(price) AS min_p,
+    avg(price) AS avg_p
+  FROM t_base_ec_record_dev_new_simple
+  GROUP BY user_id
+;
 
 
 
+SELECT  times ,count(1) from (SELECT cast(times/10 as int )  times from t_zlj_credit_user_price_statis where times>100)t group by times;
+
+SELECT
+  level1,
+  COUNT(1)
+FROM (SELECT CAST(log2(max_p) AS INT) level1
+      FROM t_zlj_credit_user_price_statis) t
+GROUP BY level1;
+SELECT
+  level1,
+  COUNT(1)
+FROM (SELECT CAST(log2(min_p) AS INT) level1
+      FROM t_zlj_credit_user_price_statis) t
+GROUP BY level1;
 
 
-select level1 , COUNT(1) from  (select CAST(log2(max_p) as int ) level1  from t_zlj_ec_user_statis )t group by level1
-select level1 , COUNT(1) from  (select CAST(log2(min_p) as int ) level1  from t_zlj_ec_user_statis )t group by level1
+SELECT
+  user_id,
+  times,
+  sum_p,
+  max_p,
+  min_p,
+  avg_p,
+  CASE WHEN level1 > 0 AND level1 < 5
+    THEN 'level1'
+  WHEN level1 > 4 AND level1 < 8
+    THEN   'level2'
+  WHEN level1 > 7
+    THEN   'level3'
+  WHEN level1 < 1
+    THEN   'level0' END AS max_level
+FROM
+  (SELECT
+     t.*,
+     log2(max_p)  level1
+   FROM t_zlj_credit_user_price_statis t
+  ) y limit 10;
+;
 
-
-insert OVERWRITE table t_base_ec_item_dev_new PARTITION(ds='20160401')
-select
-case when  t2.item_id   is not null then  t2.item_id       else t1.item_id       end ,
-case when  t2.item_id   is not null then  t2.title         else t1.title         end ,
-case when  t2.item_id   is not null then  t2.cat_id        else t1.cat_id        end ,
-case when  t2.item_id   is not null then  t2.cat_name      else t1.cat_name      end ,
-case when  t2.item_id   is not null then  t2.root_cat_id   else t1.root_cat_id   end ,
-case when  t2.item_id   is not null then  t2.root_cat_name else t1.root_cat_name end ,
-case when  t2.item_id   is not null then  t2.brand_id      else t1.brand_id      end ,
-case when  t2.item_id   is not null then  t2.brand_name    else t1.brand_name    end ,
-case when  t2.item_id   is not null then  t2.bc_type       else t1.bc_type       end ,
-case when  t2.item_id   is not null then  t2.price         else t1.price         end ,
-case when  t2.item_id   is not null then  t2.price_zone    else t1.price_zone    end ,
-case when  t2.item_id   is not null then  t2.is_online     else t1.is_online     end ,
-case when  t2.item_id   is not null then  t2.off_time      else t1.off_time      end ,
-case when  t2.item_id   is not null then  t2.favor         else t1.favor         end ,
-case when  t2.item_id   is not null then  t2.seller_id     else t1.seller_id     end ,
-case when  t2.item_id   is not null then  t2.shop_id       else t1.shop_id       end ,
-case when  t2.item_id   is not null then  t2.location      else t1.location      end ,
-case when  t2.item_id   is not null then  t2.paramap       else t2.paramap       end ,
-case when  t2.item_id   is not null then  t2.sku           else t2.sku          end ,
-case when  t2.item_id   is not null then  t2.ts            else t1.ts           end
-
-from t_base_ec_item_dev t1  full OUTER join t_base_ec_item_dev_new t2
-
-on t1.item_id =t2.item_id  and t1.ds=20160333 and t2.ds=20160606
