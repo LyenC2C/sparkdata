@@ -7,10 +7,11 @@ import rapidjson as json
 sc = SparkContext(appName="qqweibo_user_info")
 
 def valid_jsontxt(content):
+    res = content
     if type(content) == type(u""):
-        return content.encode("utf-8")
-    else:
-        return content
+        res = content.encode("utf-8")
+    # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def get_dict(x):
     ss = x.split("\t")
@@ -29,7 +30,7 @@ def f(line,occu_dict):
     info = ob.get("info","-")
     if info == "-": return None
     id = info.get("id","-")
-    certificationInfo = ob.get("certificationInfo","-").replace("\n","").replace("\r","").replace("\t","") #认证信息
+    certificationInfo = ob.get("certificationInfo","-") #认证信息
     faceUrl = info.get("faceUrl","-")
     gender = info.get("gender","-") #性别，1是男，2是女，0好像也是男
     isVIP = info.get("isVIP","-") #微博vip？
@@ -64,7 +65,7 @@ def f(line,occu_dict):
     tags_r = ""
     for tag in tags:
         tags_r += valid_jsontxt(str(tag.get("category","-"))) + "_" + \
-                  valid_jsontxt(str(tag.get("content","-")).replace("\n","").replace("\r","").replace("\t",""))
+                  valid_jsontxt(str(tag.get("content","-")))
     result.append(valid_jsontxt(str(id)))
     result.append(valid_jsontxt(str(certificationInfo)))
     result.append(valid_jsontxt(str(faceUrl)))
@@ -97,11 +98,13 @@ def f(line,occu_dict):
     company = info.get("company",[])
     com_dict = {}
     for com in company:
-        com_startYear = com.get("startYear","-")
+        com_startYear = str(com.get("startYear","-"))
         com_endYear = com.get("endYear","-")
-        com_comName = com.get("comName","-").replace("\n","").replace("\r","").replace("\t","")
-        com_depName = com.get("depName","-").replace("\n","").replace("\r","").replace("\t","")
-        index = com.get("index")
+        com_comName = com.get("comName","-")
+        com_depName = com.get("depName","-")
+        if com_startYear.isdigit(): index = float(com_startYear) #按照入职年份排序来入表
+        else: index = 0.0
+        if com_dict.has_key(index): index = index + 0.1 #避免同下标覆盖
         com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
@@ -114,15 +117,19 @@ def f(line,occu_dict):
             result.append("-")
     school = info.get("school",[])
     sch_dict = {}
+    background_list = ["博士","硕士","大学","高中","初中","小学","-"]
     for sch in school:
         # schoolId = sch.get("schoolId",[])
-        index = sch.get("index")
+        # index = sch.get("index")
         year = sch.get("year","-")
-        background = sch.get("background","-")
+        background = valid_jsontxt(str(sch.get("background","-")))
+        if background not in background_list: background = "-"
+        index = background_list.index(background) #讲学历大小按照顺序排列好，作为下标
         department = sch.get("department","-")
-        school = str(sch.get("school","-")).replace("\n","").replace("\r","").replace("\t","")
-        sch_dict[index] = [year,background,school,department]
-    sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = True)
+        school = str(sch.get("school","-"))
+        if sch_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
+        sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
+    sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = False)
     i = 0
     for ln in sch_list[:3]: #排好序后的前三位
         i += 1
@@ -144,7 +151,7 @@ rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)\
     .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):'\001'.join(list(y)[0]))
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user")
 
-#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 80 t_qqweibo_user_info.py
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_qqweibo_user_info.py
 
 #LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user' OVERWRITE INTO TABLE t_qqweibo_user_info
 
