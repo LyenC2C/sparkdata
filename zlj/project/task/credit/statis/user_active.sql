@@ -18,18 +18,17 @@ CREATE TABLE t_zlj_credit_user_ac_score AS
   GROUP BY user_id;
 
 
-
 -- 活跃度数据归一化
 
-drop table t_zlj_credit_user_ac_score_normal;
-
+DROP TABLE t_zlj_credit_user_ac_score_normal;
 CREATE TABLE t_zlj_credit_user_ac_score_normal AS
-SELECT
-  t1.user_id ,t1.score,(log(1.3 ,t1.score)-min_score)/(max_score-min_score) as score_normal
+  SELECT
+    t1.user_id,
+    t1.score,
+    (log(1.3, t1.score) - min_score) / (max_score - min_score) AS score_normal
   FROM
-t_zlj_credit_user_ac_score t1 ,
-
+    t_zlj_credit_user_ac_score t1,
     (SELECT
-      max(log(1.3 ,score)) as max_score,
-      min(log(1.3 ,score)) as min_score
-    FROM t_zlj_credit_user_ac_score)t2 ;
+       max(log(1.3, score)) AS max_score,
+       min(log(1.3, score)) AS min_score
+     FROM t_zlj_credit_user_ac_score) t2;
