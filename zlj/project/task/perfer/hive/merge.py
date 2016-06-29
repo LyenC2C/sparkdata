@@ -362,7 +362,7 @@ if __name__ == "__main__":
         hiveContext.sql('''
         create table  t_zlj_user_tag_join_t
         as
-        select * from  tmptable
+        select * from  tmptable  where  LENGTH(dim)>0
         ''')
 
 # ''.strip()
