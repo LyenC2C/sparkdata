@@ -86,8 +86,8 @@ rm  /mnt/raid2/zlj/cmt_inc_data_$ds
 
 hadoop fs -cat $false_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
-hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=false/cmt_inc_data_$ds
+hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=false1/cmt_inc_data_$ds
 
-hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=false/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=false1/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
