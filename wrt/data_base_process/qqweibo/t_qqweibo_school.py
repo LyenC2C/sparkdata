@@ -48,7 +48,7 @@ def f(line):
 
 # s_occu = "/commit/qqweibo/userinfo/map/occu.map"
 # s = "/commit/qqweibo/userinfo/qqweibo_user*"
-s = "/commit/qqweibo/userinfo/new-all/qqweibo_user.p2.177.json"
+s = "/commit/qqweibo/userinfo/new-all"
 # occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
 #     .filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)\
@@ -57,7 +57,7 @@ rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user_school")
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_qqweibo_school.py
 
-#LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user' OVERWRITE INTO TABLE t_qqweibo_user_info
+#LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user_school' OVERWRITE INTO TABLE t_qqweibo_user_school
 
 
 #
