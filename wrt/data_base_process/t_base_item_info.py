@@ -22,10 +22,10 @@ def parse_price(price_dic):
             v = float(v)
         else:
             v = 0.0
-        if min>v:
-            min=v
-            price=v
-            if '-' in tmp: price_range=tmp
+        if min> v:
+            min = v
+            price = v
+            if '-' in tmp: price_range = tmp
     return [price,price_range]
 
 def decompress(out):
@@ -83,7 +83,7 @@ def f(line,cate_dict):
     # brand_name = brand_dict.get(brandId,"-")
     brand_name = "-"
     # item_info = "-"
-    props=ob.get('props',[])
+    props = ob.get('props',[])
     item_info_list = []
     for v in props:
         item_info_list.append(valid_jsontxt(v.get('name',"-")).replace(":","").replace(",","") \
@@ -93,6 +93,8 @@ def f(line,cate_dict):
     item_info = ",".join(item_info_list)
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
+    if int(price) > 160000:
+        price = 1.0
     price_zone = value[1]
     seller = ob.get('seller',{})
     seller_id = seller.get('userNumId','-')
