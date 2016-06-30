@@ -13,10 +13,8 @@ def valid_jsontxt(content):
     # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-def get_dict(x):
-    ss = x.split("\t")
-    return (ss[0],ss[1])
-def f(line,occu_dict):
+
+def f(line):
     if line == "" or line == None:
         return None
     ob = json.loads(valid_jsontxt(line))
@@ -57,7 +55,7 @@ rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)\
     .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):'\001'.join(list(y)[0]))
 rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user_school")
 
-#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_qqweibo_user_info.py
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_qqweibo_school.py
 
 #LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user' OVERWRITE INTO TABLE t_qqweibo_user_info
 
