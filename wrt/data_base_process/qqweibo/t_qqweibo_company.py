@@ -24,17 +24,17 @@ def f(line):
     company = info.get("company",[])
     com_dict = {}
     for com in company:
-        com_startYear = str(com.get("startYear","-"))
-        com_endYear = com.get("endYear","-")
-        com_comName = com.get("comName","-")
-        com_depName = com.get("depName","-")
+        com_startYear = valid_jsontxt(str(com.get("startYear","-")))
+        com_endYear = valid_jsontxt(str(com.get("endYear","-")))
+        com_comName = valid_jsontxt(str(com.get("comName","-")))
+        com_depName = valid_jsontxt(str(com.get("depName","-")))
         if com_startYear.isdigit(): index = float(com_startYear) #按照入职年份排序来入表
         else: index = 0.0
         if com_dict.has_key(index): index = index + 0.1 #避免同下标覆盖
         com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
     lv = []
-    for ln in com_list: #排好序后的前三位
+    for ln in com_list:
         lv.append('\002'.join(ln[1]))
     company_res = '\003'.join(lv)
     return [id,company_res]
