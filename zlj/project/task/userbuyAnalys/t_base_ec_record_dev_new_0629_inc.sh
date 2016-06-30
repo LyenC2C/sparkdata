@@ -6,7 +6,11 @@ ds=$1
 
 use wlbase_dev;
 
-
+SET hive.exec.dynamic.partition= TRUE;
+SET hive.exec.dynamic.partition.mode=nonstrict;
+SET hive.exec.max.dynamic.partitions.pernode = 1000;
+SET hive.exec.max.dynamic.partitions=2000;
+SET hive.exec.reducers.bytes.per.reducer=500000000;
 Drop  table  if EXISTS  t_base_ec_record_dev_new_tmp  ;
 
 create table t_base_ec_record_dev_new_tmp like t_base_ec_record_dev_new_0629;
