@@ -13,6 +13,11 @@ SET hive.exec.max.dynamic.partitions=2000;
 SET hive.exec.reducers.bytes.per.reducer=500000000;
 Drop  table  if EXISTS  t_base_ec_record_dev_new_tmp  ;
 
+
+LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$ds/"  INTO TABLE t_base_ec_item_feed_dev_inc_new PARTITION (ds='$1');
+
+
+
 create table t_base_ec_record_dev_new_tmp like t_base_ec_record_dev_new_0629;
 
 INSERT OVERWRITE TABLE t_base_ec_record_dev_new_tmp PARTITION (ds)
