@@ -13,7 +13,7 @@ def valid_jsontxt(content):
     # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-
+#
 def f(line):
     if line == "" or line == None:
         return None
