@@ -4,11 +4,15 @@ ds=$1
 
 /home/zlj/hive/bin/hive<<EOF
 
+use wlbase_dev;
+
+
 Drop  table  if EXISTS  t_base_ec_record_dev_new_tmp  ;
 
 create table t_base_ec_record_dev_new_tmp like t_base_ec_record_dev_new_0629;
 
 INSERT OVERWRITE TABLE t_base_ec_record_dev_new_tmp PARTITION (ds)
+
 
 SELECT
   t2.*,
