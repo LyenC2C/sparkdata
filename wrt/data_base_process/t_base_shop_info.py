@@ -70,12 +70,24 @@ def f(line):
     weitaoId = seller.get("weitaoId", "-")
     shopTitle = seller.get("shopTitle", "--")
     if len(evaluateInfo) < 3: evaluateInfo =[{},{},{}]
-    desc_score = evaluateInfo[0].get("score", '0.0').strip()
-    desc_highGap = evaluateInfo[0].get("highGap", '0.0').strip()
-    service_score = evaluateInfo[1].get("score", '0.0').strip()
-    service_highGap = evaluateInfo[1].get("highGap", '0.0').strip()
-    wuliu_score = evaluateInfo[2].get("score", '0.0').strip()
-    wuliu_highGap = evaluateInfo[2].get("highGap", '0.0').strip()
+    if type(evaluateInfo[0]) == type({}):
+        desc_score = evaluateInfo[0].get("score", '0.0').strip()
+        desc_highGap = evaluateInfo[0].get("highGap", '0.0').strip()
+    else:
+        desc_score = '0.0'
+        desc_highGap = '0.0'
+    if type(evaluateInfo[1]) == type({}):
+        service_score = evaluateInfo[1].get("score", '0.0').strip()
+        service_highGap = evaluateInfo[1].get("highGap", '0.0').strip()
+    else:
+        service_score = '0.0'
+        service_highGap = '0.0'
+    if type(evaluateInfo[2]) == type({}):
+        wuliu_score = evaluateInfo[2].get("score", '0.0').strip()
+        wuliu_highGap = evaluateInfo[2].get("highGap", '0.0').strip()
+    else:
+        wuliu_score = '0.0'
+        wuliu_highGap = '0.0'
     if not desc_score.replace(".","").isdigit(): desc_score = '0.0'
     if not service_score.replace(".","").isdigit(): service_score = '0.0'
     if not wuliu_score.replace(".","").isdigit(): wuliu_score = '0.0'
