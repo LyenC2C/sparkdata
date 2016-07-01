@@ -39,7 +39,7 @@ def f(line):
     ob = json.loads(ss[2])
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
-    location = valid_jsontxt(itemInfoModel.get('location', '-'))
+    location = valid_jsontxt(itemInfoModel.get('location', '-').replace("省",""))
     seller = ob.get("seller",[])
     if seller == []: return None
     evaluateInfo = seller.get("evaluateInfo", [])
