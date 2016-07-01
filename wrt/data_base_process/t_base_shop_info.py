@@ -49,7 +49,7 @@ def f(line):
     seller_name = seller.get("nick", "-")
     credit = seller.get("creditLevel", "-")
     starts = seller.get("starts", "-")
-    trackParams = ob['trackParams']
+    trackParams = ob.get('trackParams',{})
     BC_type = trackParams.get('BC_type', '-')
     item_count = '0'
     for item in seller.get('actionUnits', []):
@@ -126,4 +126,4 @@ rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')
 
 #hfs -rmr /user/wrt/temp/shopinfo_tmp
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_base_shop_info.py
-#LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='20160622');
+#LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='20160630');
