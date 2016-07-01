@@ -15,7 +15,7 @@ hadoop fs -mv ${mission_data} /commit/iteminfo/house_tmp/
 base_path=/hive/warehouse/wlbase_dev.db/t_base_ec_item_house
 
 hadoop fs -rmr ${base_path}_merge_tmp
-spark_large $workspace_path/iteminfo/gen_iteminfo.py -geninc /commit/iteminfo/house_tmp/*/* \
+spark-submit --executor-memory 14g --driver-memory 15g  --total-executor-cores 100 $workspace_path/iteminfo/gen_iteminfo.py -geninc /commit/iteminfo/house_tmp/*/* \
   ${base_path} ${base_path}_merge_tmp
 
 hadoop fs -rmr ${base_path}_last_version/*

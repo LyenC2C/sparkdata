@@ -44,7 +44,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
           FROM t_base_ec_item_dev_new
           WHERE ds = 20160615
           ) t1
-       JOIN
+    left   JOIN
       (
         SELECT
           cast(item_id AS BIGINT)      item_id,

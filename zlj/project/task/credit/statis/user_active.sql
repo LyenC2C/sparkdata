@@ -1,5 +1,5 @@
-CREATE TABLE t_zlj_credit_user_ac_score AS
 
+CREATE TABLE t_zlj_credit_user_ac_score AS
   SELECT
     user_id,
     sum(score) score
