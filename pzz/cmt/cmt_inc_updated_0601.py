@@ -165,6 +165,7 @@ def merge_res_uid_feedids(x,y):
         else:
             resls.append(each)
     if len(resls) > 0:
+        res += '\001'
         res += '\001'.join(set(resls))
     return res
 
@@ -173,6 +174,55 @@ def cal_item_inc_num(x,y):
     for each in y:
         dic[each] += 1
     return x + '\t'+str(dic[1])+'\t'+str(dic[1]+dic[2])
+
+def convert_uid_mark(x):
+    j = json.loads(x)
+    uid = j["uid"]
+    j.pop("uid")
+    res = []
+    for k in j.keys():
+        if k!="":
+            res.append([k,uid])
+    return res
+
+def merge_mark_nouidcmt(x,y):
+    dic = {"uid":None,"cmt":[]}
+    dic_feedid = {}
+    for each in y:
+        if each[0] == 2:
+            dic["uid"] = each[1]
+        else:
+            if dic_feedid.has_key(each[1]):
+                pass
+            else:
+                dic["cmt"].append(each[2])
+                dic_feedid[each[1]] = None
+    if len(dic["cmt"]) == 0:
+        return None
+    if dic["uid"] != None:
+        res = []
+        for cmt in dic["cmt"]:
+            cmt[3] = dic["uid"]
+            res.append(cmt)
+        return [1,res]
+    else:
+        return [0,dic["cmt"]]
+
+def filter_cmt_by_feedids(x,y):
+    feedid_dic = {}
+    res = []
+    for each in y:
+        if each[0] == 2:
+            for feedid in each[1]:
+                feedid_dic[feedid] = None
+    for each in y:
+        if each[0] == 1:
+            if feedid_dic.has_key(each[1]):
+                pass
+            else:
+                res.append(each[2])
+                feedid_dic
+    return res
 
 
 if __name__ == "__main__":
@@ -306,6 +356,58 @@ if __name__ == "__main__":
                         .groupByKey()\
                         .map(lambda (x,y):cal_item_inc_num(x,y))
         rdd_item_inc_num.saveAsTextFile(output_item_inc_num)
+
+    elif sys.argv[1] == '-gen_data_add_nouid':
+        input_nouid_data = sys.argv[2]
+        input_uid_feedids = sys.argv[3]
+        input_uid_mark = sys.argv[4]
+        output_cmt_add = sys.argv[5]
+
+        input_nouid_data = "/data/develop/ec/tb/cmt/tmpdata.nouid/cmt_inc_data.nouid.20160530"
+        input_uid_feedids = "/data/develop/ec/tb/cmt/feedid/all_uid_mark_feedids.20160621"
+        input_uid_mark = "/data/develop/ec/tb/cmt/uid_mark/uid_mark_freq.json.20160621"
+        output_cmt_add = sys.argv[5]
+
+        sc = SparkContext(appName="gen_nouid_add_cmt_inc "+input_nouid_data)
+
+        #return [mark,[1,feedid,feed]]
+        rdd_nouid = sc.textFile(input_nouid_data)\
+                .map(lambda x:x.split("\001"))\
+                .map(lambda x:[x[11],[1,x[2],x]])
+
+        #return [mark,[2,feedids]]
+        rdd_mark_uid = sc.textFile(input_uid_mark)\
+                        .map(lambda x:convert_uid_mark(x))\
+                        .flatMap(lambda x:x)\
+                        .map(lambda (x,y):[x,[2,y]])
+
+        rdd_nouidcmt_mark_union = rdd_nouid.union(rdd_mark_uid)\
+                .groupByKey()\
+                .map(lambda (x,y):merge_mark_nouidcmt(x,y))\
+                .filter(lambda x:x!=None)
+
+        #return [uid,[1,feedid,cmt]]
+        rdd_cmt_uid_matched = rdd_nouidcmt_mark_union.filter(lambda x:x[0]==1)\
+                .map(lambda x:x[1])\
+                .flatMap(lambda x:x)\
+                .map(lambda x:[x[3],[1,x[2],'\001'.join(x)]])
+
+        rdd_cmt_uid_notmatched = rdd_nouidcmt_mark_union.filter(lambda x:x[0]==0)\
+                .map(lambda x:x[1])\
+                .flatMap(lambda x:x)
+
+        #return [uid,[2,feedids]]
+        rdd_uid_feedids = sc.textFile(input_uid_feedids)\
+                .map(lambda x:x.split("\001"))\
+                .map(lambda x:[x[0],[2,x[2:]]])
+
+        rdd_cmt_uid_matched.union(rdd_uid_feedids)\
+                .groupByKey()\
+                .map(lambda (x,y):filter_cmt_by_feedids(x,y))\
+                .saveAsTextFile(output_cmt_add)
+
+
+
 
 
 
