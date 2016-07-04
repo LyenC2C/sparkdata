@@ -3,17 +3,18 @@
 -- numRows=68541728
 
 
-CREATE TABLE t_zlj_credit_children_feed_data AS
-SELECT *
-FROM t_base_ec_item_feed_dev
-WHERE content LIKE '%����%' or content LIKE '%����%'  or content LIKE '%Ů��%'  or   content LIKE '%Ӥ��%';
+-- CREATE TABLE t_zlj_credit_children_feed_data AS
+-- SELECT *
+-- FROM t_base_ec_item_feed_dev
+-- WHERE content LIKE '%����%' or content LIKE '%����%'  or content LIKE '%Ů��%'  or   content LIKE '%Ӥ��%';
+--
+--
+-- -- ���� �ھ��û� 27176178
+-- SELECT count(1) from (SELECT user_id from t_zlj_credit_children_feed_data group by user_id)t ;
 
 
--- ���� �ھ��û� 27176178
-SELECT count(1) from (SELECT user_id from t_zlj_credit_children_feed_data group by user_id)t ;
 
-
-
+-- 找出有小孩的类目
 CREATE TABLE t_zlj_credit_children_feed_record_data AS
 
 SELECT
@@ -44,6 +45,7 @@ where root_cat_id  in
 122650005)
 ;
 
+-- 用户 每个类目购买次数
 create table t_zlj_credit_children_feed_record_data_usercat_count as
 SELECT user_id, concat_ws('\t',collect_set(root_num))
 from
@@ -55,7 +57,7 @@ FROM t_zlj_credit_children_feed_record_data group by user_id,root_cat_id
 
 
 
-
+-- 给每个用户计算一个有小孩的分数  一个类目购买次数*0.5 +购买的类目分布
 create table t_zlj_credit_children_feed_record_data_usercat_score as
 SELECT user_id, sum(s)+COUNT(1)*2 as score
 from
@@ -88,7 +90,7 @@ SELECT user_id from t_zlj_credit_children_feed_record_data group by user_id
 
 
  t_wrt_children_keywords_record
-create table t_wrt_children_keywords_record AS
+create table  AS
 select t2.* from
 (select user_id from wlbase_dev.t_zlj_credit_children_feed_data group by user_id)t1
 join

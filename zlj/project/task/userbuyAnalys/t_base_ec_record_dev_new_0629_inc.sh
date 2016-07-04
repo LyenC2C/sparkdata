@@ -1,5 +1,6 @@
 
 
+
 ds=$1
 
 /home/zlj/hive/bin/hive<<EOF
