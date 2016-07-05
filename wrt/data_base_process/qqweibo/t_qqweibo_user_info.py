@@ -150,7 +150,7 @@ def f(line,occu_dict):
 
 s_occu = "/commit/qqweibo/userinfo/map/occu.map"
 # s = "/commit/qqweibo/userinfo/qqweibo_user*"
-s = "/commit/qqweibo/userinfo/new-all/qqweibo_user.7kw.173.json"
+s = "/commit/qqweibo/userinfo/new-all/qqweibo_user.p2.177.json"
 occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
     .filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)\
