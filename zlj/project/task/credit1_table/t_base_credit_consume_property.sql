@@ -1,5 +1,6 @@
 
 
+--  消费特征
 
 CREATE  TABLE  t_base_credit_consume_property as
 SELECT

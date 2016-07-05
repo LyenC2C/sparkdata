@@ -1,5 +1,7 @@
 
 
+--  用户人口基本属性
+
 
 create table t_base_credit_user_property as
 SELECT

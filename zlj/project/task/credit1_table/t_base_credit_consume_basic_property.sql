@@ -1,5 +1,7 @@
 
-create TABLE  t_base_credit_consume_property as
+-- 消费特征
+
+create TABLE  t_base_credit_consume_basic_property as
 SELECT
 tb_id,
 alipay,
