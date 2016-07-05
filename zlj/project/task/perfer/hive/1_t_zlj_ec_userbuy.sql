@@ -29,7 +29,7 @@ CREATE TABLE t_zlj_ec_userbuy_info
     FROM
       t_base_ec_record_dev_new
 
-    WHERE CAST(item_id AS INT) > 0 AND CAST(cat_id AS INT) > 0 AND CAST(user_id AS INT) > 0;
+    WHERE ds='true1' and CAST(item_id AS INT) > 0 AND CAST(cat_id AS INT) > 0 AND CAST(user_id AS INT) > 0;
 
 
 DROP TABLE IF EXISTS t_zlj_ec_userbuy;
