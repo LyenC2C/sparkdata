@@ -129,9 +129,9 @@ def f(line,occu_dict):
         department = sch.get("department","-")
         school = str(sch.get("school","-"))
         if sch_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
-        sch_res = [year,background,school,department]
+        sch_res = valid_jsontxt(str(year))+valid_jsontxt(background)+valid_jsontxt(school)+valid_jsontxt(department)
         if not sch_res in sch_repeat: #去掉重复的学历学校
-            sch_dict[index] = sch_res #排序学历，高的优先输出
+            sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
             sch_repeat.append(sch_res)
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = False)
     i = 0
