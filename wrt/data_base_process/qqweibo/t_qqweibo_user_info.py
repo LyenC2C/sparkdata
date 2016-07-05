@@ -130,7 +130,9 @@ def f(line,occu_dict):
         school = str(sch.get("school","-"))
         if sch_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
         sch_res = "1" #str(year)#+valid_jsontxt(background)+valid_jsontxt(school)+valid_jsontxt(department)
-        if not sch_res == sch_repeat: #去掉重复的学历学校
+        if sch_res == "1": #去掉重复的学历学校
+            continue
+        else:
             sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
             # sch_repeat.append(sch_res)
             # sch_repeat += sch_res
@@ -148,8 +150,8 @@ def f(line,occu_dict):
 
 
 s_occu = "/commit/qqweibo/userinfo/map/occu.map"
-# s = "/commit/qqweibo/userinfo/qqweibo_user*"
-s = "/commit/qqweibo/userinfo/new-all/qqweibo_user.7kw.173.json"
+s = "/user/wrt/temp/qqweibo_test"
+# s = "/commit/qqweibo/userinfo/new-all/qqweibo_user.7kw.173.json"
 occu_dict = sc.broadcast(sc.textFile(s_occu).map(lambda x: (x.split("\t")[0],x.split("\t")[1]))\
     .filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x,occu_dict)).filter(lambda x:x!=None)\
