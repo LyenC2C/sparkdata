@@ -118,7 +118,7 @@ def f(line,occu_dict):
     school = info.get("school",[])
     background_list = ["博士","硕士","大学","高中","初中","小学","-"]
     sch_dict = {}
-    sch_repeat = []
+    sch_repeat = "1"
     for sch in school:
         # schoolId = sch.get("schoolId",[])
         # index = sch.get("index")
@@ -130,9 +130,10 @@ def f(line,occu_dict):
         school = str(sch.get("school","-"))
         if sch_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
         sch_res = "1" #str(year)#+valid_jsontxt(background)+valid_jsontxt(school)+valid_jsontxt(department)
-        if not sch_res in sch_repeat: #去掉重复的学历学校
+        if not sch_res == sch_repeat: #去掉重复的学历学校
             sch_dict[index] = [year,background,school,department] #排序学历，高的优先输出
-            sch_repeat.append(sch_res)
+            # sch_repeat.append(sch_res)
+            # sch_repeat += sch_res
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = False)
     i = 0
     for ln in sch_list[:3]: #排好序后的前三位
