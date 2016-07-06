@@ -97,6 +97,7 @@ def f(line,occu_dict):
     result.append(valid_jsontxt(str(b_star)))
     company = info.get("company",[])
     com_dict = {}
+    com_repeat = []
     for com in company:
         com_startYear = str(com.get("startYear","-"))
         com_endYear = com.get("endYear","-")
@@ -104,8 +105,12 @@ def f(line,occu_dict):
         com_depName = com.get("depName","-")
         if com_startYear.isdigit(): index = float(com_startYear) #按照入职年份排序来入表
         else: index = 0.0
-        if com_dict.has_key(index): index = index + 0.1 #避免同下标覆盖
-        com_dict[index] = [com_startYear,com_endYear,com_comName,com_depName]
+        #if com_dict.has_key(index): index = index + 0.1
+        while(com_dict.has_key(index)): index = index + 0.1# #避免同下标覆盖
+        com_res = [com_startYear,com_endYear,com_comName,com_depName]
+        if not com_res in com_repeat: #去掉重复的工作公司
+            com_dict[index] = com_res
+            com_repeat.append(com_res)
     com_list = sorted(com_dict.iteritems(), key = lambda d:d[0], reverse = True)
     i = 0
     for ln in com_list[:3]: #排好序后的前三位
@@ -128,7 +133,8 @@ def f(line,occu_dict):
         index = background_list.index(background) #讲学历大小按照顺序排列好，作为下标
         department = sch.get("department","-")
         school = str(sch.get("school","-"))
-        if sch_dict.has_key(index): index = index + 0.1 #处理相同下标，避免字典覆盖
+        #if sch_dict.has_key(index): index = index + 0.1
+        while(sch_dict.has_key(index)): index = index + 0.1#处理相同下标，避免字典覆盖
         sch_res = [year,background,school,department]#+valid_jsontxt(background)+valid_jsontxt(school)+valid_jsontxt(department)
         if not sch_res in sch_repeat: #去掉重复的学历学校
             sch_dict[index] = sch_res #排序学历，高的优先输出
