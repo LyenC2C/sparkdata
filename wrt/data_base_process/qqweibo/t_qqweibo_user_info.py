@@ -24,7 +24,7 @@ def f(line,occu_dict):
     # except:
     #     print valid_jsontxt(line)
     #     return None
-    if line == "" or line == None or type(line) != type(""):
+    if line == "" or line == None:
         return None
     text = valid_jsontxt(line.strip())
     ob = json.loads(text)
