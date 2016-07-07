@@ -26,7 +26,8 @@ def f(line,occu_dict):
     #     return None
     if line == "" or line == None or type(line) != type(""):
         return None
-    ob = json.loads(valid_jsontxt(line))
+    text = valid_jsontxt(line.strip())
+    ob = json.loads(text)
     info = ob.get("info","-")
     if info == "-": return None
     id = info.get("id","-")
