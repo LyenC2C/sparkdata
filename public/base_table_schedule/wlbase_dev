@@ -65,3 +65,9 @@
 更新至:20160629   更新日期:20160630
 更新至:20160630   更新日期:20160704
 更新至:20160703   更新日期:20160704
+
+
+用户信用个人基础信息数据: 创建时间 20160707
+[wlbase_dev][t_base_credit_user_job]          用户工作属性   id为微博id
+[wlbase_dev][t_base_credit_user_education]    用户教育属性   id为微博id，教育经历取最高学历
+[wlbase_dev][t_base_credit_user_qq_education] 用户教育属性   id为qq id，教育经历取最高学历
