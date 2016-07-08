@@ -5,7 +5,6 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 import re
-from pyspark import SparkContext
 from jpype import *
 import jpype
 sys.setrecursionlimit(10000)
