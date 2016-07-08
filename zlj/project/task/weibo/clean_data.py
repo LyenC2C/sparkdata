@@ -44,5 +44,5 @@ for line in open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706.txt'):
     try:
         emo ,txt=clean_weibo(line)
         words=cut(txt)
-        fw.write(' '.join([i+'_emo' for  i in emo])+'\t'+' '.join(words))
+        fw.write(' '.join([i+'_emo' for  i in emo])+'\t'+' '.join(words)+'\n')
     except: pass
