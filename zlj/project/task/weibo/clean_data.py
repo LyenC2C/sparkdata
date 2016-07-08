@@ -39,9 +39,9 @@ def clean_weibo(line):
     txt=pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',line))))
     return  [expressions,txt]
 
-fw=open('weibo_mts_20160706_cut','w')
+fw=open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706_cut','w')
 
-for line in open('weibo_mts_20160706.txt'):
+for line in open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706.txt'):
     try:
         emo ,txt=clean_weibo(line)
         words=cut(txt)
