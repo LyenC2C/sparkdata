@@ -134,10 +134,11 @@ def sentiment_score(segtmp):
 
 # s='我  很 傻 很 蠢'
 
-for line in open("D:\\workdata\\-user-zlj-nlp-weibo_jiangge_20160505-part-00000"):
-    tt=sentiment_score(line.split())
+f=open('D:\\nlp\\weibo_mts_20160706_cut_score','w')
+for line in open("D:\\nlp\\weibo_mts_20160706_cut"):
+    tt=sentiment_score([i.replace('_emo','') for i in line.split()])
     score=tt[0]-tt[1]
-    print score ,line.decode('utf-8')
+    f.write(str(score) +'\t'+line.decode('utf-8')+'\n')
 
 
 
