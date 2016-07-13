@@ -7,25 +7,37 @@
 SET hive.exec.reducers.bytes.per.reducer=500000000;
 USE wlbase_dev;
 
-DROP TABLE IF EXISTS t_zlj_ec_userbuy_info;
+DROP TABLE IF EXISTS t_zlj_ec_perfer_tag_data;
 CREATE TABLE t_zlj_ec_perfer_tag_data
-  AS
+AS
 
-SELECT user_id,cate_level2_id,price
-from
-(
-select user_id,cate_level2_id,price ,ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY price  DESC) AS rn
-from
-(
-	select user_id,cate_level2_id,sum(price) as   price
-	from t_base_ec_dim  as t1 join  t_zlj_ec_userbuy as t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null
- group by user_id ,cate_level2_id
+ SELECT
+  user_id,
+  cate_level2_id,
+  price
+ FROM
+  (
+   SELECT
+    user_id,
+    cate_level2_id,
+    price,
+    ROW_NUMBER()
+    OVER (PARTITION BY user_id
+     ORDER BY price DESC) AS rn
+   FROM
+    (
+     SELECT
+      user_id,
+      cate_level2_id,
+      sum(price) AS price
+     FROM t_base_ec_dim AS t1 JOIN t_zlj_ec_userbuy AS t2 ON t2.cat_id = t1.cate_id
+     WHERE cate_level2_id IS NOT NULL
+     GROUP BY user_id, cate_level2_id
 
-)t
+    ) t
 
-)t1
-where rn< 15
-;
+  ) t1
+ WHERE rn < 15;
 
 EOF
 
