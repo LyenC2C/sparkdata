@@ -12,9 +12,7 @@ CREATE TABLE t_zlj_credit_user_ac_score AS
       SELECT
         user_id,
         shop_id,
-        pow(2.8, (datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'),
-                           concat_ws('-', substring(ds, 1, 4), substring(ds, 5, 2),
-                                     substring(ds, 7, 2)))) * (-0.005)) AS score
+        pow(2.8, datediff* (-0.005)) AS score
       FROM
         t_base_ec_record_dev_new
        WHERE ds='true1' and  CAST(item_id AS BIGINT) > 0 AND CAST(cat_id AS BIGINT) > 0 AND CAST(user_id AS BIGINT) > 0

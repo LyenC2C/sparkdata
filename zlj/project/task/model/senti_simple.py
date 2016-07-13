@@ -136,9 +136,12 @@ def sentiment_score(segtmp):
 
 f=open('D:\\nlp\\weibo_mts_20160706_cut_score','w')
 for line in open("D:\\nlp\\weibo_mts_20160706_cut"):
-    tt=sentiment_score([i.replace('_emo','') for i in line.split()])
-    score=tt[0]-tt[1]
-    f.write(str(score) +'\t'+line.decode('utf-8')+'\n')
+    try:
+        words,text=line.split('\001')
+        tt=sentiment_score([i.replace('_emo','') for i in words.split()])
+        score=tt[0]-tt[1]
+        f.write(str(score) +'\t'+words+'--------'+text.decode('utf-8')+'\n')
+    except:pass
 
 
 
