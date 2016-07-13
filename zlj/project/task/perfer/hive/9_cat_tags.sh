@@ -25,7 +25,7 @@ from
 
 )t1
 where rn< 15
-
+;
 
 EOF
 
