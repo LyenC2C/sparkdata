@@ -12,7 +12,7 @@ vmPath = jpype.getDefaultJVMPath()
 jpype.startJVM(vmPath, "-Xms320m", "-Xmx1024m","-mx1024m","-Djava.class.path=/common/segfile/hanlp-1.2.7.jar:")
 JDClass = JClass("com.hankcs.hanlp.seg.CRF.CRFSegment")
 HJDClass = JClass("com.hankcs.hanlp.HanLP")
-HJDClass.setRoot("/home/zlj/datas/common/segfile/")
+HJDClass.setRoot("/common/segfile/")
 coreStop=JClass("com.hankcs.hanlp.dictionary.stopword.CoreStopWordDictionary")
 jd = JDClass().enableNameRecognize(True)
 
@@ -23,7 +23,7 @@ pattern4 = re.compile(r"(http://|https://)([A-Za-z0-9\./-_%\?\&=:]*)?", re.I)
 
 
 stopwords=set()
-for line in open('/home/zlj/datas/common/stopwords.txt'):
+for line in open('/common/stopwords.txt'):
     stopwords.add(line.strip().decode('utf-8'))
 # 分词
 def  cut(line):
@@ -38,14 +38,16 @@ def clean_weibo(line):
     txt=pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',line))))
     return  [expressions,txt]
 
-fw=open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706_cut','w')
 
-#for line in open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706.txt'):
-fin = open("/home/wrt/wrt/weibo/negative_label")
-for line in fin:
+# fin = open("/home/wrt/wrt/weibo/negative_label")
+fw=open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706_cutsd','w')
+
+fo = open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706.txt')
+
+for line in fo:
     try:
         emo, txt = clean_weibo(line)
         words = cut(txt)
-        # fw.write(' '.join([i+'_emo' for  i in emo])+' '+' '.join(words)+'\001'+line+'\n')
-        print ' '.join([i+'_emo' for  i in emo]) +
+        fw.write(' '.join([i+'_emo' for  i in emo])+' '+' '.join(words)+'\001'+line+'\n')
+        # print ' '.join([i+'_emo' for  i in emo])
     except: pass
