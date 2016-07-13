@@ -40,9 +40,12 @@ def clean_weibo(line):
 
 fw=open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706_cut','w')
 
-for line in open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706.txt'):
+#for line in open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706.txt'):
+fin = open("/home/wrt/wrt/weibo/negative_label")
+for line in fin:
     try:
-        emo ,txt=clean_weibo(line)
-        words=cut(txt)
-        fw.write(' '.join([i+'_emo' for  i in emo])+' '+' '.join(words)+'\001'+line+'\n')
+        emo, txt = clean_weibo(line)
+        words = cut(txt)
+        # fw.write(' '.join([i+'_emo' for  i in emo])+' '+' '.join(words)+'\001'+line+'\n')
+        print ' '.join([i+'_emo' for  i in emo]) +
     except: pass
