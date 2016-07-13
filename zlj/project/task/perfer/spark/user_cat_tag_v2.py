@@ -3663,8 +3663,25 @@ def f(x):
 # path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t/'
 # rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 hiveContext.sql('use wlbase_dev')
-rdd=hiveContext.sql('''select user_id,cate_level2_id,sum(price) as   price  from t_base_ec_dim  t1 join
-    t_zlj_ec_userbuy t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null group by user_id ,cate_level2_id''')\
+
+sql_text='''
+
+SELECT user_id,cate_level2_id,price
+from
+(
+select user_id,cate_level2_id,price ,ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY price  DESC) AS rn
+from
+(
+	select user_id,cate_level2_id,sum(price) as   price
+	from t_base_ec_dim  as t1 join  t_zlj_ec_userbuy as t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null
+ group by user_id ,cate_level2_id
+
+)t
+
+)t1
+where rn< 15
+'''
+rdd=hiveContext.sql(sql_text)\
     .repartition(150).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.repartition(150).reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
 
