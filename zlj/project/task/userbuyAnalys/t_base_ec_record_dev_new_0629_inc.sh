@@ -19,7 +19,7 @@ LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$ds/"  INTO 
 
 
 
-create table t_base_ec_record_dev_new_tmp like t_base_ec_record_dev_new_0629;
+create table t_base_ec_record_dev_new_tmp like t_base_ec_record_dev_new;
 
 INSERT OVERWRITE TABLE t_base_ec_record_dev_new_tmp PARTITION (ds)
 
@@ -83,17 +83,17 @@ false_path='/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_tmp/ds=false1
 
 hadoop fs -cat $true_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
-hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=true1/cmt_inc_data_$ds
+hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true1/cmt_inc_data_$ds
 
-hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=true1/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true1/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
 
 
 hadoop fs -cat $false_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
-hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=false1/cmt_inc_data_$ds
+hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false1/cmt_inc_data_$ds
 
-hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_0629/ds=false1/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false1/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
