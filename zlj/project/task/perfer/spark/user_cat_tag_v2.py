@@ -3666,20 +3666,7 @@ hiveContext.sql('use wlbase_dev')
 
 sql_text='''
 
-SELECT user_id,cate_level2_id,price
-from
-(
-select user_id,cate_level2_id,price ,ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY price  DESC) AS rn
-from
-(
-	select user_id,cate_level2_id,sum(price) as   price
-	from t_base_ec_dim  as t1 join  t_zlj_ec_userbuy as t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null
- group by user_id ,cate_level2_id
-
-)t
-
-)t1
-where rn< 15
+select * from t_zlj_ec_perfer_tag_data
 '''
 rdd=hiveContext.sql(sql_text)\
     .repartition(150).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
