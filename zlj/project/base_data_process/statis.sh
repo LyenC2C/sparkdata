@@ -1,6 +1,19 @@
+
+#zlj
+
+
+#有ds的数据统计最新ds
+#表基本信息统计
+
+
+date_now =`date +%Y%m%d`
+
+echo $date_now >> file
+echo '---------\n\n' >>file
+
+
 dstables=("t_base_ec_item_dev_new" "t_base_ec_shop_dev_new")
 
-echo ''>file 
 
 for var in ${dstables[@]};
 do
@@ -12,17 +25,21 @@ do
 done
 
 
-tables=("t_base_ec_item_feed_dev" "t_base_ec_record_dev_new")
+tables=("t_base_ec_item_feed_dev" )
 
 for var in ${tables[@]};
 do
     echo $var
     table=$var
     data=`hive -e "use wlbase_dev;  select count(1) from $table   " |tail -2`
-    echo $table  ,$data >>file 
-done 
+    echo $table ,$data >>file
+done
+
+table='t_base_ec_record_dev_new'
+data=`hive -e "use wlbase_dev;  select count(1) from $table  where ds=true1  " |tail -2`
+echo $table   , $data >>file
 
 
 table='t_base_ec_item_sold_dev'
 data=`hive -e "use wlbase_dev;  select count(1) from $table  and cp_flag <>'1'  " |tail -2`
-echo $table  ,$data >>file
+echo $table   ,$data >>file
