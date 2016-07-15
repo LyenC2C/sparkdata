@@ -8,9 +8,14 @@ sys.setdefaultencoding('utf8')
 from pyspark import SparkContext
 from pyspark.sql import *
 from pyspark.sql.types import *
+from pyspark import SparkConf
 # import rapidjson as json
-
-sc = SparkContext(appName="user_cattags")
+conf = SparkConf()
+conf.set("spark.kryoserializer.buffer.mb","1024")
+conf.set("spark.akka.frameSize","100")
+conf.set("spark.network.timeout","1000s")
+conf.set("spark.driver.maxResultSize","8g")
+sc = SparkContext(appName="user_cattags",conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 a = {
@@ -3632,6 +3637,13 @@ a = {
 import math
 
 
+def filtert_f(x):
+    if ( str(x.price).replace('.','').isdigit()):
+       root_cat_id=str(x.cate_level2_id)
+       if not a.has_key(root_cat_id):
+          return None
+       else :return x
+    else :return None
 def f(x):
     if ( str(x.price).replace('.','').isdigit()):
         price=float(x.price)
@@ -3651,7 +3663,12 @@ def f(x):
 # path='/hive/warehouse/wlbase_dev.db/t_zlj_t_base_ec_item_feed_dev_2015_iteminfo_t/'
 # rdd=sc.textFile(path).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 hiveContext.sql('use wlbase_dev')
-rdd=hiveContext.sql('select user_id,root_cat_id,cate_level2_id,price  from t_base_ec_dim  t1 join  t_zlj_ec_userbuy t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null')\
+
+sql_text='''
+
+select * from t_zlj_ec_perfer_tag_data
+'''
+rdd=hiveContext.sql(sql_text)\
     .repartition(150).map(lambda x:f(x)).filter(lambda x: x is not None).flatMap(lambda x:x)
 rdd1=rdd.repartition(150).reduceByKey(lambda a,b:a+b).map(lambda (x,score):(x.split('_')[0],x.split('_')[1]+"_"+str(score)))
 

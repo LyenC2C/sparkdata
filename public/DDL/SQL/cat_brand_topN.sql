@@ -2,8 +2,8 @@
 
 
 
--- ROW_NUMBER() 使用样例
--- 取每个类目下销售 topn  的品牌
+-- ROW_NUMBER() 使锟斤拷锟斤拷锟斤拷
+-- 取每锟斤拷锟斤拷目锟斤拷锟斤拷锟斤拷 topn  锟斤拷品锟斤拷
 
 select
  *
@@ -26,6 +26,21 @@ group by  brand_id,brand_name,root_cat_id,root_cat_name
 where rn <10
 
 ;
+
+SELECT user_id,cate_level2_id,price
+from
+(
+select user_id,cate_level2_id,price ,ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY price  DESC) AS rn
+from
+(
+	select user_id,cate_level2_id,sum(price) as   price
+	from t_base_ec_dim  as t1 join  t_zlj_ec_userbuy as t2 on t2.cat_id=t1.cate_id where cate_level2_id is not null
+ group by user_id ,cate_level2_id
+
+)t
+
+)t1
+where rn< 12
 
 
 SELECT * from
