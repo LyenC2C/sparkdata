@@ -2,6 +2,7 @@
 import sys, rapidjson, time
 import rapidjson as json
 from pyspark import SparkContext
+from pyspark import SparkConf
 
 
 def valid_jsontxt(content):
