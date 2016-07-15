@@ -288,8 +288,9 @@ if __name__ == "__main__":
         output_all_uid_marks = "/data/develop/ec/tb/cmt/uid_mark_freq.json.20160630.test"
         output_item_inc_num = "/commit_feedbck/cmt/inc_item_num.20160603"
         '''
-
-        sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data)
+        conf = SparkContext()
+        conf.set("spark.network.timeout","1000s")
+        sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
 
         #历史uid-feedid [uid,feedidls]
         rdd_uid_feedids = sc.textFile(uid_feedids)\
