@@ -47,10 +47,10 @@ CREATE TABLE t_base_credit_consume_statis_data AS
         ELSE 0 END)             brand_no_effec_id_num,
     sum(CASE WHEN annoy = '1'
       THEN 1
-        ELSE 0 END)             no_annoy_num,
+        ELSE 0 END)             annoy_num,
     sum(CASE WHEN annoy = '0'
       THEN 1
-        ELSE 0 END)             annoy_num,
+        ELSE 0 END)             no_annoy_num,
     sum(CASE WHEN bc_type = 'B'
       THEN 1
         ELSE 0 END)             b_bc_type_num,
@@ -62,7 +62,22 @@ CREATE TABLE t_base_credit_consume_statis_data AS
   WHERE ds = 'true1'
   GROUP BY user_id;
 
+create table  t_base_credit_consume_feed_default_feature as
+SELECT user_id ,sum(case when feed_default=1 then 1 else 0 end )  feed_default,
+  sum(case when feed_default=1 then 0 else 1 end )  feed_non_default
+  FROM
+(
+SELECT
+  user_id ,
+CASE WHEN  content like  '%默认%'  or content='好评！'THEN 1 ELSE 0 END as feed_default
+FROM
+  t_base_ec_item_feed_dev
+)t
+group by  user_id ;
 
+
+
+DROP TABLE  IF EXISTS  t_base_credit_consume_feature_data ;
 CREATE  table t_base_credit_consume_feature_data as
 SELECT t2.* ,
 alipay     ,
@@ -74,10 +89,13 @@ brand_size       ,
 user_per_level   ,
 ac_score_normal  ,
 sum_level        ,
-avg_month_buycnt
+avg_month_buycnt ,
+  feed_default,
+  feed_non_default
 FROM
   t_base_credit_consume_join_data t1 JOIN t_base_credit_consume_statis_data t2
-ON t1.tb_id=t2.user_id;
+ON t1.tb_id=t2.user_id
+JOIN t_base_credit_consume_feed_default_feature t3 on t1.tb_id=t3.user_id;
 
   -- 训练数据
   DROP TABLE t_base_credit_consume_join_data_zm_data ;
@@ -100,7 +118,18 @@ WHERE user_id IN (
   423908098,
   264718973,
   1051266089,
-  1730526634
+  1730526634 ,
+    1101681998
+);
+
+SELECT *
+FROM
+  t_base_credit_consume_feature_data
+WHERE user_id IN (
+  1101681998 ,
+831457909,
+2157904352
+
 );
 
 
