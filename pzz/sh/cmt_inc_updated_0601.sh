@@ -88,7 +88,7 @@ spark-submit  --master spark://cs220:7077  --total-executor-cores  40 --executor
 
 #插入hive
 echo "4/5 mv partitions to hive.."
-#sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${uid_data_output}.partitions ${table}
+sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${uid_data_output}.partitions ${table}
 
 
 #反馈商品评论增量
