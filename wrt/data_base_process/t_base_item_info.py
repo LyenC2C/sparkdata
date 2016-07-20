@@ -10,19 +10,19 @@ import rapidjson as json
 
 
 def parse_price(price_dic):
-    min=1000000000.0
-    price='0'
-    price_range='-'
+    min = 1000000000.0
+    price = '0'
+    price_range = '-'
     for value in price_dic:
         tmp=value['price']
         v = ""
         if '-' in tmp:     v=tmp.split('-')[0]
-        else :             v=tmp
+        else:             v=tmp
         if v.replace('.',"").isdigit():
             v = float(v)
         else:
             v = 0.0
-        if min> v:
+        if min > v:
             min = v
             price = v
             if '-' in tmp: price_range = tmp
@@ -100,7 +100,7 @@ def f(line,cate_dict):
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
     off_time = "-"
-    if is_online == 0 and data_flag == 2: off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
+    if is_online == '0' and data_flag == '2': off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
     skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
     # if skuProps != "-":
