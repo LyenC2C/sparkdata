@@ -15,7 +15,7 @@ feed_bck_dir=/commit_feedbck/cmt
 workspace_path=/mnt/raid1/pzz/workspace/sparkdata
 
 #table
-table=t_base_ec_item_feed_dev
+table=t_base_ec_item_feed_dev_new
 
 #输入数据
 mission_data=$1
@@ -90,8 +90,6 @@ spark-submit  --master spark://cs220:7077  --total-executor-cores  40 --executor
 echo "4/5 mv partitions to hive.."
 sh ${workspace_path}/pzz/sh/mv_feed_from_partitions.sh ${uid_data_output}.partitions ${table}
 
-#echo "insert hive"
-#sh ${workspace_path}/pzz/sh/feed.Dynamic_partitions.sql ${uid_data_output}.test
 
 #反馈商品评论增量
 echo "5/5 feed back item feed inc number to commit.."
