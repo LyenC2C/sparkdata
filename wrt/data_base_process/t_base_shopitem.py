@@ -60,7 +60,7 @@ def f(line):
         lv.append(valid_jsontxt(bonusAmount))
         lv.append(valid_jsontxt(onSale))
         lv.append(valid_jsontxt(online_days))
-        lv.append(ts)
+        lv.append(valid_jsontxt(ts))
         result.append((auctionId,lv))
     return result
 
