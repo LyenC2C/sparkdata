@@ -21,8 +21,9 @@ def f(line):
     ts = ss[0]
     text = line.strip()
     star = text.find("({")
-    if star == -1: return [None]
-    else: star += 1
+    # if star == -1: return [None]
+    # else:
+    star += 1
     end = text.rfind("})") + 1
     ob = json.loads(valid_jsontxt(text[star:end]))
     shopTitle = ob.get("shopTitle","-")
