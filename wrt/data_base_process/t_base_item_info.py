@@ -46,8 +46,6 @@ def valid_jsontxt(content):
 #     else:
 #         return content
 
-
-
 def get_cate_dict(line):
     ss = line.strip().split("\001")
     return (ss[0],[ss[1],ss[3],ss[8]])
@@ -100,7 +98,7 @@ def f(line,cate_dict):
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
     off_time = "-"
-    if is_online == '0' and data_flag == '2': off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
+    if is_online <> '1' and data_flag == '2': off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
     skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
     # if skuProps != "-":
@@ -164,5 +162,9 @@ if __name__ == "__main__":
 # hfs -rmr /user/wrt/temp/iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py -spark
 #LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
-
-
+# status_flag,data_flag：
+# 0,0（根本就没有此商品，内容都没有，也就没有了入库的必要）
+# 0,1（因为有可能是本次采集没采到，所以不能认为是下架，data_ts记录了过去采到时候的时间戳）
+# 0,2（过去就下架了，现在没采到或者不存在此商品，即下架，data_ts即为下架时间，只要后面此商品不再上架，那么data_ts和data_flag就不会变）
+# 1,1（上架）
+# 2,2（采到的时候刚好下架，所以商品即为下架，同0,2）
