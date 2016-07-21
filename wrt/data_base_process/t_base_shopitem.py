@@ -25,8 +25,8 @@ def f(line):
     else: star += 1
     end = text.rfind("})") + 1
     ob = json.loads(valid_jsontxt(text[star:end]))
-    shopTitle = ob.get("shopTitle","-")
-    item_count = ob.get("totalResults","-")
+    shopTitle = ob.get("data",{}).get("shopTitle","-")
+    item_count = ob.get("data",{}).get("totalResults","-")
     itemsArray = ob.get("data",{}).get("itemsArray",[])
     result = []
     for item in itemsArray:
