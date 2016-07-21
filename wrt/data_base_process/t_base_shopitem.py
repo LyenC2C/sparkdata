@@ -61,7 +61,7 @@ def f(line):
         lv.append(valid_jsontxt(onSale))
         lv.append(valid_jsontxt(online_days))
         lv.append(ts)
-        result.append((item_id,lv))
+        result.append((auctionId,lv))
     return result
 
 def quchong(x,y):
