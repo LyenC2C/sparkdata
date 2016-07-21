@@ -27,7 +27,7 @@ def f(line):
     ob = json.loads(valid_jsontxt(text[star:end]))
     shopTitle = ob.get("shopTitle","-")
     item_count = ob.get("totalResults","-")
-    itemsArray = ob.get("itemsArray",[])
+    itemsArray = ob.get("data",{}).get("itemsArray",[])
     result = []
     for item in itemsArray:
         lv = []
@@ -61,7 +61,7 @@ def f(line):
         lv.append(valid_jsontxt(onSale))
         lv.append(valid_jsontxt(online_days))
         lv.append(ts)
-        result.append(shop_id)
+        result.append((item_id,lv))
     return result
 
 def quchong(x,y):
@@ -75,7 +75,7 @@ def quchong(x,y):
 
 s = "/commit/tb_shopitem.json"
 rdd1_c = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x != None)
-# rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
-rdd1_c.saveAsTextFile('/user/wrt/shopitem_tmp')
+rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
+rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem.py
