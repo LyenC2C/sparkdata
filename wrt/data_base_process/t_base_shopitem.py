@@ -21,9 +21,8 @@ def f(line):
     ts = ss[0]
     text = line.strip()
     star = text.find("({")
-    # if star == -1: return [None]
-    # else:
-    star += 1
+    if star == -1: return [None]
+    else: star += 1
     end = text.rfind("})") + 1
     ob = json.loads(valid_jsontxt(text[star:end]))
     shopTitle = ob.get("shopTitle","-")
@@ -62,7 +61,7 @@ def f(line):
         lv.append(valid_jsontxt(onSale))
         lv.append(valid_jsontxt(online_days))
         lv.append(ts)
-        result.append(item_id,lv)
+        result.append((item_id,lv))
     return result
 
 def quchong(x,y):
