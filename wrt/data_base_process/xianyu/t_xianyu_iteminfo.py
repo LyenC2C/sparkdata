@@ -67,3 +67,4 @@ def f(x):
 
 s = "/commit/160719.userinfo"
 rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None)
+rdd.saveAsTextFile('/user/wrt/temp/xianyu_iteminfo_tmp')
