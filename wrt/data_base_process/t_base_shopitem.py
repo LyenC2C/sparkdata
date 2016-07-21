@@ -4,6 +4,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
+sc = SparkContext(appName="t_base_item_info")
 
 def valid_jsontxt(content):
     res = str(content)
@@ -75,4 +76,4 @@ rdd1_c = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem.py
