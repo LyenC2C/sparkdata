@@ -60,7 +60,8 @@ def f(line):
         lv.append(valid_jsontxt(orderCost))
         lv.append(valid_jsontxt(bonusAmount))
         lv.append(valid_jsontxt(onSale))
-        lv.append(valid_jsontxt(online_days))
+        lv.append(valid_jsontxt(up_day)) #上架日期
+        lv.append(valid_jsontxt(down_day)) #0代表上架，日期代表下架日期
         lv.append(valid_jsontxt(ts))
         result.append((auctionId,lv))
     return result
