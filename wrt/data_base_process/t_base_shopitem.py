@@ -43,7 +43,8 @@ def f(line):
         orderCost = item.get("orderCost","-")
         bonusAmount = item.get("bonusAmount","-")
         onSale = item.get("onSale","-")
-        online_days = "1"
+        up_day = "201607021"
+        down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(shopTitle))
         lv.append(valid_jsontxt(item_count))
