@@ -22,6 +22,6 @@ COMMENT '店铺的商品列表'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001' LINES TERMINATED BY '\n' ;
 
---此表用于：
+-- 此表用于：
 -- 1.给采集组提供最新的item_id,其中item_id可以按照销量排序
 -- 2.给开发组提供“店铺运营”项目数据
