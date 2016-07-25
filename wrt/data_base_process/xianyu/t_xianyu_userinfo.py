@@ -13,14 +13,14 @@ def valid_jsontxt(content):
     # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-def f(x):
+def f(line):
     result = []
     text = line.strip()
-    star = text.find("({") + 1
-    if star == -1: return [None]
-    else: star += 1
+    star = text.find("({")+1
+    if star == -1: return None
     end = text.rfind("})") + 1
-    ob = json.loads(valid_jsontxt(text[star:end]))
+    ob = json.loads(valid_jsontxt(text[star:-2]))
+    if type(ob)==type(1.0):return None
     idleItemSearch = ob.get("idleItemSearch@2",{}).get("data",{})
     totalCount = idleItemSearch.get("totalCount","-")
     userPersonalInfo = ob.get("userPersonalInfo@1",{}).get("data",{})
@@ -36,6 +36,9 @@ def f(x):
     constellation = userPersonalInfo.get("constellation","-")
     birthday = userPersonalInfo.get("birthday","-")
     city = userPersonalInfo.get("city","-")
+    constellation='-' if len(constellation)<1 else constellation
+    birthday='-' if len(birthday)<1 else birthday
+    city='-' if len(city)<1 else city
     result.append(valid_jsontxt(userId))
     result.append(valid_jsontxt(totalCount))
     result.append(valid_jsontxt(gender))
@@ -55,4 +58,4 @@ def f(x):
 
 s = "/commit/160719.userinfo"
 rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/wrt/temp/xianyu_userinfo_tmp')
+rdd.saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')

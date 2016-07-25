@@ -12,6 +12,3 @@ t_zlj_user_tag_join_t t1
 join t_base_credit_consume_per_price t2
 on  uid  is not null and t1.uid=t2.user_id
 ;
-
-
-SELECT  size(split(dim,'\\|')) from t_zlj_user_tag_join_t limit 10;
