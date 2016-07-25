@@ -43,7 +43,7 @@ def f(line):
         orderCost = item.get("orderCost","-")
         bonusAmount = item.get("bonusAmount","-")
         onSale = item.get("onSale","-")
-        up_day = "201607021"
+        up_day = "20160721"
         down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(shopTitle))
@@ -80,4 +80,6 @@ rdd1_c = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x != None)
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
+# hfs -rmr /user/wrt/shopitem_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem.py
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_dev PARTITION (ds='20160721');
