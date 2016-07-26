@@ -35,6 +35,7 @@ def f(line):
         title = item.get("title","-")
         picUrl = item.get("picUrl","-")
         sold = item.get("sold","-")
+        day_sold = "0"
         reservePrice = item.get("reservePrice","-")
         salePrice = item.get("salePrice","-")
         auctionType = item.get("auctionType","-")
@@ -52,6 +53,7 @@ def f(line):
         lv.append(valid_jsontxt(title))
         lv.append(valid_jsontxt(picUrl))
         lv.append(valid_jsontxt(sold))
+        lv.append(valid_jsontxt(day_sold))
         lv.append(valid_jsontxt(reservePrice))
         lv.append(valid_jsontxt(salePrice))
         lv.append(valid_jsontxt(auctionType))
@@ -81,5 +83,5 @@ rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
 # hfs -rmr /user/wrt/shopitem_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_first.py
 #LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_dev PARTITION (ds='20160721');
