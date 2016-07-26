@@ -78,7 +78,7 @@ def quchong(x,y):
         if int(ln[-1]) > max:
             max = int(ln[-1])
             y = ln
-    return "\001".join(y)
+    return y
 
 def twodays(x,y):   #同一个item_id下进行groupby后的结果
     item_list = y
@@ -113,9 +113,9 @@ yesterday = sys.argv[2]
 s1 = "/commit/shopitem/20160726/192*"
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_dev/ds=" + yesterday
 
-rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None)
-rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
-# rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None)
+# rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None)
+# rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
+rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None)
 # rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y))
 rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 #hfs -rmr /user/wrt/shopitem_tmp
