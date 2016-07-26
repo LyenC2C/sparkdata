@@ -4,7 +4,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-sc = SparkContext(appName="t_base_item_info")
+sc = SparkContext(appName="t_base_shopitem")
 
 def valid_jsontxt(content):
     # res = content
@@ -115,7 +115,7 @@ s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_dev/ds=" + yesterday
 
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None)
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
-rdd2 = sc.textfile(s2).map(lambda x:f2(x)).filter(lambda x:x != None)
+rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None)
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y))
 rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
 #hfs -rmr /user/wrt/shopitem_tmp
