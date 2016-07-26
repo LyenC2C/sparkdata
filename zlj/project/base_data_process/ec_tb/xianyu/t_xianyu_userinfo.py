@@ -4,7 +4,20 @@ from pyspark import SparkContext
 
 import rapidjson as json
 
-sc = SparkContext(appName="t_xianyu_userinfo")
+from pyspark import SparkContext
+from pyspark.sql import *
+from pyspark.sql.types import *
+from pyspark import SparkConf
+# import rapidjson as json
+conf = SparkConf()
+conf.set("spark.kryoserializer.buffer.mb","1024")
+conf.set("spark.akka.frameSize","100")
+conf.set("spark.network.timeout","1000s")
+conf.set("spark.driver.maxResultSize","8g")
+
+
+sc = SparkContext(appName="t_xianyu_userinfo",conf=conf)
+
 
 def valid_jsontxt(content):
     res = str(content)
