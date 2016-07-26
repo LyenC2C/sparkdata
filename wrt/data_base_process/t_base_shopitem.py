@@ -106,11 +106,12 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
     return "\001".join(result)
 
 
-today = sys.argv[1]
+# today = sys.argv[1]
+today = "20160722"
 yesterday = sys.argv[2]
 
 
-s1 = "/commit/tb_shopitem.json"
+s1 = "/commit/shopitem/20160726/*"
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_dev/ds=" + yesterday
 
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None)
