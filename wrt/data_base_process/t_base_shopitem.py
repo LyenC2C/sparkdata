@@ -106,8 +106,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
     return "\001".join(result)
 
 
-# today = sys.argv[1]
-today = "20160722"
+today = sys.argv[1]
 yesterday = sys.argv[2]
 
 
@@ -119,6 +118,6 @@ rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd2 = sc.textfile(s2).map(lambda x:f2(x)).filter(lambda x:x != None)
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y))
 rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
-
+#hfs -rmr /user/wrt/shopitem_tmp
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem.py 20160722 20160721
 #LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_dev PARTITION (ds='20160722');
