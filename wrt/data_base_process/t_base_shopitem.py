@@ -78,7 +78,7 @@ def quchong(x,y):
         if int(ln[-1]) > max:
             max = int(ln[-1])
             y = ln
-    return y
+    return "\001".join(y)
 
 def twodays(x,y):   #同一个item_id下进行groupby后的结果
     item_list = y
