@@ -283,10 +283,9 @@ def cat_tags():
 def user_profile():
     sql_tag='''
     select
-    tb_id ,concat_ws('\002',
-    case when tgender is not null then cast(tgender as string) else '_' end  ,cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) as user_profile
+    tb_id ,concat_ws('\002', case when tgender is not null then cast(tgender as string) else '_' end  ,cast(tage as string),tname,tloc,alipay,buycnt,verify,regtime) as user_profile
     from
-    t_base_user_info_s_tbuserinfo
+    t_base_user_info_s_tbuserinfo_t
     '''
     rdd=hiveContext.sql(sql_tag).map(lambda x:(x.tb_id,('user_profile',x.user_profile))).filter(lambda x:len(x[1][1])>2)
     # rdd.map(lambda x:x[1]).saveAsTextFile('/user/zlj/tmp/tes')
