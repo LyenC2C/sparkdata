@@ -103,7 +103,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         tod_item[16] = yes_item[16] #无论此商品在曾经是否下过架，今天都已经上架了，那么复制他的上架时间即可
         tod_item[7] = str(int(tod_item[6]) - int(yes_item[6])) #计算日销量，今日减昨日
         result = tod_item
-    return "\001".join(result)
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
 today = sys.argv[1]
