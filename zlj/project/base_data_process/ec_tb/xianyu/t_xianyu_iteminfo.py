@@ -90,14 +90,14 @@ def f(line):
 def f_try(line):
     try:
         return f(line)
-    except:return None
+    except:return [None]
 
 # s = "/commit/160719.userinfo"
 s = "/commit/taobao_xianyu/"
 
 # rdd = sc.textFile(s).flatMap(lambda x:f_1(x)).filter(lambda x:x!=None)
 
-rdd = sc.textFile(s).flatMap(lambda x:f_try(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x)).groupByKey()\
+rdd = sc.textFile(s).filter(lambda x:len(x)>10).flatMap(lambda x:f_try(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x)).groupByKey()\
     .map(lambda (x,y):list(y)[0]).map(lambda x:'\001'.join(x))
 rdd.saveAsTextFile('/user/zlj/temp/xianyu_iteminfo_tmp')
 
