@@ -55,10 +55,13 @@ def f(line):
 
 
 
-
+def f_try(line):
+    try:
+        return f(line)
+    except:return None
 # s = "/commit/160719.userinfo"
 
 s = "/commit/taobao_xianyu/"
 
-rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
+rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
