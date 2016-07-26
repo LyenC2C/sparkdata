@@ -110,7 +110,7 @@ today = sys.argv[1]
 yesterday = sys.argv[2]
 
 
-s1 = "/commit/shopitem/20160726/*"
+s1 = "/commit/shopitem/20160726/192.168.51.93_00155d013ab3.2016-07-17_02.16.26"
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_dev/ds=" + yesterday
 
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None)
