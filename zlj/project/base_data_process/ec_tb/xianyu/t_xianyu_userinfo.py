@@ -69,10 +69,11 @@ def f(line):
 
 
 import  sys
-limit=1024*8*16
+limit=1024*8*10
 def f_try(line):
     try:
         if sys.getsizeof(line)>limit:return None
+        if 'userPersonalInfo' not in line :return None
         # if size<30: print line
         return f(line)
     except:return None
