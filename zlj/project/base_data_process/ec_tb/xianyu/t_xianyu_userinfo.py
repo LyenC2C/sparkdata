@@ -84,8 +84,9 @@ import  sys
 limit=1024*8*10
 def f_try(line):
     try:
-        print sys.getsizeof(line)
-        if sys.getsizeof(line)>limit:return None
+        size=sys.getsizeof(line)
+        print size
+        if size>limit or size<100:return None
         if 'userPersonalInfo' not in line :return None
         # if size<30: print line
         return f(line)
