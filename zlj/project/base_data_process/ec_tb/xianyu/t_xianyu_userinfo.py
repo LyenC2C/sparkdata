@@ -70,6 +70,7 @@ def f(line):
 
 def f_try(line):
     try:
+        print len(line)
         return f(line)
     except:return None
 # s = "/commit/160719.userinfo"
