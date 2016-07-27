@@ -70,7 +70,8 @@ def f(line):
 
 def f_try(line):
     try:
-        print len(line),line
+        size=len(line)
+        if size<30: print line
         return f(line)
     except:return None
 # s = "/commit/160719.userinfo"
