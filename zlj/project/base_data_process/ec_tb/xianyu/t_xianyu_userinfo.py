@@ -68,10 +68,12 @@ def f(line):
 
 
 
+import  sys
+limit=1024*8*16
 def f_try(line):
     try:
-        size=len(line)
-        if size<30: print line
+        if sys.getsizeof(line)>limit:return None
+        # if size<30: print line
         return f(line)
     except:return None
 # s = "/commit/160719.userinfo"
