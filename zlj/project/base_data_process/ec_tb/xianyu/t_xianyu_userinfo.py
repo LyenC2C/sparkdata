@@ -10,6 +10,7 @@ from pyspark.sql.types import *
 from pyspark import SparkConf
 # import rapidjson as json
 conf = SparkConf()
+conf.set("spark.hadoop.validateOutputSpecs", "false")
 conf.set("spark.kryoserializer.buffer.mb","1024")
 conf.set("spark.akka.frameSize","100")
 conf.set("spark.network.timeout","1000s")
