@@ -3357,8 +3357,8 @@ def f(line):
     else:
         province =loc
         city='-'
-    result.append(valid_jsontxt(province))
-    result.append(valid_jsontxt(city))
+    result.append(valid_jsontxt(province.replace('省')))
+    result.append(valid_jsontxt(city.replace('市')))
     return (userId,"\001".join(result))
 
 
