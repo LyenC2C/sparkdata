@@ -3365,9 +3365,9 @@ def f(line):
 
 
 def f_try(line):
-    # try:
+    try:
         return f(line)
-    # except:return None
+    except:return None
 
 s = "/commit/taobao_xianyu_back/10.199.1.96_00155d02c679.2016-07-20_15.54.34"
 
