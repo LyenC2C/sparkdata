@@ -3351,8 +3351,7 @@ def f(line):
     result.append(valid_jsontxt(userNick))
     result.append(valid_jsontxt(constellation))
     result.append(valid_jsontxt(birthday))
-    result.append(valid_jsontxt(cityid))
-    loc=loc_map.get(cityid,'')
+    loc=loc_map.get(cityid,'-')
     province=''
     city=''
     if len(loc.split('-'))==2:
@@ -3372,7 +3371,7 @@ def f_try(line):
         return f(line)
     except:return None
 
-s = "/commit/taobao_xianyu_back/10.199.1.96_00155d02c679.2016-07-20_15.54.34"
+s = "/commit/taobao_xianyu_back/"
 
 rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x!=None).\
     groupByKey().map(lambda (x,y):list(y)[0])
