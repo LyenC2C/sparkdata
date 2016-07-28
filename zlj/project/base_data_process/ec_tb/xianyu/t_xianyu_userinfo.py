@@ -84,16 +84,12 @@ import  sys
 limit=1024*8*10
 def f_try(line):
     try:
-        size=sys.getsizeof(line)
-        print size
-        if size>limit or size<100:return None
-        if 'userPersonalInfo' not in line :return None
-        # if size<30: print line
         return f(line)
     except:return None
 # s = "/commit/160719.userinfo"
 
-s = "/commit/taobao_xianyu/"
+s = "/commit/taobao_xianyu_back/"
 
 rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
+
