@@ -73,11 +73,11 @@ limit=1024*8*10
 def f_try(line):
     try:
         return f(line)
-    except:return (None,None)
+    except:return None
 
 s = "/commit/taobao_xianyu_back/"
 
-rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x[0]!=None and x[1]!=None).\
+rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x!=None).\
     groupByKey().map(lambda (x,y):list(y)[0])
 rdd.repartition(100).saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
 
