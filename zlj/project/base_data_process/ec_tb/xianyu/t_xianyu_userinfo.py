@@ -63,7 +63,7 @@ def f(line):
     result.append(valid_jsontxt(constellation))
     result.append(valid_jsontxt(birthday))
     result.append(valid_jsontxt(city))
-    return "\001".join(result)
+    return (userId,"\001".join(result))
 
 
 
@@ -73,10 +73,10 @@ limit=1024*8*10
 def f_try(line):
     try:
         return f(line)
-    except:return None
+    except:return (None,None)
 
 s = "/commit/taobao_xianyu_back/"
 
-rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x!=None)
+rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x[0]!=None).groupByKey().map(lambda (x,y):list(y)[0])
 rdd.repartition(100).saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
 
