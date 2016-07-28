@@ -77,6 +77,7 @@ def f_try(line):
 
 s = "/commit/taobao_xianyu_back/"
 
-rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x[0]!=None).groupByKey().map(lambda (x,y):list(y)[0])
+rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x[0]!=None and x[1]!=None).\
+    groupByKey().map(lambda (x,y):list(y)[0])
 rdd.repartition(100).saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
 

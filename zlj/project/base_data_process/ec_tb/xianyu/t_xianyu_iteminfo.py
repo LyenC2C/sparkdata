@@ -97,7 +97,7 @@ s = "/commit/taobao_xianyu_back/"
 
 # rdd = sc.textFile(s).flatMap(lambda x:f_1(x)).filter(lambda x:x!=None)
 
-rdd = sc.textFile(s).filter(lambda x:len(x)>10).flatMap(lambda x:f_try(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x)).groupByKey()\
-    .map(lambda (x,y):list(y)[0]).map(lambda x:'\001'.join(x))
+rdd = sc.textFile(s).filter(lambda x:len(x)>10).flatMap(lambda x:f_try(x)).filter(lambda x:x!=None)\
+    .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):list(y)[0]).map(lambda x:'\001'.join(x))
 rdd.repartition(100).saveAsTextFile('/user/zlj/temp/xianyu_iteminfo_tmp')
 
