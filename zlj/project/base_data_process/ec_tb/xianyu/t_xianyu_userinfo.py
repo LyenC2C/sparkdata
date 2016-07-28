@@ -3363,8 +3363,6 @@ def f(line):
 
 
 
-import  sys
-limit=1024*8*10
 def f_try(line):
     try:
         return f(line)
