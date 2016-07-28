@@ -3322,7 +3322,7 @@ def f(line):
     if star == -1: return None
     end = text.rfind("})") + 1
     ob = json.loads(valid_jsontxt(text[star:-2]))
-    if type(ob)==type(1.0):return None
+    if type(ob)!=type({}):return None
     idleItemSearch = ob.get("idleItemSearch@2",{}).get("data",{})
     totalCount = idleItemSearch.get("totalCount","-")
     userPersonalInfo = ob.get("userPersonalInfo@1",{}).get("data",{})
