@@ -52,29 +52,17 @@ def f(line):
     constellation='-' if len(constellation)<1 else constellation
     birthday='-' if len(birthday)<1 else birthday
     city='-' if len(city)<1 else city
-    # result.append(valid_jsontxt(userId))
-    # result.append(valid_jsontxt(totalCount))
-    # result.append(valid_jsontxt(gender))
-    # result.append(valid_jsontxt(idleUserId))
-    # result.append(valid_jsontxt(nick))
-    # result.append(valid_jsontxt(tradeCount))
-    # result.append(valid_jsontxt(tradeIncome))
-    # result.append(valid_jsontxt(userNick))
-    # result.append(valid_jsontxt(constellation))
-    # result.append(valid_jsontxt(birthday))
-    # result.append(valid_jsontxt(city))
-
-    result.append(userId)
-    result.append(totalCount)
-    result.append(gender)
-    result.append(idleUserId)
-    result.append(nick)
-    result.append(tradeCount)
-    result.append(tradeIncome)
-    result.append(userNick)
-    result.append(constellation)
-    result.append(birthday)
-    result.append(city)
+    result.append(valid_jsontxt(userId))
+    result.append(valid_jsontxt(totalCount))
+    result.append(valid_jsontxt(gender))
+    result.append(valid_jsontxt(idleUserId))
+    result.append(valid_jsontxt(nick))
+    result.append(valid_jsontxt(tradeCount))
+    result.append(valid_jsontxt(tradeIncome))
+    result.append(valid_jsontxt(userNick))
+    result.append(valid_jsontxt(constellation))
+    result.append(valid_jsontxt(birthday))
+    result.append(valid_jsontxt(city))
     return "\001".join(result)
 
 
@@ -86,10 +74,9 @@ def f_try(line):
     try:
         return f(line)
     except:return None
-# s = "/commit/160719.userinfo"
 
 s = "/commit/taobao_xianyu_back/"
 
 rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
+rdd.repartition(100).saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
 
