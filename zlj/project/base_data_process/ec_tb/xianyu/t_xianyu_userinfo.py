@@ -3352,6 +3352,8 @@ def f(line):
     result.append(valid_jsontxt(constellation))
     result.append(valid_jsontxt(birthday))
     loc=loc_map.get(cityid,'')
+    province=''
+    city=''
     if len(loc.split('-'))==2:
         province ,city=loc.split('-')
     else:
