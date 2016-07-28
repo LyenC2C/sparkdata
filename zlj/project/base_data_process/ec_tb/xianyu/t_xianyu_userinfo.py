@@ -3351,6 +3351,7 @@ def f(line):
     result.append(valid_jsontxt(userNick))
     result.append(valid_jsontxt(constellation))
     result.append(valid_jsontxt(birthday))
+    result.append(valid_jsontxt(cityid))
     loc=loc_map.get(cityid,'')
     province=''
     city=''
