@@ -3357,17 +3357,17 @@ def f(line):
     else:
         province =loc
         city='-'
-    result.append(valid_jsontxt(province.replace('省')))
-    result.append(valid_jsontxt(city.replace('市')))
+    result.append(valid_jsontxt(province.replace(u'省')))
+    result.append(valid_jsontxt(city.replace(u'市')))
     return (userId,"\001".join(result))
 
 
 
 
 def f_try(line):
-    try:
+    # try:
         return f(line)
-    except:return None
+    # except:return None
 
 s = "/commit/taobao_xianyu_back/10.199.1.96_00155d02c679.2016-07-20_15.54.34"
 
