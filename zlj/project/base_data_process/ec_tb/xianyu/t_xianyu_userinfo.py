@@ -19,7 +19,8 @@ conf.set("spark.driver.maxResultSize","8g")
 
 sc = SparkContext(appName="t_xianyu_userinfo",conf=conf)
 
-loc_map={u'110000' : u'北京市',
+loc_map={
+    u'110000' : u'北京市',
 u'110100' : u'北京市-东城区',
 u'111100' : u'北京市-房山区',
 u'111200' : u'北京市-通州区',
