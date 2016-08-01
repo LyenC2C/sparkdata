@@ -35,20 +35,23 @@ def format_info(line):
 #新record表,建立线上库所需数据
 def format_info(line):
     ls = line.replace(",","").replace("|"," ").split("\001")
+    if len(ls) < 18 or len(ls[2]) <4 or len(ls[2]) > 15 :
+        return None
     try:
         int(ls[2])
-    except:
+        #rowkey:itemid+_+60101+0000
+        #rowkey = ls[2]+'_'+ls[5][-5:]+ls[1][-4:]
+        #修改为   99999-ls[5][-5:]
+        rowkey = ls[2]+'_'+str(99999-int(ls[5][-5:]))+ls[1][-4:]
+        #[ds,catid,root_cat_id,brand_name,price,bc_type]
+        v_info = '|'.join([ls[5],ls[9],ls[10],ls[13],ls[15],ls[14]])
+        v_item = '|'.join([ls[0],ls[17],ls[8],ls[7]])
+        return rowkey+','+v_info+','+v_item
+
+    except Exception,e:
+        print line.encode("utf-8"),e
         return None
-    if len(ls[2]) <4 or len(ls[2]) > 15 or ls[14] == '\\N':
-        return None
-    #rowkey:itemid+_+60101+0000
-    #rowkey = ls[2]+'_'+ls[5][-5:]+ls[1][-4:]
-    #修改为   99999-ls[5][-5:]
-    rowkey = ls[2]+'_'+str(99999-int(ls[5][-5:]))+ls[1][-4:]
-    #[ds,catid,root_cat_id,brand_name,price,bc_type]
-    v_info = '|'.join([ls[5],ls[9],ls[10],ls[13],ls[15],ls[14]])
-    v_item = '|'.join([ls[0],ls[17],ls[8],ls[7]])
-    return rowkey+','+v_info+','+v_item
+
 
 if __name__ == '__main__':
     '''
