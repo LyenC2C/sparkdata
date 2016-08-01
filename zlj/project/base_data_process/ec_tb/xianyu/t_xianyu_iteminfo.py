@@ -1,9 +1,16 @@
 #coding=utf-8
 __author__ = 'wrt'
 from pyspark import SparkContext
-
+from pyspark import SparkConf
 import rapidjson as json
 
+
+conf = SparkConf()
+conf.set("spark.hadoop.validateOutputSpecs", "false")
+conf.set("spark.kryoserializer.buffer.mb","1024")
+conf.set("spark.akka.frameSize","100")
+conf.set("spark.network.timeout","1000s")
+conf.set("spark.driver.maxResultSize","8g")
 sc = SparkContext(appName="t_xianyu_userinfo")
 
 def valid_jsontxt(content):
