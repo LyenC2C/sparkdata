@@ -42,4 +42,5 @@ echo $table   , $data >>file
 
 table='t_base_ec_item_sold_dev'
 data=`hive -e "use wlbase_dev;  select count(1) from $table  and cp_flag <>'1'  " |tail -2`
+
 echo $table   ,$data >>file
