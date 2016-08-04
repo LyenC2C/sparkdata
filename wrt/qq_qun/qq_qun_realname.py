@@ -3,6 +3,7 @@ __author__ = 'wrt'
 
 import sys
 import rapidjson as json
+from pyspark import SparkContext
 
 sc = SparkContext(appName="t_base_shopitem")
 
@@ -28,3 +29,5 @@ def f(x):
     return qq + "\t" + name
 
 rdd = sc.textFile("s").map(lambda x:f(x)).saveAsTextFile('/user/wrt/temp/qq_real_name')
+
+#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 qq_qun_realname.py
