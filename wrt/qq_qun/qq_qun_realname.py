@@ -14,8 +14,6 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-s = "/user/zlj/nlp/oper_group_info_name"
-
 def f(x):
     ss = x.split("\t")
     if len(ss) == 1: return x
@@ -27,7 +25,7 @@ def f(x):
     l.sort(key = lambda k:k[1],reverse=True)
     name = l[0][0]
     return qq + "\t" + name
-
-rdd = sc.textFile("s").map(lambda x:f(x)).saveAsTextFile('/user/wrt/temp/qq_real_name')
+s = "/user/zlj/nlp/oper_group_info_name"
+rdd = sc.textFile(s).map(lambda x:f(x)).saveAsTextFile('/user/wrt/temp/qq_real_name')
 
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 qq_qun_realname.py
