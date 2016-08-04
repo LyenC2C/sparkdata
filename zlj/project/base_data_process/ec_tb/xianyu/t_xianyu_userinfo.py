@@ -4,7 +4,24 @@ from pyspark import SparkContext
 
 import rapidjson as json
 
-sc = SparkContext(appName="t_xianyu_userinfo")
+from pyspark import SparkContext
+from pyspark.sql import *
+from pyspark.sql.types import *
+from pyspark import SparkConf
+# import rapidjson as json
+conf = SparkConf()
+conf.set("spark.hadoop.validateOutputSpecs", "false")
+conf.set("spark.kryoserializer.buffer.mb","1024")
+conf.set("spark.akka.frameSize","100")
+conf.set("spark.network.timeout","1000s")
+conf.set("spark.driver.maxResultSize","8g")
+
+
+sc = SparkContext(appName="t_xianyu_userinfo",conf=conf)
+
+
+
+
 
 def valid_jsontxt(content):
     res = str(content)
@@ -20,7 +37,7 @@ def f(line):
     if star == -1: return None
     end = text.rfind("})") + 1
     ob = json.loads(valid_jsontxt(text[star:-2]))
-    if type(ob)==type(1.0):return None
+    if type(ob)!=type({}):return None
     idleItemSearch = ob.get("idleItemSearch@2",{}).get("data",{})
     totalCount = idleItemSearch.get("totalCount","-")
     userPersonalInfo = ob.get("userPersonalInfo@1",{}).get("data",{})
@@ -38,7 +55,7 @@ def f(line):
     city = userPersonalInfo.get("city","-")
     constellation='-' if len(constellation)<1 else constellation
     birthday='-' if len(birthday)<1 else birthday
-    city='-' if len(city)<1 else city
+    cityid='-' if len(city)<1 else city
     result.append(valid_jsontxt(userId))
     result.append(valid_jsontxt(totalCount))
     result.append(valid_jsontxt(gender))
@@ -49,13 +66,31 @@ def f(line):
     result.append(valid_jsontxt(userNick))
     result.append(valid_jsontxt(constellation))
     result.append(valid_jsontxt(birthday))
-    result.append(valid_jsontxt(city))
-    return "\001".join(result)
+    result.append(valid_jsontxt(cityid))
+    # loc=loc_map.get(cityid,'-')
+    loc=''
+    province=''
+    city=''
+    if len(loc.split('-'))==2:
+        province ,city=loc.split('-')
+    else:
+        province =loc
+        city='-'
+    result.append(valid_jsontxt(province.replace(u'省','')))
+    result.append(valid_jsontxt(city.replace(u'市','')))
+    return (userId,"\001".join(result))
 
 
 
 
+def f_try(line):
+    try:
+        return f(line)
+    except:return None
 
-s = "/commit/160719.userinfo"
-rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
-rdd.saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
+s = "/commit/taobao_xianyu_back/"
+
+rdd = sc.textFile(s).map(lambda x:f_try(x)).filter(lambda x:x!=None).\
+    groupByKey().map(lambda (x,y):list(y)[0])
+rdd.repartition(100).saveAsTextFile('/user/zlj/temp/xianyu_userinfo_tmp')
+

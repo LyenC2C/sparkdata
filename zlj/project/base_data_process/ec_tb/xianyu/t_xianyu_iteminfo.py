@@ -1,10 +1,17 @@
 #coding=utf-8
 __author__ = 'wrt'
 from pyspark import SparkContext
-
+from pyspark import SparkConf
 import rapidjson as json
 
-sc = SparkContext(appName="t_xianyu_userinfo")
+
+conf = SparkConf()
+conf.set("spark.hadoop.validateOutputSpecs", "false")
+conf.set("spark.kryoserializer.buffer.mb","1024")
+conf.set("spark.akka.frameSize","100")
+conf.set("spark.network.timeout","1000s")
+conf.set("spark.driver.maxResultSize","8g")
+sc = SparkContext(appName="t_xianyu_userinfo",conf=conf)
 
 def valid_jsontxt(content):
     res = str(content)
@@ -87,13 +94,17 @@ def f(line):
     return result
 
 
+def f_try(line):
+    try:
+        return f(line)
+    except:return [None]
 
+# s = "/commit/160719.userinfo"
+s = "/commit/taobao_xianyu_back/"
 
-s = "/commit/160719.userinfo"
+# rdd = sc.textFile(s).flatMap(lambda x:f_1(x)).filter(lambda x:x!=None)
 
-rdd = sc.textFile(s).flatMap(lambda x:f_1(x)).filter(lambda x:x!=None)
-
-rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x)).groupByKey()\
-    .map(lambda (x,y):list(y)[0]).map(lambda x:'\001'.join(x))
-rdd.saveAsTextFile('/user/zlj/temp/xianyu_iteminfo_tmp')
+rdd = sc.textFile(s).filter(lambda x:len(x)>10).flatMap(lambda x:f_try(x)).filter(lambda x:x!=None)\
+    .map(lambda x:(x[0],x)).groupByKey().map(lambda (x,y):list(y)[0]).map(lambda x:'\001'.join(x))
+rdd.repartition(100).saveAsTextFile('/user/zlj/temp/xianyu_iteminfo_tmp')
 

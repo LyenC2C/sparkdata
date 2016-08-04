@@ -11,7 +11,7 @@ tradeIncome  string comment '',
 userNick  string comment '淘宝昵称',
 constellation  string comment '星座',
 birthday  string comment '出生年月',
-
+province  string comment '省' ,
 city  string comment '城市'
 )
 COMMENT '电商淘宝闲鱼用户信息表'

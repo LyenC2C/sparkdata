@@ -8,7 +8,6 @@ CREATE TABLE t_base_credit_consume_join_data AS
     regtime_month,
     buycnt,
     verify_level,
-    size(split(dim, '\\|'))   AS dim_size,
     -- esp_perfer    ,
     size(split(brand, '\\|')) AS brand_size,
     CASE WHEN cast(split(user_per_level, '_') [1] AS INT) > 0
@@ -18,7 +17,10 @@ CREATE TABLE t_base_credit_consume_join_data AS
     CASE WHEN cast(split(sum_level, 'el') [1] AS INT) > 0
       THEN cast(split(sum_level, 'el') [1] AS INT)
     ELSE 0 END                AS sum_level,
-    avg_month_buycnt
+    avg_month_buycnt ,
+    cat_flag ,
+    house_flag
+
 
   FROM
 
@@ -99,14 +101,15 @@ CREATE TABLE t_base_credit_consume_feature_data AS
     regtime_month,
     buycnt,
     verify_level,
-    dim_size,
     brand_size,
     user_per_level,
     ac_score_normal,
     sum_level,
     avg_month_buycnt,
     feed_default,
-    feed_non_default
+    feed_non_default ,
+    cat_flag ,
+    house_flag
 
   FROM
     t_base_credit_consume_join_data t1 JOIN t_base_credit_consume_statis_data t2
