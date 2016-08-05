@@ -9,11 +9,13 @@ CREATE TABLE t_base_ec_record_dev_new_simple_user_rootid AS
   GROUP BY user_id, root_cat_id;
 
 --  用户类目特征表
+  DROP TABLE  t_base_ec_record_dev_new_simple_user_rootid_group ;
+
 CREATE TABLE t_base_ec_record_dev_new_simple_user_rootid_group
 AS
   SELECT
     user_id,
-    concat_ws('\t', collect_set(concat_ws('\t', numdata, pricedata)))
+    concat_ws(' ', collect_set(concat_ws(' ', numdata, pricedata)))
   FROM
     (
       SELECT
@@ -52,3 +54,11 @@ AS
 
     ) tn
   GROUP BY user_id;
+
+
+Drop table  t_base_ec_record_dev_new_simple_user_rootid_group_traindata ;
+create TABLE t_base_ec_record_dev_new_simple_user_rootid_group_traindata as
+SELECT  concat_ws(' ',concat( '+',cast(t1.gender as String)), `_c1` )
+  from
+( select userid ,gender  from t_base_ec_tb_xianyu_userinfo   where  gender  in('0','1')  and birthday like '%19%' )
+t1 join t_base_ec_record_dev_new_simple_user_rootid_group t2 on t1.userid =t2.user_id ;
