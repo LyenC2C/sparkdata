@@ -32,11 +32,11 @@ def valid_jsontxt(content):
 
 def f(line):
     result = []
-    text = line.strip()
+    text = valid_jsontxt(line.strip())
     star = text.find("({")+1
     if star == -1: return None
     end = text.rfind("})") + 1
-    ob = json.loads(valid_jsontxt(text[star:-2]))
+    ob = json.loads(text[star:end])
     if type(ob)!=type({}):return None
     idleItemSearch = ob.get("idleItemSearch@2",{}).get("data",{})
     totalCount = idleItemSearch.get("totalCount","-")
