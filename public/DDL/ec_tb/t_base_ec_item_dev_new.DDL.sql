@@ -18,7 +18,6 @@ seller_id STRING  COMMENT '店家id',
 shop_id STRING  COMMENT '店铺id',
 location  String COMMENT '店铺地址' ,
 
-
 paramap map<string, string>   COMMENT '商品参数表' ,
 sku  map<string, string>  COMMENT'sku  21433_89866585|1627207_3232479:price_quant,21433_89866585|1627207_3232479:price_quant',
 ts STRING COMMENT '采集时间戳'
