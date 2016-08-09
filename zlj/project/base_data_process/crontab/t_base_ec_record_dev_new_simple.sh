@@ -1,4 +1,10 @@
 
+/home/zlj/hive/bin/hive<<EOF
+
+use wlbase_dev;
+
+
+DROP  table t_base_ec_record_dev_new_simple  ;
 
 
 create table t_base_ec_record_dev_new_simple as
@@ -16,9 +22,12 @@ brand_id         ,
 bc_type          ,
 price            ,
 shop_id
-from t_base_ec_record_dev_new;
+from t_base_ec_record_dev_new
+where ds='true1'
+;
 
 
 
+EOF
 
 

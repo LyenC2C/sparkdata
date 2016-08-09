@@ -53,6 +53,7 @@ def f(line):
     BC_type = trackParams.get('BC_type', '-')
     item_count = '0'
     for item in seller.get('actionUnits', []):
+        if type(item) != type({}): continue
         if item.has_key('track'):
             if item['track'] == 'Button-AllItem':
                 item_count = item.get('value', '0')

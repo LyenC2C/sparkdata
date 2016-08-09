@@ -1,14 +1,14 @@
 CREATE TABLE t_zlj_credit_girl_feed_data AS
 SELECT *
 FROM t_base_ec_item_feed_dev
-WHERE   ds>20160101 and content LIKE '%女朋友%'  or  content LIKE '%妹子%';
+WHERE   ds>20160101 and content LIKE '%濂冲弸%'  or  content LIKE '%濡瑰瓙%';
 
 
 
 CREATE TABLE t_zlj_credit_girl_feed_data_girllove AS
 SELECT *
 FROM t_base_ec_item_feed_dev
-WHERE    content LIKE '%女朋友%'
+WHERE    content LIKE '%女锟斤拷锟斤拷%'
 
 
 
@@ -29,11 +29,11 @@ ON t1.item_id = t2.item_id AND t2.ds = 2016050;
 
 
 select cat_name,count(1)  from t_zlj_credit_girl_feed_data_girllove_item where
- root_cat_name like '%鲜花%'group by cat_name
+ root_cat_name like '%锟绞伙拷%'group by cat_name
 
-	290501	鲜花速递(同城)
+
 
 create table  t_zlj_credit_girl_feed_data_girllove_item_flower_290501 as
 select * from  t_base_ec_record_dev_new where cat_id=290501 ;
 
--- 直接根据年龄来吧
+-- 直锟接革拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
