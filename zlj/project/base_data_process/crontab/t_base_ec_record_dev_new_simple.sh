@@ -23,6 +23,7 @@ bc_type          ,
 price            ,
 shop_id
 from t_base_ec_record_dev_new
+where ds='true1'
 ;
 
 
