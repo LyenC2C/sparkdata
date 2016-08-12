@@ -110,7 +110,7 @@ today = sys.argv[1]
 yesterday = sys.argv[2]
 
 
-s1 = "/commit/shopitem/20160726/192*"
+s1 = "/commit/shopitem/" + today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_dev/ds=" + yesterday
 
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None)
@@ -119,5 +119,5 @@ rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None)
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y))
 rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
 #hfs -rmr /user/wrt/shopitem_tmp
-#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem.py 20160722 20160721
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_dev PARTITION (ds='20160722');
+#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem.py 20160810 20160722
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_dev PARTITION (ds='20160810');
