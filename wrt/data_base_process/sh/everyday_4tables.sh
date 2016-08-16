@@ -3,7 +3,7 @@ source ~/.bashrc
 #pre_path='/home/wrt/sparkdata'
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
-sh ./item_sold.sh 20160729 20160728 20160814
+
 sh ./item_sold.sh 20160730 20160729 20160814
 sh ./item_sold.sh 20160801 20160730 20160814
 sh ./item_sold.sh 20160802 20160801 20160814
