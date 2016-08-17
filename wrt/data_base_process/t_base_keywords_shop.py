@@ -14,7 +14,7 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-def f(x):
+def f(line):
     text = line.strip()
     ob = json.loads(valid_jsontxt(text))
     shop = ob.get("shop",{})
