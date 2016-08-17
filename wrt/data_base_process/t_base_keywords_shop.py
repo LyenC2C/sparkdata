@@ -18,12 +18,13 @@ def f(line):
     text = line.strip()
     ob = json.loads(valid_jsontxt(text))
     shop = ob.get("shop",{})
-    shop_id = shop.get("id","-")
+    shop_id = valid_jsontxt(shop.get("id","-"))
     if shop_id == "-": return None
     isMall = shop.get("isMall",False)
     if isMall: bc_type = 'B'
     else: bc_type = 'C'
-    totalSold = shop.get("totalSold","0")
+    bc_type = valid_jsontxt(bc_type)
+    totalSold = valid_jsontxt(shop.get("totalSold","0"))
     # return shop_id + "\001" + bc_type + "\001" + totalSold
     return (shop_id,(shop_id,bc_type,totalSold))
 
