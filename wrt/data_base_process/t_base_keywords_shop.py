@@ -31,10 +31,10 @@ def f(x):
 #     return "\001".join(y[0])
 
 
-sc = "/commit/tb_shop_search.160714.clean.all.sq"
-rdd_c = sc.textFile(sc).map(lambda x:f(x)).filter(lambda x:x != None)
+s1 = "/commit/tb_shop_search.160714.clean.all.sq"
+rdd_c = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x != None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):"\001".join(y[0]))
 rdd.saveAsTextFile('/user/wrt/keywords_shop_tmp')
 
 #hfs -rmr /user/wrt/keywords_shop_tmp
-#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_keywordsd_shop.py
+#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_keywords_shop.py
