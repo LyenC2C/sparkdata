@@ -73,8 +73,8 @@ def fun(line):
         # wf_1.write(wstr1 + '\n')
 
         txt = wb['text'].replace('转发微博', '').replace('\n', '')  # .split('//@')[0]
-        wstr2 = '\001'.join([mid, name.encode('utf8'), wb['user'][
-                            'screen_name'].encode('utf8'), str(t), txt.encode('utf8')])
+        wstr2 = '\001'.join([mid, name, wb['user'][
+                            'screen_name'], str(t), txt])
         rs.append(wstr2)
 
     return  rs
