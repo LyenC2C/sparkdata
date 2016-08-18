@@ -73,8 +73,7 @@ def fun(line):
         # wf_1.write(wstr1 + '\n')
 
         txt = wb['text'].replace('转发微博', '').replace('\n', '')  # .split('//@')[0]
-        wstr2 = '\001'.join([mid, name, wb['user'][
-                            'screen_name'], str(t), txt])
+        wstr2 = '\001'.join( [valid_jsontxt(i) for i in [mid, name, wb['user']['screen_name'], str(t), txt]])
         rs.append(wstr2)
 
     return  rs
