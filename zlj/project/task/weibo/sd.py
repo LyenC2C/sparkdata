@@ -73,8 +73,10 @@ def fun(line):
         #     [mid, name.encode('utf8'), wb['user']['screen_name'].encode('utf8'), str(t)])
         # wf_1.write(wstr1 + '\n')
 
-        txt = wb['text'].replace('转发微博', '').replace('\n', '') ##.split('//@')[0]
-        next_user_name=valid_jsontxt(txt).split('//@')[1].split(':')[0]
+        txt = valid_jsontxt(wb['text']).replace('转发微博', '').replace('\n', '') ##.split('//@')[0]
+        if '//@' in txt:
+            next_user_name=valid_jsontxt(txt).split('//@')[1].split(':')[0]
+        else: next_user_name=""
         wstr2 = '\001'.join( [valid_jsontxt(i) for i in [mid,
                                                          name,wb['retweeted_status']['user']['idstr'],
                                                          wb['user']['screen_name'],wb['user']['idstr'],
