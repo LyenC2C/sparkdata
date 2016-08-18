@@ -1,9 +1,16 @@
 CREATE  TABLE  if not exists t_base_ec_brand (
-brand_id   String COMMENT '品牌id',
+brand_id   String COMMENT 'id',
 brand_name  String ,
-stars  int
+item_count  bigint ,
+
+avg_price
+max_price
+min_price
+03price
+05price
+08price
 )
-COMMENT '电商品牌数据'
+COMMENT ''
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;

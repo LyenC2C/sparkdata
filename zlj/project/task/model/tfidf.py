@@ -24,6 +24,8 @@ sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
 
+rdd=sc.textFile('/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_v2').map(lambda x:x.split())\
+.filter(lambda x:x[0].isdigit()==True).map(lambda x:' '.join(x)).saveAsTextFile('/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_v2_filter')
 # def groupvalue(y):
 #
 #     lv=[(k.split('-')[0],v) for k,v in s1.iteritems()]
