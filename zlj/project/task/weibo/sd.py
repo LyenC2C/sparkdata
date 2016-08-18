@@ -40,12 +40,14 @@ from datetime import datetime
 
 def fun(line):
     if "\001" not in line :return None
-    ls= valid_jsontxt(line).split("\001")
-    if len(ls)!=2:return None
-    mid, s = valid_jsontxt(line).split("\001")[:1]
-    j = json.loads(s)
+    # ls= valid_jsontxt(line).split("\001")
+    # if len(ls)!=2:return None
+    mid, s = line.split("\001")
+
+    j = json.loads(valid_jsontxt(s))
     if type(j)!=type({}):return None
 
+    rs=[]
     for wb in j['reposts']:
         if 'retweeted_status' not in wb:
             continue
@@ -69,11 +71,12 @@ def fun(line):
         #     [mid, name.encode('utf8'), wb['user']['screen_name'].encode('utf8'), str(t)])
         # wf_1.write(wstr1 + '\n')
 
-        txt = wb['text'].replace(u'转发微博', '').replace(
-            '\n', '')  # .split('//@')[0]
+        txt = wb['text'].replace(u'转发微博', '').replace('\n', '')  # .split('//@')[0]
         wstr2 = '\001'.join([mid, name.encode('utf8'), wb['user'][
                             'screen_name'].encode('utf8'), str(t), txt.encode('utf8')])
-        return wstr2
+        rs.append(wstr2)
+
+    return  rs
 
 sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).filter(lambda x:x!=None).saveAsTextFile('/user/zlj/tmp/1_parse')
 
