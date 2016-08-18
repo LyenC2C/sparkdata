@@ -39,8 +39,8 @@ from datetime import datetime
 
 
 def fun(line):
-    if '\001' not in line :return None
-    mid, s = valid_jsontxt(line).split('\001')[:1]
+    if "\001" not in line :return None
+    mid, s = valid_jsontxt(line).split("\001")[:1]
     j = json.loads(s)
     if type(j)!=type({}):return None
 
