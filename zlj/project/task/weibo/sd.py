@@ -34,12 +34,10 @@ from datetime import datetime
 
 
 def fun(line):
-    try:
-        mid, s = line.split('\001')
-        j = json.loads(s)
-        if type(j)!=type({}):return None
-    except:
-        return None
+
+    mid, s = line.split('\001')
+    j = json.loads(s)
+    if type(j)!=type({}):return None
 
     for wb in j['reposts']:
         if 'retweeted_status' not in wb:
