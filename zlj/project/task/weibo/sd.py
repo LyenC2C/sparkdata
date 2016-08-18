@@ -40,6 +40,8 @@ from datetime import datetime
 
 def fun(line):
     if "\001" not in line :return None
+    ls= valid_jsontxt(line).split("\001")
+    if len(ls)!=2:return None
     mid, s = valid_jsontxt(line).split("\001")[:1]
     j = json.loads(s)
     if type(j)!=type({}):return None
@@ -73,7 +75,7 @@ def fun(line):
                             'screen_name'].encode('utf8'), str(t), txt.encode('utf8')])
         return wstr2
 
-sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).saveAsTextFile('/user/zlj/tmp/1_parse')
+sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).filter(lambda x:x!=None).saveAsTextFile('/user/zlj/tmp/1_parse')
 
 
 # wf_2.close()
