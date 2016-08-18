@@ -73,8 +73,13 @@ def fun(line):
         #     [mid, name.encode('utf8'), wb['user']['screen_name'].encode('utf8'), str(t)])
         # wf_1.write(wstr1 + '\n')
 
-        txt = wb['text'].replace('转发微博', '').replace('\n', '').split('//@')[0]
-        wstr2 = '\001'.join( [valid_jsontxt(i) for i in [mid, name, wb['user']['screen_name'], str(t), txt]])
+        txt = wb['text'].replace('转发微博', '').replace('\n', '') ##.split('//@')[0]
+        next_user_name=txt.split('//@')[0].split(':')[0]
+        wstr2 = '\001'.join( [valid_jsontxt(i) for i in [mid,
+                                                         name,wb['retweeted_status']['user']['idstr'],
+                                                         wb['user']['screen_name'],wb['user']['idstr'],
+                                                         next_user_name ,
+                                                         str(t), txt]])
         rs.append(wstr2)
 
     return  rs
