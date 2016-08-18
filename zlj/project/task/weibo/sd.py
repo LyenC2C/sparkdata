@@ -31,8 +31,9 @@ def valid_jsontxt(content):
 # coding=utf8
 # import json
 import sys
-import email.utils
+from email  import utils
 import re
+
 from datetime import datetime
 
 
@@ -52,10 +53,10 @@ def fun(line):
         if 'retweeted_status' not in wb:
             continue
 
-        date_tz = email.utils.parsedate_tz(wb['created_at'])
+        date_tz = utils.parsedate_tz(wb['created_at'])
         end_date = datetime(*date_tz[:6])
 
-        date_tz = email.utils.parsedate_tz(
+        date_tz = utils.parsedate_tz(
             wb['retweeted_status']['created_at'])
         start_date = datetime(*date_tz[:6])
 
