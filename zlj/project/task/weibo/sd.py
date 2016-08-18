@@ -22,7 +22,12 @@ sc = SparkContext(appName="user_cattags", conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-
+def valid_jsontxt(content):
+    res = content
+    if type(content) == type(u""):
+        res = content.encode("utf-8")
+        return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    else: return res
 # coding=utf8
 # import json
 import sys
@@ -35,7 +40,7 @@ from datetime import datetime
 
 def fun(line):
 
-    mid, s = line.split('\001')
+    mid, s = valid_jsontxt(line).split('\001')
     j = json.loads(s)
     if type(j)!=type({}):return None
 
