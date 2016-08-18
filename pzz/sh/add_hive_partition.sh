@@ -4,7 +4,6 @@ table=$1
 start=$2
 end=$3
 
-
 for((i=${start};i<=${end};i++))
 do
 	cmd="hadoop fs -mkdir /hive/warehouse/wlbase_dev.db/${table}/ds=${i}"
