@@ -72,7 +72,7 @@ def fun(line):
         #     [mid, name.encode('utf8'), wb['user']['screen_name'].encode('utf8'), str(t)])
         # wf_1.write(wstr1 + '\n')
 
-        txt = wb['text'].replace(u'转发微博', '').replace('\n', '')  # .split('//@')[0]
+        txt = valid_jsontxt(wb['text']).replace(u'转发微博', '').replace('\n', '')  # .split('//@')[0]
         wstr2 = '\001'.join([mid, name.encode('utf8'), wb['user'][
                             'screen_name'].encode('utf8'), str(t), txt.encode('utf8')])
         rs.append(wstr2)
