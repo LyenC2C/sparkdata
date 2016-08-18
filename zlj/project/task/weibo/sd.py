@@ -26,7 +26,7 @@ def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-        return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+        return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\\r", "")
     else: return res
 # coding=utf8
 # import json
