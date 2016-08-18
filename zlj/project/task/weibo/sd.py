@@ -74,7 +74,7 @@ def fun(line):
         # wf_1.write(wstr1 + '\n')
 
         txt = wb['text'].replace('转发微博', '').replace('\n', '') ##.split('//@')[0]
-        next_user_name=txt.split(u'//')[1].split(':')[0]
+        next_user_name=valid_jsontxt(txt).split('//@')[1].split(':')[0]
         wstr2 = '\001'.join( [valid_jsontxt(i) for i in [mid,
                                                          name,wb['retweeted_status']['user']['idstr'],
                                                          wb['user']['screen_name'],wb['user']['idstr'],
