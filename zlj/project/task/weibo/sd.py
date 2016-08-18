@@ -78,7 +78,7 @@ def fun(line):
 
     return  rs
 
-sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).filter(lambda x:x!=None).saveAsTextFile('/user/zlj/tmp/1_parse')
+sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/1_parse')
 
 
 # wf_2.close()
