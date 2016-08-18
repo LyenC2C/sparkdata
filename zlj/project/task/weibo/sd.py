@@ -59,6 +59,7 @@ def fun(line):
         date_tz = utils.parsedate_tz(
             wb['retweeted_status']['created_at'])
         start_date = datetime(*date_tz[:6])
+        if start_date.year<2015:continue
 
         t = int((end_date - start_date).total_seconds())
 
@@ -72,13 +73,18 @@ def fun(line):
         #     [mid, name.encode('utf8'), wb['user']['screen_name'].encode('utf8'), str(t)])
         # wf_1.write(wstr1 + '\n')
 
-        txt = wb['text'].replace('转发微博', '').replace('\n', '')  # .split('//@')[0]
+        txt = wb['text'].replace('转发微博', '').replace('\n', '').split('//@')[0]
         wstr2 = '\001'.join( [valid_jsontxt(i) for i in [mid, name, wb['user']['screen_name'], str(t), txt]])
         rs.append(wstr2)
 
     return  rs
 
-sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/1_parse')
+def try_fun(line):
+    try:
+        return fun(line)
+    except: return None
+# sc.textFile('/commit/weibo_dc').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/commit/weibo_dc_parse2015')
+sc.textFile('/user/zlj/tmp/1').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/1_parse')
 
 
 # wf_2.close()
