@@ -14,7 +14,7 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-def f1(line):
+def f(line):
     ss = line.strip().split("\t",4)
     shop_id = ss[1]
     ts = ss[0]
