@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE  if not exists t_base_ec_shopitem_dev (
+CREATE EXTERNAL TABLE  if not exists t_base_ec_shopitem_new (
 shop_id String COMMENT '店铺id',
 item_id String COMMENT '商品id',
 item_title String COMMENT '商品title',
@@ -20,4 +20,4 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001' LINES TERMINATED BY '\n' ;
 -- 1.给采集组提供最新的item_id,其中item_id可以按照销量排序
 use wlservice;
 create table t_wrt_upgrade_itemid AS
-select item_id,sold from wlbase_dev.t_base_ec_shopitem_dev where ds = 20160722 order by sold desc
+select item_id,sold from wlbase_dev.t_base_ec_shopitem_new where ds = 20160722 order by sold desc
