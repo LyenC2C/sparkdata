@@ -75,6 +75,11 @@ WHERE rn < 10;
 -- 品牌等级
 Drop table  t_zlj_tmp_brand_level ;
 
+DROP TABLE t_zlj_tmp_brand_level1 ;
+create table t_zlj_tmp_brand_level1 as
+SELECT brand_name , brand_id FROM  t_zlj_tmp_brand_level where brand_level=1 and length(brand_name)>1
+;
+
 CREATE TABLE t_zlj_tmp_brand_level AS
   SELECT
     brand_id,
