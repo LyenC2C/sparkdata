@@ -18,6 +18,7 @@ def f1(line):
     ss = line.strip().split("\t",4)
     shop_id = ss[1]
     ts = ss[0]
+    bc_type = ss[3]
     text = ss[4]
     if text == "noshop": return [None]
     ob = json.loads(valid_jsontxt(text))
@@ -46,7 +47,7 @@ def f1(line):
         # lv.append(valid_jsontxt(day_sold))
         lv.append(valid_jsontxt(reservePrice))
         lv.append(valid_jsontxt(salePrice))
-        # lv.append(valid_jsontxt(auctionType))
+        lv.append(valid_jsontxt(bc_type))
         # lv.append(valid_jsontxt(quantity))
         # lv.append(valid_jsontxt(totalSoldQuantity))
         # lv.append(valid_jsontxt(orderCost))
