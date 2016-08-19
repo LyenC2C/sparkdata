@@ -90,7 +90,7 @@ def try_fun(line):
     try:
         return fun(line)
     except: return None
-sc.textFile('/commit/weibo_dc').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/commit/weibo_dc_parse2015')
+sc.textFile('/commit/weibo_dc').repartition().map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/commit/weibo_dc_parse2015')
 # sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/1_parse')
 
 
