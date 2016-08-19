@@ -18,7 +18,7 @@ def f1(line):
     ss = line.strip().split("\t",4)
     shop_id = ss[1]
     ts = ss[0]
-    bc_type = ss[3]
+    # bc_type = ss[3]
     text = ss[4]
     if text == "noshop": return [None]
     ob = json.loads(valid_jsontxt(text))
@@ -42,7 +42,7 @@ def f1(line):
         lv.append(valid_jsontxt(sold))
         lv.append(valid_jsontxt(reservePrice))
         lv.append(valid_jsontxt(salePrice))
-        lv.append(valid_jsontxt(bc_type))
+        # lv.append(valid_jsontxt(bc_type))
         lv.append(valid_jsontxt(up_day)) #上架日期
         lv.append(valid_jsontxt(down_day)) #0代表上架，日期代表下架日期
         lv.append(valid_jsontxt(ts))
@@ -65,5 +65,5 @@ rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
 # hfs -rmr /user/wrt/shopitem_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_first.py
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_new PARTITION (ds='20160818');
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_tmall_first.py
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_tmall PARTITION (ds='20160818');
