@@ -30,29 +30,19 @@ def f1(line):
         title = item.get("title","-")
         picUrl = item.get("picUrl","-")
         sold = item.get("sold","-")
-        # day_sold = '0' #日销量，默认为0
         reservePrice = item.get("reservePrice","-")
         if reservePrice == "": reservePrice = "-"
         salePrice = item.get("salePrice","-")
-        # auctionType = item.get("auctionType","-")
         up_day = "20160819"
         down_day = "0"
         lv.append(valid_jsontxt(shop_id))
-        # lv.append(valid_jsontxt(shopTitle))
-        # lv.append(valid_jsontxt(item_count))
         lv.append(valid_jsontxt(item_id))
         lv.append(valid_jsontxt(title))
         lv.append(valid_jsontxt(picUrl))
         lv.append(valid_jsontxt(sold))
-        # lv.append(valid_jsontxt(day_sold))
         lv.append(valid_jsontxt(reservePrice))
         lv.append(valid_jsontxt(salePrice))
         lv.append(valid_jsontxt(bc_type))
-        # lv.append(valid_jsontxt(quantity))
-        # lv.append(valid_jsontxt(totalSoldQuantity))
-        # lv.append(valid_jsontxt(orderCost))
-        # lv.append(valid_jsontxt(bonusAmount))
-        # lv.append(valid_jsontxt(onSale))
         lv.append(valid_jsontxt(up_day)) #上架日期
         lv.append(valid_jsontxt(down_day)) #0代表上架，日期代表下架日期
         lv.append(valid_jsontxt(ts))
@@ -76,4 +66,4 @@ rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
 # hfs -rmr /user/wrt/shopitem_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_first.py
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_dev PARTITION (ds='20160721');
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_new PARTITION (ds='20160818');
