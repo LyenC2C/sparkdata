@@ -115,7 +115,7 @@ if __name__ == '__main__':
     elif sys.argv[1] == '-filter_flw_by_uid':
         sc = SparkContext(appName="filter flw by uid")
         id_ls = sc.broadcast(sc.textFile(sys.argv[2]).map(lambda x:int(x.strip())).collect())
-        rdd_f = sc.textFile("/user/yarn/weibo/rel_fri.json.20160401")
+        rdd_f = sc.textFile("/data/develop/sinawb/rel_fri.json.20160401")
         rdd_f.map(lambda x:filter_flw_by_uid(x,id_ls.value))\
                 .filter(lambda x:len(x)>0)\
                 .flatMap(lambda x:x)\
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     elif sys.argv[1] == '-filter_info_by_big_uid':
         sc = SparkContext(appName="filter info by big uid")
         rdd_uid  = sc.textFile(sys.argv[2]).map(lambda x:[x.strip(),1])
-        rdd_uinfo = sc.textFile("/user/yarn/weibo/user_info.json.20160401")\
+        rdd_uinfo = sc.textFile("/data/develop/sinawb/rel_fri.json.20160401")\
                     .map(lambda x:f(x))\
                     .filter(lambda x:x!=None)
 
