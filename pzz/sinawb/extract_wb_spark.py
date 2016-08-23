@@ -91,7 +91,7 @@ if __name__ == '__main__':
     if sys.argv[1] == '-filter_fri_by_uid':
         sc = SparkContext(appName="filter fri by uid")
         tel_map  = sc.broadcast(sc.textFile(sys.argv[2]).map(lambda x:(int(x.strip()),None)).collectAsMap())
-        rdd_f = sc.textFile("/user/yarn/weibo/rel_fri.json.20160401")
+        rdd_f = sc.textFile("/data/develop/sinawb/rel_fri.json.20160401")
         rdd_f.map(lambda x:filter_fri_by_uid(x,tel_map.value))\
                 .filter(lambda x:x!=None)\
                 .saveAsTextFile(sys.argv[3])
