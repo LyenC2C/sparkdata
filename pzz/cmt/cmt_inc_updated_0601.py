@@ -291,6 +291,7 @@ if __name__ == "__main__":
         '''
         conf = SparkConf()
         conf.set("spark.network.timeout","1000s")
+        conf.set("spark.akka.frameSize","500")
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
 
         #历史uid-feedid [uid,feedidls]
