@@ -93,9 +93,8 @@ def f(line,cate_dict):
         if valid_jsontxt('品牌') in valid_jsontxt(v.get('name',"-")) and brand_name == "-" :
             brand_name = v.get('value',"-")
     item_info = ",".join(item_info_list)
-
     # value = parse_price(data['apiStack']['itemInfoModel']['priceUnits'])
-    price = value[0]
+    # price = value[0]
     apiStack = data.get("apiStack",[])
     if apiStack == []:
         price = 0.0
@@ -166,7 +165,7 @@ if __name__ == "__main__":
     # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
     rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 
-# hfs -rmr /user/wrt/temp/iteminfo_tmp
+# hfs -rmr user/wrt/temp/znk_iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py
 # LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
 # status_flag,data_flag：
