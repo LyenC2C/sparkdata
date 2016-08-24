@@ -163,7 +163,7 @@ if __name__ == "__main__":
     s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
     cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
     rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)\
-        .map(lambda (x,y):"\001".join([str(valid_jsontxt(i)) for i in y[0]]))
+        .groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid_jsontxt(i) for i in y[0]]))
     # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
     rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 
