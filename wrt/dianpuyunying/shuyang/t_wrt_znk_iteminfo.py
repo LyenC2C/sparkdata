@@ -116,6 +116,7 @@ def f(line,cate_dict):
     # skuProps = data.get("apiStack",{}).get("skuModel",{}).get("","-")
     # if skuProps != "-":
     ts = "-"
+    is_online = "-"
     result = []
     result.append(item_id)
     result.append(title)
