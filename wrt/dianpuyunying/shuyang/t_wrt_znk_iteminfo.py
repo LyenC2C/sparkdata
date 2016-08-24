@@ -113,7 +113,7 @@ def f(line,cate_dict):
     off_time = "-"
     # if is_online <> '1' and data_flag == '2': off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
-    skuProps = data.get("apiStack",{}).get("skuModel",{}).get("","-")
+    # skuProps = data.get("apiStack",{}).get("skuModel",{}).get("","-")
     # if skuProps != "-":
     ts = "-"
     result = []
