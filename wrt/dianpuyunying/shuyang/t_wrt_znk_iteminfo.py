@@ -62,6 +62,7 @@ def f(line,cate_dict):
     # if len(ss) != 3: return None
     txt = valid_jsontxt(line)
     ob = json.loads(txt)
+    if type(ob) == type(1.0): return None
     data = ob.get('data',"-")
     if data == "-": return None
     itemInfoModel = data.get('itemInfoModel',"-")
@@ -92,11 +93,20 @@ def f(line,cate_dict):
         if valid_jsontxt('品牌') in valid_jsontxt(v.get('name',"-")) and brand_name == "-" :
             brand_name = v.get('value',"-")
     item_info = ",".join(item_info_list)
-    value = parse_price(data['apiStack']['itemInfoModel']['priceUnits'])
+
+    # value = parse_price(data['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
-    if int(price) > 160000:
-        price = 1.0
-    price_zone = value[1]
+    apiStack = data.get("apiStack",[])
+    if apiStack == []:
+        price = 0.0
+        price_zone = '-'
+    else:
+        value_json = apiStack[0].get("value")
+        value_ob = json.loads(valid_jsontxt(value_json))
+        value = parse_price(value_ob["data"]["itemInfoModel"]["priceUnits"])
+        if int(price) > 160000:
+            price = 1.0
+        price_zone = value[1]
     seller = data.get('seller',{})
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
@@ -157,8 +167,8 @@ if __name__ == "__main__":
     rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 
 # hfs -rmr /user/wrt/temp/iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py -spark
-#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py
+# LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
 # status_flag,data_flag：
 # 0,0（根本就没有此商品，内容都没有，也就没有了入库的必要）
 # 0,1（因为有可能是本次采集没采到，所以不能认为是下架，data_ts记录了过去采到时候的时间戳）
