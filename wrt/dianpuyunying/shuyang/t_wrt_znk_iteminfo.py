@@ -103,6 +103,7 @@ def f(line,cate_dict):
         value_json = apiStack[0].get("value")
         value_ob = json.loads(valid_jsontxt(value_json))
         value = parse_price(value_ob["data"]["itemInfoModel"]["priceUnits"])
+        price = value[0]
         if int(price) > 160000:
             price = 1.0
         price_zone = value[1]
