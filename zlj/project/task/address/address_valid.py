@@ -89,14 +89,14 @@ def check_xian_qu(line ,words,address_ls):
 
 import jieba
 
-def extract(line):
+def extract(address):
 
-    words='\001'.join(jieba.cut(line)).encode('utf-8').split('\001')
+    words='\001'.join(jieba.cut(address)).encode('utf-8').split('\001')
     log(words)
-    address_ls=seg.mainAlgorithm_String(line).split('|')
+    address_ls=seg.mainAlgorithm_String(address).split('|')
     # address_ls=[]
     log(address_ls)
-    line=line.replace('社区','').replace('小区','')
+    line=address.replace('社区','').replace('小区','')
     prov,words,address_ls=check_prov(line,words,address_ls)
     log(prov)
     log(words)
@@ -110,7 +110,8 @@ def extract(line):
     log(words.append(""))
     log(address_ls.append(""))
     # [].remove()
-    return prov,city,xian, ''.join(address_ls.remove(prov).remove(city))
+    address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
+    return prov,city,xian, ''.join(address_ls)
 
 line ='四川省成都市十陵街道双龙社区'
 # print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
