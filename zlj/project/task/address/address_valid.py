@@ -61,7 +61,7 @@ def check_prov(line ,words,address_ls):
     else:
         for index,prov  in enumerate(words_tmp) :
             if prov_dic.has_key(prov):
-               return prov_dic[prov],words[index:],address_ls
+               return prov,words[index:],address_ls
 
 def check_city(line ,words,address_ls):
     words_tmp = copy.deepcopy(words)
@@ -72,7 +72,7 @@ def check_city(line ,words,address_ls):
     else:
         for index,city  in enumerate(words) :
             if city_dic.has_key(city):
-               return city_dic[city],words[index:],address_ls
+               return city,words[index:],address_ls
 
 
 def check_xian_qu(line ,words,address_ls):
@@ -84,7 +84,7 @@ def check_xian_qu(line ,words,address_ls):
     else:
         for index,xian  in enumerate(words_tmp) :
             if xian_dic.has_key(xian):
-               return xian_dic[xian],words[index:],address_ls
+               return xian,words[index:],address_ls
     return "",words[index:],address_ls
 
 
@@ -114,7 +114,7 @@ def extract(address):
     xian=xian.replace(prov,'').replace(city,'')
     # [].remove()
     address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
-    return prov,city  ,xian, ''.join(address_ls)
+    return prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls)
 
 line ='四川省成都市十陵街道双龙社区'
 print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
