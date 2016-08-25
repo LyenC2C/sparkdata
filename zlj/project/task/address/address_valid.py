@@ -85,7 +85,7 @@ def log(w):
         print  '\t'.join(w)
     else :print w
 def extract(line):
-    words=jieba.cut(line)
+    words='\001'.join(jieba.cut(line)).split('\001')
     log(words)
     address_ls=seg.mainAlgorithm_String(line).split('|')
     log(address_ls)
