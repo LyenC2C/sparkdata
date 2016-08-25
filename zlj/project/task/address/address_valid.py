@@ -104,6 +104,6 @@ def extract(line):
     return prov,city,xian, ''.join(address_ls)
 
 line ='四川省成都市十陵街道双龙社区'
-print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
-print '\t'.join(extract('四川成都市十陵街道双龙社区'))
+# print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
+# print '\t'.join(extract('四川成都市十陵街道双龙社区'))
 print '\t'.join(extract('四川成都十陵街道双龙社区'))
