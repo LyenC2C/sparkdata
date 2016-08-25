@@ -48,18 +48,17 @@ def log(w):
         print  '\t'.join(w)
     else :print w
 
+import copy
 
-print prov_dic['四川'] ,'----------'
+# print prov_dic['四川'] ,'----------'
 def check_prov(line ,words,address_ls):
+    words_tmp = copy.deepcopy(words)
     if '省' in line :
         for index,prov in enumerate(address_ls):
              if '省' in prov:
                  return prov, words,address_ls[index:]
     else:
-
-        for index,prov  in enumerate(words) :
-            log(index)
-            log(prov)
+        for index,prov  in enumerate(words_tmp) :
             if prov_dic.has_key(prov):
                return prov,words[index:],address_ls
 
