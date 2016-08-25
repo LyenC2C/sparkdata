@@ -61,6 +61,7 @@ def f(line,cate_dict):
     if apiStack == []:
         return None
     value_json = apiStack[0].get("value")
+    if value_json == "": return None
     value_ob = json.loads(valid_jsontxt(value_json))
     if value_ob["data"]["itemControl"]["unitControl"].has_key("offShelfUrl"):
         is_online = 2
