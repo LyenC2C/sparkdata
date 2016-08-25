@@ -63,6 +63,7 @@ def check_prov(line ,words,address_ls):
                return prov,words[index:],address_ls
 
 def check_city(line ,words,address_ls):
+    words_tmp = copy.deepcopy(words)
     if '市' in line :
         for index,city in enumerate(address_ls):
              if '市' in city:
@@ -74,15 +75,16 @@ def check_city(line ,words,address_ls):
 
 
 def check_xian_qu(line ,words,address_ls):
+    words_tmp = copy.deepcopy(words)
     if '县' in line or '区' in line:
         for index,xian in enumerate(address_ls):
              if '县' in xian  or  '区' in xian:
                  return xian, words,address_ls[index:]
     else:
-        for index,xian  in enumerate(words) :
+        for index,xian  in enumerate(words_tmp) :
             if xian_dic.has_key(xian):
                return xian,words[index:],address_ls
-
+    return "",words[index:],address_ls
 
 
 import jieba
@@ -94,6 +96,7 @@ def extract(line):
     address_ls=seg.mainAlgorithm_String(line).split('|')
     address_ls=[]
     log(address_ls)
+    line=line.replace('社区','').replace('小区','')
     prov,words,address_ls=check_prov(line,words,address_ls)
     log(prov)
     log(words)
@@ -104,8 +107,8 @@ def extract(line):
     log(address_ls)
     xian,words,address_ls=check_xian_qu(line,words,address_ls)
     log(xian)
-    log(words)
-    log(address_ls)
+    log(words.append(""))
+    log(address_ls.append(""))
     return prov,city,xian, ''.join(address_ls)
 
 line ='四川省成都市十陵街道双龙社区'
