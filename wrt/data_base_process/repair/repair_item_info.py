@@ -55,6 +55,7 @@ def f(line,cate_dict):
     if type(ob) == type(1.0): return None
     if ob.has_key("ret") and "ERRCODE_QUERY_DETAIL_FAIL::宝贝不存在" in ob["ret"]:
         return None
+    data = ob.get('data',"-")
     apiStack = data.get("apiStack",[])
     if apiStack == []:
         return None
@@ -64,7 +65,6 @@ def f(line,cate_dict):
         is_online = 2
     else:
         is_online = 1
-    data = ob.get('data',"-")
     if data == "-": return None
     itemInfoModel = data.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     rdd.saveAsTextFile('/user/wrt/temp/repair_iteminfo_tmp')
 
 # hfs -rmr user/wrt/temp/znk_iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  repair_item_info.py
 # LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
 # status_flag,data_flag：
 # 0,0（根本就没有此商品，内容都没有，也就没有了入库的必要）
