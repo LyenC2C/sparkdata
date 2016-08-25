@@ -426,7 +426,8 @@ if __name__ == "__main__":
                         .flatMap(lambda x:x)\
                         .groupByKey()\
                         .map(lambda (x,y):cal_item_inc_num(x,y))
-        rdd_item_inc_num.saveAsTextFile(output_item_inc_num)
+        rdd_item_inc_num.coalesce(50)\
+                        .saveAsTextFile(output_item_inc_num)
 
     elif sys.argv[1] == '-gen_data_add_nouid':
         input_nouid_data = sys.argv[2]
