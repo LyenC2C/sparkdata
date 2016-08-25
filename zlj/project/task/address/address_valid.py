@@ -47,7 +47,7 @@ def log(w):
     # if type(w)==type([]):
     #     print  '\t'.join(w)
     # else :print w
-    print ""
+    return  ""
 
 import copy
 
@@ -61,7 +61,7 @@ def check_prov(line ,words,address_ls):
     else:
         for index,prov  in enumerate(words_tmp) :
             if prov_dic.has_key(prov):
-               return prov,words[index:],address_ls
+               return prov_dic[prov],words[index:],address_ls
 
 def check_city(line ,words,address_ls):
     words_tmp = copy.deepcopy(words)
@@ -72,7 +72,7 @@ def check_city(line ,words,address_ls):
     else:
         for index,city  in enumerate(words) :
             if city_dic.has_key(city):
-               return city,words[index:],address_ls
+               return city_dic[city],words[index:],address_ls
 
 
 def check_xian_qu(line ,words,address_ls):
@@ -84,7 +84,7 @@ def check_xian_qu(line ,words,address_ls):
     else:
         for index,xian  in enumerate(words_tmp) :
             if xian_dic.has_key(xian):
-               return xian,words[index:],address_ls
+               return xian_dic[xian],words[index:],address_ls
     return "",words[index:],address_ls
 
 
