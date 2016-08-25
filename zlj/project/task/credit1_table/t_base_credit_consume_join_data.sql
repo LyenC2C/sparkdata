@@ -20,13 +20,9 @@ CREATE TABLE t_base_credit_consume_join_data AS
     avg_month_buycnt ,
     cat_flag ,
     house_flag
-
-
   FROM
-
     t_base_credit_consume_basic_property t1
-
-    LEFT JOIN t_base_credit_consume_perfer t2 ON t1.tb_id = t2.tb_id
+ LEFT JOIN t_base_credit_consume_perfer t2 ON t1.tb_id = t2.tb_id
 
     LEFT JOIN t_base_credit_consume_property t3 ON t1.tb_id = t3.user_id
   WHERE length(sum_level) > 0;
