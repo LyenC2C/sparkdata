@@ -43,10 +43,14 @@ for ob in address:
         xians=city_ob['sub']
         for xian_ob in xians:
             xian_dic[xian_ob['name'].replace('县','').replace('区','')]=xian_ob['name']
-
+def log(w):
+    if type(w)==type([]):
+        print  '\t'.join(w)
+    else :print w
 
 
 def check_prov(line ,words,address_ls):
+    log(words)
     if '省' in line :
         for index,prov in enumerate(address_ls):
              if '省' in prov:
@@ -80,10 +84,7 @@ def check_xian_qu(line ,words,address_ls):
 
 
 import jieba
-def log(w):
-    if type(w)==type([]):
-        print  '\t'.join(w)
-    else :print w
+
 def extract(line):
     words='\001'.join(jieba.cut(line)).split('\001')
     log(words)
