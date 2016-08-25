@@ -109,7 +109,8 @@ def extract(line):
     log(xian)
     log(words.append(""))
     log(address_ls.append(""))
-    return prov,city,xian, ''.join(address_ls)
+    # [].remove()
+    return prov,city,xian, ''.join(address_ls.remove(prov).remove(city))
 
 line ='四川省成都市十陵街道双龙社区'
 # print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
