@@ -111,7 +111,7 @@ def extract(address):
     log(address_ls.append(""))
     # [].remove()
     address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
-    return prov,city,xian, ''.join(address_ls)
+    return prov,city.replace(prov,''),xian.replace(prov,'').replace(city,''), ''.join(address_ls)
 
 line ='四川省成都市十陵街道双龙社区'
 # print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
