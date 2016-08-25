@@ -29,12 +29,34 @@ def valid_jsontxt(content):
         return res
     else: return res
 # coding=utf8
-# import json
 import sys
 from email  import utils
 import re
 
 from datetime import datetime
+
+def fun1(line):
+    if "\001" not in line :return None
+    # ls= valid_jsontxt(line).split("\001")
+    # if len(ls)!=2:return None
+    mid, s = line.split("\001")
+    j = json.loads(valid_jsontxt(s))
+    if type(j)!=type({}):return None
+    res=()
+    for wb in j['reposts']:
+        if 'retweeted_status' not in wb:
+            continue
+        rs = wb['retweeted_status']
+        res = (rs['idstr'] ,'\001'.join([ str(i) for i in [
+            rs['idstr'],
+            str(rs['user']['id']),
+            rs['created_at'],
+            valid_jsontxt(rs['text'])
+        ] ])
+            )
+        break
+    return res
+
 
 
 
@@ -59,6 +81,7 @@ def fun(line):
         date_tz = utils.parsedate_tz(
             wb['retweeted_status']['created_at'])
         start_date = datetime(*date_tz[:6])
+        # time=[start_date.hour start_date.minute]
         if start_date.year<2015:continue
 
         t = int((end_date - start_date).total_seconds())
@@ -90,9 +113,72 @@ def try_fun(line):
     try:
         return fun(line)
     except: return None
-sc.textFile('/commit/weibo_dc').repartition().map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/commit/weibo_dc_parse2015')
+
+def try_fun1(line):
+    try:
+        return fun1(line)
+    except: return None
+sc.textFile('/commit/weibo_dc').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/commit/weibo_dc_parse2015')
+
+
+sc.textFile('/commit/weibo_dc/')\
+    .map(lambda x:try_fun1(x)).filter(lambda x:x!=None).filter(lambda x: len(x)==2).groupByKey()\
+    .filter(lambda (x,y):len(list(y))>0).map(lambda (x,y): list(y)[0]).saveAsTextFile('/commit/weibo_dc_parse2015_8w_fix')
+
+sc.textFile('/commit/weibo_dc/')\
+    .map(lambda x:try_fun1(x)).filter(lambda x:x!=None ).filter(lambda x: len(x)==2).map(lambda x:x[0]+'\002'+x[1]).saveAsTextFile('/commit/weibo_dc_parse2015_8w')
 # sc.textFile('/user/zlj/tmp/1').map(lambda x:fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/1_parse')
 
 
+
+# spark-submit  --total-executor-cores  50   --executor-memory  14g  --driver-memory 14g  extract_wb_spark.py  -filter_fri_by_big_uid  /hive/warehouse/wlbase_dev.db/t_zlj_dc_weibodata_3w_username_id  /commit/weibo_dc_parse2015_link
+
+# 关系数据
+def fun1(line,tel_map):
+    ob=json.loads(line)
+    if type(ob)!=type({}):return None
+    uid=str(ob.get('uid'))
+    if tel_map.has_key(uid):
+        uid=tel_map.get(uid)
+    ids=  ob.get('ids')
+    ls=[]
+    if ids ==None:return None
+    ids=[str(i) for  i in ob.get('ids')]
+    for id in ids:
+        if  tel_map.has_key(id):
+            ls.append(tel_map.get(id))
+    return str(uid)+'\t'+'\001'.join(ls)
+
+
+tel_map  = sc.broadcast(sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_dc_weibodata_3w_username_id').map(lambda x:(x.split('\001')[0],x.split('\001')[1])).collectAsMap())
+
+sc.textFile('/commit/weibo_dc_parse2015_link').map(lambda x:fun1(x,tel_map.value)).filter(lambda x:x is not None)\
+    .repartition(100).saveAsTextFile('/commit/weibo_dc_parse2015_link_filter')
+
 # wf_2.close()
 # wf_1.close()
+
+
+def fun(line):
+   ob= json.loads(line)
+   uid =ob['uid']
+   ls=[]
+   for i in ob.keys():
+       if 'uid' not in i:
+           ls.append((i,uid))
+   return ls
+
+rdd=sc.textFile('/data/develop/ec/tb/cmt/uid_mark/uid_mark_freq.json.20160726/').map(lambda x:fun(x))\
+    .flatMap(lambda x:x).map(lambda x:'\001'.join(x)).saveAsTextFile('/user/zlj/tmp/uid_mark_freq')
+
+rdd1=sc.broadcast(sc.textFile('/commit/tb_comment_tz_tmp/tz.cmt').map(lambda x:(x.split('\001')[-1],x)).collectAsMap())
+tel_map  = sc.broadcast(sc.textFile(sys.argv[2]).map(lambda x:(int(x.strip()),None)).collectAsMap())
+
+def  fun1(x,map):
+    k,v =x
+    if map.has_key(k):
+        return (v,map[k])
+rs=rdd.map(lambda x:fun1(x,rdd1.value)).filter(lambda x:x !=None)
+rsdd=rdd.join(rdd1).map(lambda (x,y):(y[0],y[1]))
+
+rsdd
