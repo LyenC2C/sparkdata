@@ -50,12 +50,12 @@ def log(w):
 
 
 def check_prov(line ,words,address_ls):
-    log(words)
     if '省' in line :
         for index,prov in enumerate(address_ls):
              if '省' in prov:
                  return prov, words,address_ls[index:]
     else:
+        log(words)
         for index,prov  in enumerate(words) :
             if prov_dic.has_key(prov):
                return prov,words[index:],address_ls
