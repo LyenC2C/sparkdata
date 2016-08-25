@@ -36,9 +36,11 @@ for ob in address:
     # ob=json.loads('\''+valid_jsontxt(i)+'\'')
     prov=ob['abbrname'].replace('省','').replace('自治区','').replace('回族','').replace('维吾尔','').replace('壮族','')
     prov_dic[prov]=ob['name']
-    for city_ob in prov:
+    citys=prov['sub']
+    for city_ob in citys:
         city_dic[city_ob['name'].replace('市','')]=city_ob['name']
-        for xian_ob in city_ob:
+        xians=city_ob['sub']
+        for xian_ob in xians:
             xian_dic[xian_ob['name'].replace('县','').replace('区','')]=xian_ob['name']
 
 
