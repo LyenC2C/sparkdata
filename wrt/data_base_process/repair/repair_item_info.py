@@ -32,10 +32,11 @@ def decompress(out):
     return data
 
 def valid_jsontxt(content):
-    res = content
+    # res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-    # return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
+    else:
+        res = str(content)
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 # def valid_jsontxt(content):
