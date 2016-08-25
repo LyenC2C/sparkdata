@@ -44,9 +44,10 @@ for ob in address:
         for xian_ob in xians:
             xian_dic[xian_ob['name'].replace('县','').replace('区','')]=xian_ob['name']
 def log(w):
-    if type(w)==type([]):
-        print  '\t'.join(w)
-    else :print w
+    # if type(w)==type([]):
+    #     print  '\t'.join(w)
+    # else :print w
+    print ""
 
 import copy
 
@@ -116,6 +117,6 @@ def extract(address):
     return prov,city  ,xian, ''.join(address_ls)
 
 line ='四川省成都市十陵街道双龙社区'
-# print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
-# print '\t'.join(extract('四川成都市十陵街道双龙社区'))
+print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
+print '\t'.join(extract('四川成都市十陵街道双龙社区'))
 print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
