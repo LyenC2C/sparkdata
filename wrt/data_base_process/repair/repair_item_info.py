@@ -76,8 +76,6 @@ def f(line,cate_dict):
     title = itemInfoModel.get('title','-').replace("\n","")
     favor = itemInfoModel.get('favcount','0')
     categoryId = itemInfoModel.get('categoryId','-')
-    if categoryId != '121954006' and categoryId != '122326002' and categoryId != '50012481':
-        return None
     root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
     cat_name = cate_dict.get(categoryId,["-","-","-"])[0]
     root_cat_name = cate_dict.get(categoryId,["-","-","-"])[2]
@@ -147,8 +145,6 @@ def quchong(x, y):
     for ln in result:
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
-
-
     # result = []
 if __name__ == "__main__":
     from pyspark import SparkContext
