@@ -49,6 +49,7 @@ def log(w):
     else :print w
 
 
+print prov_dic['四川'] ,'----------'
 def check_prov(line ,words,address_ls):
     if '省' in line :
         for index,prov in enumerate(address_ls):
