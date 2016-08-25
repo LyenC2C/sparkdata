@@ -102,7 +102,7 @@ def f(line,cate_dict):
     seller = data.get('seller',{})
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
-    ts = "1471104000"
+    ts = "1471881600"
     off_time = "-"
     if is_online == '2' : off_time = ts #如果已下架，显示下架时间，未下架，显示“-”,此处为修复程序，下架时间暂时为入库时间，后面会join之前的数据产生准确的下架时间
     sku_info = "-"
@@ -149,7 +149,7 @@ def quchong(x, y):
 if __name__ == "__main__":
     from pyspark import SparkContext
     sc = SparkContext(appName="repair_item_info")
-    s = "/commit/iteminfo/20160814/*"
+    s = "/commit/iteminfo/20160823/*"
     s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
     cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
     rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)\
