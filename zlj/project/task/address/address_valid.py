@@ -76,10 +76,6 @@ import jieba
 def extract(line):
     words=jieba.cut(line)
     address_ls=seg.mainAlgorithm_String(line)
-    prov=''
-    city=''
-    xian=''
-    town=''
 
     prov,words,address_ls=check_prov(line,words,address_ls)
     city,words,address_ls=check_city(line,words,address_ls)
