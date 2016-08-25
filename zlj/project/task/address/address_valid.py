@@ -94,7 +94,7 @@ def extract(line):
     words='\001'.join(jieba.cut(line)).encode('utf-8').split('\001')
     log(words)
     address_ls=seg.mainAlgorithm_String(line).split('|')
-    address_ls=[]
+    # address_ls=[]
     log(address_ls)
     line=line.replace('社区','').replace('小区','')
     prov,words,address_ls=check_prov(line,words,address_ls)
