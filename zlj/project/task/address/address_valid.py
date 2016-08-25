@@ -87,7 +87,7 @@ def log(w):
 def extract(line):
     words=jieba.cut(line)
     log(words)
-    address_ls=seg.mainAlgorithm_String(line)
+    address_ls=seg.mainAlgorithm_String(line).split('|')
     log(address_ls)
     prov,words,address_ls=check_prov(line,words,address_ls)
     log(prov)
