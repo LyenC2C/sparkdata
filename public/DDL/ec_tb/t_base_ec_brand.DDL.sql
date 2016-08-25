@@ -2,7 +2,6 @@ CREATE  TABLE  if not exists t_base_ec_brand (
 brand_id   String COMMENT 'id',
 brand_name  String ,
 item_count  bigint ,
-
 avg_price
 max_price
 min_price
