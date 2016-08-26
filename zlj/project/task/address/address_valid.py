@@ -123,7 +123,7 @@ weght=[0.3,0.3,0,0.4]
 def sim(ad_real,ad_test):
     score=0
     for index,item in enumerate(zip(ad_real,ad_test)):
-        if item[0]==item[1]: score=score+weght[index]
+        if len(item[0])>1 and len(item[1])>1  and item[0]==item[1]: score=score+weght[index]
     return score
 
 # line ='四川省成都市十陵街道双龙社区'
