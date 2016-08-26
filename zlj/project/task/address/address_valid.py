@@ -126,10 +126,10 @@ def sim(ad_real,ad_test):
         if item[0]==item[1]: score=score+weght[index]
     return score
 
-line ='四川省成都市十陵街道双龙社区'
-ad_real=extract('四川省成都市十陵街道双龙社区')
-ad_test=extract('四川成都市十陵街道双龙社区')
-print sim(ad_real,ad_test)
+# line ='四川省成都市十陵街道双龙社区'
+# ad_real=extract('四川省成都市十陵街道双龙社区')
+# ad_test=extract('四川成都市十陵街道双龙社区')
+# print sim(ad_real,ad_test)
 
 
 ad_real=extract('四川省成都市十陵街道双龙社区')
