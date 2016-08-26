@@ -44,10 +44,10 @@ for ob in address:
         for xian_ob in xians:
             xian_dic[xian_ob['name'].replace('县','').replace('区','')]=xian_ob['name']
 def log(w):
-    # if type(w)==type([]):
-    #     print  '\t'.join(w)
-    # else :print w
-    return  ""
+     if type(w)==type([]):
+         print  '\t'.join(w)
+     else :print w
+    # return  ""
 
 import copy
 
@@ -134,6 +134,7 @@ print sim(ad_real,ad_test)
 
 ad_real=extract('四川省成都市十陵街道双龙社区')
 ad_test=extract('十陵街道双龙社区')
+print ad_real ,ad_test
 print sim(ad_real,ad_test)
 
 ad_real=extract('峨眉山市十陵街道双龙社区')
