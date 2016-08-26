@@ -346,6 +346,7 @@ if __name__ == "__main__":
         #保存uid-mark-nick
         rdd_new_user.groupByKey()\
                     .map(lambda (x,y):x)\
+                    .coalesce(100)\
                     .saveAsTextFile(output_user)
 
         #匹配mark的uid,并且区分新旧数据
