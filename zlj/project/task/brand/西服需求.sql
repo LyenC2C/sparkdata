@@ -34,6 +34,9 @@ and cat_id in (
 
 
 
+LOAD DATA  local  INPATH '/home/zlj/data_tmp' OVERWRITE INTO TABLE t_zlj_feed_tmp PARTITION (ds='0826') ;
+
+
 SELECT
 
 item_id      ,
@@ -53,8 +56,8 @@ from t_base_uid_tmp   t1 join t_zlj_feed_tmp t2 on t1.uid=t2.mark  where t1.ds='
 
 
 
-
-create table t_zlj_tmp_xizhuang as
+DROP  table wlservice.t_zlj_tmp_record;
+create table wlservice.t_zlj_tmp_record as
 SELECT
       t2.*,
       t1.title,
@@ -81,7 +84,7 @@ SELECT
             shop_id,
             location
           FROM t_base_ec_item_dev_new
-          WHERE ds = 20160814
+          WHERE ds = 20160824
           ) t1
       RIGHT  JOIN
       (
@@ -91,9 +94,9 @@ SELECT
 item_id      ,
 item_title   ,
 feed_id      ,
-t1.id1       ,
+t1.id1  as user_id      ,
 content      ,
-f_date       ,
+SUBSTRING(regexp_replace(f_date, '-', ''), 0, 8)  as dsns        ,
 annoy        ,
 ts           ,
 sku          ,
@@ -101,7 +104,7 @@ rate_type    ,
 crawl_type   ,
 mark
 
-from t_base_uid_tmp   t1 join t_zlj_feed_tmp t2 on t1.uid=t2.mark  where t1.ds='uid_mark'
+from t_base_uid_tmp   t1 join t_zlj_feed_tmp t2 on t1.uid=t2.mark  where t1.ds='uid_mark' and t2.ds='0826'
 
       ) t2 ON t1.item_id = t2.item_id;
 

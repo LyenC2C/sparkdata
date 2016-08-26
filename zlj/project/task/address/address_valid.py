@@ -32,22 +32,21 @@ def valid_jsontxt(content):
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 for ob in address:
-    # print type(i)
-    # ob=json.loads('\''+valid_jsontxt(i)+'\'')
     prov=ob['abbrname'].replace('省','').replace('自治区','').replace('回族','').replace('维吾尔','').replace('壮族','')
     prov_dic[prov]=ob['name']
     citys=ob['sub']
-
     for city_ob in citys:
         city_dic[city_ob['name'].replace('市','')]=city_ob['name']
         xians=city_ob['sub']
         for xian_ob in xians:
             xian_dic[xian_ob['name'].replace('县','').replace('区','')]=xian_ob['name']
+
+# 地址
 def log(w):
-    # if type(w)==type([]):
-    #     print  '\t'.join(w)
-    # else :print w
-    return  ""
+     if type(w)==type([]) or  type(w)==type(()):
+         print  '\t'.join(w)
+     else :print w
+    # return  ""
 
 import copy
 
@@ -62,7 +61,7 @@ def check_prov(line ,words,address_ls):
         for index,prov  in enumerate(words_tmp) :
             if prov_dic.has_key(prov):
                return prov,words[index:],address_ls
-
+    return "",words,address_ls
 def check_city(line ,words,address_ls):
     words_tmp = copy.deepcopy(words)
     if '市' in line :
@@ -73,7 +72,7 @@ def check_city(line ,words,address_ls):
         for index,city  in enumerate(words) :
             if city_dic.has_key(city):
                return city,words[index:],address_ls
-
+    return "",words,address_ls
 
 def check_xian_qu(line ,words,address_ls):
     words_tmp = copy.deepcopy(words)
@@ -87,11 +86,12 @@ def check_xian_qu(line ,words,address_ls):
                return xian,words[index:],address_ls
     return "",words[index:],address_ls
 
+from Levenshtein import *
+
 
 import jieba
-
+# 提取地址
 def extract(address):
-
     words='\001'.join(jieba.cut(address)).encode('utf-8').split('\001')
     log(words)
     address_ls=seg.mainAlgorithm_String(address).split('|')
@@ -114,9 +114,48 @@ def extract(address):
     xian=xian.replace(prov,'').replace(city,'')
     # [].remove()
     address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
-    return prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls)
+    return [prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls)]
 
-line ='四川省成都市十陵街道双龙社区'
-print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
-print '\t'.join(extract('四川成都市十陵街道双龙社区'))
-print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
+import Levenshtein
+# 权重设计
+weght=[0.3,0.3,0,0.4]
+
+# 计算相似度
+def sim(ad_real,ad_test):
+    score=0
+    for index,item in enumerate(zip(ad_real[:-1],ad_test[:-1])):
+        if len(item[0])>1 and len(item[1])>1  and item[0]==item[1]: score=score+weght[index]
+    dis=Levenshtein.distance(ad_real[-1],ad_test[-1])
+    score=score+weght[-1]*1/(dis+1)
+    return score
+
+# line ='四川省成都市十陵街道双龙社区'
+# ad_real=extract('四川省成都市十陵街道双龙社区')
+# ad_test=extract('四川成都市十陵街道双龙社区')
+# print sim(ad_real,ad_test)
+import json
+
+# 解析淘宝地址
+def taobao_address(address):
+    ls= address.split('\t')
+    rs=[]
+    for ob  in json.loads(ls[-1])['order_list']:
+        rs.append([
+            ob['receiverState'],
+            ob['receiverCity'],
+            ob['receiverAddress'],
+            ob['receiverMobile'],
+                   ])
+    return [ls[0],ls[1],rs]
+ad_real=extract('四川省成都市十陵街道双龙社区')
+ad_test=extract('十陵街道双龙社区')
+print ad_real ,ad_test
+print sim(ad_real,ad_test)
+
+ad_real=extract('峨眉山市十陵街道双龙社区')
+ad_test=extract('十陵街道双龙社区')
+log(ad_real)
+log(ad_test)
+print sim(ad_real,ad_test)
+# print '\t'.join(extract('四川成都市十陵街道双龙社区'))
+# print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
