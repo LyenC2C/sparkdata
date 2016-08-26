@@ -139,6 +139,8 @@ print sim(ad_real,ad_test)
 
 ad_real=extract('峨眉山市十陵街道双龙社区')
 ad_test=extract('十陵街道双龙社区')
+log(ad_real)
+log(ad_test)
 print sim(ad_real,ad_test)
 # print '\t'.join(extract('四川成都市十陵街道双龙社区'))
 # print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
