@@ -119,7 +119,7 @@ def extract(address):
     return (prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls))
 
 
-weght=[0.3,0.3,0.4]
+weght=[0.3,0.3,0,0.4]
 def sim(ad_real,ad_test):
     score=0
     for index,item in enumerate(zip(ad_real,ad_test)):
@@ -129,7 +129,15 @@ def sim(ad_real,ad_test):
 line ='四川省成都市十陵街道双龙社区'
 ad_real=extract('四川省成都市十陵街道双龙社区')
 ad_test=extract('四川成都市十陵街道双龙社区')
+print sim(ad_real,ad_test)
 
+
+ad_real=extract('四川省成都市十陵街道双龙社区')
+ad_test=extract('十陵街道双龙社区')
+print sim(ad_real,ad_test)
+
+ad_real=extract('峨眉山市十陵街道双龙社区')
+ad_test=extract('十陵街道双龙社区')
 print sim(ad_real,ad_test)
 # print '\t'.join(extract('四川成都市十陵街道双龙社区'))
 # print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
