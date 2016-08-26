@@ -1,27 +1,27 @@
--- CREATE TABLE IF NOT EXISTS t_base_ec_record_dev_new_0629 (
---   item_id        BIGINT,
---   feed_id        string,
---   user_id        string,
---   content_length INT,
---   annoy          string,
---   dsn            string,
---   datediff       INT,
---   sku            string,
---   title          string,
---   cat_id         string,
---   root_cat_id    string,
---   root_cat_name  string,
---   brand_id       string,
---   brand_name     string,
---   bc_type        string,
---   price          string,
---   shop_id        string,
---   location       string
--- )
--- COMMENT '淘宝电商record记录'
--- PARTITIONED BY  (ds STRING )
--- ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
--- stored AS textfile;
+CREATE TABLE IF NOT EXISTS t_base_ec_record_dev_new_0629 (
+  item_id        BIGINT COMMENT '商品id',
+  feed_id        string COMMENT '评论id',
+  user_id        string COMMENT '用户id',
+  content_length INT COMMENT '评论长度',
+  annoy          string COMMENT '是否匿名',
+  dsn            string COMMENT '评论日期',
+  datediff       INT COMMENT '评论时间和当日间隔',
+  sku            string COMMENT 'sku',
+  title          string COMMENT '商品title',
+  cat_id         string COMMENT '叶子类目id',
+  root_cat_id    string COMMENT '以及类目id',
+  root_cat_name  string COMMENT '一级类目名字',
+  brand_id       string COMMENT '品牌id',
+  brand_name     string COMMENT '品牌名字',
+  bc_type        string COMMENT '店铺类型',
+  price          string COMMENT '商品价格',
+  shop_id        string COMMENT '店铺id',
+  location       string COMMENT '店铺所在地'
+)
+COMMENT '淘宝电商record记录'
+PARTITIONED BY  (ds STRING )
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
+stored AS textfile;
 
 
 SET hive.exec.dynamic.partition= TRUE;

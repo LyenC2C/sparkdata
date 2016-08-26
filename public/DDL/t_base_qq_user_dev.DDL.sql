@@ -1,5 +1,4 @@
 use wlbase_dev;
-
 CREATE EXTERNAL TABLE  if not exists t_base_qq_user_dev (
 uin  STRING   COMMENT 'qq号' ,
 birthday STRING COMMENT 'yyyy-mm-dd',
