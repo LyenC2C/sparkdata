@@ -87,6 +87,8 @@ def check_xian_qu(line ,words,address_ls):
                return xian,words[index:],address_ls
     return "",words[index:],address_ls
 
+from Levenshtein import *
+
 
 import jieba
 
@@ -114,9 +116,20 @@ def extract(address):
     xian=xian.replace(prov,'').replace(city,'')
     # [].remove()
     address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
-    return prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls)
+    return (prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls))
+
+
+weght=[0.3,0.3,0.4]
+def sim(ad_real,ad_test):
+    score=0
+    for index,item in enumerate(zip(ad_real,ad_test)):
+        if item[0]==item[1]: score=score+weght[index]
+    return score
 
 line ='四川省成都市十陵街道双龙社区'
-print '\t'.join(extract('四川省成都市十陵街道双龙社区'))
-print '\t'.join(extract('四川成都市十陵街道双龙社区'))
-print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
+ad_real=extract('四川省成都市十陵街道双龙社区')
+ad_test=extract('四川成都市十陵街道双龙社区')
+
+print sim(ad_real,ad_test)
+# print '\t'.join(extract('四川成都市十陵街道双龙社区'))
+# print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
