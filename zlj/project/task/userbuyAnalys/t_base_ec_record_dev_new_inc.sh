@@ -52,7 +52,7 @@ FROM (SELECT
         shop_id,
         location
       FROM t_base_ec_item_dev_new
-      WHERE ds = 20160630
+      WHERE ds = 20160825
      ) t1
  RIGHT JOIN
   (

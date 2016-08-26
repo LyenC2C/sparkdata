@@ -72,14 +72,17 @@ FROM
 WHERE rn < 10;
 
 
+
+SELECT  count(DISTINCT  brand_name) from t_zlj_tmp_brand_level1;
 -- 品牌等级
 Drop table  t_zlj_tmp_brand_level ;
 
 DROP TABLE t_zlj_tmp_brand_level1 ;
 create table t_zlj_tmp_brand_level1 as
-SELECT brand_name , brand_id FROM  t_zlj_tmp_brand_level where brand_level=1 and length(brand_name)>1
+SELECT brand_name , brand_id FROM  t_zlj_tmp_brand_level where brand_level=1 and length(brand_name)>1 and brand_name not like '%其他%'
 ;
 
+DROP  table t_zlj_tmp_brand_level ;
 CREATE TABLE t_zlj_tmp_brand_level AS
   SELECT
     brand_id,
@@ -100,8 +103,8 @@ CREATE TABLE t_zlj_tmp_brand_level AS
         brand_name,
         root_cat_name,
         ROW_NUMBER()
-        OVER (PARTITION BY avg_price
-          ORDER BY brand_id, root_cat_id DESC) AS rn
+        OVER (PARTITION BY   root_cat_id
+          ORDER BY avg_price DESC) AS rn
       FROM
         (
           SELECT
