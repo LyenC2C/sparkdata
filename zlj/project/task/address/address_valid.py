@@ -44,7 +44,7 @@ for ob in address:
         for xian_ob in xians:
             xian_dic[xian_ob['name'].replace('县','').replace('区','')]=xian_ob['name']
 def log(w):
-     if type(w)==type([]):
+     if type(w)==type([]) or  type(w)==type(()):
          print  '\t'.join(w)
      else :print w
     # return  ""
@@ -116,14 +116,16 @@ def extract(address):
     xian=xian.replace(prov,'').replace(city,'')
     # [].remove()
     address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
-    return (prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls))
+    return [prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls)]
 
-
+import Levenshtein
 weght=[0.3,0.3,0,0.4]
 def sim(ad_real,ad_test):
     score=0
-    for index,item in enumerate(zip(ad_real,ad_test)):
+    for index,item in enumerate(zip(ad_real[:-1],ad_test[:-1])):
         if len(item[0])>1 and len(item[1])>1  and item[0]==item[1]: score=score+weght[index]
+    dis=Levenshtein.distance(ad_real[-1],ad_test[-1])
+    score=score+weght[-1]*1/(dis+1)
     return score
 
 # line ='四川省成都市十陵街道双龙社区'
