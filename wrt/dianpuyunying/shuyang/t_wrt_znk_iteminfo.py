@@ -159,7 +159,7 @@ def quchong(x, y):
 if __name__ == "__main__":
     from pyspark import SparkContext
     sc = SparkContext(appName="t_base_item_info")
-    s = "/commit/tb_tmp/iteminfo/diapers.iteminfo"
+    s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
     s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
     cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
     rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)\
