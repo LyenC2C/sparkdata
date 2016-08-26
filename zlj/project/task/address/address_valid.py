@@ -62,7 +62,7 @@ def check_prov(line ,words,address_ls):
         for index,prov  in enumerate(words_tmp) :
             if prov_dic.has_key(prov):
                return prov,words[index:],address_ls
-
+    return "",words,address_ls
 def check_city(line ,words,address_ls):
     words_tmp = copy.deepcopy(words)
     if '市' in line :
@@ -73,7 +73,7 @@ def check_city(line ,words,address_ls):
         for index,city  in enumerate(words) :
             if city_dic.has_key(city):
                return city,words[index:],address_ls
-
+    return "",words,address_ls
 
 def check_xian_qu(line ,words,address_ls):
     words_tmp = copy.deepcopy(words)
