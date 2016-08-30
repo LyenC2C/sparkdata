@@ -29,3 +29,18 @@ for ob  in json.loads(ls[-1])['order_list']:
         ob['receiverAddress'],
         ob['receiverMobile'],
                ])
+
+import requests
+
+
+head={
+    'Host':'restapi.amap.com',
+    'Connection':'keep-alive',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
+}
+
+url='http://restapi.amap.com/v3/geocode/geo?key=510cf51a347e0890c99f40370552acd5&address=%E5%9B%9B%E5%B7%9D%E6%88%90%E9%83%BD%E5%8D%81%E9%99%B5%E8%A1%97%E9%81%93%E5%8F%8C%E9%BE%99%E7%A4%BE%E5%8C%BA&output=json'
+r = requests.get(url,headers=head,timeout=2)
+
+print r.text
+print r.content

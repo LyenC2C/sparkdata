@@ -191,6 +191,7 @@ def address_format(address):
 line='3674918	15996928280	{"order_list": [{"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-28 17:25:27", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:11:47", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:12:34", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "中阳里办事处锦绣水岸22栋一单元501", "receiverState": "江苏省", "created": "2015-07-10 12:26:23", "buyerNick": "sunzhi716", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-17 18:28:19", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}]}'
 def  match(tel,name,address):
     ob=address_format(address)
+    print ob
     if  ob[0]==-1 :return  (-1,'查询无结果')
     else :
         prov,city,xian,other=ob[1]
@@ -219,7 +220,7 @@ def  match(tel,name,address):
 
 
 
-match('15996928280','孙航','江苏省徐州市凤城镇锦绣水岸22栋1-501')
+print match('15996928280','孙航','江苏省徐州市凤城镇锦绣水岸22栋1-501')
 
 
 # ad_real=extract('四川省成都市十陵街道双龙社区')
