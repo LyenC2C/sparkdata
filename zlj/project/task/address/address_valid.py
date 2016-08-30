@@ -53,7 +53,7 @@ import copy
 # print prov_dic['四川'] ,'----------'
 def check_prov(line ,words,address_ls):
     words_tmp = copy.deepcopy(words)
-    if '省' in line :
+    if '省' in line or '自治区' in line :
         for index,prov in enumerate(address_ls):
              if '省' in prov:
                  return prov, words,address_ls[index:]
@@ -112,9 +112,12 @@ def extract(address):
     log(address_ls.append(""))
     city=city.replace(prov,'')
     xian=xian.replace(prov,'').replace(city,'')
-    # [].remove()
+
     address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
-    return [prov_dic.get(prov,prov),city_dic.get(city,city)  ,xian_dic.get(xian,xian), ''.join(address_ls)]
+    return [prov_dic.get(prov,prov),
+            city_dic.get(city,city),
+            xian_dic.get(xian,xian),
+            ''.join(address_ls)]
 
 import Levenshtein
 # 权重设计
@@ -144,15 +147,77 @@ def taobao_address(address):
             ob['receiverState'],
             ob['receiverCity'],
             ob['receiverAddress'],
+            ob['receiverName'],
             ob['receiverMobile'],
                    ])
     return [ls[0],ls[1],rs]
+
+State = {
+   1:'姓名',
+   2:'省份',
+   3:'城市',
+   4:'详细地址'
+         }
+
+
+def match_info(v):
+    if type(v)==type(True):
+        if v==True :return '匹配'
+        else :return '不匹配'
+    if type(v)==type(1.0):
+        return '置信度'+ str(v)
+head={
+    'Host':'restapi.amap.com',
+    'Connection':'keep-alive',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
+}
+
+
+import requests
+def address_format(address):
+    url='http://restapi.amap.com/v3/geocode/geo?key=510cf51a347e0890c99f40370552acd5&address='+address +'&output=json'
+    ob=json.loads(requests.get(url,header=head,timeout=2).text)
+    if type(ob)!=type({}):return (-1,'请求异常')
+    if ob.get('status',-1)!=1:return (-1,'请求异常')
+    geocodes=ob.get('geocodes',{})
+    province=geocodes.get('province','')
+    city=geocodes.get('city','')
+    district=geocodes.get('district','')
+    return (1,(province,city,district,address.replace(province).replace(city).replace(district)))
+
+
+# 匹配
+def  match(tel,name,address):
+    prov,city,xian,other=extract(address)
+    ls=[]
+    data=taobao_address(tel)
+    if len(data[-1])==0:return  (-1,'查询无结果')
+    for index, item in enumerate(data):
+        receiverState,receiverCity,receiverAddress,receiverName,receiverMobile=item
+        ls.append((name in receiverName, prov in receiverState,city in receiverCity ,
+          1/(Levenshtein.distance(other,receiverAddress)+1) )
+         )
+
+    top_index=sorted([(v,index) for index, v in enumerate(map(sum,ls))])[-1]
+    rs=[]
+
+    # (receiverState,receiverCity,receiverAddress,receiverName,receiverMobile)
+    state=ls[top_index]
+    for index, v in enumerate(state):
+        rs.append(state[index]+match_info(v))
+    return rs
+
+
+
+
+
+
 ad_real=extract('四川省成都市十陵街道双龙社区')
 ad_test=extract('十陵街道双龙社区')
 print ad_real ,ad_test
 print sim(ad_real,ad_test)
 
-ad_real=extract('峨眉山市十陵街道双龙社区')
+ad_real=extract('四川省峨眉山市十陵街道双龙社区')
 ad_test=extract('十陵街道双龙社区')
 log(ad_real)
 log(ad_test)
