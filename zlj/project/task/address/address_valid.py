@@ -193,7 +193,7 @@ def  match(tel,name,address):
     prov,city,xian,other=extract(address)
     ls=[]
     # data=taobao_address(tel)
-    data=json.loads(line.split()[-1])
+    data=json.loads(line.split('\t')[-1])
     if len(data[-1])==0:return  (-1,'查询无结果')
     for index, item in enumerate(data):
         receiverState,receiverCity,receiverAddress,receiverName,receiverMobile=item
