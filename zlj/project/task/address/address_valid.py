@@ -187,10 +187,13 @@ def address_format(address):
 
 
 # 匹配
+
+line='3674918	15996928280	{"order_list": [{"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-28 17:25:27", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:11:47", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:12:34", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "中阳里办事处锦绣水岸22栋一单元501", "receiverState": "江苏省", "created": "2015-07-10 12:26:23", "buyerNick": "sunzhi716", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-17 18:28:19", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}]}'
 def  match(tel,name,address):
     prov,city,xian,other=extract(address)
     ls=[]
-    data=taobao_address(tel)
+    # data=taobao_address(tel)
+    data=json.loads(line.split()[-1])
     if len(data[-1])==0:return  (-1,'查询无结果')
     for index, item in enumerate(data):
         receiverState,receiverCity,receiverAddress,receiverName,receiverMobile=item
@@ -209,18 +212,18 @@ def  match(tel,name,address):
 
 
 
+match('15996928280','孙航','江苏省徐州市凤城镇锦绣水岸22栋1-501')
 
 
-
-ad_real=extract('四川省成都市十陵街道双龙社区')
-ad_test=extract('十陵街道双龙社区')
-print ad_real ,ad_test
-print sim(ad_real,ad_test)
-
-ad_real=extract('四川省峨眉山市十陵街道双龙社区')
-ad_test=extract('十陵街道双龙社区')
-log(ad_real)
-log(ad_test)
-print sim(ad_real,ad_test)
+# ad_real=extract('四川省成都市十陵街道双龙社区')
+# ad_test=extract('十陵街道双龙社区')
+# print ad_real ,ad_test
+# print sim(ad_real,ad_test)
+#
+# ad_real=extract('四川省峨眉山市十陵街道双龙社区')
+# ad_test=extract('十陵街道双龙社区')
+# log(ad_real)
+# log(ad_test)
+# print sim(ad_real,ad_test)
 # print '\t'.join(extract('四川成都市十陵街道双龙社区'))
 # print '\t'.join(extract('四川成都龙泉驿区十陵街道双龙社区'))
