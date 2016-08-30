@@ -176,7 +176,7 @@ head={
 import requests
 def address_format(address):
     url='http://restapi.amap.com/v3/geocode/geo?key=510cf51a347e0890c99f40370552acd5&address='+address +'&output=json'
-    ob=json.loads(requests.get(url,header=head,timeout=2).text)
+    ob=json.loads(requests.get(url,headers=head,timeout=2).text)
     if type(ob)!=type({}):return (-1,'请求异常')
     if ob.get('status',-1)!=1:return (-1,'请求异常')
     geocodes=ob.get('geocodes',{})
