@@ -21,5 +21,12 @@ PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
 
+
+
 LOAD DATA   INPATH '/user/mc/weibo/edu_res/' OVERWRITE INTO TABLE t_base_weibo_edu PARTITION (ds='20160830') ;
 
+
+SELECT school,COUNT(1)  from t_base_weibo_edu group by school ;
+
+68584868
+select count(1) from t_base_weibo_edu;

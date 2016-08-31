@@ -42,7 +42,7 @@ SELECT
 item_id      ,
 item_title   ,
 feed_id      ,
-t1.id1       ,
+t1.id1 as user_id        ,
 content      ,
 f_date       ,
 annoy        ,
@@ -52,7 +52,7 @@ rate_type    ,
 crawl_type   ,
 mark
 
-from t_base_uid_tmp   t1 join t_zlj_feed_tmp t2 on t1.uid=t2.mark  where t1.ds='uid_mark'
+from t_base_uid_tmp   t1 join t_zlj_feed_tmp t2 on t1.uid=t2.mark  where t1.ds='uid_mark' and t2.ds='uid_mark'
 
 
 
@@ -138,3 +138,81 @@ from
 ;
 
 	LOAD DATA   INPATH '/user/zlj/tmp/uid_mark_freq' OVERWRITE INTO TABLE t_base_uid_tmp PARTITION (ds='uid_mark')
+
+
+-- 	两粒单排扣   一粒单排扣  多粒单排扣  三粒双排扣   这四种在不同城市的销量分布    和  分别购买的人群年龄段
+SELECT tage ,brand_name,COUNT(1) ,type
+from
+(
+select
+brand_name,type ,
+case when tage<18 and tage>10 then 1
+ when tage>=18 and tage<=24 then 2
+ when tage>=25 and  tage<=29 then 3
+ when tage>=30 and  tage<=34 then 4
+ when tage>=35 and  tage<=39 then 5
+ when tage>=40 and  tage<=44 then 6
+ when tage>=45 and  tage<=49 then 7
+ when tage>=50 then 8
+end
+tage
+from
+(
+select user_id ,brand_name,type
+from
+(
+SELECT
+
+item_id      ,
+item_title   ,
+feed_id      ,
+t1.id1 as user_id        ,
+content      ,
+f_date       ,
+annoy        ,
+ts           ,
+sku          ,
+rate_type    ,
+crawl_type   ,
+mark
+
+from t_base_uid_tmp   t1 join t_zlj_feed_tmp t2 on t1.uid=t2.mark  where t1.ds='uid_mark' and t2.ds='uid_mark'
+)t3 join
+(SELECT  * from wlservice.t_wrt_xifu_menjin_itemid where type in  ('两粒单排扣',   '一粒单排扣',  '多粒单排扣',  '三粒双排扣'))t4
+on t3.item_id=t4.item_id
+)t5 join t_base_user_info_s_tbuserinfo_t t6 on t5.user_id =t6.tb_id
+
+) t group by tage ,brand_name ,type
+;
+
+
+
+select
+tel_city,brand_name,type  ,COUNT(1)
+from
+(
+select user_id ,brand_name,type
+from
+(
+SELECT
+
+item_id      ,
+item_title   ,
+feed_id      ,
+t1.id1 as user_id        ,
+content      ,
+f_date       ,
+annoy        ,
+ts           ,
+sku          ,
+rate_type    ,
+crawl_type   ,
+mark
+
+from t_base_uid_tmp   t1 join t_zlj_feed_tmp t2 on t1.uid=t2.mark  where t1.ds='uid_mark' and t2.ds='uid_mark'
+)t3 join
+(SELECT  * from wlservice.t_wrt_xifu_menjin_itemid where type in  ('两粒单排扣',   '一粒单排扣',  '多粒单排扣',  '三粒双排扣'))t4
+on t3.item_id=t4.item_id
+)t5 join t_base_user_info_s_tbuserinfo_t t6 on t5.user_id =t6.tb_id
+ group by tel_city ,brand_name ,type
+;
