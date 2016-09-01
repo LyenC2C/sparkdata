@@ -161,7 +161,7 @@ s1 = "/commit/itemsold/" + today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=" + iteminfo_day
 s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + yesterday
 
-rdd1_c = sc.textFile(s_znk).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
+rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
 rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd3 = sc.textFile(s3).map(lambda x: f3(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
