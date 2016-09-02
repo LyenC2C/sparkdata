@@ -39,7 +39,7 @@ def f(line):
         lv.append(valid_jsontxt(item_id))
         # lv.append(valid_jsontxt(title))
         # lv.append(valid_jsontxt(picUrl))
-        # lv.append(valid_jsontxt(sold))
+        lv.append(valid_jsontxt(sold))
         # lv.append(valid_jsontxt(reservePrice))
         lv.append(valid_jsontxt(salePrice))
         # lv.append(valid_jsontxt(bc_type))
