@@ -4,8 +4,6 @@ source ~/.bashrc
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
 
-
-sh ./item_sold.sh 20160815 20160814 20160814
 sh ./item_sold.sh 20160816 20160815 20160814
 sh ./item_sold.sh 20160817 20160816 20160814
 sh ./item_sold.sh 20160818 20160817 20160814

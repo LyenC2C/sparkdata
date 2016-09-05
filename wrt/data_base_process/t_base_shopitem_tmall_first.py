@@ -37,10 +37,10 @@ def f(line):
         down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(item_id))
-        lv.append(valid_jsontxt(title))
-        lv.append(valid_jsontxt(picUrl))
+        # lv.append(valid_jsontxt(title))
+        # lv.append(valid_jsontxt(picUrl))
         lv.append(valid_jsontxt(sold))
-        lv.append(valid_jsontxt(reservePrice))
+        # lv.append(valid_jsontxt(reservePrice))
         lv.append(valid_jsontxt(salePrice))
         # lv.append(valid_jsontxt(bc_type))
         lv.append(valid_jsontxt(up_day)) #上架日期
