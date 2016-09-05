@@ -46,7 +46,7 @@ def f1(line):
 
 def f2(line):
     ss = line.strip().split('\001')
-    ss.append(yesterday) #强行增加一个字段，可以理解为ds，使得昨日字段列表的长度变成8，好与今日的数据区分开
+    ss.append(yesterday) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
     return (ss[1],ss)
 
 def quchong(x,y):
