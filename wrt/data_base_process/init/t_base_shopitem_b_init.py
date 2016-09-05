@@ -32,7 +32,7 @@ def f(line):
         # reservePrice = item.get("reservePrice","-")
         # if reservePrice == "": reservePrice = "-"
         salePrice = item.get("salePrice","-")
-        up_day = "20160904"
+        up_day = "20160905"
         down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(item_id))
@@ -54,7 +54,7 @@ def quchong(x,y):
     return "\001".join(y)
 
 
-s = "/commit/shopitem_b/20160904" #新的shopitem从这也天开始
+s = "/commit/shopitem_b/20160905" #新的shopitem从这也天开始
 rdd1_c = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x != None)
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
