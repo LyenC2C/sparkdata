@@ -33,7 +33,7 @@ def f1(line):
         # if reservePrice == "": reservePrice = "-"
         salePrice = item.get("salePrice","-")
         up_day = today #默认为今日新上架，后面会进行调整
-        down_day = "1"
+        down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(item_id))
         lv.append(valid_jsontxt(sold))
@@ -46,6 +46,7 @@ def f1(line):
 
 def f2(line):
     ss = line.strip().split('\001')
+    ss.append(yesterday) #强行增加一个字段，可以理解为ds，使得昨日字段列表的长度变成8，好与今日的数据区分开
     return (ss[1],ss)
 
 def quchong(x,y):
