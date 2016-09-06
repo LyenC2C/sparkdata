@@ -156,7 +156,7 @@ def quchong_3(x, y):
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
-
+s_znk = "/commit/tb_tmp/solds/znk.itemid.solds"
 s1 = "/commit/itemsold/" + today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=" + iteminfo_day
 s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + yesterday
