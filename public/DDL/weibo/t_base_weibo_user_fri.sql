@@ -9,6 +9,13 @@ PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
 
+-- 非异常
+-- 620994234
+SELECT  COUNT(1) from t_base_weibo_user_fri where LENGTH(ids)>1 ;
+
+insert overwrite table t_base_weibo_user_fri partition(ds='20160902')
+SELECT  id ,ids   from t_base_weibo_user_fri where LENGTH(ids)>1 ;
+
 
 
 LOAD DATA   INPATH '/user/zlj/tmp/rel_fri.json' OVERWRITE INTO TABLE t_base_weibo_user_fri PARTITION (ds='20160830') ;

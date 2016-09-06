@@ -67,6 +67,7 @@ on t1.ds=20160418 and t1.tb_id=t2.uid and t2.ds=20160608
 
 
 
+
 SELECT  COUNT(1) from (select uid from t_base_ec_tb_userinfo where ds=20160608 group by uid)t
 
 
