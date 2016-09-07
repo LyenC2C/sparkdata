@@ -3,14 +3,16 @@
 --  计算相互关注人数
 create table t_base_weibo_user_fri_bi_friends as
 SELECT
-
 id1, id2 ,COUNT(1) as num
 from
 (
 select
 sort_array(array(id,fid))[0]  as id1 ,sort_array(array(id,fid))[1] as id2
 from t_base_weibo_user_fri lateral view explode(split(ids,',')) tt as fid
-)t group by id1,id2  HAVING COUNT(1)>1 ;
+)t group by id1,id2  HAVING COUNT(1)>1
+;
+
+
 
 
 create table t_base_weibo_user_fri_bi_friends_tmp_louvain_testdata as
