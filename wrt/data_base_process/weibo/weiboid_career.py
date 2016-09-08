@@ -20,6 +20,8 @@ def quchong(x,y):
         if dep != "-":
             dep.append(ln[3])
     if dep == []: dep.append("-")
+    com = list(set(com))
+    dep = list(set(dep))
     com_r = "\t".join(com)
     dep_r = '\t'.join(dep)
     return x + "\001" + com_r + "\001" + dep_r
