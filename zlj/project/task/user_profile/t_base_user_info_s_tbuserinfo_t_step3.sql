@@ -5,7 +5,7 @@ select t3.*,prov as tel_prov,city as tel_city  from
 (
 SELECT
 uid as tb_id ,
-alipay ,
+regexp_replace(alipay, 'None', '-')   ,
 buycnt,
 verify,
 regtime,
@@ -21,10 +21,10 @@ on t1.ds=20160418 and t1.tb_id=t2.uid
 )t3 LEFT join t_base_ec_loc t4 on t3.tb_id=t4.user_id ;
 
 
-SELECT
-COUNT(1)
-from t_base_user_info_s t1  RIGHT OUTER join
-(select * from t_base_ec_tb_userinfo where ds=20160608)  t2
-on t1.ds=20160418 and t1.tb_id=t2.uid
-
-select COUNT(1) from t_base_ec_tb_userinfo where ds=20160608
+-- SELECT
+-- COUNT(1)
+-- from t_base_user_info_s t1  RIGHT OUTER join
+-- (select * from t_base_ec_tb_userinfo where ds=20160608)  t2
+-- on t1.ds=20160418 and t1.tb_id=t2.uid
+--
+-- select COUNT(1) from t_base_ec_tb_userinfo where ds=20160608
