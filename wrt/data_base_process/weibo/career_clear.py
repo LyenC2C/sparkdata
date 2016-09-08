@@ -18,7 +18,7 @@ def f(line,word_dict):
             # return None
     # return line.strip()
     ss[3] = "-"
-    return line.strip()
+    return "\001".join(ss)
 
 s_word = '/user/wrt/career_word_1000'
 occu_word = '/user/wrt/career_5000'
