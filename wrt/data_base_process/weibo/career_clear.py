@@ -2,6 +2,7 @@
 __author__ = 'wrt'
 import sys
 import rapidjson as json
+from pyspark import SparkContext
 
 
 sc = SparkContext(appName="career_clear")
@@ -18,3 +19,6 @@ s_word = '/user/wrt/career_word_1000'
 rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_career/ds=20160830")
 cate_dict = sc.broadcast(sc.textFile(s_word).map(lambda x: (x.strip(),0)).filter(lambda x:x!=None).collectAsMap()).value
 rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_career_yes')
+#hfs -rmr /user/wrt/temp/weibo_career_yes
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 career_clear.py
+
