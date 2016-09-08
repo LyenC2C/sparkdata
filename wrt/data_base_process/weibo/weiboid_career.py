@@ -17,7 +17,7 @@ def quchong(x,y):
     dep = []
     for ln in y:
         com.append(ln[2])
-        if dep != "-":
+        if ln[3] != "-":
             dep.append(ln[3])
     if dep == []: dep.append("-")
     com = list(set(com))
