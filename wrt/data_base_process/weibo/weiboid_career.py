@@ -13,18 +13,19 @@ def f(line):
     return (id,ss)
 
 def quchong(x,y):
-    sch = []
+    com = []
     dep = []
     for ln in y:
-        sch.append(ln[1])
+        com.append(ln[2])
         if dep != "-":
-            dep.append(ln[2])
+            dep.append(ln[3])
     if dep == []: dep.append("-")
-    sch_r = "\t".join(sch)
+    com_r = "\t".join(com)
     dep_r = '\t'.join(dep)
-    return x + "\001" + sch_r + "\001" + dep_r
+    return x + "\001" + com_r + "\001" + dep_r
 
 
 rdd = sc.textFile("/hive/warehouse/wlservice.db/t_wrt_tmp_career_yes/ds=20160909")
 rdd1 = rdd.map(lambda x:f(x)).groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd1.saveAsTextFile('/user/wrt/temp/weiboid_career')
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 weiboid_career.py
