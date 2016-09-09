@@ -34,7 +34,7 @@ def f2(line):
 
 
 rdd = sc.textFile("/data/develop/sinawb/rel_fri.json.20160401")
-# rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_career/ds=20160830")
+# rdd = sc.textFile ("/hive/warehouse/wlbase_dev.db/t_base_weibo_career/ds=20160830")
 
 # word_dict = sc.broadcast(sc.textFile(occu_word).map(lambda x: (x.strip(),0)).filter(lambda x:x!=None).collectAsMap()).value
 rdd.map(lambda x:f2(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_peixun')
