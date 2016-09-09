@@ -19,12 +19,25 @@ def f(line):
             return uid
     return None
 
+def f2(line):
+    ob = json.loads(line.strip())
+    if type(ob) == type(1.2): return None
+    id = ob.get("id","-")
+    if id == "-": return None
+    tag = ob.get("tag",[])
+    if tag == []: return None
+    for tt in tag:
+        for key in tt:
+           if tt[key].lower() in ["iphone",'apple','苹果','ipod','ipad','mac','iphone7','iphone6','iphone6s']:
+               return id
+    return None
+
 
 rdd = sc.textFile("/data/develop/sinawb/rel_fri.json.20160401")
 # rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_career/ds=20160830")
 
 # word_dict = sc.broadcast(sc.textFile(occu_word).map(lambda x: (x.strip(),0)).filter(lambda x:x!=None).collectAsMap()).value
-rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_peixun')
+rdd.map(lambda x:f2(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_peixun')
 #hfs -rmr /user/wrt/temp/weibo_career_yes
 # spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 weibo_peixun.py
 #create table t_wrt_tmp_career_yes like wlbase_dev.t_base_weibo_career;
