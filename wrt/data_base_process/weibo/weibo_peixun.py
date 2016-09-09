@@ -52,7 +52,7 @@ rdd3 = sc.textFile("/user/wrt/temp/weibo_example")
 # rdd = sc.textFile ("/hive/warehouse/wlbase_dev.db/t_base_weibo_career/ds=20160830")
 
 # word_dict = sc.broadcast(sc.textFile(occu_word).map(lambda x: (x.strip(),0)).filter(lambda x:x!=None).collectAsMap()).value
-rdd.map(lambda x:f2(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_iphone7')
+rdd3.map(lambda x:f2(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_iphone7')
 #hfs -rmr /user/wrt/temp/weibo_career_yes
 # spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 weibo_peixun.py
 #create table t_wrt_tmp_career_yes like wlbase_dev.t_base_weibo_career;
