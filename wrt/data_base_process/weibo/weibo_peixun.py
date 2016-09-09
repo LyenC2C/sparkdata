@@ -46,7 +46,7 @@ def f2(line):
         return None
 
 
-rdd = sc.textFile("/data/develop/sinawb/tag")
+rdd = sc.textFile("/data/develop/sinawb/tag/user_tag.json_crawler175")
 rdd2 = sc.textFile("/data/develop/sinawb/rel_fri.json.20160401")
 # rdd = sc.textFile ("/hive/warehouse/wlbase_dev.db/t_base_weibo_career/ds=20160830")
 
