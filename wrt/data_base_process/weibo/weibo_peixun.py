@@ -7,6 +7,14 @@ from pyspark import SparkContext
 
 sc = SparkContext(appName="weibo_peixun")
 
+def valid_jsontxt(content):
+    # res = content
+    if type(content) == type(u""):
+        res = content.encode("utf-8")
+    else:
+        res = str(content)
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
+
 def f(line):
     ob = json.loads(line.strip())
     if type(ob) == type(1.2): return None
@@ -20,7 +28,7 @@ def f(line):
     return None
 
 def f2(line):
-    ob = json.loads(line.strip())
+    ob = json.loads(valid_jsontxt(line.strip()))
     if type(ob) == type(1.2): return None
     id = ob.get("id","-")
     if id == "-": return None
