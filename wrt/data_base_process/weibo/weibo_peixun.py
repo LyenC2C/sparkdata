@@ -9,6 +9,7 @@ sc = SparkContext(appName="weibo_peixun")
 
 def f(line):
     ob = json.loads(line.strip())
+    if type(ob) == type(1.2): return None
     uid = ob.get("uid","-")
     if uid == "-": return None
     ids = ob.get("ids",[])
@@ -25,7 +26,7 @@ rdd = sc.textFile("/data/develop/sinawb/rel_fri.json.20160401")
 # word_dict = sc.broadcast(sc.textFile(occu_word).map(lambda x: (x.strip(),0)).filter(lambda x:x!=None).collectAsMap()).value
 rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_peixun')
 #hfs -rmr /user/wrt/temp/weibo_career_yes
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 career_clear.py
+# spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 weibo_peixun.py
 #create table t_wrt_tmp_career_yes like wlbase_dev.t_base_weibo_career;
 #create table t_wrt_tmp_career_no like wlbase_dev.t_base_weibo_career;
 
