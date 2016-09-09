@@ -28,19 +28,22 @@ def f(line):
     return None
 
 def f2(line):
-    ob = json.loads(valid_jsontxt(line.strip()))
-    if type(ob) == type(1.2): return None
-    id = ob.get("id","-")
-    if id == "-": return None
-    tag = ob.get("tag",[])
-    if tag == []: return None
-    for tt in tag:
-        if type(tt) != type({}):
-            return  None
-        for key in tt:
-           if tt[key].lower() in ["iphone",'apple','苹果','ipod','ipad','mac','iphone7','iphone6','iphone6s']:
-               return id
-    return None
+    try:
+        ob = json.loads(valid_jsontxt(line.strip()))
+        if type(ob) == type(1.2): return None
+        id = ob.get("id","-")
+        if id == "-": return None
+        tag = ob.get("tag",[])
+        if tag == []: return None
+        for tt in tag:
+            if type(tt) != type({}):
+                return  None
+            for key in tt:
+               if tt[key].lower() in ["iphone",'apple','苹果','ipod','ipad','mac','iphone7','iphone6','iphone6s']:
+                   return id
+        return None
+    except:
+        return None
 
 
 rdd = sc.textFile("/data/develop/sinawb/tag")
