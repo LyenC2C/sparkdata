@@ -35,6 +35,8 @@ def f2(line):
     tag = ob.get("tag",[])
     if tag == []: return None
     for tt in tag:
+        if type(tt) != type({}):
+            return  None
         for key in tt:
            if tt[key].lower() in ["iphone",'apple','苹果','ipod','ipad','mac','iphone7','iphone6','iphone6s']:
                return id
