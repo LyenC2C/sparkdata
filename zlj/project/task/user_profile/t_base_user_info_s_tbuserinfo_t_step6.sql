@@ -1,5 +1,6 @@
 -- 加入闲鱼地址信息
 
+-- select from_unixtime(unix_timestamp(weibo_created_at ,'EEE MMM dd HH:mm:ss zzz yyyy'),'yyyyMMdd') from t_credit_user_tb_weibo_register  limit 10;
 DROP TABLE t_base_user_info_s_tbuserinfo_t_step6;
 
 CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
@@ -23,7 +24,7 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
         followers_count,
         friends_count,
         statuses_count,
-        created_at,
+       from_unixtime(unix_timestamp(created_at ,'EEE MMM dd HH:mm:ss zzz yyyy'),'yyyyMMdd') as created_at,
         location,
         verified,
         tb_id
