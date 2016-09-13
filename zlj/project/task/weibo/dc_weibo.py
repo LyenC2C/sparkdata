@@ -188,3 +188,40 @@ rs=rdd.map(lambda x:fun1(x,rdd1.value)).filter(lambda x:x !=None)
 rsdd=rdd.join(rdd1).map(lambda (x,y):(y[0],y[1]))
 
 rsdd
+
+
+
+
+def fun(line):
+    ob = json.loads(valid_jsontxt(line))
+    if type(ob)!=type({}):return None
+    if ob['count']<1:return None
+    ls_cards=ob['cards']
+    ls=[]
+    for cards in ls_cards:
+        card_group_ls=cards['card_group']
+        for card_group in card_group_ls:
+            mblog=card_group['mblog']
+            weibo_idstr=mblog['idstr']
+            text=mblog['text']
+            created_timestamp=mblog['created_timestamp']
+            user=mblog['user']
+            user_id=user['id']
+            screen_name=user['screen_name']
+            ls.append('\001'.join([ str(i) for i in [user_id,screen_name,weibo_idstr,text,created_timestamp]]))
+    return ls
+
+def try_fun(line):
+    try: return fun(line)
+    except:return None
+sc.textFile('/commit/weibo.json_1').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/commit/weibo.json_1_parse_v1')
+
+# 转发微博
+
+def fun(x):
+    id,ids=x.split('\001')
+    ls=[]
+    for i in ids.split(','):
+        ls.append(id+','+i)
+    return ls
+sc.textFile('/user/zlj/algo/part-0000*1').map(lambda x:fun(x)).flatMap(lambda x:x).saveAsTextFile('/user/zlj/algo/part_flatmap')

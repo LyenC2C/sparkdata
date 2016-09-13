@@ -18,14 +18,12 @@ dstables=("alipay" \
 "regtime" \
 "tb_nick" \
 "tb_location" \
-"tgender" \
-"tage" \
-"tname" \
-"tloc" \
+"qq_gender" \
+"qq_name" \
+"qq_loc" \
 "tel_prov" \
 "tel_city" \
 "xianyu_gender" \
-"xianyu_birthday" \
 "xianyu_constellation" \
 "xianyu_province" \
 "xianyu_city" \
@@ -37,12 +35,17 @@ dstables=("alipay" \
 "weibo_location" \
 "weibo_verified"  )
 
+culume=(
+"qq_age" \
+"xianyu_birthday" \
+)
+
 
 for var in ${dstables[@]};
 do
     echo $var >>file
     table=$var
     data=`hive -e "use wlbase_dev;  select count(1) from t_base_user_info_s_tbuserinfo_t_step6 where length($table)>1  "  1>>file`
-    echo  "">>file
-    echo  "">>file
+    echo  "">>user_statis_file
+    echo  "">>user_statis_file
 done
