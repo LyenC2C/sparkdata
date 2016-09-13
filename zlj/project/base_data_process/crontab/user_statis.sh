@@ -45,7 +45,8 @@ for var in ${dstables[@]};
 do
     echo $var >>file
     table=$var
-    data=`hive -e "use wlbase_dev;  select count(1) from t_base_user_info_s_tbuserinfo_t_step6 where length($table)>1  "  1>>file`
+    echo "use wlbase_dev;  select count(1) from t_base_user_info_s_tbuserinfo_t_step6 where length($table)>1  ; "  >>user_statis_file
+    data=`hive -e "use wlbase_dev;  select count(1) from t_base_user_info_s_tbuserinfo_t_step6 where length($table)>1  ; "  1>>user_statis_file`
     echo  "">>user_statis_file
     echo  "">>user_statis_file
 done
