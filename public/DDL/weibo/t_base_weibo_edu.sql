@@ -28,5 +28,5 @@ LOAD DATA   INPATH '/user/mc/weibo/edu_res/' OVERWRITE INTO TABLE t_base_weibo_e
 
 SELECT school,COUNT(1)  from t_base_weibo_edu group by school ;
 
-68584868
+6858w
 select count(1) from t_base_weibo_edu;

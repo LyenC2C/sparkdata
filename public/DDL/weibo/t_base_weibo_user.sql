@@ -39,3 +39,41 @@ COMMENT '微博用户信息'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
+
+drop TABLE  t_zlj_tmp;
+create table t_zlj_tmp as
+select * from (
+SELECT id from t_base_weibo_user
+UNION  ALL
+select id from t_base_weibo_user_fri
+)t group by id ;
+
+4.1亿
+select count(1) from t_base_weibo_user;
+
+
+
+select cast( log2(followers_count) as int )  ,count(1) from  t_base_weibo_user    group by  cast( log2(followers_count) as int )
+select cast( log2(statuses_count) as int )  ,count(1) from  t_base_weibo_user    group by  cast( log2(statuses_count) as int )
+
+select cast( log2(friends_count) as int )  ,count(1) from  t_base_weibo_user    group by  cast( log2(friends_count) as int )
+
+select cast( log2(bi_followers_count) as int )  ,count(1) from  t_base_weibo_user    group by  cast( log2(bi_followers_count) as int )
+
+-- SELECT bi_followers_count from  t_base_weibo_user limit 10
+
+SELECT  verified ,COUNT(1) from t_base_weibo_user group by verified ;
+False   416137495
+True    2226004
+
+
+SELECT  gender ,COUNT(1) from t_base_weibo_user group by gender ;
+f       169665638
+m       248697861
+
+SELECT  geo_enabled ,COUNT(1) from t_base_weibo_user group by geo_enabled ;
+False   7057849
+True    411305650
+
+SELECT  geo_enabled ,COUNT(1)  from t_base_weibo_user group by geo_enabled ;
+

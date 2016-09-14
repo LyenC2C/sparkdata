@@ -19,5 +19,5 @@ stored as textfile ;
 
 LOAD DATA   INPATH '/user/mc/weibo/career_res/' OVERWRITE INTO TABLE t_base_weibo_career PARTITION (ds='20160830') ;
 
-24489093
+2448w
 select count(1) from t_base_weibo_career;

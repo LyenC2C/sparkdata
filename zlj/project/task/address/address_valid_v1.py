@@ -22,66 +22,12 @@ def valid_jsontxt(content):
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 
-def log(w):
-     if type(w)==type([]) or  type(w)==type(()):
-         print  '\t'.join(w)
-     else :print w
-    # return  ""
-
-import copy
-
-
-
 from Levenshtein import *
 
-
-import jieba
 # 提取地址
-def extract(address):
-    words='\001'.join(jieba.cut(address)).encode('utf-8').split('\001')
-    log(words)
-    address_ls=seg.mainAlgorithm_String(address).split('|')
-    # address_ls=[]
-    log(address_ls)
-    line=address.replace('社区','').replace('小区','')
-    prov,words,address_ls=check_prov(line,words,address_ls)
-    log(prov)
-    log(words)
-    log(address_ls)
-    city,words,address_ls=check_city(line,words,address_ls)
-    log(city)
-    log(words)
-    log(address_ls)
-    xian,words,address_ls=check_xian_qu(line,words,address_ls)
-    log(xian)
-    log(words.append(""))
-    log(address_ls.append(""))
-    city=city.replace(prov,'')
-    xian=xian.replace(prov,'').replace(city,'')
-
-    address_ls=seg.mainAlgorithm_String(address.replace(prov,'').replace(city,'').replace(xian,''))
-    return [prov_dic.get(prov,prov),
-            city_dic.get(city,city),
-            xian_dic.get(xian,xian),
-            ''.join(address_ls)]
 
 import Levenshtein
-# 权重设计
-weght=[0.3,0.3,0,0.4]
 
-# 计算相似度
-def sim(ad_real,ad_test):
-    score=0
-    for index,item in enumerate(zip(ad_real[:-1],ad_test[:-1])):
-        if len(item[0])>1 and len(item[1])>1  and item[0]==item[1]: score=score+weght[index]
-    dis=Levenshtein.distance(ad_real[-1],ad_test[-1])
-    score=score+weght[-1]*1/(dis+1)
-    return score
-
-# line ='四川省成都市十陵街道双龙社区'
-# ad_real=extract('四川省成都市十陵街道双龙社区')
-# ad_test=extract('四川成都市十陵街道双龙社区')
-# print sim(ad_real,ad_test)
 import json
 
 # 解析淘宝地址
@@ -98,13 +44,13 @@ def taobao_address(address):
                    ])
     return [ls[0],ls[1],rs]
 
+# 状态
 name_state = {
    0:'姓名',
    1:'省份',
    2:'城市',
    3:'详细地址'
          }
-
 
 def match_info(v):
     if type(v)==type(True):
@@ -114,7 +60,7 @@ def match_info(v):
         return '置信度:'+ str(v)
 
 
-
+# 请求head
 head={
     'Host':'restapi.amap.com',
     'Connection':'keep-alive',
@@ -123,6 +69,7 @@ head={
 
 
 import requests
+# 地址格式化
 def address_format(address):
     url='http://restapi.amap.com/v3/geocode/geo?key=510cf51a347e0890c99f40370552acd5&address='+address +'&output=json'
     r=requests.get(url,headers=head,timeout=2)
@@ -135,6 +82,7 @@ def address_format(address):
     district=valid_jsontxt(geocodes.get('district',''))
     return (1,(province,city,district,address.replace(province,'').replace(city,'').replace(district,'')))
 
+# 高德地址gps请求
 def address_gps(address):
     url='http://restapi.amap.com/v3/geocode/geo?j=json&key=510cf51a347e0890c99f40370552acd5&address='+address
     r=requests.get(url,headers=head,timeout=2)
@@ -147,6 +95,7 @@ def address_gps(address):
 # 匹配
 from math import radians, cos, sin, asin, sqrt
 
+# gps距离
 def haversine(lon1, lat1, lon2, lat2): # 经度1，纬度1，经度2，纬度2 （十进制度数）
     """
     Calculate the great circle distance between two points
@@ -164,10 +113,12 @@ def haversine(lon1, lat1, lon2, lat2): # 经度1，纬度1，经度2，纬度2 �
     return c * r
 
 
+# 测试数据
 line='3674918	15996928280	{"order_list": [{"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-28 17:25:27", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:11:47", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:12:34", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "中阳里办事处锦绣水岸22栋一单元501", "receiverState": "江苏省", "created": "2015-07-10 12:26:23", "buyerNick": "sunzhi716", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-17 18:28:19", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}]}'
+
+# 匹配
 def  match(tel,name,address):
     ob=address_format(address)
-
     if  ob[0]==-1 :return  (-1,'查询无结果')
     else :
         prov,city,xian,other=ob[1]
@@ -193,12 +144,12 @@ def  match(tel,name,address):
     distance=haversine(match_gps[0],match_gps[1],taobao_gps[0],taobao_gps[1])
     confidence=(100-distance*2)
     confidence= confidence if confidence>0 else 0
-    # (receiverState,receiverCity,receiverAddress,receiverName,receiverMobile)
     state=ls[top_index[-1]]
     state[-1]=confidence
     for index, v in enumerate(state):
         # print name_state[index],match_info(v)
         rs.append(name_state[index]+match_info(v))
+    rs.append('距离（公里）:'+str(distance))
     return rs
 
 

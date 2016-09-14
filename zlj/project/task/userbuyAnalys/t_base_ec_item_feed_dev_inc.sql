@@ -42,7 +42,7 @@ CREATE TABLE t_base_ec_item_feed_dev_inc_tmp
             shop_id,
             location
           FROM t_base_ec_item_dev_new
-          WHERE ds = 20160615
+          WHERE ds = 20160825
           ) t1
     left   JOIN
       (
