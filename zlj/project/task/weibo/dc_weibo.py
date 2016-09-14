@@ -222,6 +222,8 @@ def fun(x):
     id,ids=x.split('\001')
     ls=[]
     for i in ids.split(','):
-        ls.append(id+','+i)
+        ls.append(id+' '+i)
     return ls
-sc.textFile('/user/zlj/algo/part-0000*1').map(lambda x:fun(x)).flatMap(lambda x:x).saveAsTextFile('/user/zlj/algo/part_flatmap')
+sc.textFile('/user/zlj/algo/part-000*').map(lambda x:fun(x)).flatMap(lambda x:x).saveAsTextFile('/user/zlj/algo/part_flatmap')
+
+sc.textFile('/user/zlj/tmp/t_base_weibo_user_fri_tel/part-000**').map(lambda x:fun(x)).flatMap(lambda x:x).saveAsTextFile('/user/zlj/algo/part_flatmap100')
