@@ -1,3 +1,6 @@
+
+-- 用户消费统计特征表
+
 DROP TABLE IF EXISTS t_base_user_consum_statis_data;
 CREATE TABLE t_base_user_consum_statis_data AS
   SELECT
@@ -18,7 +21,7 @@ CREATE TABLE t_base_user_consum_statis_data AS
     sum(CASE WHEN bc_type = 'C'       THEN 1         ELSE 0 END)             c_bc_type_num,
 -- xiage
 sum(case when bc_type='B' then price else '0' end)/sum(price) as tmall_ratio,
-sum( case when root_cat_name in ('彩妆/香水/美妆工具','个人护理/保健/按摩器材','洗护清洁剂/卫生巾/纸/香薰','俪人购(俪人购专用)') then price else '0' end)/sum(price) as beauty_ratio,
+sum(case when root_cat_name in ('彩妆/香水/美妆工具','个人护理/保健/按摩器材','洗护清洁剂/卫生巾/纸/香薰','俪人购(俪人购专用)') then price else '0' end)/sum(price) as beauty_ratio,
 sum(case when root_cat_name in ('网游装备/游戏币/帐号/代练','网络游戏点卡') then price else '0' end)/sum(price) as game_ratio,
 sum(case when root_cat_name in ('书籍/杂志/报纸','教育培训') then price else '0' end)/sum(price) as edu_ratio,
 sum(case when root_cat_name in ('OTC药品/医疗器械/计生用品','传统滋补营养品','保健食品/膳食营养补充食品','家庭保健','中药饮片') then price else '0' end)/sum(price) as medical_ratio,
@@ -38,4 +41,5 @@ sum(case when price >10000 then 1 else 0 end)/count(*) as a10000_raio
   FROM
     t_base_ec_record_dev_new
   WHERE ds = 'true1'
-  GROUP BY user_id;
+  GROUP BY user_id
+  ;
