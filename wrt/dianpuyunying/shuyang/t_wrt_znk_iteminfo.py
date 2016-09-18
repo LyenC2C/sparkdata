@@ -158,7 +158,9 @@ def f1(line,brand_dict):
     # return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def f2(line,brand_dict):
-    txt = valid_jsontxt(line)
+    ss = line.strip().split("\t")
+    if len(ss) != 3: return None
+    txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) != type({}): return None
     data = ob.get('data',"-")
