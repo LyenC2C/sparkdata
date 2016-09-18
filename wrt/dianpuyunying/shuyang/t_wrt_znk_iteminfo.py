@@ -162,7 +162,7 @@ def f2(line,brand_dict):
     if len(ss) != 3: return None
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
-    # if type(ob) != type({}): return None
+    if type(ob) != type({}): return None
     data = ob.get('data',"-")
     if data == "-": return None
     itemInfoModel = data.get('itemInfoModel',"-")
@@ -203,8 +203,8 @@ def f2(line,brand_dict):
     result.appned(item_count)
     result.append(str(price))
     result.append(str(picurl))
-    return (item_id,result)
-    # return "\001".join([str(valid_jsontxt(i)) for i in result])
+    # return (item_id,result)
+    return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def f3(line):
     ss = line.strip().split("\001")
@@ -238,13 +238,15 @@ s1 = "/commit/tb_tmp/iteminfo/znk.shopitem.0913.iteminfo.change.fmt"
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/znk_brandid_name"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
+'''
 rdd_now = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
 rdd_last = sc.textFile(s2).map(lambda x:f3(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
-# rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
-
+'''
+rdd = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)
+rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 # hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
 # LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
