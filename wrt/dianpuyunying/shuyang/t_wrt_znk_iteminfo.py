@@ -78,7 +78,9 @@ def tp(title):
 
 
 def f1(line,brand_dict):
-    txt = valid_jsontxt(line)
+    ss = line.strip().split("\t")
+    if len(ss) != 3: return None
+    txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) == type(1.0): return None
     data = ob.get('data',"-")
@@ -158,7 +160,7 @@ def f1(line,brand_dict):
 def f2(line,brand_dict):
     txt = valid_jsontxt(line)
     ob = json.loads(txt)
-    if type(ob) == type(1.0): return None
+    if type(ob) != type({}): return None
     data = ob.get('data',"-")
     if data == "-": return None
     itemInfoModel = data.get('itemInfoModel',"-")
@@ -241,6 +243,6 @@ rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):two
 # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 
-# hfs -rmr user/wrt/temp/znk_iteminfo_tmp
+# hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
 # LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
