@@ -232,7 +232,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 # s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
 s1 = "/commit/tb_tmp/iteminfo/znk.shopitem.0913.iteminfo.change.fmt"
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
-s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/brandid_name"
+s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/znk_brandid_name"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_now = sc.textFile(s).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
@@ -242,5 +242,5 @@ rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):two
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 
 # hfs -rmr user/wrt/temp/znk_iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
 # LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
