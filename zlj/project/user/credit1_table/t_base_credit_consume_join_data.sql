@@ -29,40 +29,6 @@ CREATE TABLE t_base_credit_consume_join_data AS
 
 
 -- 用户统计信息
-DROP TABLE IF EXISTS t_base_credit_consume_statis_data;
-CREATE TABLE t_base_credit_consume_statis_data AS
-  SELECT
-    user_id,
-    sum(price)                  consume_price,
-    avg(price) AS               avg_price,
-    max(price) as max_price,
-    min(price) as min_price ,
-    count(1)   AS               local_buycnt,
-    COUNT(DISTINCT cat_id)      cat_id_num,
-    COUNT(DISTINCT root_cat_id) root_cat_id_num,
-    COUNT(DISTINCT brand_id)    brand_id_num,
-    sum(CASE WHEN length(brand_id) > 2
-      THEN 1
-        ELSE 0 END)             brand_effec_id_num,
-    sum(CASE WHEN length(brand_id) <= 2
-      THEN 1
-        ELSE 0 END)             brand_no_effec_id_num,
-    sum(CASE WHEN annoy = '1'
-      THEN 1
-        ELSE 0 END)             annoy_num,
-    sum(CASE WHEN annoy = '0'
-      THEN 1
-        ELSE 0 END)             no_annoy_num,
-    sum(CASE WHEN bc_type = 'B'
-      THEN 1
-        ELSE 0 END)             b_bc_type_num,
-    sum(CASE WHEN bc_type = 'C'
-      THEN 1
-        ELSE 0 END)             c_bc_type_num
-  FROM
-    t_base_ec_record_dev_new
-  WHERE ds = 'true1'
-  GROUP BY user_id;
 
 
 -- 评论数据
