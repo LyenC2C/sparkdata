@@ -162,7 +162,7 @@ def f2(line,brand_dict):
     if len(ss) != 3: return None
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
-    if type(ob) != type({}): return None
+    # if type(ob) != type({}): return None
     data = ob.get('data',"-")
     if data == "-": return None
     itemInfoModel = data.get('itemInfoModel',"-")
