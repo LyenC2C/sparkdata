@@ -182,7 +182,8 @@ def f2(line,brand_dict):
         if valid_jsontxt('包装数量(片)') == valid_jsontxt(v.get('name','-')): item_count = v.get("value",'-')
     # item_info = ",".join(item_info_list)
     if not item_size in ['L','XL','M','S']: return None #大部分商品皆有尺码，没有尺码的直接舍弃掉即可
-    if not item_count.isdigit(): item_count = ps(title) #先判断是否为数字，如果不是就从title中解析
+    if not item_count.isdigit():
+        item_count = ps(title) #先判断是否为数字，如果不是就从title中解析
     if item_count == "-": return None #解析失败返回“-”，那么最终舍弃这个商品
     for znk_type in ["拉拉裤","纸尿裤","护理垫","纸尿片"]: #同意成人xxx的形式
         if znk_type in item_type:
