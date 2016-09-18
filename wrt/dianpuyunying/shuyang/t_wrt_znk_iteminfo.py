@@ -204,7 +204,7 @@ def f2(line,brand_dict):
 
 def f3(line):
     ss = line.strip().split("\001")
-    ss.append(yesterday)
+    ss.append(last_day)
     return (ss[0],ss)
 
 
@@ -230,7 +230,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
     # result = []
 
 # s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
-s1 = ""
+s1 = "/commit/tb_tmp/iteminfo/znk.shopitem.0913.iteminfo.change.fmt"
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/brandid_name"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
@@ -244,9 +244,3 @@ rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 # hfs -rmr user/wrt/temp/znk_iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py
 # LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
-# status_flag,data_flag：
-# 0,0（根本就没有此商品，内容都没有，也就没有了入库的必要）
-# 0,1（因为有可能是本次采集没采到，所以不能认为是下架，data_ts记录了过去采到时候的时间戳）
-# 0,2（过去就下架了，现在没采到或者不存在此商品，即下架，data_ts即为下架时间，只要后面此商品不再上架，那么data_ts和data_flag就不会变）
-# 1,1（上架）
-# 2,2（采到的时候刚好下架，所以商品即为下架，同0,2）
