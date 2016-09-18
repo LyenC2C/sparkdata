@@ -163,9 +163,7 @@ def f2(line,brand_dict):
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) != type({}): return None
-    data = ob.get('data',"-")
-    if data == "-": return None
-    itemInfoModel = data.get('itemInfoModel',"-")
+    itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     item_id = itemInfoModel.get('itemId','-')
     categoryId = itemInfoModel.get('categoryId','-')
