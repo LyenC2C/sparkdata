@@ -1,8 +1,8 @@
 
 -- 用户消费统计特征表
 
-DROP TABLE IF EXISTS t_base_user_consum_statis_data;
-CREATE TABLE t_base_user_consum_statis_data AS
+DROP TABLE IF EXISTS t_base_user_consum_statis_feature;
+CREATE TABLE t_base_user_consum_statis_feature AS
   SELECT
     user_id,
     sum(price)                  consume_price,
@@ -38,8 +38,7 @@ sum(case when price <=1000 and price>500 then 1 else 0 end)/count(*) as a500b100
 sum(case when price <=5000 and price>1000 then 1 else 0 end)/count(*) as a1000b5000_ratio,
 sum(case when price <=10000 and price>5000 then 1 else 0 end)/count(*) as a5000b10000_ratio,
 sum(case when price >10000 then 1 else 0 end)/count(*) as a10000_raio
-  FROM
-    t_base_ec_record_dev_new
-  WHERE ds = 'true1'
-  GROUP BY user_id
+
+
   ;
+
