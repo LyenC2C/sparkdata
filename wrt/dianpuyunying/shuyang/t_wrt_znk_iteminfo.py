@@ -172,6 +172,7 @@ def f2(line,brand_dict):
     picsPath = itemInfoModel.get('picsPath',[])
     if picsPath == []: picurl = "-"
     else: picurl = picsPath[0]
+    trackParams = ob.get('trackParams',{})
     brandId = trackParams.get('brandId','-')
     brand_name = brand_dict.get(brandId,"new_brand") #每次入库都要人工查看一下是否产生新的brandid。
     props = ob.get('props',[])
