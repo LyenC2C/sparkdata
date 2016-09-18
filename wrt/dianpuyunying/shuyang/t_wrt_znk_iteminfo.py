@@ -241,14 +241,10 @@ s1 = "/commit/tb_tmp/iteminfo/znk.shopitem.0913.iteminfo.change.fmt"
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/znk_brandid_name"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-'''
 rdd_now = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
 rdd_last = sc.textFile(s2).map(lambda x:f3(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
-rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
-'''
-rdd = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 # hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
