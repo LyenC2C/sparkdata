@@ -176,6 +176,9 @@ def f2(line,brand_dict):
     brandId = trackParams.get('brandId','-')
     brand_name = brand_dict.get(brandId,"new_brand") #每次入库都要人工查看一下是否产生新的brandid。
     props = ob.get('props',[])
+    item_count = "-"
+    item_size = "-"
+    item_type = "-"
     for v in props:
         if valid_jsontxt('尺码') == valid_jsontxt(v.get('name','-')): item_size = v.get("value","-")
         if valid_jsontxt('成人纸尿裤护理品') == valid_jsontxt(v.get('name','-')): item_type = v.get("value","-")
