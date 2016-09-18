@@ -206,8 +206,8 @@ def f2(line,brand_dict):
     result.append(item_count)
     result.append(str(price))
     result.append(str(picurl))
-    # return (item_id,result)
-    return "\001".join([str(valid_jsontxt(i)) for i in result])
+    return (item_id,result)
+    # return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def f3(line):
     ss = line.strip().split("\001")
