@@ -48,7 +48,7 @@ def f(line):
 def f2(line):
     ss = line.strip().split("\001")
     ss.append(last_day)
-    return (ss[0],ss)
+    return (ss[1],ss)
 
 def twodays(x,y):   #同一个feedid下进行groupby后的结果
     item_list = y
