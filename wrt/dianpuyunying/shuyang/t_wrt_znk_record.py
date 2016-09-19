@@ -10,7 +10,7 @@ from pyspark import SparkContext
 sc = SparkContext(appName="t_znk_record")
 
 now_day = sys.argv[1]
-last_day = sys.argv[2]
+# last_day = sys.argv[2]
 
 def valid_jsontxt(content):
     res = content
@@ -75,15 +75,15 @@ def twodays(x,y):   #同一个feedid下进行groupby后的结果
 
 
 s1 = "/commit/tb_tmp/comments/" + now_day
-s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_record/ds=" + last_day
+# s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_record/ds=" + last_day
 
-rdd_now = sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None)\
-    .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
-rdd_last = sc.textFile(s2).map(lambda x:f2(x))
-rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
+rdd = sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None)\
+    .groupByKey().mapValues(list).map(lambda (x,y):"\001".join(y[0]))
+# rdd_last = sc.textFile(s2).map(lambda x:f2(x))
+# rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/temp/znk_record_tmp')
 
 # hfs -rmr /user/wrt/temp/znk_record_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_record.py 20160919 20160829
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_record.py 20160919
 # LOAD DATA  INPATH '/user/wrt/temp/znk_record_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
 
