@@ -248,4 +248,4 @@ rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):two
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 # hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
-# LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
+# LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo_new PARTITION (ds='20160919');
