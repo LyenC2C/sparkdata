@@ -5,6 +5,9 @@ import copy
 import math
 import time
 import rapidjson as json
+from pyspark import SparkContext
+
+sc = SparkContext(appName="repair_item_info")
 
 def valid_jsontxt(content):
     # res = content
@@ -41,7 +44,7 @@ def f(line):
     new_jsn = change_fmt(jsn)
     if new_jsn:
         jsndp = json.dumps(new_jsn,ensure_ascii=False)
-        newsave = sp[0]+'\t'+sp[1]+'\t'+jsndp+'\n'
+        newsave = sp[0]+'\t'+sp[1]+'\t'+jsndp
         return newsave
     else:
         return None
@@ -50,3 +53,6 @@ today = sys.argv[1]
 s1 = "/commit/iteminfo/" + today
 rdd = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x != None)
 rdd.saveAsTextFile('/user/wrt/temp/repair_iteminfo_tmp')
+
+# hfs -rmr user/wrt/temp/znk_iteminfo_tmp
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  repair_iteminfo_new_old.py
