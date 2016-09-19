@@ -40,7 +40,8 @@ def f(line):
             lv.append(feedid)
             lv.append(userid)
             lv.append(dsn)
-            result.append((feedid,lv))
+            # result.append((feedid,lv))
+            result.append("\001".join([valid_jsontxt(i) for i in result]))
         return result
     else:
         return None
@@ -59,13 +60,15 @@ def twodays(x,y):   #同一个feedid下进行groupby后的结果
         if len(item_list[0]) == 4:
             tod_item = item_list[0] #此评论为今日评论
             result = tod_item #使用默认值即可
-    if len(item_list) == 2: #有两个评论，一个是昨日，一个是今日
+    elif len(item_list) == 2: #有两个评论，一个是昨日，一个是今日
         #判断今日和昨日的位置并分别命名赋值
         if len(item_list[0]) == 5:
             tod_item = item_list[1]
         if len(item_list[0]) == 4:
             tod_item = item_list[0]
         result = tod_item
+    else:
+        result = ['-']
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
@@ -73,12 +76,14 @@ def twodays(x,y):   #同一个feedid下进行groupby后的结果
 
 s1 = "/commit/tb_tmp/comments/" + now_day
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_record/ds=" + last_day
+'''
 rdd_now = sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
 rdd_last = sc.textFile(s2).map(lambda x:f2(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/temp/znk_record_tmp')
-
+'''
+sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/znk_record_tmp')
 # hfs -rmr /user/wrt/temp/znk_record_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_record.py 20160919 20160829
 # LOAD DATA  INPATH '/user/wrt/temp/znk_record_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
