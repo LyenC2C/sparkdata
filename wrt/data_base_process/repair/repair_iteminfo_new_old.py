@@ -43,7 +43,7 @@ def f(line):
     jsn = json.loads(valid_jsontxt(sp[2]))
     new_jsn = change_fmt(jsn)
     if new_jsn:
-        jsndp = json.dumps(new_jsn,ensure_ascii=False)
+        jsndp = json.dumps(new_jsn)
         newsave = sp[0]+'\t'+sp[1]+'\t'+jsndp
         return newsave
     else:
