@@ -33,12 +33,13 @@ def f(line):
             lv = []
             itemid = value.get('auctionNumId', '-')
             feedid = value.get('id', '-')
-            userid = value.get('userId', '-')
+            # userid = value.get('userId', '-')
+            usermark = value.get('userMark','')
             dsn = value.get('feedbackDate', '-').replace("-","").replace(".","")
             # if itemid == "-" or feedid == "-" or userid == '-' or dsn == '-':
-            lv.append(itemid)
             lv.append(feedid)
-            lv.append(userid)
+            lv.append(itemid)
+            lv.append(usermark)
             lv.append(dsn)
             result.append((feedid,lv))
             # result.append("\001".join([valid_jsontxt(i) for i in lv]))
