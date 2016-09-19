@@ -40,7 +40,7 @@ def change_fmt(jsn):
 
 def f(line):
     sp = line.split('\t')
-    jsn = json.loads(sp[2])
+    jsn = json.loads(valid_jsontxt(sp[2]))
     new_jsn = change_fmt(jsn)
     if new_jsn:
         jsndp = json.dumps(new_jsn,ensure_ascii=False)
@@ -54,5 +54,5 @@ s1 = "/commit/iteminfo/" + today
 rdd = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x != None)
 rdd.saveAsTextFile('/user/wrt/temp/repair_iteminfo_tmp')
 
-# hfs -rmr user/wrt/temp/znk_iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  repair_iteminfo_new_old.py
+# hfs -rmr /user/wrt/temp/repair_iteminfo_tmp
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  repair_iteminfo_new_old.py 20160913
