@@ -44,7 +44,7 @@ def f(line):
     new_jsn = change_fmt(jsn)
     if new_jsn:
         jsndp = json.dumps(new_jsn)
-        newsave = sp[0]+'\t'+sp[1]+'\t'+jsndp
+        newsave = valid_jsontxt(sp[0]) + '\t' + valid_jsontxt(sp[1]) + '\t' + valid_jsontxt(jsndp)
         return newsave
     else:
         return None
