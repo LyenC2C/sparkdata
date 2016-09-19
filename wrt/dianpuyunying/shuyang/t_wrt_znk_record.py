@@ -41,7 +41,7 @@ def f(line):
             lv.append(userid)
             lv.append(dsn)
             # result.append((feedid,lv))
-            result.append("\001".join([valid_jsontxt(i) for i in result]))
+            result.append("\001".join([valid_jsontxt(i) for i in lv]))
         return result
     else:
         return None
