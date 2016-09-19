@@ -74,7 +74,7 @@ def twodays(x,y):   #同一个feedid下进行groupby后的结果
 
 
 
-s1 = "/commit/tb_tmp/comments/20160919/192.168.10.70_02150000006b.2016-09-17_21.52.50"# + now_day
+s1 = "/commit/tb_tmp/comments/" + now_day
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_record/ds=" + last_day
 
 rdd_now = sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None)\
