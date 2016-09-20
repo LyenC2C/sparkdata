@@ -25,11 +25,13 @@ def f(line):
         return None
     json_txt = ls[4][10:-1]
     ob = json.loads(json_txt)
-    if type(ob) != type({}): return None
+    if type(ob) != type({}): return [None]
     rateList = ob.get("rateDetail",{}).get("rateList",[])
-    if rateList == []:return None
+    if rateList == []:return [None]
     result = []
     for rate in rateList:
+        # lv = []
+        # lv.append("1")
         # try:
         lv = []
         tradeEndTime = float(str(rate['tradeEndTime'])[-3:])
