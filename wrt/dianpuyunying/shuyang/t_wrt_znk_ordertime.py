@@ -32,7 +32,7 @@ def f(line):
     for rate in rateList:
         # try:
         lv = []
-        tradeEndTime = rate['tradeEndTime'][-3:]
+        tradeEndTime = float(str(rate['tradeEndTime'])[-3:])
         tradetime = time.strftime("%Y%m%d" ,time.gmtime(tradeEndTime))
         feed_id = rate['id']
         lv.append(feed_id)
@@ -48,5 +48,5 @@ rdd = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):"\001".join(y[0]))
 rdd.saveAsTextFile('/user/wrt/temp/znk_ordertime_tmp')
 
-#hfs -rmr /user/wrt/temp/znk_feedmark_tmp
-#spark-submit  --executor-memory 1G  --driver-memory 5G  --total-executor-cores 80  t_wrt_znk_ordertime.py 20160920
+#hfs -rmr /user/wrt/temp/znk_ordertime_tmp
+#spark-submit  --executor-memory 4G  --driver-memory 5G  --total-executor-cores 80  t_wrt_znk_ordertime.py 20160920
