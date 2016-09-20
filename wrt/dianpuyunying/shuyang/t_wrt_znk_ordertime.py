@@ -30,16 +30,16 @@ def f(line):
     if rateList == []:return None
     result = []
     for rate in rateList:
-        try:
-            lv = []
-            tradeEndTime = rate['tradeEndTime'][-3:]
-            tradetime = time.strftime("%Y%m%d" ,time.gmtime(tradeEndTime))
-            feed_id = rate['id']
-            lv.append(feed_id)
-            lv.append(tradetime)
-            result.append((feed_id,lv))
-        except:
-            continue
+        # try:
+        lv = []
+        tradeEndTime = rate['tradeEndTime'][-3:]
+        tradetime = time.strftime("%Y%m%d" ,time.gmtime(tradeEndTime))
+        feed_id = rate['id']
+        lv.append(feed_id)
+        lv.append(tradetime)
+        result.append((feed_id,lv))
+        # except:
+        #     continue
     return result
 
 
