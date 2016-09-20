@@ -37,8 +37,8 @@ def f(line):
         tradeEndTime = float(str(rate['tradeEndTime'])[-3:])
         tradetime = time.strftime("%Y%m%d" ,time.gmtime(tradeEndTime))
         feed_id = rate['id']
-        lv.append(feed_id)
-        lv.append(tradetime)
+        lv.append(valid_jsontxt(feed_id))
+        lv.append(valid_jsontxt(tradetime))
         result.append((feed_id,lv))
         # except:
         #     continue
