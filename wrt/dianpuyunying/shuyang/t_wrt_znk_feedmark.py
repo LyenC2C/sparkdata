@@ -82,7 +82,7 @@ rdd = sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):"\001".join(y[0]))
 # rdd_last = sc.textFile(s2).map(lambda x:f2(x))
 # rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
-rdd.saveAsTextFile('/user/wrt/temp/znk_record_tmp')
+rdd.saveAsTextFile('/user/wrt/temp/znk_feedmark_tmp')
 
 # hfs -rmr /user/wrt/temp/znk_record_tmp
 # spark-submit  --executor-memory 1G  --driver-memory 5G  --total-executor-cores 80  t_wrt_znk_feedmark.py 20160919
