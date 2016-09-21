@@ -35,7 +35,7 @@ def f(line):
         # lv.append("1")
         # try:
         lv = []
-        tradeEndTime = float(str(rate['tradeEndTime'])[-3:])
+        tradeEndTime = float(str(rate['tradeEndTime'])[:-3])
         tradetime = time.strftime("%Y%m%d" ,time.gmtime(tradeEndTime))
         feed_id = rate['id']
         lv.append(valid_jsontxt(feed_id))
@@ -53,3 +53,4 @@ rdd.saveAsTextFile('/user/wrt/temp/znk_ordertime_tmp')
 
 #hfs -rmr /user/wrt/temp/znk_ordertime_tmp
 #spark-submit  --executor-memory 4G  --driver-memory 5G  --total-executor-cores 80  t_wrt_znk_ordertime.py 20160920
+#LOAD DATA  INPATH '/user/wrt/temp/znk_ordertime_tmp' OVERWRITE INTO TABLE t_wrt_znk_ordertime;
