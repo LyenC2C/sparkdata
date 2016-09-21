@@ -78,7 +78,9 @@ def tp(title):
 
 
 def f1(line,brand_dict):
-    txt = valid_jsontxt(line)
+    ss = line.strip().split("\t")
+    if len(ss) != 3: return None
+    txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) == type(1.0): return None
     data = ob.get('data',"-")
@@ -156,12 +158,12 @@ def f1(line,brand_dict):
     # return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def f2(line,brand_dict):
-    txt = valid_jsontxt(line)
+    ss = line.strip().split("\t")
+    if len(ss) != 3: return None
+    txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
-    if type(ob) == type(1.0): return None
-    data = ob.get('data',"-")
-    if data == "-": return None
-    itemInfoModel = data.get('itemInfoModel',"-")
+    if type(ob) != type({}): return None
+    itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     item_id = itemInfoModel.get('itemId','-')
     categoryId = itemInfoModel.get('categoryId','-')
@@ -170,20 +172,25 @@ def f2(line,brand_dict):
     picsPath = itemInfoModel.get('picsPath',[])
     if picsPath == []: picurl = "-"
     else: picurl = picsPath[0]
+    trackParams = ob.get('trackParams',{})
     brandId = trackParams.get('brandId','-')
     brand_name = brand_dict.get(brandId,"new_brand") #每次入库都要人工查看一下是否产生新的brandid。
     props = ob.get('props',[])
+    item_count = "-"
+    item_size = "-"
+    item_type = "-"
     for v in props:
         if valid_jsontxt('尺码') == valid_jsontxt(v.get('name','-')): item_size = v.get("value","-")
         if valid_jsontxt('成人纸尿裤护理品') == valid_jsontxt(v.get('name','-')): item_type = v.get("value","-")
         if valid_jsontxt('包装数量(片)') == valid_jsontxt(v.get('name','-')): item_count = v.get("value",'-')
     # item_info = ",".join(item_info_list)
     if not item_size in ['L','XL','M','S']: return None #大部分商品皆有尺码，没有尺码的直接舍弃掉即可
-    if not item_count.isdigit(): item_count = ps(title) #先判断是否为数字，如果不是就从title中解析
+    if not item_count.isdigit():
+        item_count = ps(title) #先判断是否为数字，如果不是就从title中解析
     if item_count == "-": return None #解析失败返回“-”，那么最终舍弃这个商品
-    for type in ["拉拉裤","纸尿裤","护理垫","纸尿片"]: #同意成人xxx的形式
-        if type in item_type:
-            item_type = "成人" + type
+    for znk_type in ["拉拉裤","纸尿裤","护理垫","纸尿片"]: #同意成人xxx的形式
+        if znk_type in item_type:
+            item_type = "成人" + znk_type
     if not item_type in ["成人拉拉裤","成人纸尿裤","成人护理垫","成人纸尿片"]: item_type = tp(title) #统一后依然不在标准数据范围就解析title
     if item_type == "-": return None #解析失败返回“-”，那么最终舍弃这个商品
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
@@ -194,9 +201,9 @@ def f2(line,brand_dict):
     result.append(item_id)
     result.append(title)
     result.append(brand_name)
-    result.appned(item_size)
-    result.appned(item_type)
-    result.appned(item_count)
+    result.append(item_size)
+    result.append(item_type)
+    result.append(item_count)
     result.append(str(price))
     result.append(str(picurl))
     return (item_id,result)
@@ -204,7 +211,7 @@ def f2(line,brand_dict):
 
 def f3(line):
     ss = line.strip().split("\001")
-    ss.append(yesterday)
+    ss.append(last_day)
     return (ss[0],ss)
 
 
@@ -230,23 +237,15 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
     # result = []
 
 # s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
-s1 = ""
+s1 = "/commit/tb_tmp/iteminfo/znk.shopitem.0913.iteminfo.change.fmt"
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
-s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/brandid_name"
+s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/znk_brandid_name"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd_now = sc.textFile(s).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
+rdd_now = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
-rdd_last = sc.textFile(s).map(lambda x:f3(x))
+rdd_last = sc.textFile(s2).map(lambda x:f3(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
-# rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
-
-# hfs -rmr user/wrt/temp/znk_iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py
-# LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo PARTITION (ds='20160825');
-# status_flag,data_flag：
-# 0,0（根本就没有此商品，内容都没有，也就没有了入库的必要）
-# 0,1（因为有可能是本次采集没采到，所以不能认为是下架，data_ts记录了过去采到时候的时间戳）
-# 0,2（过去就下架了，现在没采到或者不存在此商品，即下架，data_ts即为下架时间，只要后面此商品不再上架，那么data_ts和data_flag就不会变）
-# 1,1（上架）
-# 2,2（采到的时候刚好下架，所以商品即为下架，同0,2）
+# hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
+# LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo_new PARTITION (ds='20160919');
