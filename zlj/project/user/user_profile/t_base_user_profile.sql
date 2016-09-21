@@ -34,6 +34,7 @@
 
 --用户基础信息表
 
+Drop table  t_base_user_profile;
 create table t_base_user_profile as
 
 SELECT
@@ -49,6 +50,7 @@ case when qq_gender             is null or  length(qq_gender            )<1  the
 case when qq_age                is null                   then -1  else  qq_age                 end as qq_age                 ,
 case when qq_name               is null or  length(qq_name              )<1  then '-'  else  qq_name                end as qq_name                ,
 case when qq_loc                is null or  length(qq_loc               )<1  then '-'  else  qq_loc                 end as qq_loc                 ,
+case when qq_find_schools                is null or  length(qq_loc      )<1  then '-'  else  qq_find_schools        end as qq_find_schools        ,
 case when tel_prov              is null or  length(tel_prov             )<1  then '-'  else  tel_prov               end as tel_prov               ,
 case when tel_city              is null or  length(tel_city             )<1  then '-'  else  tel_city               end as tel_city               ,
 case when xianyu_gender         is null or  length(xianyu_gender        )<1  then '-'  else  xianyu_gender          end as xianyu_gender          ,
@@ -56,8 +58,8 @@ case when xianyu_birthday       is null 										then -1  else  xianyu_birthday
 case when xianyu_constellation  is null or  length(xianyu_constellation )<1  then '-'  else  xianyu_constellation   end as xianyu_constellation   ,
 case when xianyu_province       is null or  length(xianyu_province      )<1  then '-'  else  xianyu_province        end as xianyu_province        ,
 case when xianyu_city           is null or  length(xianyu_city          )<1  then '-'  else  xianyu_city            end as xianyu_city            ,
-case when predict_gender        is null 								     then -1  else  predict_gender         end as predict_gender         ,
 case when xianyu_detail_loc     is null or  length(xianyu_detail_loc    )<1  then '-'  else  xianyu_detail_loc      end as xianyu_detail_loc      ,
+case when predict_gender        is null 			 					     then -1  else  predict_gender         end as model_predict_gender         ,
 case when weibo_id              is null or  length(weibo_id             )<1  then '-'  else  weibo_id               end as weibo_id               ,
 case when weibo_screen_name     is null or  length(weibo_screen_name    )<1  then '-'  else  weibo_screen_name      end as weibo_screen_name      ,
 case when weibo_gender          is null or  length(weibo_gender         )<1  then '-'  else  weibo_gender           end as weibo_gender           ,
@@ -70,4 +72,4 @@ case when weibo_verified        is null or  length(weibo_verified       )<1  the
 case when weibo_colleges        is null or  length(weibo_colleges       )<1  then '-'  else  weibo_colleges         end as weibo_colleges         ,
 case when weibo_company  	    is null or  length(weibo_company       )<1  then '-'  else  weibo_company         end as weibo_company
 from
-t_base_user_info_s_tbuserinfo_t_step7 ;
+t_base_user_info_s_tbuserinfo_t_step8 ;

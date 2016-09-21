@@ -15,7 +15,7 @@ CREATE TABLE t_zlj_credit_user_ac_score AS
         pow(2.8, datediff* (-0.005)) AS score
       FROM
         t_base_ec_record_dev_new
-       WHERE ds='true1' and  CAST(item_id AS BIGINT) > 0 AND CAST(cat_id AS BIGINT) > 0 AND CAST(user_id AS BIGINT) > 0
+       WHERE ds='true' and  CAST(item_id AS BIGINT) > 0 AND CAST(cat_id AS BIGINT) > 0 AND CAST(user_id AS BIGINT) > 0
     ) t
   GROUP BY user_id;
 

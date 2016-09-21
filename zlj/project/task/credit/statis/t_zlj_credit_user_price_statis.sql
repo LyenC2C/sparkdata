@@ -13,7 +13,7 @@ CREATE TABLE t_zlj_credit_user_price_statis_back AS
     sum(case when bc_type='B' then price else '0' end)/sum(price) as tmallbuy_ratio,
 stddev(price) as price_std
 
-  FROM t_base_ec_record_dev_new  where ds='true1'
+  FROM t_base_ec_record_dev_new  where ds='true'
   GROUP BY user_id  HAVING count(1)<7000
  ;
 
@@ -27,7 +27,7 @@ CREATE TABLE t_zlj_credit_user_price_statis_dim AS
 
 sum( case when root_cat_name in ('彩妆/香水/美妆工具','个人护理/保健/按摩器材','洗护清洁剂/卫生巾/纸/香薰','俪人购(俪人购专用)') then price else '0' end)/sum(price) as beauty_consum_ratio,
 sum( case when root_cat_name in ('彩妆/香水/美妆工具','个人护理/保健/按摩器材','洗护清洁剂/卫生巾/纸/香薰','俪人购(俪人购专用)') then price else '0' end) as beauty_consum,
-  FROM t_base_ec_record_dev_new  where ds='true1'
+  FROM t_base_ec_record_dev_new  where ds='true'
   GROUP BY user_id  HAVING count(1)<7000
 
    ;
