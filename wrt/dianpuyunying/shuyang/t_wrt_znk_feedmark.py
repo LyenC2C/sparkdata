@@ -4,6 +4,7 @@ import sys
 import copy
 import math
 import time
+import datetime
 import rapidjson as json
 from pyspark import SparkContext
 
@@ -36,11 +37,23 @@ def f(line):
             # userid = value.get('userId', '-')
             usermark = value.get('userMark','')
             dsn = value.get('feedbackDate', '-').replace("-","").replace(".","")
+            y = int(dsn[0:4])
+            m = int(dsn[4:6])
+            d = int(dsn[6:8])
+            dsn_date = datetime.datetime(y,m,d)
             # if itemid == "-" or feedid == "-" or userid == '-' or dsn == '-':
+            feedback = value.get('feedback','-')
+            if valid_jsontxt(feedback) == "评价方未及时做出评价,系统默认好评!":
+                during_day = datetime.timedelta(days=22)
+            if valid_jsontxt(feedback) == "好评！":
+                during_day = datetime.timedelta(days=11)
+            else:
+                during_day = datetime.timedelta(days=9)
+            buy_date = str(dsn_date - during_day)[:10].replace("-","")
             lv.append(feedid)
             lv.append(itemid)
             lv.append(usermark)
-            lv.append(dsn)
+            lv.append(buy_date)
             result.append((feedid,lv))
             # result.append("\001".join([valid_jsontxt(i) for i in lv]))
         return result
@@ -84,7 +97,7 @@ rdd = sc.textFile(s1).flatMap(lambda x:f(x)).filter(lambda x:x!=None)\
 # rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/temp/znk_feedmark_tmp')
 
-# hfs -rmr /user/wrt/temp/znk_record_tmp
+# hfs -rmr /user/wrt/temp/znk_feedmark_tmp
 # spark-submit  --executor-memory 1G  --driver-memory 5G  --total-executor-cores 80  t_wrt_znk_feedmark.py 20160919
 # LOAD DATA  INPATH '/user/wrt/temp/znk_record_tmp' OVERWRITE INTO TABLE t_wrt_znk_record PARTITION (ds='20160825');
 
