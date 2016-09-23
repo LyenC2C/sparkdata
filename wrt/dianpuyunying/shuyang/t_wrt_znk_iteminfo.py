@@ -6,7 +6,8 @@ import math
 import time
 import rapidjson as json
 from pyspark import SparkContext
-last_day = sys.argv[1]
+now_day = sys.argv[1]
+last_day = sys.argv[2]
 sc = SparkContext(appName="t_base_item_info")
 
 
@@ -237,7 +238,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
     # result = []
 
 # s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
-s1 = "/commit/tb_tmp/iteminfo/znk.shopitem.0913.iteminfo.change.fmt"
+s1 = "/commit/tb_tmp/iteminfo/" + now_day
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/znk_brandid_name"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
@@ -247,5 +248,5 @@ rdd_last = sc.textFile(s2).map(lambda x:f3(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 # hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160913 20160912
 # LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo_new PARTITION (ds='20160919');
