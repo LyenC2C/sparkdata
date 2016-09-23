@@ -151,10 +151,10 @@ def f(line, place_dict):
 # return birthday + '\001' + phone + '\001' + gender_id + '\001' + college + '\001' + uin + '\001' + lnick + '\001' + loc_id + '\001' + loc + '\001' + h_loc_id + '\001' + h_loc + '\001' +\
 #    personal + '\001' + shengxiao + '\001' + gender + '\001' + occupation + '\001' + constel + '\001' + blood + '\001' + url + '\001' + homepage + '\001' + nick + '\001' +\
 # 		email + '\001' + uin2 + '\001' + mobile + '\001' + ts
-if sys.argv[1] == '-h':
-    comment = 'qq用户信息格式化为hive数据格式'
-    print comment
-    print 'argvs:\n argv[1]:qq file or dir input\n argv[2]:district_dict file or dir input\n argv[3]:dir output'
+# if sys.argv[1] == '-h':
+#     comment = 'qq用户信息格式化为hive数据格式'
+#     print comment
+#     print 'argvs:\n argv[1]:qq file or dir input\n argv[2]:district_dict file or dir input\n argv[3]:dir output'
 
 rdd = sc.textFile('/data/develop/qq/qqinfo.total.distinct.valid')
 rdd2 = sc.textFile('/user/wrt/loc.map.final')
