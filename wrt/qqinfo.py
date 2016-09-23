@@ -156,14 +156,14 @@ if sys.argv[1] == '-h':
     print comment
     print 'argvs:\n argv[1]:qq file or dir input\n argv[2]:district_dict file or dir input\n argv[3]:dir output'
 
-rdd = sc.textFile(sys.argv[1])
-rdd2 = sc.textFile(sys.argv[2])
+rdd = sc.textFile('/data/develop/qq/qqinfo.total.distinct.valid')
+rdd2 = sc.textFile('/user/wrt/loc.map.final')
 p_dict = rdd2.map(lambda x: x.split('\t')).collectAsMap()
 broadcastVar = sc.broadcast(p_dict)
 place_dict = broadcastVar.value
 rdd_info_chong = rdd.map(lambda x: f(x, place_dict)).filter(lambda x: x != None).map(lambda x:(x[0],x[1:]))
 rdd_info = rdd_info_chong.groupByKey().mapValues(list).map(lambda (x, y): [x]+y[0])
-rdd_age = sc.textFile('/user/wrt/qq_age.0611').map(lambda x: x.split('\t')).map(lambda x:[x[0],int(x[1])])
+# rdd_age = sc.textFile('/user/wrt/qq_age.0611').map(lambda x: x.split('\t')).map(lambda x:[x[0],int(x[1])])
 schema1 = StructType([
     StructField("uin", StringType(), True),
     StructField("birthday", StringType(), True),
@@ -190,15 +190,15 @@ schema1 = StructType([
     StructField("ts", StringType(), True),
     StructField("age", IntegerType(), True)
 ])
-schema2 = StructType([
-    StructField("qq", StringType(), True),
-    StructField("age", IntegerType(), True)
-])
+# schema2 = StructType([
+#     StructField("qq", StringType(), True),
+#     StructField("age", IntegerType(), True)
+# ])
 
 df1 = hiveContext.createDataFrame(rdd_info, schema1)
 hiveContext.registerDataFrameAsTable(df1, 'qqinfo')
-df2 = hiveContext.createDataFrame(rdd_age, schema2)
-hiveContext.registerDataFrameAsTable(df2, 'qqage')
+# df2 = hiveContext.createDataFrame(rdd_age, schema2)
+# hiveContext.registerDataFrameAsTable(df2, 'qqage')
 hiveContext.sql('use wlbase_dev')
 
 sql = '''
@@ -215,7 +215,7 @@ Insert overwrite table t_base_qq_user_dev  PARTITION(ds=20151112)
                 where uin is not null)t1
 
                  left join
-                 qqage t2
+                 (select qq_id as qq,field1 as age qun_member_info) t2
                 on t1.uin=t2.qq
 
 '''
