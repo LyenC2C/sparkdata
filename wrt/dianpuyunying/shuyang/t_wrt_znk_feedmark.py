@@ -99,5 +99,5 @@ rdd.saveAsTextFile('/user/wrt/temp/znk_feedmark_tmp')
 
 # hfs -rmr /user/wrt/temp/znk_feedmark_tmp
 # spark-submit  --executor-memory 1G  --driver-memory 5G  --total-executor-cores 80  t_wrt_znk_feedmark.py 20160919
-# LOAD DATA  INPATH '/user/wrt/temp/znk_record_tmp' OVERWRITE INTO TABLE t_wrt_znk_record PARTITION (ds='20160825');
+# LOAD DATA  INPATH '/user/wrt/temp/znk_feedmark_tmp' OVERWRITE INTO TABLE t_wrt_znk_feedmark;
 
