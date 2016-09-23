@@ -215,7 +215,7 @@ Insert overwrite table t_base_qq_user_dev  PARTITION(ds=20151112)
                 where uin is not null)t1
 
                  left join
-                 (select qq_id as qq,field1 as age qun_member_info) t2
+                 (select qq_id as qq,field1 as age from qun_member_info) t2
                 on t1.uin=t2.qq
 
 '''
