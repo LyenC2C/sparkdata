@@ -31,7 +31,7 @@ def valid_jsontxt(content):
 def parse(line):
     ob=json.loads(valid_jsontxt(line))
     if type(ob)!=type({}):return None
-    action = ob.get('action','-'),
+    t_action = ob.get('action','-'),
     cateid = ob.get('cateid','-'),
     catename = ob.get('catename','-'),
     decrypted_tel = ob.get('decrypted_tel','-'),
@@ -46,13 +46,25 @@ def parse(line):
     tradeline = ob.get('tradeline','-'),
     uid = ob.get('uid','-'),
     uname = ob.get('uname' ,'-'),
-    rs=[uid,title,rootcateid,nickname,isbiz,online,infoid,catename,uname,decrypted_tel,tradeline,action,cateid]
+    rs=[t_action ,
+            cateid   ,
+            catename ,
+            decrypted_tel,
+            infoid   ,
+            isbiz,
+            nickname ,
+            online   ,
+            rootcateid   ,
+            title,
+            tradeline,
+            uid,
+            uname,]
     return (infoid[0],[ i[0] for i in rs])
 
 
 
-sc.textFile('/commit/credit/58/fang.info.json.head.100w').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
-    .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/58_fang.info.json.head.100w_parse')
+sc.textFile('/commit/credit/58/fang.info.json').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
+    .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/fang.info.json_parse')
 
 
 # /commit/credit/58/fang.info.json

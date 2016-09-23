@@ -4,7 +4,7 @@ id  bigint   COMMENT ' 用户UID ',
 ids  string  COMMENT ' 关系列表 用,分割 '
 
 )
-COMMENT '微博用户粉丝'
+COMMENT '微博用户关注列表'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
