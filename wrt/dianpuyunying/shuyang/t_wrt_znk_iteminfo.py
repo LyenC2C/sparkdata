@@ -244,8 +244,8 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 
 # s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
 s1 = "/commit/tb_tmp/iteminfo/" + now_day
-s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_brand_brandname/ds=" +last_day
-s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/znk_brandid_name"
+s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
+s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brand_brandname/znk_brand_brandname"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_now = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
