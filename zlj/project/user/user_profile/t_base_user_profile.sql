@@ -7,11 +7,11 @@
 -- regtime	string	用户淘宝注册时间
 -- tb_nick	string	淘宝昵称
 -- tb_location	string	淘宝地址
--- qq_gender	string	qq 性别
+-- qq_gender	string	qq性别
 -- qq_age	int	qq年龄
--- qq_name	string	qq 姓名
--- qq_loc	string	qq 地址
--- tel_prov	string	手机号 对应地址省份
+-- qq_name	string	qq姓名
+-- qq_loc	string	qq地址
+-- tel_prov	string	手机号对应地址省份
 -- tel_city	string	手机号对应地址城市
 -- xianyu_gender	string	闲鱼性别
 -- xianyu_birthday	int	闲鱼年龄（出生年月转换而来）
@@ -46,8 +46,8 @@ case when verify                is null or  length(verify               )<1  the
 case when regtime               is null or  length(regtime              )<1  then '-'  else  regtime                end as regtime                ,
 case when tb_nick               is null or  length(tb_nick              )<1  then '-'  else  tb_nick                end as tb_nick                ,
 case when tb_location           is null or  length(tb_location          )<1  then '-'  else  tb_location            end as tb_location            ,
-case when qq_gender             is null or  length(qq_gender            )<1  then '-'  else  qq_gender              end as qq_gender              ,
-case when qq_age                is null                   then -1  else  qq_age                 end as qq_age                 ,
+case when qq_gender             is null or  length(qq_gender            )<1  then '-'  else  cast(qq_gender  as int)             end as qq_gender              ,
+case when qq_age                is null                   then -1  else  cast(qq_age as int)                 end as qq_age                 ,
 case when qq_name               is null or  length(qq_name              )<1  then '-'  else  qq_name                end as qq_name                ,
 case when qq_loc                is null or  length(qq_loc               )<1  then '-'  else  qq_loc                 end as qq_loc                 ,
 case when qq_find_schools                is null or  length(qq_loc      )<1  then '-'  else  qq_find_schools        end as qq_find_schools        ,
@@ -73,3 +73,48 @@ case when weibo_colleges        is null or  length(weibo_colleges       )<1  the
 case when weibo_company  	    is null or  length(weibo_company       )<1  then '-'  else  weibo_company         end as weibo_company
 from
 t_base_user_info_s_tbuserinfo_t_step8 ;
+
+
+
+
+SELECT
+sum( case when length(tb_id                )>1 then 1 else 0 end )    ,
+sum( case when length(alipay               )>1 then 1 else 0 end )    ,
+sum( case when cast(buycnt   as bigint     )>=1 then 1 else 0 end )    ,
+sum( case when length(verify               )>1 then 1 else 0 end )    ,
+sum( case when length(regtime              )>1 then 1 else 0 end )    ,
+sum( case when length(tb_nick              )>1 then 1 else 0 end )    ,
+sum( case when length(tb_location          )>1 then 1 else 0 end )    ,
+sum( case when cast(qq_gender as int            )>=0 then 1 else 0 end )    ,
+sum( case when qq_age     >-1 then 1 else 0 end )    ,
+sum( case when length(qq_name              )>1 then 1 else 0 end )    ,
+sum( case when length(qq_loc               )>1 then 1 else 0 end )    ,
+sum( case when length(qq_find_schools      )>1 then 1 else 0 end )    ,
+sum( case when length(tel_prov             )>1 then 1 else 0 end )    ,
+sum( case when length(tel_city             )>1 then 1 else 0 end )    ,
+sum( case when cast( xianyu_gender  as int      )>=0 then 1 else 0 end )    ,
+sum( case when  xianyu_birthday   >1 then 1 else 0 end )    ,
+sum( case when length(xianyu_constellation )>1 then 1 else 0 end )    ,
+sum( case when length(xianyu_province      )>1 then 1 else 0 end )    ,
+sum( case when length(xianyu_city          )>1 then 1 else 0 end )    ,
+sum( case when length(xianyu_detail_loc    )>1 then 1 else 0 end )    ,
+sum( case when  model_predict_gender >=0 then 1 else 0 end )    ,
+sum( case when length(weibo_id             )>1 then 1 else 0 end )    ,
+sum( case when length(weibo_screen_name    )>1 then 1 else 0 end )    ,
+sum( case when  weibo_gender      in ('m','f') then 1 else 0 end )    ,
+sum( case when  weibo_followers_count >0 then 1 else 0 end )    ,
+sum( case when  weibo_friends_count  >0 then 1 else 0 end )    ,
+sum( case when length(weibo_statuses_count )>1 then 1 else 0 end )    ,
+sum( case when length(weibo_created_at     )>1 then 1 else 0 end )    ,
+sum( case when length(weibo_location       )>1 then 1 else 0 end )    ,
+sum( case when length(weibo_verified       )>1 then 1 else 0 end )    ,
+sum( case when length(weibo_colleges       )>1 then 1 else 0 end )    ,
+sum( case when length(weibo_company        )>1 then 1 else 0 end )
+from t_base_user_profile
+;
+
+
+select sum( case when  weibo_verified='True' then 1 else 0 end )
+from t_base_user_profile  ;
+
+SELECT count(DISTINCT tb_id ) from t_base_user_profile;
