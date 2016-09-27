@@ -1,3 +1,7 @@
+
+alter table t_base_ec_record_dev_new  change price price float;
+
+
 CREATE TABLE IF NOT EXISTS t_base_ec_record_dev_new_0629 (
   item_id        BIGINT COMMENT '商品id',
   feed_id        string COMMENT '评论id',
