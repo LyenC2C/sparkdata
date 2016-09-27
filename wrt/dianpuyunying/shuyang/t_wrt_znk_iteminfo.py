@@ -6,7 +6,8 @@ import math
 import time
 import rapidjson as json
 from pyspark import SparkContext
-last_day = sys.argv[1]
+now_day = sys.argv[1]
+last_day = sys.argv[2]
 sc = SparkContext(appName="t_base_item_info")
 
 
@@ -173,16 +174,21 @@ def f2(line,brand_dict):
     if picsPath == []: picurl = "-"
     else: picurl = picsPath[0]
     trackParams = ob.get('trackParams',{})
-    brandId = trackParams.get('brandId','-')
-    brand_name = brand_dict.get(brandId,"new_brand") #每次入库都要人工查看一下是否产生新的brandid。
+    # brandId = trackParams.get('brandId','-')
+    # brand_name = brand_dict.get(brandId,"new_brand") #每次入库都要人工查看一下是否产生新的brandid。
     props = ob.get('props',[])
     item_count = "-"
     item_size = "-"
     item_type = "-"
+    brand_name = "-"
+    brand = "-"
     for v in props:
         if valid_jsontxt('尺码') == valid_jsontxt(v.get('name','-')): item_size = v.get("value","-")
         if valid_jsontxt('成人纸尿裤护理品') == valid_jsontxt(v.get('name','-')): item_type = v.get("value","-")
         if valid_jsontxt('包装数量(片)') == valid_jsontxt(v.get('name','-')): item_count = v.get("value",'-')
+        if valid_jsontxt('品牌') == valid_jsontxt(v.get('name','-')): brand = valid_jsontxt(v.get("value",'-'))
+    if brand == '-': return None
+    brand_name = brand_dict.get(brand,brand_name)
     # item_info = ",".join(item_info_list)
     if not item_size in ['L','XL','M','S']: return None #大部分商品皆有尺码，没有尺码的直接舍弃掉即可
     if not item_count.isdigit():
@@ -237,8 +243,8 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
     # result = []
 
 # s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
-s1 = "/commit/tb_tmp/iteminfo/znk.shopitem.0913.iteminfo.change.fmt"
-s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
+s1 = "/commit/tb_tmp/iteminfo/" + now_day
+s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_brand_brandname/ds=" +last_day
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brandid_name/znk_brandid_name"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd_now = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
@@ -247,5 +253,5 @@ rdd_last = sc.textFile(s2).map(lambda x:f3(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
 # hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160912
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  t_wrt_znk_iteminfo.py 20160913 20160912
 # LOAD DATA  INPATH '/user/wrt/temp/znk_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_znk_iteminfo_new PARTITION (ds='20160919');
