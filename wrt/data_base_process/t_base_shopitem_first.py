@@ -32,7 +32,7 @@ def f(line):
         # reservePrice = item.get("reservePrice","-")
         # if reservePrice == "": reservePrice = "-"
         salePrice = item.get("salePrice","-")
-        up_day = today #默认为今日新上架，后面会进行调整
+        up_day = '20160922' #默认为今日新上架，后面会进行调整
         down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(item_id))
