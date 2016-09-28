@@ -61,5 +61,5 @@ rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
 # hfs -rmr /user/wrt/shopitem_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_c_init.py
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='20160922')
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='20160922');
 
