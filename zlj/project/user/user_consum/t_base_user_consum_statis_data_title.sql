@@ -12,11 +12,8 @@ sum(game_ratio_price)/sum(price) as game_ratio,
 sum(edu_ratio_price)/sum(price) as edu_ratio,
 sum(medical_ratio_price)/sum(price) as medical_ratio,
 sum(fraud_num) as fraud_cnt
-
 from
-
 (
-
 SELECT  user_id ,price ,
  case when bc_type='B' then price else '0' end  as  tmall_ratio_price,
  case when root_cat_name in ('彩妆/香水/美妆工具','个人护理/保健/按摩器材','洗护清洁剂/卫生巾/纸/香薰','俪人购(俪人购专用)') then price else '0' end  as beauty_ratio_price,

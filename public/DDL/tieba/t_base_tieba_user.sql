@@ -18,6 +18,15 @@ from
 (SELECT uid as tag,id1 as name  from t_base_uid_tmp where ds='tieba_name' group by uid,id1 ) t1 join
 (SELECT uid as tag,id1 as tel  from t_base_uid_tmp where ds='tieba_tel' group by uid,id1 )  t2 on t1.tag=t2.tag ;
 
-
+31320799
 SELECT  COUNT(1) from (SELECT uid as tag,id1 as name  from t_base_uid_tmp where ds='tieba_name' group by uid,id1 ) t1 ;
+
+38838730
 SELECT  COUNT(1) from (SELECT uid as tag,id1 as name  from t_base_uid_tmp where ds='tieba_tel' group by uid,id1 ) t1 ;
+
+
+
+31018389
+SELECT  COUNT(1) from (SELECT uid as tag,id1 as name  from t_base_uid_tmp where ds='tieba_name' group by uid ) t1 ;
+37714244
+SELECT  COUNT(1) from (SELECT uid as tag,id1 as name  from t_base_uid_tmp where ds='tieba_tel' group by uid ) t1 ;
