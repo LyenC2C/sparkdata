@@ -12,7 +12,8 @@ stored as textfile ;
 
 
 
-LOAD DATA   INPATH '/user/mc/weibo/career_res/' OVERWRITE INTO TABLE t_base_weibo_career PARTITION (ds='20160830') ;
-
-2448w
-select count(1) from t_base_weibo_career;
+INSERT OVERWRITE table t_base_tieba_user PARTITION(ds='20160927')
+SELECT t2.tag,t2.tel ,t1.name
+from
+(SELECT uid as tag,id1 as name  from t_base_uid_tmp where ds='tieba_name' group by uid,id1 ) t1 join
+(SELECT uid as tag,id1 as tel  from t_base_uid_tmp where ds='tieba_name' group by uid,id1 )  t2 on t1.tag=t2.tag ;
