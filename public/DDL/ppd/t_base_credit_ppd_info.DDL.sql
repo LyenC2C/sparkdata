@@ -1,4 +1,4 @@
-CREATE  TABLE  if not exists t_base_ppd_info (
+CREATE  TABLE  if not exists t_base_credit_ppd_info (
 uname string comment '拍拍贷id',
 real_name string comment '真实姓名',
 phone string comment '电话（后三位没有）',
