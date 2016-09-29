@@ -242,12 +242,12 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 
     # result = []
 
-# s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
-s1 = "/commit/tb_tmp/iteminfo/" + now_day
+s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
+# s1 = "/commit/tb_tmp/iteminfo/" + now_day
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brand_brandname/znk_brand_brandname"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd_now = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
+rdd_now = sc.textFile(s).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
     .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
 rdd_last = sc.textFile(s2).map(lambda x:f3(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
