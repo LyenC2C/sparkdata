@@ -36,8 +36,8 @@ def f(line):
     return (uname,result)
 
 rdd_c = sc.textFile("/commit/credit/ppd/financial_blacklist_ppd_user_info").map(lambda x:f(x)).filter(lambda x:x!=None)
-rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): valid_jsontxt(i) for i in y[0])
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): "\001".join([valid_jsontxt(i) for i in y[0]]))
 rdd.saveAsTextFile('/user/wrt/temp/ppd_info_tmp')
 
-# hfs -rmr /user/wrt/temp/iteminfo_tmp
+# hfs -rmr /user/wrt/temp/ppd_info_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_ppd_info.py
