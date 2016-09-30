@@ -30,7 +30,7 @@ def f(line):
     result = []
     for borrow in borrow_list:
         lv = []
-        borrow_date = borrow.get("borrow_date","-")
+        borrow_date = borrow.get("borrow_date","-").replace("-","")
         borrow_nper = borrow.get("borrow_nper","-")
         list_number = borrow.get("list_number","-")
         time_out_interest = borrow.get("time_out_interest","-")
