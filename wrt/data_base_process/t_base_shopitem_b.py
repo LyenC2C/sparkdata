@@ -75,22 +75,21 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         elif len(item_list[0]) == 7:
             tod_item = item_list[0] #此商品为今日商品，说明此商品今天上架，此前没出现过
             result = tod_item #使用默认值即可
-    elif len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
+        else:
+            rs += str(len(item_list[0]))
+    if len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
         #判断今日和昨日的位置并分别命名赋值
         if len(item_list[0]) == 8:
             yes_item = item_list[0]
             tod_item = item_list[1]
-        if len(item_list[0]) == 7:
+        elif len(item_list[0]) == 7:
             tod_item = item_list[0]
             yes_item = item_list[1]
+        else: rs += str(len(item_list[0])) + str(len(item_list[1]))
         tod_item[4] = yes_item[4] #无论此商品在曾经是否下过架，今天都已经上架了，那么复制他的上架时间即可
         result = tod_item
-    else:
-        flag = "1"
-        for ln in item_list:
-            rs += str(len(ln))
-    if flag == "0": return None
-    else: return rs
+    if rs == "": return None
+    else : return rs
     # return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
