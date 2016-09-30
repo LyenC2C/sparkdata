@@ -64,16 +64,18 @@ def quchong(x,y):
 
 def twodays(x,y):   #同一个item_id下进行groupby后的结果
     item_list = y
+    flag = "0"
+    result = ""
     if len(item_list) == 1: #只有一个商品
         if len(item_list[0]) == 8:
             yes_item = item_list[0] #此商品为昨日商品（昨日商品多个ds字段），今日商品需要复制昨日商品
             if yes_item[5] == '0': #此昨日商品在今天之前没下架，但是今天下架了;否则是今天之前就下架了，那么复制即可
                 yes_item[5] = today #设置down_day为今日日期
             result = yes_item[:-1]   #记得将最后的ds去掉，不要复制进来
-        if len(item_list[0]) == 7:
+        elif len(item_list[0]) == 7:
             tod_item = item_list[0] #此商品为今日商品，说明此商品今天上架，此前没出现过
             result = tod_item #使用默认值即可
-    if len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
+    elif len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
         #判断今日和昨日的位置并分别命名赋值
         if len(item_list[0]) == 8:
             yes_item = item_list[0]
@@ -83,7 +85,13 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
             yes_item = item_list[1]
         tod_item[4] = yes_item[4] #无论此商品在曾经是否下过架，今天都已经上架了，那么复制他的上架时间即可
         result = tod_item
-    return "\001".join([str(valid_jsontxt(i)) for i in result])
+    else:
+        flag = "1"
+        for ln in item_list:
+            result += str(len(ln))
+    if flag == "0": return None
+    else: return result
+    # return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
 today = sys.argv[1]
