@@ -65,7 +65,7 @@ def quchong(x,y):
 def twodays(x,y):   #同一个item_id下进行groupby后的结果
     item_list = y
     flag = "0"
-    result = ""
+    rs = ""
     if len(item_list) == 1: #只有一个商品
         if len(item_list[0]) == 8:
             yes_item = item_list[0] #此商品为昨日商品（昨日商品多个ds字段），今日商品需要复制昨日商品
@@ -88,9 +88,9 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
     else:
         flag = "1"
         for ln in item_list:
-            result += str(len(ln))
+            rs += str(len(ln))
     if flag == "0": return None
-    else: return result
+    else: return rs
     # return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
@@ -104,7 +104,7 @@ s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + yesterday
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None) #解析
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y)) #去重
 rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None) #导入昨天数据
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)).filter(lambda x:x!=None) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
 #hfs -rmr /user/wrt/shopitem_tmp
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20160906 20160905
