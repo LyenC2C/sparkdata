@@ -4,7 +4,11 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-sc = SparkContext(appName="t_base_shopitem")
+
+today = sys.argv[1]
+yesterday = sys.argv[2]
+
+sc = SparkContext(appName="t_base_shopitem_b_"+today)
 
 def valid_jsontxt(content):
     # res = content
@@ -96,4 +100,4 @@ rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x,
 rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
 #hfs -rmr /user/wrt/shopitem_tmp
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20160906 20160905
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20160905');
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20160906');
