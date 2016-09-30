@@ -6,7 +6,7 @@ qiantian=$(date -d '2 days ago' +%Y%m%d)
 
 #zuotian='20160919'
 #qiantian='20160918'
-iteminfo_day = "20160825"
+iteminfo_day='20160825'
 #zuotian=$1
 #qiantian=$2
 #iteminfo_day=$3
