@@ -30,6 +30,7 @@ def f1(line):
     for item in ob:
         lv = []
         item_id = item.get("item_id","-")
+        if item_id == None or item_id == 'None': item_id = '-'
         # title = item.get("title","-")
         # picUrl = item.get("picUrl","-")
         sold = item.get("sold","-")
