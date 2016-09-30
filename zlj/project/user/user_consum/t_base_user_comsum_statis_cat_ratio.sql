@@ -5,6 +5,7 @@ create table  t_base_user_comsum_statis_cat_ratio as
 
 select
 user_id ,
+sum(price),
 sum(price_11      )/sum(price)  as ratio_11,
 sum(price_1101    )/sum(price)  as ratio_1101,
 sum(price_1201    )/sum(price)  as ratio_1201,

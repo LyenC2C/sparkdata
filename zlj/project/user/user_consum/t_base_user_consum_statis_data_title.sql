@@ -29,9 +29,8 @@ or ((title like '%安卓%解锁%' or title like '%苹果%解锁%' ) and root_cat
 or (title like '%银行%流水%' )
 then 1 else 0 end   as fraud_num
 from t_base_ec_record_dev_new
-where ds='true'
- )
- t  group by user_id
+where ds='true' and LENGTH(user_id)>0
+ )t  group by user_id
 HAVING  COUNT(1)<5000
   ;
 
