@@ -31,7 +31,7 @@ from
 select
 t1.item_id,
 t1.feed_id,
-t2.uid as user_id,
+t2.id1 as user_id,
 t1.dsn
 from
 t_wrt_znk_feedmark t1
