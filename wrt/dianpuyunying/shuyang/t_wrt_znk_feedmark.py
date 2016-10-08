@@ -12,9 +12,9 @@ sc = SparkContext(appName="t_znk_record")
 
 now_day = sys.argv[1]
 # last_day = sys.argv[2]
-y_now = int(dsn[0:4])
-m_now = int(dsn[4:6])
-d_now = int(dsn[6:8])
+y_now = int(now_day[0:4])
+m_now = int(now_day[4:6])
+d_now = int(now_day[6:8])
 now_date = datetime.datetime(y_now,m_now,d_now)
 
 def valid_jsontxt(content):
@@ -54,7 +54,7 @@ def f(line):
             else:
                 during_day = datetime.timedelta(days=9)
             buy_date = dsn_date - during_day
-            if (now_date - buy_date).days > 22:
+            if int((now_date - buy_date).days) > 22:
                 buy_day = str(buy_date)[:10].replace("-","")
                 lv.append(feedid)
                 lv.append(itemid)
