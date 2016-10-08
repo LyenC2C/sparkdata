@@ -21,7 +21,8 @@ root_cat_id      ,
 brand_id         ,
 bc_type          ,
 price            ,
-shop_id
+shop_id          ,
+ds
 from t_base_ec_record_dev_new
 where ds='true'
 ;

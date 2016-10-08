@@ -29,7 +29,7 @@ from t_pzz_tag_basic_info
 join t_base_uid_tmp  t2 on t2.ds='ttinfo' and t1.tb_id =t2.id1
 ) t1
 
-full join (select uid as tel, id1 as weibo_id from t_base_uid_tmp where ds='wid') t2 on  t1.tel=t2.uid
+-- full join (select uid as tel, id1 as weibo_id from t_base_uid_tmp where ds='wid') t2 on  t1.tel=t2.uid
 
 
 
