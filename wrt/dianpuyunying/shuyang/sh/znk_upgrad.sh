@@ -81,7 +81,7 @@ insert overwrite table t_wrt_znk_userid
 select user_id from t_wrt_znk_development_data where ds = '$now_day' group by user_id;
 EOF
 
-sh $dev_path/t_wrt_znk_othercat.sql
+sh $dev_path/t_wrt_znk_othercat.sql $now_day
 
 hfs -cat /hive/warehouse/wlservice.db/t_wrt_znk_development_data/ds=$now_day/* > $save_path/znk_development_$now_day
 
