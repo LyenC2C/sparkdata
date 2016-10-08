@@ -1,6 +1,4 @@
 -- 打通手机号用户的关注数据
-
-
 CREATE TABLE t_zlj_weibo_fri_tel AS
 
   SELECT

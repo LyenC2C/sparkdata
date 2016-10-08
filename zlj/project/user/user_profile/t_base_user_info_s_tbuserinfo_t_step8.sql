@@ -13,7 +13,7 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step8 AS
  (
  SELECT  id1 as tb_id , find_schools
  from t_zlj_qq_find_qq_school_rst t1 join
- t_base_uid_tmp t2 on t1.qq_id =t2.uid
+ t_base_uid_tmp t2 on t1.qq_id =t2.uid and t2.ds='qtb'
  )t2  on t1.tb_id=t2.tb_id
  ;
 

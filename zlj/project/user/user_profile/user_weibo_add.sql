@@ -17,6 +17,8 @@ case when LENGTH(t1.tloc )<2  then t4.tloc else t1.tloc end as tloc
 
 from t_base_user_info_s t1
 
+
+
 left join
 (
 
