@@ -1,3 +1,4 @@
+now_day=$1
 hive<<EOF
 
 use wlservice;
@@ -79,7 +80,7 @@ else "-"
 end,
 t2.dsn
 from
-(select user_id from t_wrt_znk_development_data where ds = 20160919 group by  user_id)t1
+(select user_id from t_wrt_znk_development_data where ds = '$now_day' group by  user_id)t1
 join
 (select user_id,cat_id,dsn,title from wlbase_dev.t_base_ec_record_dev_new where ds = 'true' and
 (

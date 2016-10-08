@@ -4,7 +4,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-sc = SparkContext(appName="t_base_item_info")
+sc = SparkContext(appName="t_base_shopitem")
 
 def valid_jsontxt(content):
     # res = content
@@ -16,6 +16,7 @@ def valid_jsontxt(content):
 
 def f(line):
     ss = line.strip().split("\t",4)
+    if len(ss) != 5: return [None]
     shop_id = ss[1]
     ts = ss[0]
     text = ss[4]
@@ -32,7 +33,7 @@ def f(line):
         # reservePrice = item.get("reservePrice","-")
         # if reservePrice == "": reservePrice = "-"
         salePrice = item.get("salePrice","-")
-        up_day = '20160922' #默认为今日新上架，后面会进行调整
+        up_day = "20160922"
         down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(item_id))
@@ -53,11 +54,13 @@ def quchong(x,y):
             y = ln
     return "\001".join(y)
 
-s = "/commit/shopitem_c/20160922"
+
+s = "/commit/shopitem_c/20160922" #新的shopitem从这也天开始
 rdd1_c = sc.textFile(s).flatMap(lambda x:f(x)).filter(lambda x:x != None)
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
-rdd1.saveAsTextFile('/user/wrt/shopitem_b_tmp')
+rdd1.saveAsTextFile('/user/wrt/shopitem_tmp')
 
 # hfs -rmr /user/wrt/shopitem_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_first.py
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_dev PARTITION (ds='20160721');
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_c_init.py
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='20160922');
+

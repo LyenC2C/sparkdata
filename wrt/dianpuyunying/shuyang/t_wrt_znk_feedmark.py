@@ -12,6 +12,10 @@ sc = SparkContext(appName="t_znk_record")
 
 now_day = sys.argv[1]
 # last_day = sys.argv[2]
+y_now = int(now_day[0:4])
+m_now = int(now_day[4:6])
+d_now = int(now_day[6:8])
+now_date = datetime.datetime(y_now,m_now,d_now)
 
 def valid_jsontxt(content):
     res = content
@@ -45,16 +49,18 @@ def f(line):
             feedback = value.get('feedback','-')
             if valid_jsontxt(feedback) == "评价方未及时做出评价,系统默认好评!":
                 during_day = datetime.timedelta(days=22)
-            if valid_jsontxt(feedback) == "好评！":
+            elif valid_jsontxt(feedback) == "好评！":
                 during_day = datetime.timedelta(days=11)
             else:
                 during_day = datetime.timedelta(days=9)
-            buy_date = str(dsn_date - during_day)[:10].replace("-","")
-            lv.append(feedid)
-            lv.append(itemid)
-            lv.append(usermark)
-            lv.append(buy_date)
-            result.append((feedid,lv))
+            buy_date = dsn_date - during_day
+            if int((now_date - buy_date).days) > 22:
+                buy_day = str(buy_date)[:10].replace("-","")
+                lv.append(feedid)
+                lv.append(itemid)
+                lv.append(usermark)
+                lv.append(buy_day)
+                result.append((feedid,lv))
             # result.append("\001".join([valid_jsontxt(i) for i in lv]))
         return result
     else:

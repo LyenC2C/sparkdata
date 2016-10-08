@@ -4,7 +4,11 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-sc = SparkContext(appName="t_base_shopitem")
+
+today = sys.argv[1]
+yesterday = sys.argv[2]
+
+sc = SparkContext(appName="t_base_shopitem_b_"+today)
 
 def valid_jsontxt(content):
     # res = content
@@ -26,6 +30,7 @@ def f1(line):
     for item in ob:
         lv = []
         item_id = item.get("item_id","-")
+        if item_id == None or item_id == 'None': item_id = '-'
         # title = item.get("title","-")
         # picUrl = item.get("picUrl","-")
         sold = item.get("sold","-")
@@ -95,5 +100,5 @@ rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None) #导入昨
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
 #hfs -rmr /user/wrt/shopitem_tmp
-#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20160905 20160904
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20160905');
+#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20160906 20160905
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20160906');
