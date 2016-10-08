@@ -50,7 +50,7 @@ def valid_jsontxt(content):
 
 def get_cate_dict(line):
     ss = line.strip().split("\001")
-    return (ss[0],ss[1])
+    return (valid_jsontxt(ss[0]),valid_jsontxt(ss[1]))
 
 def ps(title):
     # for ln in ["片","枚"]:
