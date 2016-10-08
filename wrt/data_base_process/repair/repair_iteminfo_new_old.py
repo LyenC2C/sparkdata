@@ -52,7 +52,7 @@ def f(line):
 # today = sys.argv[1]
 s1 = "/commit/iteminfo/201609*" #+ today
 rdd = sc.textFile(s1).map(lambda x:f(x)).filter(lambda x:x != None)
-rdd.saveAsTextFile('/user/wrt/temp/repair_iteminfo_tmp')
+rdd.saveAsTextFile('/user/wrt/temp/repair_iteminfo_09_tmp')
 
 # hfs -rmr /user/wrt/temp/repair_iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  repair_iteminfo_new_old.py
+# spark-submit  --executor-memory 10G  --driver-memory 8G  --total-executor-cores 120  repair_iteminfo_new_old.py
