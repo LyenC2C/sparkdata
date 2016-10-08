@@ -8,7 +8,7 @@ import rapidjson as json
 from pyspark import SparkContext
 now_day = sys.argv[1]
 last_day = sys.argv[2]
-sc = SparkContext(appName="t_base_item_info")
+sc = SparkContext(appName="t_base_item_info_"+now_day)
 
 
 def parse_price(price_dic):
@@ -164,7 +164,9 @@ def f2(line,brand_dict):
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) != type({}): return None
-    itemInfoModel = ob.get('itemInfoModel',"-")
+    data = ob.get('data',"-")
+    if data == "-": return None
+    itemInfoModel = data.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     item_id = itemInfoModel.get('itemId','-')
     categoryId = itemInfoModel.get('categoryId','-')
@@ -173,14 +175,14 @@ def f2(line,brand_dict):
     picsPath = itemInfoModel.get('picsPath',[])
     if picsPath == []: picurl = "-"
     else: picurl = picsPath[0]
-    trackParams = ob.get('trackParams',{})
+    trackParams = data.get('trackParams',{})
     # brandId = trackParams.get('brandId','-')
     # brand_name = brand_dict.get(brandId,"new_brand") #每次入库都要人工查看一下是否产生新的brandid。
-    props = ob.get('props',[])
+    props = data.get('props',[])
     item_count = "-"
     item_size = "-"
     item_type = "-"
-    brand_name = "-"
+    #brand_name = "-"
     brand = "-"
     for v in props:
         if valid_jsontxt('尺码') == valid_jsontxt(v.get('name','-')): item_size = v.get("value","-")
@@ -188,7 +190,7 @@ def f2(line,brand_dict):
         if valid_jsontxt('包装数量(片)') == valid_jsontxt(v.get('name','-')): item_count = v.get("value",'-')
         if valid_jsontxt('品牌') == valid_jsontxt(v.get('name','-')): brand = valid_jsontxt(v.get("value",'-'))
     if brand == '-': return None
-    brand_name = brand_dict.get(brand,brand_name)
+    brand_name = brand_dict.get(brand,brand)
     # item_info = ",".join(item_info_list)
     if not item_size in ['L','XL','M','S']: return None #大部分商品皆有尺码，没有尺码的直接舍弃掉即可
     if not item_count.isdigit():
@@ -199,8 +201,20 @@ def f2(line,brand_dict):
             item_type = "成人" + znk_type
     if not item_type in ["成人拉拉裤","成人纸尿裤","成人护理垫","成人纸尿片"]: item_type = tp(title) #统一后依然不在标准数据范围就解析title
     if item_type == "-": return None #解析失败返回“-”，那么最终舍弃这个商品
-    value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-    price = value[0]
+    #value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+    #price = value[0]
+    apiStack = data.get("apiStack",[])
+    if apiStack == []:
+        price = 0.0
+        price_zone = '-'
+    else:
+        value_json = apiStack[0].get("value")
+        value_ob = json.loads(valid_jsontxt(value_json))
+        value = parse_price(value_ob["data"]["itemInfoModel"]["priceUnits"])
+        price = value[0]
+        if int(price) > 160000:
+            price = 1.0
+        price_zone = value[1]
     if int(price) > 160000:
         price = 1.0
     result = []
@@ -213,14 +227,12 @@ def f2(line,brand_dict):
     result.append(str(price))
     result.append(str(picurl))
     return (item_id,result)
-    # return "\001".join([str(valid_jsontxt(i)) for i in result])
+    #return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def f3(line):
     ss = line.strip().split("\001")
-    ss.append(last_day)
+    ss.append(last_day) #强行加入一个字段使得和今天数据区分开
     return (ss[0],ss)
-
-
 
 def twodays(x,y):   #同一个item_id下进行groupby后的结果
     item_list = y
@@ -242,13 +254,13 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 
     # result = []
 
-s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
-# s1 = "/commit/tb_tmp/iteminfo/" + now_day
+#s = "/commit/tb_tmp/iteminfo/diapers.iteminfo.cb"
+s1 = "/commit/tb_tmp/iteminfo/" + now_day + "/*"
 s2 = "/hive/warehouse/wlservice.db/t_wrt_znk_iteminfo_new/ds=" +last_day
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_znk_brand_brandname/znk_brand_brandname"
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd_now = sc.textFile(s).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)\
-    .groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
+rdd_now_c = sc.textFile(s1).map(lambda x: f2(x, brand_dict)).filter(lambda x:x!=None)
+rdd_now = rdd_now_c.groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))
 rdd_last = sc.textFile(s2).map(lambda x:f3(x))
 rdd = rdd_now.union(rdd_last).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/temp/znk_iteminfo_tmp')
