@@ -44,16 +44,22 @@ where watch_id1<>watch_id2 ;
 
   数据做笛卡尔
 LOAD DATA  INPATH '/user/zlj/tmp/weibo_bi_fri_tmp/' OVERWRITE INTO TABLE t_base_uid  PARTITION (ds='wb_fri_linkflat')
+CREATE  TABLE  t_zlj_tmp_test1 as
+SELECT *
+FROM t_base_uid where
+ds='wb_fri_linkflat'  limit 100000000;
 
 
 create table t_zlj_visul_weibo_user_fri_bi_friends_step3  as
-SELECT  t2.uid,t2.id1 from
+SELECT  t2.uid,t2.link from
 (
-SELECT concat_ws('\001',id1,id2) as link
+SELECT concat_ws('\002',id1,id2) as link
 from t_base_weibo_user_fri_bi_friends
 
-union all
+)t1 join
+(SELECT  uid, concat_ws('\002' ,sort_array(split(id1,'\002'))[0] ,sort_array(split(id1,'\002'))[1] )  as link
+  from t_base_uid  where ds='wb_fri_linkflat'
+  )t2  on t1.link=t2.link  ;
 
-SELECT concat_ws('\001',id2,id1) as link
-from t_base_weibo_user_fri_bi_friends
-)t1 join t_base_uid t2  on t1.link=t2.id1  and t2.ds='wb_fri_linkflat' ;
+-- SELECT  uid,  sort_array(split(id1,'\002'))[0]
+--   from t_base_uid  where ds='wb_fri_linkflat' limit  10
