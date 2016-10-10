@@ -205,16 +205,14 @@ def f2(line,brand_dict):
     #price = value[0]
     apiStack = data.get("apiStack",[])
     if apiStack == []:
-        price = 0.0
-        price_zone = '-'
-    else:
-        value_json = apiStack[0].get("value")
-        value_ob = json.loads(valid_jsontxt(value_json))
-        value = parse_price(value_ob["data"]["itemInfoModel"]["priceUnits"])
-        price = value[0]
-        if int(price) > 160000:
-            price = 1.0
-        price_zone = value[1]
+        # price = 1.0
+        return None
+    # else:
+    value_json = apiStack[0].get("value")
+    if value_json == "": return None
+    value_ob = json.loads(valid_jsontxt(value_json))
+    value = parse_price(value_ob["data"]["itemInfoModel"]["priceUnits"])
+    price = value[0]
     if int(price) > 160000:
         price = 1.0
     result = []
