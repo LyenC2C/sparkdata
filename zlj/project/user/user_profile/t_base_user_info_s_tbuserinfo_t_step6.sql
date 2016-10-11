@@ -29,7 +29,7 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
         verified,
         tb_id
       FROM
-        t_base_weibo_user t1 JOIN
+        t_base_weibo_user t1 RIGHT JOIN
         (
           SELECT
             t1.id1 AS weiboid,
@@ -44,6 +44,20 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
   t_base_user_info_s_tbuserinfo_t_step5 t4
 
 ON t3.tb_id=t4.tb_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 SELECT count(1) from t_base_user_info_s_tbuserinfo_t_step6 where weiboid is not null;
