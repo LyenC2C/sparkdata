@@ -36,3 +36,8 @@ def f(x):
 sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_visul_weibo_user_fri_bi_friends_step1/')\
     .repartition(200).map(lambda x:f(x)).filter(lambda x:x!=None).flatMap(lambda x:x)\
     .saveAsTextFile('/user/zlj/tmp/weibo_bi_fri_tmp')
+
+
+sc.textFile('/user/zlj/tmp/t_base_weibo_user_fri_tel')\
+    .repartition(200).map(lambda x:f(x)).filter(lambda x:x!=None).flatMap(lambda x:x)\
+    .saveAsTextFile('/user/zlj/tmp/weibo_bi_fri_tel_tmp')

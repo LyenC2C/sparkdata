@@ -57,9 +57,29 @@ SELECT concat_ws('\002',id1,id2) as link
 from t_base_weibo_user_fri_bi_friends
 
 )t1 join
-(SELECT  uid, concat_ws('\002' ,sort_array(split(id1,'\002'))[0] ,sort_array(split(id1,'\002'))[1] )  as link
+(
+SELECT  uid, concat_ws('\002' ,sort_array(split(id1,'\002'))[0] ,sort_array(split(id1,'\002'))[1] )  as link
   from t_base_uid  where ds='wb_fri_linkflat'
   )t2  on t1.link=t2.link  ;
 
 -- SELECT  uid,  sort_array(split(id1,'\002'))[0]
 --   from t_base_uid  where ds='wb_fri_linkflat' limit  10
+
+
+drop table t_zlj_tmp_wb_fri_linkflat;
+  create table t_zlj_tmp_wb_fri_linkflat as
+  SELECT  hashvalue
+  from
+  (
+  SELECT concat_ws('',substr(id1,1,4 ),substr(id2,1,4 ))  hashvalue  from t_base_weibo_user_fri_bi_friends
+  )t group by hashvalue ;
+
+
+
+  SELECT /*+ mapjoin(t2)*/ t2.uid , concat_ws('\002',link1 ,link2) as link  from t_zlj_tmp_wb_fri_linkflat t1
+  join
+  (
+  SELECT  uid, sort_array(split(id1,'\002'))[0] link1 ,sort_array(split(id1,'\002'))[1] link2
+  from t_base_uid  where ds='wb_fri_linkflat'
+  where sort_array(split(id1,'\002'))[0]<>sort_array(split(id1,'\002'))[1]
+  )t2 on t1.hashvalue=concat_ws('',substr(link1,1,4 ),substr(link2,1,4 ))

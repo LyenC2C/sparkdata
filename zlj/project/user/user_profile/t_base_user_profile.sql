@@ -69,9 +69,11 @@ case when weibo_created_at      is null or  length(weibo_created_at     )<1  the
 case when weibo_location        is null or  length(weibo_location       )<1  then '-'  else  weibo_location         end as weibo_location         ,
 case when weibo_verified        is null or  length(weibo_verified       )<1  then '-'  else  weibo_verified         end as weibo_verified         ,
 case when weibo_colleges        is null or  length(weibo_colleges       )<1  then '-'  else  weibo_colleges         end as weibo_colleges         ,
-case when weibo_company  	    is null or  length(weibo_company       )<1  then '-'  else  weibo_company         end as weibo_company
+case when weibo_company  	    is null or  length(weibo_company       )<1  then '-'  else  weibo_company         end as weibo_company ,
+case when   58_tel  	    is null or  length(58_tel       )<1  then '-'  else  58_tel         end as 58_tel ,
+case when 58_nickname  	    is null or  length(58_nickname       )<1  then '-'  else  58_nickname         end as 58_nickname
 from
-t_base_user_info_s_tbuserinfo_t_step8 ;
+t_base_user_info_s_tbuserinfo_t_step9 ;
 
 
 
