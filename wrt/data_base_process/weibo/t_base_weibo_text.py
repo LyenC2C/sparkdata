@@ -92,4 +92,4 @@ rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f(x)).filter(lambda x:
 rdd_c.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
+# spark-submit  --executor-memory 6G --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
