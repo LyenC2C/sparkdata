@@ -39,7 +39,7 @@ join t_zlj_weibo_pagerank_tel t2 on t1.id =t2.uid
 )   t2 on  t1.uid=t2.follow_id ;
 
 
--- 聚合followid, 产出结果
+-- 聚合followid, 产出结果  65814855
 create table t_zlj_visul_weibo_link_pagerank_follows as
 
 select weibo_id ,weibo_pagerank ,

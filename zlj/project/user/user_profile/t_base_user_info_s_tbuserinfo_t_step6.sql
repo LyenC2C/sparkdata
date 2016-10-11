@@ -18,7 +18,7 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
   FROM
     (
       SELECT
-        id AS weiboid,
+        weiboid,
         screen_name,
         gender,
         followers_count,
@@ -43,8 +43,25 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
     JOIN
   t_base_user_info_s_tbuserinfo_t_step5 t4
 
-ON t3.tb_id=t4.tb_id;
+ON t3.tb_id=t4.tb_id
+;
 
+
+
+
+
+SELECT
+count(1)
+  from
+t_base_weibo_user t1 RIGHT JOIN
+        (
+          SELECT
+            t1.id1 AS weiboid,
+            t2.id1 AS tb_id
+          from
+          t_base_uid_tmp t1 JOIN t_base_uid_tmp t2 ON t1.ds='wid' AND t2.ds='ttinfo' AND t1.uid=t2.uid
+          group by t1.id1,t2.id1
+        ) t2 ON t1.idstr = t2.weiboid ;
 
 
 
