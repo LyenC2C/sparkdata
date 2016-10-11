@@ -42,11 +42,11 @@ def f(line):
         geo = statuse.get('geo','-')
         if geo == None: geo = "-"
         reposts_count = statuse.get('reposts_count','-')
-        comments_count = status.get('comments_count','-')
-        attitudes_count = status.get('attitudes_count','-')
+        comments_count = statuse.get('comments_count','-')
+        attitudes_count = statuse.get('attitudes_count','-')
         weibo_type = statuse.get('visible',{}).get('type','-')#type取值，0：普通微博，1：私密微博，3：指定分组微博，4：密友微博；
         isLongText = statuse.get('isLongText',False)
-        retweeted_status = status.get('retweeted_status',"-")
+        retweeted_status = statuse.get('retweeted_status',"-")
         if retweeted_status != "-":
             ori_uid = retweeted_status.get("uid","-")
             ori_mid = retweeted_status.get("mid",'-')
