@@ -26,10 +26,9 @@ def f(line):
     ob = json.loads(txt)
     if type(ob) != type({}): return None
     statuses = ob.get("statuses",[])
-    # result = []
-    result = ""
+    result = []
     for statuse in statuses:
-        result += "1"
+        result.append("1")
         # lv = []
         # user_id = statuse.get('uid','-')
     #     mid = statquse.get('mid',"-")
@@ -90,10 +89,10 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-sc.textFile("/commit/weibo/tmp").map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_text')
-# rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f(x)).filter(lambda x:x != None)
+# sc.textFile("/commit/weibo/tmp").map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_text')
+rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f(x)).filter(lambda x:x != None)
 # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-# rdd_c.saveAsTextFile('/user/wrt/temp/weibo_text')
+rdd_c.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
 # spark-submit  --executor-memory 6G --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
