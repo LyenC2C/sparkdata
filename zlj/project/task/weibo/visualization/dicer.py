@@ -22,6 +22,7 @@ sc = SparkContext(appName="user_cattags", conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
+
 import itertools
 def f(x):
     id,ids=x.split('\001')
