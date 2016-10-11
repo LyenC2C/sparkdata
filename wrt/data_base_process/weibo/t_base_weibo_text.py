@@ -16,7 +16,7 @@ def valid_jsontxt(content):
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 
-def f(x):
+def f(line):
     ss = line.strip().split("\t",3)
     if len(ss) != 4: return None
     # user_id = ss[1]
