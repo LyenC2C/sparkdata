@@ -26,9 +26,8 @@ def f(line):
     ob = json.loads(txt)
     if type(ob) != type({}): return None
     statuses = ob.get("statuses",[])
-    result = []
-    for statuse in statuses:
-        result.append("1")
+    result = ["1","2"]
+    # for statuse in statuses:
         # lv = []
         # user_id = statuse.get('uid','-')
     #     mid = statquse.get('mid',"-")
