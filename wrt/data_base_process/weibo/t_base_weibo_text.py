@@ -33,7 +33,7 @@ def f(line):
         mid = statuse.get('mid',"-")
         created_at = statuse.get('created_at','-')
         text = statuse.get('text',"-")
-        source = statuse.get('source',"-")
+        source = valid_jsontxt(statuse.get('source',"-"))
         if source == "": source = "-"
         if source != "-":
             source = pq(source).text()
