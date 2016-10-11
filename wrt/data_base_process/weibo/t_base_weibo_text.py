@@ -84,7 +84,7 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f1(x)).filter(lambda x:x != None)
+rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f(x)).filter(lambda x:x != None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/weibo_text')
 
