@@ -61,7 +61,8 @@ t_base_weibo_user t1 RIGHT JOIN
           from
           t_base_uid_tmp t1 JOIN t_base_uid_tmp t2 ON t1.ds='wid' AND t2.ds='ttinfo' AND t1.uid=t2.uid
           group by t1.id1,t2.id1
-        ) t2 ON t1.idstr = t2.weiboid ;
+        ) t2 ON t1.idstr = t2.weiboid
+;
 
 
 
@@ -77,7 +78,7 @@ t_base_weibo_user t1 RIGHT JOIN
 
 
 
-SELECT count(1) from t_base_user_info_s_tbuserinfo_t_step6 where weiboid is not null;
+SELECT count(1) from t_base_user_info_s_tbuserinfo_t_step6 where weibo_id is not null;
 
 
 
