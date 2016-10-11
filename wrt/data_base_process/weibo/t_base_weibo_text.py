@@ -34,6 +34,7 @@ def f(line):
         created_at = statuse.get('created_at','-')
         text = statuse.get('text',"-")
         source = statuse.get('source',"-")
+        if source == "": source = "-"
         if source != "-":
             source = pq(source).text()
         favorited = statuse.get('favorited',False)
