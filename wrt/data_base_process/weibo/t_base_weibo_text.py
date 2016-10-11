@@ -23,7 +23,7 @@ def f(line):
     ts = ss[0]
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
-    statuses = ob.get("statuses",)
+    statuses = ob.get("statuses",[])
     result = []
     for statuse in statuses:
         lv = []
