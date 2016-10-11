@@ -27,9 +27,9 @@ def f(line):
     if type(ob) != type({}): return None
     statuses = ob.get("statuses",[])
     result = []
-    # for statuse in statuses:
-    #     lv = []
-    #     user_id = statuse.get('id','-')
+    for statuse in statuses:
+        # lv = []
+        user_id = statuse.get('id','-')
     #     mid = statuse.get('mid',"-")
     #     created_at = statuse.get('created_at','-')
     #     text = statuse.get('text',"-")
@@ -70,7 +70,8 @@ def f(line):
     #     lv.append(ts)
     #     result.append((mid,lv))
     #     result.append(lv)
-    return ts
+        result.append(user_id)
+    return result
 
 
 def quchong(x, y):
@@ -87,10 +88,10 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-sc.textFile("/commit/weibo/tmp").map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_text')
-# rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f(x)).filter(lambda x:x != None)
+# sc.textFile("/commit/weibo/tmp").map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile('/user/wrt/temp/weibo_text')
+rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f(x)).filter(lambda x:x != None)
 # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-# rdd_c.saveAsTextFile('/user/wrt/temp/weibo_text')
+rdd_c.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
 # spark-submit  --executor-memory 6G --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
