@@ -22,7 +22,7 @@ def f(line):
     # user_id = ss[1]
     ts = ss[0]
     txt = valid_jsontxt(ss[3])
-    if txt != "": return [None]
+    if txt == "": return [None]
     ob = json.loads(txt)
     if type(ob) != type({}): return [None]
     statuses = ob.get("statuses",[])
