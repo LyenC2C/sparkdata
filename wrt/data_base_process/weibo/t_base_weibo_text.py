@@ -88,3 +88,6 @@ sc = SparkContext(appName="weibo_peixun")
 rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f1(x)).filter(lambda x:x != None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/weibo_text')
+
+#hfs -rmr /user/wrt/temp/weibo_text
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
