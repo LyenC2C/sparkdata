@@ -38,7 +38,8 @@ FROM
           id3 weibo_id,
           id4 qqweibo,
           id5 tb_id,
-          id6 email FROM t_base_uid_tmp WHERE ds ='link' and   uid   rlike   '^1(3[0-9]|4[57]|5[0-35-9]|7[01678]|8[0-9])\\d{8}'
+          id6 email FROM t_base_uid_tmp
+          WHERE ds ='link' and   uid   rlike   '^1(3[0-9]|4[57]|5[0-35-9]|7[01678]|8[0-9])\\d{8}'
       ) t1
 
       JOIN
@@ -83,30 +84,47 @@ WHERE rank = 1 ;
 
 
 
-
+Drop table t_zlj_credit_valid_api1_step2 ;
 create table t_zlj_credit_valid_api1_step2  as
 
 SELECT  t1.*
 ,
-weibo_created_at  as weibo_reg_time ,
-  xianyu_birthday as xianyu_info
+  regtime as tb_regtime ,
+  tb_nick,
+weibo_created_at  as weibo_regtime ,
+  weibo_screen_name  as weibo_nick_name,
+  xianyu_birthday as xianyu_info ,
+  qq_name,
+  58_tel ,
+  58_nickname
 from t_zlj_credit_valid_api1_step1  t1 join t_base_user_profile t2 on
   t1.tb_id=t2.tb_id ;
 
 
+DROP TABLE  t_zlj_credit_valid_api1 ;
 create table t_zlj_credit_valid_api1 as
   SELECT
-    case when tb_id  is not null then 1 else -1 end  as tb_id ,
-    case when tb_regyear  is not null then 1 else -1 end  as tb_regyear ,
-    case when xianyu_info  is not null then 1 else -1 end  as tb_xianyu ,
-    case when weibo_id  is not null then 1 else -1 end  as snwb_id ,
-    case when weibo_reg_time  is not null then 1 else -1 end  as snwb_reg_time ,
-    case when qqid  is not null then 1 else -1 end  as qq_id ,
-    case when email  is not null then 1 else -1 end  as email
+    tb_id,
+    case when tb_id  is not null and tb_id<>'-' then 1 else -1 end  as tb_flag ,
+    tb_nick,
+    tb_regyear ,
+    case when xianyu_info  is not null and xianyu_info<>'-' then 1 else -1 end  as tb_xianyu_flag ,
+    case when weibo_id  is not null and weibo_id<>'-' then 1 else -1 end  as snwb_id_flag ,
+    weibo_nick_name ,
+    weibo_regtime ,
+
+    case when qqid  is not null and qqid<>'-' then 1 else -1 end  as qq_flag,
+    qqid ,
+    case when email  is not null and email<>'-' then 1 else -1 end  as email_flag ,
+    email,
+    case when 58_tel  is not null and 58_tel<>'-' then 1 else -1 end  as 58_flag,
+    58_nickname
 
     from
     t_zlj_credit_valid_api1_step2
     ;
+
+
 tel                     string       手机号
 qqid                    string       qq是否注册
 real_name               string
@@ -118,3 +136,4 @@ tb_score                int
 tb_regyear              double        淘宝注册时间
 weibo_reg_time          string        微博注册时间
 xianyu_info             int           闲鱼是否开通
+58_tel                                58账号是否开通
