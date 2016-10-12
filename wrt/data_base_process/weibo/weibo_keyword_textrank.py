@@ -28,8 +28,8 @@ def valid_jsontxt(content):
 
 def f(line):
     ss = line.strip().split("\001")
-    # text = pattern5.sub('',pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3]))))))
-    text = pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3])))))
+    text = pattern5.sub('',pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3]))))))
+    # text = pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3])))))
     text = text.split("//")[0]
     if text == "" or text == "转发微博": return None
     return (ss[1],text)
