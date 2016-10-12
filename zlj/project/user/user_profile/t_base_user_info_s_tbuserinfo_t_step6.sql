@@ -50,6 +50,11 @@ ON t3.tb_id=t4.tb_id
 
 
 
+
+
+
+
+
 SELECT
 count(1)
   from
