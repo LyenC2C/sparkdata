@@ -20,6 +20,68 @@ LOAD DATA  INPATH '/user/zlj/tmp/t_base_weibo_user_fri_tel_table' OVERWRITE INTO
 t_zlj_base_weibo_user_fri_followid_tel PARTITION (ds='20161010')
 
 
+
+create table t_zlj_base_weibo_user_fri_followid_tel_bi_friends as
+SELECT
+id1, id2 ,COUNT(1) as num
+from
+(
+select
+sort_array(array(id,fid))[0]  as id1 ,sort_array(array(id,fid))[1] as id2
+from t_zlj_base_weibo_user_fri_followid_tel lateral view explode(split(ids,',')) tt as fid
+)t group by id1,id2  HAVING COUNT(1)>1
+;
+
+-- 58970775
+CREATE TABLE t_zlj_visul_weibo_user_fri_followid_tel_bi_friends AS
+  SELECT
+    weibo_id,
+    follow_ids
+  FROM t_base_uid_tmp t2
+    JOIN
+    (
+      SELECT
+        weibo1                              AS weibo_id,
+        concat_ws(',', collect_set(weibo2)) AS follow_ids
+      FROM
+        (
+          SELECT
+            id1 weibo1,
+            id2 weibo2
+            from
+            t_base_weibo_user_fri_bi_friends
+          UNION ALL
+          SELECT
+            id2 weibo1,
+            id2 weibo2
+            from
+            t_base_weibo_user_fri_bi_friends
+        )t
+      GROUP BY weibo1
+    ) t1
+      ON t1.weibo_id = t2.id1 AND t2.ds = 'wid';
+
+
+create table t_zlj_visul_tel_bi_friends_link_pagerank as
+SELECT
+id ,weibo_pagerank  ,follow_id ,pagerank follow_pagerank
+from
+t_zlj_weibo_pagerank_tel   t1
+join
+(
+SELECT  id ,weibo_pagerank ,follow_id
+from
+(
+SELECT  weibo_id id ,pagerank weibo_pagerank , follow_ids ids  from
+  t_zlj_visul_weibo_user_fri_followid_tel_bi_friends t1
+join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id =t2.uid
+ )t
+ lateral view explode(split(ids,',')) tt as follow_id
+)   t2 on  t1.uid=t2.follow_id ;
+;
+
+
+
 -- 关联pagerank
 create table t_zlj_visul_weibo_link_pagerank as
 SELECT
@@ -68,10 +130,17 @@ t3.tags  ,
  follow_ids
 from
 (
+
+
+(
 SELECT
  weibo_id ,weibo_pagerank ,concat_ws(' ',collect_set( follow_id) ) as follow_ids
  from t_zlj_visul_weibo_link_pagerank_filter
  group  by weibo_id ,weibo_pagerank
+)t1 RIGHT join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id=t2.uid
+
+
+
  )t1
  join t_base_weibo_user t2 on t1.weibo_id=t2.idstr
  left join t_base_weibo_usertag on t1.weibo_id=t3.id
