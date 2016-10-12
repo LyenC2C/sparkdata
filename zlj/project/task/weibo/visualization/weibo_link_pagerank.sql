@@ -16,9 +16,11 @@ t_base_weibo_user_fri_bi_friends
 
 create table t_zlj_base_weibo_user_fri_followid_tel like t_base_weibo_user_fri;
 
-LOAD DATA  INPATH '/user/zlj/tmp/t_base_weibo_user_fri_tel_table' OVERWRITE INTO TABLE
-t_zlj_base_weibo_user_fri_followid_tel PARTITION (ds='20161010')
 
+LOAD DATA  INPATH '/user/zlj/tmp/t_base_weibo_user_fri_tel_table' OVERWRITE INTO TABLE
+t_zlj_base_weibo_user_fri_followid_tel PARTITION (ds='20161010') ;
+
+-- 100603551
 
 
 create table t_zlj_base_weibo_user_fri_followid_tel_bi_friends as
@@ -32,6 +34,8 @@ from t_zlj_base_weibo_user_fri_followid_tel lateral view explode(split(ids,','))
 )t group by id1,id2  HAVING COUNT(1)>1
 ;
 
+
+-- 互相为好友的人 去重关联手机号
 -- 58970775
 CREATE TABLE t_zlj_visul_weibo_user_fri_followid_tel_bi_friends AS
   SELECT
@@ -62,23 +66,39 @@ CREATE TABLE t_zlj_visul_weibo_user_fri_followid_tel_bi_friends AS
       ON t1.weibo_id = t2.id1 AND t2.ds = 'wid';
 
 
-create table t_zlj_visul_tel_bi_friends_link_pagerank as
-SELECT
-id ,weibo_pagerank  ,follow_id ,pagerank follow_pagerank
-from
-t_zlj_weibo_pagerank_tel   t1
-join
-(
-SELECT  id ,weibo_pagerank ,follow_id
-from
-(
-SELECT  weibo_id id ,pagerank weibo_pagerank , follow_ids ids  from
+
+-- 48992604
+DROP table t_zlj_visul_tel_bi_friends_link_rs;
+create table t_zlj_visul_tel_bi_friends_link_rs as
+ SELECT
+t1.weibo_id, weibo_pagerank,
+t2.profile_image_url,
+t2.screen_name,
+t2.location ,
+t3.tags  ,
+ follow_ids
+  from
+ (
+ SELECT  weibo_id  ,pagerank weibo_pagerank , follow_ids   from
   t_zlj_visul_weibo_user_fri_followid_tel_bi_friends t1
 join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id =t2.uid
- )t
- lateral view explode(split(ids,',')) tt as follow_id
-)   t2 on  t1.uid=t2.follow_id ;
-;
+ )t1
+   join t_base_weibo_user t2 on t1.weibo_id=t2.idstr
+ left join (SELECT  cast(id as string) id  ,tags from t_base_weibo_usertag) t3  on t1.weibo_id= t3.id
+  ;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -99,6 +119,8 @@ join t_zlj_weibo_pagerank_tel t2 on t1.id =t2.uid
  )t
  lateral view explode(split(ids,',')) tt as follow_id
 )   t2 on  t1.uid=t2.follow_id ;
+
+
 
 -- 过滤掉followid 不再主id里面
 CREATE TABLE t_zlj_visul_weibo_link_pagerank_filter AS
