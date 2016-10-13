@@ -39,7 +39,7 @@ def f(line):
 def weibo_juhe(x,y):
     text_list = y
     user_weibo = "\n".join([valid_jsontxt(i) for i in text_list])
-    res = ja.textrank(text, topK=20, withWeight=True,
+    res = ja.textrank(user_weibo, topK=20, withWeight=True,
                                  allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
     return x + "\001" + "\t".join([valid_jsontxt(i) for i in res])
     # return user_weibo
