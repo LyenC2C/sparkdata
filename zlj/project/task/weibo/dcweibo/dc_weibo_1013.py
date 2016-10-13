@@ -129,22 +129,21 @@ def try_fun1(line):
 def fun(line):
     ob = json.loads(valid_jsontxt(line))
     if type(ob)!=type({}):return None
-
-    idstr      =  ob.ge('tidstr','')
-    followers_count      =  ob.ge('tfollowers_count','')
-    friends_count      =  ob.ge('tfriends_count','')
-    pagefriends_count      =  ob.ge('tpagefriends_count','')
-    statuses_count      =  ob.ge('tstatuses_count','')
-    favourites_count      =  ob.ge('tfavourites_count','')
-    created_at      =  ob.ge('tcreated_at','')
-    verified      =  ob.ge('tverified','')
+    idstr      =  ob.get('idstr','')
+    followers_count      =  ob.get('followers_count','')
+    friends_count      =  ob.get('friends_count','')
+    pagefriends_count      =  ob.get('pagefriends_count','')
+    statuses_count      =  ob.get('statuses_count','')
+    favourites_count      =  ob.get('favourites_count','')
+    created_at      =  ob.get('created_at','')
+    verified      =  ob.get('verified','')
     statusob=ob['status']
-    status_created_at      =  statusob.ge('tstatus_created_at','')
-    status_idstr      =  statusob.ge('tstatus_idstr','')
-    status_text      =  statusob.ge('tstatus_text','')
-    status_reposts_count      =  statusob.ge('tstatus_reposts_count','')
-    status_comments_count      =  statusob.ge('tstatus_comments_count','')
-    status_attitudes_count      =  statusob.ge('tstatus_attitudes_count','')
+    status_created_at      =  statusob.get('created_at','')
+    status_idstr      =  statusob.get('idstr','')
+    status_text      =  statusob.get('text','')
+    status_reposts_count      =  statusob.get('reposts_count','')
+    status_comments_count      =  statusob.get('comments_count','')
+    status_attitudes_count      =  statusob.get('attitudes_count','')
     return [
         idstr       ,
         followers_count      ,
@@ -161,4 +160,9 @@ def fun(line):
         status_comments_count ,
         status_attitudes_count]
 
-sc.textFile('/commit/weibo_dc/userinfo_800w_20161013.json').map(lambda x:fun(x)).flatMap(lambda x:x!=None)
+def fun_try(line):
+    try:
+        return fun(line)
+    except:return None
+sc.textFile('/commit/weibo_dc/userinfo_800w_20161013.json').map(lambda x:fun_try(x)).filter(lambda x:x!=None)\
+    .map(lambda x:'\001'.join([str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/dc_800w_userinfo_800w_20161013.data')
