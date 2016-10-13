@@ -3,8 +3,10 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-import jieba
+# import jieba
 import re
+import jieba.analyse as ja
+
 
 sc = SparkContext(appName="weibo_keyword_textrank")
 
@@ -37,7 +39,10 @@ def f(line):
 def weibo_juhe(x,y):
     text_list = y
     user_weibo = "\n".join([valid_jsontxt(i) for i in text_list])
-    return user_weibo
+    res = ja.textrank(text, topK=20, withWeight=True,
+                                 allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
+    return x + "\001" + "\t".join([valid_jsontxt(i) for i in res])
+    # return user_weibo
 
 
 
