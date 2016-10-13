@@ -43,8 +43,8 @@ def weibo_juhe(x,y):
                                  allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
     words = []
     for ln in res:
-        words.append(ln[0])
-    return x + "\001" + "\t".join([valid_jsontxt(i) for i in words])
+        words.append(valid_jsontxt(ln[0]))
+    return x + "\001" + "\t".join(words)
     # return user_weibo
 
 
