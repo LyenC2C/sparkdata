@@ -31,6 +31,8 @@ join t_base_uid t2   where t2.ds='tb-qqwb'  and t3.id=t2.id1
 
 
 
+
+
 -- select COUNT(1) from
 -- (
 --
