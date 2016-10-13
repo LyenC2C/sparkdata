@@ -44,7 +44,7 @@ def weibo_juhe(x,y):
     words = []
     for ln in res:
         words.append(valid_jsontxt(ln[0]))
-    return x + "\001" + "\t".join(words)
+    return valid_jsontxt(x) + "\001" + "\t".join(words)
     # return user_weibo
 
 
