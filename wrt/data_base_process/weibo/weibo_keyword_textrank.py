@@ -54,7 +54,7 @@ def weibo_juhe(x,y):
 rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161012")
 rdd1 = rdd.map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe(x, y))
-rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank_test')
+rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
 
 # hfs -rmr  /user/wrt/temp/weibo_keyword_textrank
 # spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 60 weibo_keyword_textrank.py
