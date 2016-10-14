@@ -46,4 +46,4 @@ for line in sys.stdin:
     tagls = parse_360(line)
     for each in tagls:
         #print json.dumps(each,ensure_ascii=False).encode("utf-8")
-        print "\001".join(each)
+        print "\001".join(each).encode("utf-8")
