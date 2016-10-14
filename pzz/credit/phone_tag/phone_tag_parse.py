@@ -36,7 +36,7 @@ def parse_360(line):
             }
             #print json.dumps(obj,ensure_ascii=False).encode("utf-8")
             #objls.append(obj)
-            objls.append([obj["tel"],obj["province"],obj["provider"],obj["tag"],str(obj["num"]),obj["platform"],obj["date"]])
+            objls.append([obj["tel"],obj["province"],obj["city"],obj["provider"],obj["tag"],str(obj["num"]),obj["platform"],obj["date"]])
         return objls
 
 
