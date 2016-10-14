@@ -35,7 +35,8 @@ def parse_360(line):
                 "date":date
             }
             #print json.dumps(obj,ensure_ascii=False).encode("utf-8")
-            objls.append(obj)
+            #objls.append(obj)
+            objls.append([obj["tel"],obj["province"],obj["city"],obj["provider"],obj["tag"],str(obj["num"]),obj["platform"],obj["date"]])
         return objls
 
 
@@ -44,4 +45,5 @@ def parse_360(line):
 for line in sys.stdin:
     tagls = parse_360(line)
     for each in tagls:
-        print json.dumps(each,ensure_ascii=False).encode("utf-8")
+        #print json.dumps(each,ensure_ascii=False).encode("utf-8")
+        print "\001".join(each).encode("utf-8")
