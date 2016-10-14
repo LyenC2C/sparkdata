@@ -30,10 +30,12 @@ def valid_jsontxt(content):
 
 def f(line):
     ss = line.strip().split("\001")
+    #微博清洗，去掉链接，@的人，话题以及表情
     text = pattern5.sub('',pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3]))))))
     # text = pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3])))))
-    text = text.split("//")[0]
-    if text == "" or text == "转发微博": return None
+    text = text.split("//")[0]  #去掉转发
+    text = text.split("@")[0]   #将刚才未清洗干净的@去掉
+    if text.strip() == "" or text.stip() == "转发微博": return None
     return (ss[1],text)
 
 def weibo_juhe(x,y):
@@ -49,7 +51,7 @@ def weibo_juhe(x,y):
 
 
 
-rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161012/part-00000")
+rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161012")
 rdd1 = rdd.map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe(x, y))
 rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank_test')
