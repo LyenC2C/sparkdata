@@ -36,8 +36,7 @@ t2.shop_num ,
 t3.tie_num
 from
 (
-SELECT  t1.*
-,
+SELECT  t1.*,
   regtime as tb_regtime ,
   tb_nick,
   weibo_created_at  as weibo_regtime ,
