@@ -30,26 +30,31 @@ def valid_jsontxt(content):
 
 def f(line):
     ss = line.strip().split("\001")
+    #微博清洗，去掉链接，@的人，话题以及表情
     text = pattern5.sub('',pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3]))))))
     # text = pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3])))))
-    text = text.split("//")[0]
-    if text == "" or text == "转发微博": return None
+    text = text.split("//")[0]  #去掉转发
+    text = text.split("@")[0]   #将刚才未清洗干净的@去掉
+    if text.strip() == "" or text.strip() == "转发微博": return None
     return (ss[1],text)
 
 def weibo_juhe(x,y):
     text_list = y
     user_weibo = "\n".join([valid_jsontxt(i) for i in text_list])
     res = ja.textrank(user_weibo, topK=20, withWeight=True,
-                                 allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
-    return x + "\001" + "\t".join([valid_jsontxt(i) for i in res])
+                             allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
+    words = []
+    for ln in res:
+        words.append(valid_jsontxt(ln[0]) + "_" + valid_jsontxt(ln[1]))
+    return valid_jsontxt(x) + "\001" + "\t".join(words)
     # return user_weibo
 
 
 
-rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161012/part-00000")
+rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161012")
 rdd1 = rdd.map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe(x, y))
 rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
 
-# hfs -rmr /user/wrt/temp/weibo_keyword_textrank
-# spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 weibo_keyword_textrank.py
+# hfs -rmr  /user/wrt/temp/weibo_keyword_textrank
+# spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 60 weibo_keyword_textrank.py

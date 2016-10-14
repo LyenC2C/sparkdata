@@ -29,7 +29,7 @@ def f(line):
     result = []
     for statuse in statuses:
         lv = []
-        user_id = statuse.get('id','-')
+        user_id = statuse.get('uid','-')
         mid = statuse.get('mid',"-")
         created_at = statuse.get('created_at','-')
         text = statuse.get('text',"-")

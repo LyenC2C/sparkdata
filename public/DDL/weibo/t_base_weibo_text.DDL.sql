@@ -17,7 +17,7 @@ retweeted_status string comment '转发的原微博id,userid和微博内容（�
 ts string comment '采集时间戳'
 
 )
-COMMENT '微博具体内容'
+COMMENT '微博博文内容'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
