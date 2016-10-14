@@ -32,5 +32,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
 
 
-
+create table t_zlj_tmp_crawler_userid_weiboid as
+idstr,status_idstr
+SELECT from t_zlj_dc_800wuser_weibo_info ;
 LOAD DATA  INPATH '/user/zlj/tmp/dc_800w_userinfo_800w_20161013.data' OVERWRITE INTO TABLE t_zlj_dc_800wuser_weibo_info PARTITION (ds='20151023')
