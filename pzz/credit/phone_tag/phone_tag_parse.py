@@ -5,6 +5,8 @@
 
 import json,sys,datetime
 
+date = sys.argv[1]
+
 def parse_360(line):
     j = json.loads(line.strip())
     if j.has_key("errno") and j["errno"] == 0:
@@ -29,11 +31,14 @@ def parse_360(line):
                 "provider" : provider,
                 "tag" : lable["label"],
                 "num" : lable["labelNum"],
-                "platform":"360"
+                "platform":"360",
+                "date":date
             }
             #print json.dumps(obj,ensure_ascii=False).encode("utf-8")
             objls.append(obj)
         return objls
+
+
 
 
 for line in sys.stdin:
