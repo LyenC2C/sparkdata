@@ -40,10 +40,10 @@ def weibo_juhe(x,y):
     text_list = y
     user_weibo = "\n".join([valid_jsontxt(i) for i in text_list])
     res = ja.textrank(user_weibo, topK=20, withWeight=True,
-                                 allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
+                             allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
     words = []
     for ln in res:
-        words.append(valid_jsontxt(ln[0]))
+        words.append(valid_jsontxt(ln[0]) + "_" + valid_jsontxt(ln[1]))
     return valid_jsontxt(x) + "\001" + "\t".join(words)
     # return user_weibo
 
