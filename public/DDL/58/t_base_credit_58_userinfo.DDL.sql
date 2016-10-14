@@ -13,7 +13,3 @@ stored as textfile ;
 -- LOAD DATA  INPATH '/commit/t_base_ec_dim' OVERWRITE INTO TABLE t_base_ec_dim PARTITION (ds='20151023') ;
 
 
-
-  INSERT OVERWRITE table t_base_credit_58_userinfo PARTITION(ds='20160928')
-  SELECT decrypted_tel,nickname,uid ,uname
-  from t_base_credit_58_info group by decrypted_tel,nickname,uid ,uname ;

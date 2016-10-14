@@ -26,6 +26,6 @@ def f(x):
     name = l[0][0]
     return qq + "\t" + name
 s = "/user/zlj/nlp/oper_group_info_name"
-rdd = sc.textFile(s).map(lambda x:f(x)).saveAsTextFile('/user/wrt/temp/qq_real_name')
+rdd = sc.textFile(s).map(lambda x:f(x)).saveAsTextFile('/user/wrt/temp/qq_real_name2')
 
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 qq_qun_realname.py

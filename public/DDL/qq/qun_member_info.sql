@@ -1,12 +1,12 @@
 CREATE  TABLE  if not exists qun_member_info (
-qq_id  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-field1  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-field2  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-field3  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-qun_id  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-qqname  String     COMMENT 'Ò»¼¶ÀàÄ¿id '
+qq_id  String     COMMENT 'qq id',
+field1  String     COMMENT 'å¹´é¾„ ',
+field2  String     COMMENT 'æ€§åˆ«  0ç”· 1å¥³',
+field3  String     COMMENT 'Ò»ï¿½ï¿½ï¿½ï¿½Ä¿id ',
+qun_id  String     COMMENT 'Ò»ï¿½ï¿½ï¿½ï¿½Ä¿id ',
+qqname  String     COMMENT 'Ò»ï¿½ï¿½ï¿½ï¿½Ä¿id '
 )
-COMMENT 'qq ÈºÓÃ»§Êý¾Ý'
+COMMENT 'qq Èºï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
