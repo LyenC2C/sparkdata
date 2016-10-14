@@ -86,7 +86,7 @@ def f(line,cate_dict):
     item_info_list = []
     for v in props:
         item_info_list.append(valid_jsontxt(v.get('name',"-")).replace(":","").replace(",","") \
-                     +":" + valid_jsontxt(v.get('value',"-")).replace(":","").replace(",",""))
+                     + ":" + valid_jsontxt(v.get('value',"-")).replace(":","").replace(",",""))
         if valid_jsontxt('品牌') == valid_jsontxt(v.get('name',"-")) and brand_name == "-" :
             brand_name = v.get('value',"-")
     item_info = ",".join(item_info_list)
