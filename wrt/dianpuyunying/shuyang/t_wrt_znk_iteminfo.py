@@ -4,8 +4,8 @@ import sys
 import copy
 import math
 import time
-# import rapidjson as json
-import json
+import rapidjson as json
+# import json
 from pyspark import SparkContext
 now_day = sys.argv[1]
 last_day = sys.argv[2]
