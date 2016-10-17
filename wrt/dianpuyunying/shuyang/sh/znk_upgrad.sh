@@ -87,6 +87,6 @@ hfs -cat /hive/warehouse/wlservice.db/t_wrt_znk_development_data/ds=$now_day/* >
 
 hfs -cat /hive/warehouse/wlservice.db/t_wrt_znk_othercat/* > $save_path/znk_othercat_$now_day
 
-scp $save_path/znk_development_$now_day hadoop@192.168.4.251:/media/disk1/
+scp $save_path/znk_development_$now_day hadoop@192.168.4.251:/media/disk1/shuyang/
 
-scp $save_path/znk_othercat_$now_day hadoop@192.168.4.251:/media/disk1/
+scp $save_path/znk_othercat_$now_day hadoop@192.168.4.251:/media/disk1/shuyang/
