@@ -182,3 +182,27 @@ sc.textFile('/commit/weibo_dc/user_weibo_cnt.json').map(lambda x:fun(x)).filter(
 
 sc.textFile('/commit/weibo_dc/user_weibo_cnt.json').map(lambda x:fun(x)).filter(lambda x:x>5).histogram([i*50 for i in xrange(10)])
 sc.textFile('/commit/weibo_dc/user_weibo_cnt_20161017.json').map(lambda x:fun(x)).filter(lambda x:x>5).histogram([0,10,20,30,100000])
+
+def fun(line):
+    try:
+        ob = json.loads(valid_jsontxt(line))
+        if type(ob)!=type({}):return None
+        statuses=ob['statuses']
+        rs=[]
+        for info in statuses:
+            weibo_id=info.get('idstr','')
+            reposts_count=info.get('reposts_count',0)
+            comments_count=info.get('comments_count',0)
+            attitudes_count=info.get('attitudes_count',0)
+            user_idstr=info['user']['idstr']
+            rs.append([weibo_id,reposts_count,comments_count,attitudes_count,user_idstr ])
+        return rs
+    except:return None
+
+
+
+
+rdd=sc.textFile('/commit/weibo_dc/weibo_20161017.json').map(lambda x:fun(x)).histogram()
+rs=rdd.filter(lambda x:x!=None).flatMap(lambda x:x).filter(lambda x:x!=None and len(x)>4).map(lambda x:(x[-1],x[1])).groupByKey().map(lambda (x,y):[x,max(list(y))]).take(10)
+
+rs.map(lambda x:x[-1]).histogram([100,200,300,500,1000,10000,1000000])
