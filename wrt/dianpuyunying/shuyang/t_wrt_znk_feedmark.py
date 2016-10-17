@@ -5,8 +5,8 @@ import copy
 import math
 import time
 import datetime
-# import rapidjson as json
-import json
+import rapidjson as json
+# import json
 from pyspark import SparkContext
 
 sc = SparkContext(appName="t_znk_record")
