@@ -78,7 +78,7 @@ def address_format(address):
     if ob.get('status',-1)!='1':return (-1,'请求异常')
     geocodes=ob.get('geocodes',{})[0]
     province=valid_jsontxt(geocodes.get('province',''))
-    city=valid_jsontxt(geocodes.get('city',''))
+    city=valid_jsontxt(geocodes.get('city','')).replace('市','')
     district=valid_jsontxt(geocodes.get('district',''))
     return (1,(province,city,district,address.replace(province,'').replace(city,'').replace(district,'')))
 
@@ -130,7 +130,7 @@ def  match(tel,name,address):
     if len(line)==0:return  (-1,'查询无结果')
     for index, item in enumerate(data['order_list']):
         receiverState=valid_jsontxt(item.get('receiverState','-'))
-        receiverCity=valid_jsontxt(item.get('receiverCity','-'))
+        receiverCity=valid_jsontxt(item.get('receiverCity','-')).replace('市','')
         receiverAddress=valid_jsontxt(item.get('receiverAddress','-'))
         receiverName=valid_jsontxt(item.get('receiverName','-'))
         receiverMobile=valid_jsontxt(item.get('receiverMobile','-'))
@@ -153,12 +153,15 @@ def  match(tel,name,address):
     return rs
 
 
-rs= match('15996928280','孙航','江苏省徐州市凤城镇锦绣水岸')
-print '\t'.join(rs)
+# rs= match('15996928280','孙航','江苏省徐州市凤城镇锦绣水岸')
+# print '\t'.join(rs)
+#
+#
+# rs= match('15996928280','孙航sd','江苏省徐州市凤城镇锦绣水岸')
+# print '\t'.join(rs)
+#
+# rs= match('15996928280','孙航','徐州市凤城镇锦绣水岸')
+# print '\t'.join(rs)
 
-
-rs= match('15996928280','孙航sd','江苏省徐州市凤城镇锦绣水岸')
-print '\t'.join(rs)
-
-rs= match('15996928280','孙航','徐州市凤城镇锦绣水岸')
-print '\t'.join(rs)
+print '\t'.join(address_format('上海市松江区')[-1])
+print '\t'.join(address_format('上海松江区')[-1])
