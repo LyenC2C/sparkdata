@@ -19,6 +19,7 @@ LOAD DATA  INPATH "/data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$ds/"  INTO 
 
 
 
+Drop table t_base_ec_record_dev_new_tmp ;
 create table t_base_ec_record_dev_new_tmp like t_base_ec_record_dev_new;
 
 INSERT OVERWRITE TABLE t_base_ec_record_dev_new_tmp PARTITION (ds)
@@ -52,7 +53,7 @@ FROM (SELECT
         shop_id,
         location
       FROM t_base_ec_item_dev_new
-      WHERE ds = 20160825
+      WHERE ds = 20161013
      ) t1
  RIGHT JOIN
   (
@@ -76,24 +77,24 @@ FROM (SELECT
 EOF
 
 
-true_path='/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_tmp/ds=true1'
+tmp_true_path='/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_tmp/ds=true1'
 
-false_path='/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_tmp/ds=false1'
+tmp_false_path='/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_tmp/ds=false1'
 
 
 hadoop fs -cat $true_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
-hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true1/cmt_inc_data_$ds
+hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$ds
 
-hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true1/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
 
 
 hadoop fs -cat $false_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
-hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false1/cmt_inc_data_$ds
+hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false/cmt_inc_data_$ds
 
-hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false1/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
