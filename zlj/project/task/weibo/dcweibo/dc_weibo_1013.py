@@ -165,4 +165,7 @@ def fun_try(line):
         return fun(line)
     except:return None
 sc.textFile('/commit/weibo_dc/userinfo_800w_20161013.json').map(lambda x:fun_try(x)).filter(lambda x:x!=None)\
-    .map(lambda x:'\001'.join([str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/dc_800w_userinfo_800w_20161013.data')
+    .map(lambda x:'\001'.join([str(i) for i in x]))
+
+
+sc.textFile('/commit/weibo_dc/user_weibo_cnt.json').map(lambda x:json.loads(x)['rt']).filter(lambda x:x>0).count()
