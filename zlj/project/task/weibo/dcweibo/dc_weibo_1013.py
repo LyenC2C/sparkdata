@@ -168,4 +168,17 @@ sc.textFile('/commit/weibo_dc/userinfo_800w_20161013.json').map(lambda x:fun_try
     .map(lambda x:'\001'.join([str(i) for i in x]))
 
 
-sc.textFile('/commit/weibo_dc/user_weibo_cnt.json').map(lambda x:json.loads(x)['rt']).filter(lambda x:x>0).count()
+def fun(x):
+    try:
+        ob=json.loads(x)
+        rt=ob.get('rt',0)
+        id=ob.get('id',0)
+        comments=ob.get('comments',0)
+        return [rt,id,comments]
+    except:return None
+sc.textFile('/commit/weibo_dc/user_weibo_cnt.json').map(lambda x:fun(x)).filter(lambda x:x[0]>5)\
+    .map(lambda x:'\001'.join([str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/user_weibo_cnt')
+
+
+sc.textFile('/commit/weibo_dc/user_weibo_cnt.json').map(lambda x:fun(x)).filter(lambda x:x>5).histogram([i*50 for i in xrange(10)])
+sc.textFile('/commit/weibo_dc/user_weibo_cnt_20161017.json').map(lambda x:fun(x)).filter(lambda x:x>5).histogram([0,10,20,30,100000])

@@ -11,7 +11,6 @@ and catename in ('投资担保','咨询','二手回收','保险','财务会计/�
 
 create table wlbase_dev.t_base_credit_58_info_fraud as
 SELECT
-
 TRANSFORM(t_action       ,
 cateid         ,
 catename       ,
