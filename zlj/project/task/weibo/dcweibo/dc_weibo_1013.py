@@ -206,3 +206,70 @@ rdd=sc.textFile('/commit/weibo_dc/weibo_20161017.json').map(lambda x:fun(x)).his
 rs=rdd.filter(lambda x:x!=None).flatMap(lambda x:x).filter(lambda x:x!=None and len(x)>4).map(lambda x:(x[-1],x[1])).groupByKey().map(lambda (x,y):[x,max(list(y))]).take(10)
 
 rs.map(lambda x:x[-1]).histogram([100,200,300,500,1000,10000,1000000])
+
+
+
+
+def fun_line(line):
+    ob = json.loads(valid_jsontxt(line))
+    if type(ob)!=type({}):return None
+    birthday =ob.get('birthday','-')
+    birthday_visible =ob.get('birthday_visible','-')
+    city =ob.get('city','-')
+    completion_level =ob.get('completion_level','-')
+    created_at =ob.get('created_at','-')
+    credentials_num =ob.get('credentials_num','-')
+    credentials_type =ob.get('credentials_type','-')
+    default_avatar =ob.get('default_avatar','-')
+    description =ob.get('description','-')
+    domain =ob.get('domain','-')
+    email =ob.get('email','-')
+    email_visible =ob.get('email_visible','-')
+    gender =ob.get('gender','-')
+    id =ob.get('id','-')
+    lang =ob.get('lang','-')
+    location =ob.get('location','-')
+    msn =ob.get('msn','-')
+    msn_visible =ob.get('msn_visible','-')
+    name =ob.get('name','-')
+    profileImageUrl =ob.get('profileImageUrl','-')
+    province =ob.get('province','-')
+    qq =ob.get('qq','-')
+    qq_visible =ob.get('qq_visible','-')
+    real_name =ob.get('real_name','-')
+    real_name_visible =ob.get('real_name_visible','-')
+    screen_name =ob.get('screen_name','-')
+    url =ob.get('url','-')
+    url_visible =ob.get('url_visible','-')
+    return [birthday,
+    birthday_visible,
+    city,
+    completion_level,
+    created_at,
+    credentials_num,
+    credentials_type,
+    default_avatar,
+    description,
+    domain,
+    email,
+    email_visible,
+    gender,
+    id,
+    lang,
+    location,
+    msn,
+    msn_visible,
+    name,
+    profileImageUrl,
+    province,
+    qq,
+    qq_visible,
+    real_name,
+    real_name_visible,
+    screen_name,
+    url,
+    url_visible]
+
+
+sc.textFile('/commit/user_basic.json').map(lambda x:fun_line(x)).filter(lambda x:x!=None).\
+    map(lambda x:'\001'.join([str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/user_basic')

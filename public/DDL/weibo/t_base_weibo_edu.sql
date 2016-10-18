@@ -21,7 +21,7 @@ PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
 
-
+-- 马驰
 
 LOAD DATA   INPATH '/user/mc/weibo/edu_res/' OVERWRITE INTO TABLE t_base_weibo_edu PARTITION (ds='20160830') ;
 

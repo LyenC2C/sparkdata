@@ -68,6 +68,7 @@ CREATE TABLE t_zlj_visul_weibo_user_fri_followid_tel_bi_friends AS
 
 
 -- 48992604
+-- 用户画像产出结果
 DROP table t_zlj_visul_tel_bi_friends_link_rs;
 create table t_zlj_visul_tel_bi_friends_link_rs as
  SELECT
