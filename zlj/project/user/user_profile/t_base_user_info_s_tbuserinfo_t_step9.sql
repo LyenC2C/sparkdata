@@ -24,3 +24,4 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step9 AS
 -- SELECT  COUNT(1)
 --  from t_zlj_qq_find_qq_school_rst t1 join
 --  t_base_uid_tmp t2 on t1.qq_id =t2.uid ;
+

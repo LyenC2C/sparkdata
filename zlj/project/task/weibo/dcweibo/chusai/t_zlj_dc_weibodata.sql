@@ -74,6 +74,7 @@ SELECT user_name  orgin_name , user_id  orgin_id  from t_zlj_dc_weibodata
 
 SELECT count(1)  FROM t_zlj_dc_weibodata_orgin_name_orgin_id where length(orgin_name)>1 ;
 
+-- 获得所有用户
 create table t_zlj_dc_weibodata_orgin_name_orgin_id
  as
 select  orgin_name , orgin_id

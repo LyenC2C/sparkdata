@@ -118,7 +118,6 @@ create table t_zlj_credit_valid_api1 as
     email,
     case when 58_tel  is not null and 58_tel<>'-' then 1 else -1 end  as 58_flag,
     58_nickname
-
     from
     t_zlj_credit_valid_api1_step2
     ;

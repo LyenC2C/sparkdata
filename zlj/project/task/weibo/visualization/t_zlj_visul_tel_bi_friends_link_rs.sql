@@ -85,9 +85,11 @@ t3.tags  ,
 join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id =t2.uid
  )t1
    join t_base_weibo_user t2 on t1.weibo_id=t2.idstr
- left join (SELECT  cast(id as string) id  ,tags from t_base_weibo_usertag) t3  on t1.weibo_id= t3.id
+ left join (SELECT  cast(id as string) id  ,tags from t_base_weibo_usertag group by id ,tags ) t3  on t1.weibo_id= t3.id
   ;
 
+
+-- SELECT  * from t_base_weibo_usertag where  idstr  in ('1042639012','1003329587');
 
 
 

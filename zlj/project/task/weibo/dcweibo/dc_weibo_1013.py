@@ -241,7 +241,7 @@ def fun_line(line):
     screen_name =ob.get('screen_name','-')
     url =ob.get('url','-')
     url_visible =ob.get('url_visible','-')
-    return [birthday,
+    return [id, birthday,
     birthday_visible,
     city,
     completion_level,
@@ -254,7 +254,6 @@ def fun_line(line):
     email,
     email_visible,
     gender,
-    id,
     lang,
     location,
     msn,
