@@ -25,3 +25,17 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step9 AS
 --  from t_zlj_qq_find_qq_school_rst t1 join
 --  t_base_uid_tmp t2 on t1.qq_id =t2.uid ;
 
+
+select num ,COUNT(1) freq
+ from
+(
+SELECT uid ,count(1) as num  from t_base_uid_tmp where  ds='ttinfo'  and
+  uid rlike   '^1(3[0-9]|4[57]|5[0-35-9]|7[01678]|8[0-9])\\d{8}'
+  group by uid
+  )t group by num
+
+
+
+ SELECT uid ,count(1) as num  from t_base_uid_tmp where  ds='ttinfo'  and
+  uid rlike   '^1(3[0-9]|4[57]|5[0-35-9]|7[01678]|8[0-9])\\d{8}'
+  group by uid HAVING  COUNT(1)>100 ;

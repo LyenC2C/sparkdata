@@ -71,6 +71,11 @@ def try_fun(line):
 
 
 sc.textFile('/commit/weibo_dc/weibo_repost_20161018.json').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_repost_20161018')
+sc.textFile('/commit/weibo_dc/weibo_repost_20161019.json').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_repost_20161019')
+
+
+
+# LOAD DATA   INPATH '/user/zlj/tmp/weibo_repost_20161019' OVERWRITE INTO TABLE t_zlj_dc_weibodata PARTITION (ds='20161019')
 #
 # LOAD DATA   INPATH '/user/zlj/tmp/weibo_repost_20161018' OVERWRITE INTO TABLE t_zlj_dc_weibodata PARTITION (ds='20161018')
 #

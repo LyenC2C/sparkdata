@@ -144,3 +144,19 @@ email	string	邮箱是否注册
 58_nickname	string	58昵称
 
 
+
+tb_id                   string
+tb_flag                 int
+tb_nick                 string
+tb_regtime              string
+tb_xianyu_flag          int
+snwb_id_flag            int
+weibo_nick_name         string
+weibo_regtime           string
+qq_flag                 int
+qqid                    string
+email_flag              int
+email                   string
+58_flag                 int
+58_nickname             string
+
