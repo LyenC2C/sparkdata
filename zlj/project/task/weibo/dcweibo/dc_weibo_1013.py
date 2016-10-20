@@ -66,7 +66,7 @@ def fun(line):
 sc.textFile('/data/develop/sinawb/rel_fri.json.20160401').map(lambda x:fun(x)).filter(lambda x:x!=None)\
     .map(lambda x:'\001'.join(x)).saveAsTextFile('/user/zlj/tmp/rel_fri.json')
 
-
+# 提取转发数据
 def fun(line):
     if "\001" not in line :return None
     # ls= valid_jsontxt(line).split("\001")

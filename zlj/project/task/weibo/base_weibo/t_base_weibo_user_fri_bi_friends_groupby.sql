@@ -18,3 +18,9 @@ create table t_base_weibo_user_fri_bi_friends_groupby as
   )t group by id1
 ;
 
+
+SELECT COUNT(1) from t_base_weibo_user_fri_bi_friends_groupby where size(split(follow_ids,','))>5000
+
+-- check
+
+SELECT * from  t_base_weibo_user_fri_bi_friends_groupby where weibo_id=2071271691 ;

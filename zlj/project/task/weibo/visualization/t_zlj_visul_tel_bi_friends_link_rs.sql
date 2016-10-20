@@ -69,24 +69,24 @@ CREATE TABLE t_zlj_visul_weibo_user_fri_followid_tel_bi_friends AS
 
 -- 48992604
 -- 用户画像产出结果
-DROP table t_zlj_visul_tel_bi_friends_link_rs;
-create table t_zlj_visul_tel_bi_friends_link_rs as
- SELECT
-t1.weibo_id, weibo_pagerank,
-t2.profile_image_url,
-t2.screen_name,
-t2.location ,
-t3.tags  ,
- follow_ids
-  from
- (
- SELECT  weibo_id  ,pagerank weibo_pagerank , follow_ids   from
-  t_zlj_visul_weibo_user_fri_followid_tel_bi_friends t1
-join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id =t2.uid
- )t1
-   join t_base_weibo_user t2 on t1.weibo_id=t2.idstr
- left join (SELECT  cast(id as string) id  ,tags from t_base_weibo_usertag group by id ,tags ) t3  on t1.weibo_id= t3.id
-  ;
+-- DROP table t_zlj_visul_tel_bi_friends_link_rs;
+-- create table t_zlj_visul_tel_bi_friends_link_rs as
+--  SELECT
+-- t1.weibo_id, weibo_pagerank,
+-- t2.profile_image_url,
+-- t2.screen_name,
+-- t2.location ,
+-- t3.tags  ,
+--  follow_ids
+--   from
+--  (
+--  SELECT  weibo_id  ,pagerank weibo_pagerank , follow_ids   from
+--   t_zlj_visul_weibo_user_fri_followid_tel_bi_friends t1
+-- join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id =t2.uid
+--  )t1
+--    join t_base_weibo_user t2 on t1.weibo_id=t2.idstr
+--  left join (SELECT  cast(id as string) id  ,tags from t_base_weibo_usertag group by id ,tags ) t3  on t1.weibo_id= t3.id
+--   ;
 
 
 -- SELECT  * from t_base_weibo_usertag where  idstr  in ('1042639012','1003329587');
@@ -164,8 +164,6 @@ SELECT
  from t_zlj_visul_weibo_link_pagerank_filter
  group  by weibo_id ,weibo_pagerank
 )t1 RIGHT join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id=t2.uid
-
-
 
  )t1
  join t_base_weibo_user t2 on t1.weibo_id=t2.idstr
