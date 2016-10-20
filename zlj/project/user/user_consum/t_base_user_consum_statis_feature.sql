@@ -2,8 +2,6 @@
 
 DROP  TABLE t_base_user_consum_statis_feature  ;
 
-
-
 create table t_base_user_consum_statis_feature_tmp as
 select
 

@@ -1,38 +1,38 @@
 
 
 
-
-Insert  /user/zlj/tmp/t_base_weibo_user_fri_tel_table ;
-
--- 展开数据
-t_base_weibo_user_fri
--- 互相关注人数
-t_base_weibo_user_fri_bi_friends
-
-
-
-
-
-
-create table t_zlj_base_weibo_user_fri_followid_tel like t_base_weibo_user_fri;
-
-
-LOAD DATA  INPATH '/user/zlj/tmp/t_base_weibo_user_fri_tel_table' OVERWRITE INTO TABLE
-t_zlj_base_weibo_user_fri_followid_tel PARTITION (ds='20161010') ;
-
--- 100603551
-
-
-create table t_zlj_base_weibo_user_fri_followid_tel_bi_friends as
-SELECT
-id1, id2 ,COUNT(1) as num
-from
-(
-select
-sort_array(array(id,fid))[0]  as id1 ,sort_array(array(id,fid))[1] as id2
-from t_zlj_base_weibo_user_fri_followid_tel lateral view explode(split(ids,',')) tt as fid
-)t group by id1,id2  HAVING COUNT(1)>1
-;
+--
+-- Insert  /user/zlj/tmp/t_base_weibo_user_fri_tel_table ;
+--
+-- -- 展开数据
+-- t_base_weibo_user_fri
+-- -- 互相关注人数
+-- t_base_weibo_user_fri_bi_friends
+--
+--
+--
+--
+--
+--
+-- create table t_zlj_base_weibo_user_fri_followid_tel like t_base_weibo_user_fri;
+--
+--
+-- LOAD DATA  INPATH '/user/zlj/tmp/t_base_weibo_user_fri_tel_table' OVERWRITE INTO TABLE
+-- t_zlj_base_weibo_user_fri_followid_tel PARTITION (ds='20161010') ;
+--
+-- -- 100603551
+--
+--
+-- create table t_zlj_base_weibo_user_fri_followid_tel_bi_friends as
+-- SELECT
+-- id1, id2 ,COUNT(1) as num
+-- from
+-- (
+-- select
+-- sort_array(array(id,fid))[0]  as id1 ,sort_array(array(id,fid))[1] as id2
+-- from t_zlj_base_weibo_user_fri_followid_tel lateral view explode(split(ids,',')) tt as fid
+-- )t group by id1,id2  HAVING COUNT(1)>1
+-- ;
 
 
 -- 互相为好友的人 去重关联手机号

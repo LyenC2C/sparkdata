@@ -24,3 +24,5 @@ SELECT COUNT(1) from t_base_weibo_user_fri_bi_friends_groupby where size(split(f
 -- check
 
 SELECT * from  t_base_weibo_user_fri_bi_friends_groupby where weibo_id=2071271691 ;
+
+SELECT * from  t_zlj_visual_weibo_baseinfo where weibo_id=2071271691 ;
