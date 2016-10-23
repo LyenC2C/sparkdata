@@ -1,0 +1,92 @@
+ val conf = new SparkConf().setAppName("SplitTest")
+    val sc = new SparkContext(conf)
+
+    val version="v2"
+    val rdd=sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_simple_user_rootid_group_traindata_"+version).map(v=>{
+      val ks=v.split("\\s+")
+      val lable=ks(0)
+      val data=ks.slice(1,ks.length).map(t=>t.split(":")(0)+":"+t.split(":")(1).toFloat.toInt.toString)
+        .sortBy(t=>t.split(":")(0).toInt).mkString(" ")
+
+      Array(lable,data).mkString(" ")
+    }).saveAsTextFile("/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_traindata_"+version)
+
+    val data = MLUtils.loadLibSVMFile(sc, "/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_traindata_v2")
+    val splits = data.randomSplit(Array(0.7, 0.3))
+    val (trainingData, testData) = (splits(0), splits(1))
+    val boostingStrategy = BoostingStrategy.defaultParams("Classification")
+     boostingStrategy.numIterations = 80 // Note: Use more iterations in practice.
+     boostingStrategy.treeStrategy.numClasses = 2
+     boostingStrategy.treeStrategy.maxDepth = 5
+
+    //  Empty categoricalFeaturesInfo indicates all features are continuous.
+    val boostingStrategy.treeStrategy.categoricalFeaturesInfo = Map[Int, Int]()
+    val model = GradientBoostedTrees.train(trainingData, boostingStrategy)
+
+    val numClasses = 2
+    // categoricalFeaturesInfo 为空，意味着所有的特征为连续型变量
+    val categoricalFeaturesInfo = Map[Int, Int]()
+    //树的个数
+    val numTrees = 3
+    //特征子集采样策略，auto 表示算法自主选取
+    val featureSubsetStrategy = "auto"
+    //纯度计算
+    val impurity = "gini"
+    //树的最大层次
+    val maxDepth = 4
+    //特征最大装箱数
+    val maxBins = 32
+    val categoricalFeaturesInfo = Map[Int, Int]()
+    val dc=RandomForest.trainClassifier(trainingData,numClasses, categoricalFeaturesInfo,
+      numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins)
+    dc.finalize()
+
+
+
+    model.toDebugString
+    model.totalNumNodes
+    model.__resultOfEnsuring
+    model.save(sc,"/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_traindata_v2_modle")
+    // Evaluate model on test instances and compute test error
+    val labelAndPreds = testData.map { point =>
+      val prediction = model.predict(point.features)
+      (point.label, prediction)
+    }
+    model.treeWeights
+//    val testErr = labelAndPreds.filter(r => r._1 != r._2).count.toDouble / testData.count()
+
+
+
+    val rdd1=sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_simple_user_rootid_group_v2").map(v=>{
+      try {
+        val ks = v.split("\001")
+        val lable = ks(0)
+        if(lable.forall(_.isDigit) && lable.contains(":")==false){
+          val data = ks(1).split("\\s+").map(t => t.split(":")(0) + ":" + t.split(":")(1).toFloat.toInt.toString)
+            .sortBy(t => t.split(":")(0).toInt).mkString(" ")
+          Array(lable, data).mkString(" ")
+        }else{
+          None
+        }
+      }catch{
+        case _=> None
+      }
+    }).filter(x=>x!=None).saveAsTextFile("/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_v2")
+
+    val datapre = MLUtils.loadLibSVMFile(sc, "/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_v2")
+       val labelAndPreds = datapre.map { point =>
+      val prediction = model.predict(point.features)
+      (point.label, prediction)
+    }
+
+
+    datapre.map { point =>
+      val prediction = model.predict(point.features)
+      point.label.toString+"\t"+prediction.toString
+    }.saveAsTextFile("/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_v2_result")
+
+    println("Test Error = " + testErr)
+    model.treeWeights
+    model.save(sc,"/user/zlj/nlp/t_base_ec_record_dev_new_simple_user_rootid_group_traindata_model")
+    println("Learned classification GBT model:\n" + model.toDebugString)
+  }
