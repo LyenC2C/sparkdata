@@ -11,6 +11,9 @@
  ADD FILE hdfs://192.168.4.220:9600/data/develop/udf/udf_58.py ;
 
 
+create table t_zlj_credit_valid_api10 as
+SELECT * from  t_base_credit_58_info_fraud;
+
 create table wlbase_dev.t_base_credit_58_info_fraud as
 
 select

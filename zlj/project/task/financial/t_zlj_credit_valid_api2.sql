@@ -74,10 +74,10 @@ create table t_zlj_credit_valid_api2 as
     58_nickname ,
     shop_num ,
     tie_num
-
     from
     t_zlj_credit_valid_api2_step3
     ;
+--
 
 
 --
