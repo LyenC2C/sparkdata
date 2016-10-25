@@ -40,6 +40,9 @@ PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
 
+
+
+
 drop TABLE  t_zlj_tmp;
 create table t_zlj_tmp as
 select * from (

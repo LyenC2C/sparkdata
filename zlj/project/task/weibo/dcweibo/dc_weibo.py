@@ -72,15 +72,12 @@ def fun(line):
     # ls= valid_jsontxt(line).split("\001")
     # if len(ls)!=2:return None
     mid, s = line.split("\001")
-
     j = json.loads(valid_jsontxt(s))
     if type(j)!=type({}):return None
-
     rs=[]
     for wb in j['reposts']:
         if 'retweeted_status' not in wb:
             continue
-
         date_tz = utils.parsedate_tz(wb['created_at'])
         end_date = datetime(*date_tz[:6])
 

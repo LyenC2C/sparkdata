@@ -1,4 +1,8 @@
--- 打通手机号用户的关注数据
+
+
+-- 100603551
+-- 打通手机号用户的关系数据
+alter table t_zlj_weibo_fri_tel rename to  t_base_weibo_user_fri_tel;
 CREATE TABLE t_zlj_weibo_fri_tel AS
 
   SELECT
@@ -13,6 +17,11 @@ CREATE TABLE t_zlj_weibo_fri_tel AS
     ) t1 JOIN
     t_base_weibo_user_fri t2 ON t1.weibo_id = t2.id AND t2.ds = 20160902;
 
+
+
+-- check
+
+SELECT * from  t_zlj_weibo_fri_tel where id=2071271691 ;
 
 -- 拿出四川用户数据
 
