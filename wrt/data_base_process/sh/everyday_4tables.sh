@@ -5,8 +5,7 @@ source ~/.bashrc
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
 
 
-#sh ./item_sold.sh 20161023 20161014 20161013
-
+#sh ./item_sold.sh 20161023 20161014 2016101
 #sh ./item_sold.sh 20161015 20161014 20161013
 #sh ./item_sold.sh 20161016 20161015 20161013
 #sh ./item_sold.sh 20161017 20161016 20161013
