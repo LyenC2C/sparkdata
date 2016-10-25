@@ -1,0 +1,12 @@
+数据来源：
+mid_layer:t_base_ec_record_dev_new
+
+数据生成方法:
+(1)先生成csv文件(spark)
+(2)后生成hfile文件(MR)
+(3)最后LoadIncrementalHFiles
+
+数据更新:
+购买记录表:[hbase cluster][ec_record_new]
+更新至:20161014   更新内容:-20161014    更新日期:20161017
+
