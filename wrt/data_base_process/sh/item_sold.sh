@@ -18,6 +18,7 @@ iteminfo_day=$3
 #sh $pre_path/wrt/data_base_process/hive/t_base_item_sale.sql $zuotian >> \
 #$pre_path/wrt/data_base_process/sh/log_date/log_$zuotian 2>&1
 
+
 hadoop fs -rm -r /user/wrt/daysale_tmp >> $pre_path/wrt/data_base_process/sh/log_daysale/log_$qiantian 2>&1
 
 spark-submit  --total-executor-cores  120   --executor-memory  9g  --driver-memory 10g \
