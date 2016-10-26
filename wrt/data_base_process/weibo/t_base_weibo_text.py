@@ -95,7 +95,8 @@ def quchong(x, y):
 
 
 rdd_c = sc.textFile("/commit/weibo/tmp/20161024.1w.userweibo").flatMap(lambda x:f(x)).filter(lambda x:x != None)
-rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
+# rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): valid_jsontxt(x) + "\001" + valid_jsontxt(y[0]))
 rdd.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
