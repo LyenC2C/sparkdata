@@ -19,7 +19,7 @@ def valid_jsontxt(content):
 def f(line):
     ss = line.strip().split("\t",3)
     if len(ss) != 4: return [None]
-    # user_id = ss[1]
+    user_id = ss[1]
     ts = ss[0]
     txt = valid_jsontxt(ss[3])
     if txt == "": return [None]
@@ -29,7 +29,7 @@ def f(line):
     result = []
     for statuse in statuses:
         lv = []
-        user_id = statuse.get('uid','-')
+        # user_id = statuse.get('uid','-')
         mid = statuse.get('mid',"-")
         created_at = statuse.get('created_at','-')
         text = statuse.get('text',"-")
