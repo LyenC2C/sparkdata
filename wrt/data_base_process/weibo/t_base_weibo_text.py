@@ -25,57 +25,58 @@ def f(line):
     if txt == "": return [None]
     ob = json.loads(txt)
     if type(ob) != type({}): return [None]
+    if ob.has_key("error"): return [None]
     statuses = ob.get("statuses",[])
     result = []
     for statuse in statuses:
         lv = []
         # user_id = statuse.get('uid','-')
         mid = statuse.get('mid',"-")
-        # created_at = statuse.get('created_at','-')
-        # text = statuse.get('text',"-")
-        # source = valid_jsontxt(statuse.get('source',"-"))
-        # if source == "": source = "-"
-        # if source != "-":
-        #     source = pq(source).text()
-        # favorited = statuse.get('favorited',False)
-        # if favorited == True: favorited = 1
-        # else: favorited = 0
-        # truncated = statuse.get('truncated',False)
-        # if truncated == True: truncated = 1
-        # else: truncated = 0
-        # isLongText = statuse.get('isLongText',False)
-        # if isLongText == True: isLongText = 1
-        # else: isLongText = 0
-        # thumbnail_pic = statuse.get('bmiddle_pic','-')
-        # geo = statuse.get('geo','-')
-        # if geo == None: geo = "-"
-        # reposts_count = statuse.get('reposts_count','-')
-        # comments_count = statuse.get('comments_count','-')
-        # attitudes_count = statuse.get('attitudes_count','-')
-        # weibo_type = statuse.get('visible',{}).get('type','-')#type取值，0：普通微博，1：私密微博，3：指定分组微博，4：密友微博；
-        # retweeted_status = statuse.get('retweeted_status',"-")
-        # if retweeted_status != "-":
-        #     ori_uid = retweeted_status.get("uid","-")
-        #     ori_mid = retweeted_status.get("mid",'-')
-        #     ori_text = retweeted_status.get("text","-")
-        #     retweeted_status = valid_jsontxt(ori_uid) + "\002" + valid_jsontxt(ori_mid) + "\002" + valid_jsontxt(ori_text)
+        created_at = statuse.get('created_at','-')
+        text = statuse.get('text',"-")
+        source = valid_jsontxt(statuse.get('source',"-"))
+        if source == "": source = "-"
+        if source != "-":
+            source = pq(source).text()
+        favorited = statuse.get('favorited',False)
+        if favorited == True: favorited = 1
+        else: favorited = 0
+        truncated = statuse.get('truncated',False)
+        if truncated == True: truncated = 1
+        else: truncated = 0
+        isLongText = statuse.get('isLongText',False)
+        if isLongText == True: isLongText = 1
+        else: isLongText = 0
+        thumbnail_pic = statuse.get('bmiddle_pic','-')
+        geo = statuse.get('geo','-')
+        if geo == None: geo = "-"
+        reposts_count = statuse.get('reposts_count','-')
+        comments_count = statuse.get('comments_count','-')
+        attitudes_count = statuse.get('attitudes_count','-')
+        weibo_type = statuse.get('visible',{}).get('type','-')#type取值，0：普通微博，1：私密微博，3：指定分组微博，4：密友微博；
+        retweeted_status = statuse.get('retweeted_status',"-")
+        if retweeted_status != "-":
+            ori_uid = retweeted_status.get("uid","-")
+            ori_mid = retweeted_status.get("mid",'-')
+            ori_text = retweeted_status.get("text","-")
+            retweeted_status = valid_jsontxt(ori_uid) + "\002" + valid_jsontxt(ori_mid) + "\002" + valid_jsontxt(ori_text)
         lv.append(mid)
         lv.append(user_id)
-        # lv.append(created_at)
-        # lv.append(text)
-        # lv.append(source)
-        # lv.append(favorited)
-        # lv.append(truncated)
-        # lv.append(thumbnail_pic)
-        # lv.append(geo)
-        # lv.append(reposts_count)
-        # lv.append(comments_count)
-        # lv.append(attitudes_count)
-        # lv.append(weibo_type)
-        # lv.append(isLongText)
-        # lv.append(retweeted_status)
-        # lv.append(ts)
-        result.append((user_id,lv))
+        lv.append(created_at)
+        lv.append(text)
+        lv.append(source)
+        lv.append(favorited)
+        lv.append(truncated)
+        lv.append(thumbnail_pic)
+        lv.append(geo)
+        lv.append(reposts_count)
+        lv.append(comments_count)
+        lv.append(attitudes_count)
+        lv.append(weibo_type)
+        lv.append(isLongText)
+        lv.append(retweeted_status)
+        lv.append(ts)
+        result.append((mid,lv))
         # result.append(lv)
     return result
 
@@ -95,8 +96,7 @@ def quchong(x, y):
 
 
 rdd_c = sc.textFile("/commit/weibo/tmp/20161024.1w.userweibo").flatMap(lambda x:f(x)).filter(lambda x:x != None)
-# rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
-rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): valid_jsontxt(y[0][0]) + "\001" + valid_jsontxt(y[0][1]))
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
