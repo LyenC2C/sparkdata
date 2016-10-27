@@ -72,8 +72,14 @@ def try_fun(line):
 
 sc.textFile('/commit/weibo_dc/weibo_repost_20161018.json').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_repost_20161018')
 sc.textFile('/commit/weibo_dc/weibo_repost_20161019.json').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_repost_20161019')
-sc.textFile('/commit/weibo_dc/weibo_repost_20161025.json').map(lambda x:try_fun(x)).filter(lambda x:x!=None).\
-    flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_repost_20161025')
+
+sc.textFile('/commit/weibo_dc/weibo_repost_20161025.json').map(lambda x:try_fun(x)).filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_repost_20161025')
+sc.textFile('/commit/weibo_dc/weibo_src_repost_20161026.json').map(lambda x:try_fun(x))\
+    .filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_src_repost_20161026')
+
+sc.textFile('/commit/weibo_dc/weibo_src_repost_20161027.json').map(lambda x:try_fun(x))\
+    .filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_src_repost_20161027')
+
 
 
 # scr weibo
@@ -87,8 +93,8 @@ def fun1(line):
     created_at=ob['created_at']
     return '\001'.join([str(i) for i in [mid,id,created_at,text]])
 
-sc.textFile('/commit/weibo_dc/weibo_src_20161025.json').map(lambda x:fun1(x)).filter(lambda x:x!=None).\
-    saveAsTextFile('/user/zlj/tmp/weibo_src_20161025')
+sc.textFile('/commit/weibo_dc/weibo_repost_20161027.json').map(lambda x:fun1(x)).filter(lambda x:x!=None).\
+    saveAsTextFile('/user/zlj/tmp/weibo_src_20161027')
 
 
 # LOAD DATA   INPATH '/user/zlj/tmp/weibo_repost_20161019' OVERWRITE INTO TABLE t_zlj_dc_weibodata PARTITION (ds='20161019')

@@ -12,8 +12,10 @@ from t_base_weibo_user_fri where ds = 20160902 lateral view explode(split(ids,',
 )t group by id1,id2  HAVING COUNT(1)>1
 ;
 
-
-
+--
+--
+--
+--
 
 
 SELECT  avg(num) as avg_num, max(num) as max_num

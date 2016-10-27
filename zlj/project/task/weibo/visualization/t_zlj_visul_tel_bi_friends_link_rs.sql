@@ -1,6 +1,18 @@
 
 
 
+
+-- 第一阶段数据
+
+alter table t_zlj_visul_tel_bi_friends_link_rs rename to t_zlj_visul_tel_bi_friends_link_rs_v1;
+
+-- rs
+
+Drop table t_zlj_visul_tel_bi_friends_link_rs;
+create table t_zlj_visul_tel_bi_friends_link_rs as
+SELECT *  from t_base_weibo_user_fri_bi_tel
+;
+
 --
 -- Insert  /user/zlj/tmp/t_base_weibo_user_fri_tel_table ;
 --

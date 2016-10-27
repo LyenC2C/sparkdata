@@ -81,7 +81,43 @@ group by phone_no ;
 
 
 
+--
+Drop table t_base_ec_record_dev_new_rong360_feature_train_allclass;
+create table t_base_ec_record_dev_new_rong360_feature_train_allclass as
+SELECT
+t1.id   ,
+label ,
+class,
+local_buycount           ,
+total_price              ,
+car_flag                 ,
+house_flag               ,
+child_flag               ,
+pet_flag                 ,
+annoy_num                ,
+annoy_ratio              ,
+brand_id_num             ,
+root_cat_id_num          ,
+b_bc_type_num            ,
+b_bc_type_num_ratio      ,
+b_bc_price_ratio         ,
+brand_effec_price_ratio  ,
+brand_effec_num_ratio    ,
+b50_num_ratio            ,
+b50_ratio               ,
+ t3.*  ,
+case when alipay like '已通过支付宝实名认证' then 1 else 0 end  as alipay_flag  ,
+cast(buycnt as int)+0 as buycut  ,
+case when cast(regexp_replace(verify, 'VIP等级', '')  as int) is null  then -1 else cast(regexp_replace(verify, 'VIP等级', '')  as int) end    as  verify_level ,
+(12 * (2016 - YEAR(regexp_replace(regtime, '\\.', '-'))) + (7 - MONTH(regexp_replace(regtime, '\\.', '-')))) regtime_month ,
+case when cast(qq_gender as int) is NULL then -1 else cast(qq_gender as int) end   as qq_gender
+ from
+t_base_ec_record_dev_new_rong360_feature_zlj t1 join
+t_base_user_profile t2 on t1.user_id =t2.tb_id
+ join  wlfinance.t_hx_model_rong360_finnal t3  on t1.phone_no=t3.phone_no
+ join wlfinance.t_hx_rong360_user  t4  on t1.phone_no=t4.phone_no ;
 
+-- SELECT qq_gender ,cast(qq_gender as int)+0,cast(qq_gender as int)  from t_base_user_profile limit 10;
 -- 特征最终表
 Drop table t_base_ec_record_dev_new_rong360_feature_train;
 create table t_base_ec_record_dev_new_rong360_feature_train as
@@ -110,8 +146,7 @@ case when alipay like '已通过支付宝实名认证' then 1 else 0 end  as ali
 buycnt  ,
 cast(regexp_replace('verify', 'VIP等级', '')  as int) as  verify_level ,
 (12 * (2016 - YEAR(regexp_replace(regtime, '\\.', '-'))) + (7 - MONTH(regexp_replace(regtime, '\\.', '-')))) regtime_month ,
-cast(qq_age as int)  ,
-cast(qq_gender as int)
+cast(qq_gender as int) as qq_gender
  from
 t_base_ec_record_dev_new_rong360_feature_zlj t1 join
 t_base_user_profile t2 on t1.user_id =t2.tb_id
@@ -228,7 +263,7 @@ from
 SELECT
 cast(predict*10 as int ) as p10 ,label
 from
-t_zlj_rong360_rs_ks where ds='v2'
+t_zlj_rong360_rs_ks where ds='v3'
 )t
 
 )t1
@@ -237,7 +272,7 @@ join
 SELECT
 sum(case when label=1 then 1 else 0 end ) as good_tag,
 sum(case when label=0 then 1 else 0 end ) as bad_tag
-from t_zlj_rong360_rs_ks where ds='v2'
+from t_zlj_rong360_rs_ks where ds='v3'
 )t2
 ;
 测试结果  正 43/68
