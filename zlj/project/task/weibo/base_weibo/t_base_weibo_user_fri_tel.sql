@@ -23,32 +23,3 @@ CREATE TABLE t_zlj_weibo_fri_tel AS
 
 SELECT * from  t_zlj_weibo_fri_tel where id=2071271691 ;
 
--- 拿出四川用户数据
-
-DROP TABLE t_zlj_weibo_fri_tel_sichuan;
-CREATE TABLE t_zlj_weibo_fri_tel_sichuan AS
-  SELECT
-    /*+ mapjoin(t1)*/ t2.*
-  FROM
-    (SELECT id
-     FROM t_base_weibo_user
-     WHERE ds = 20160829 AND location LIKE '%成都%') t1
-    JOIN t_zlj_weibo_fri_tel t2 ON t1.id = t2.id;
-
-
-CREATE TABLE t_zlj_weibo_fri_tel_sichuan_lateral AS
-  SELECT concat_ws('\t', CAST(t1.id AS string), t1.fid) AS f
-  FROM
-    (
-      SELECT
-        id,
-        fid
-      FROM t_zlj_weibo_fri_tel_sichuan lateral VIEW explode(split(ids, ',')) tt AS fid
-    ) t1
-    JOIN
-    (
-      SELECT id1 AS weibo_id
-      FROM t_base_uid_tmp
-      WHERE ds = 'wid'
-    ) t2 ON t1.fid = t2.weibo_id;
-

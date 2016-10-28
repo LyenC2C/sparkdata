@@ -55,6 +55,6 @@ cast(uid as BIGINT )	as rt,
 	from t_base_uid where ds='dc_rt_test'
 	)t1 join t_zlj_dc_800wuser_weibo_info t2 on t1.weiboid =t2.status_idstr
 )t2
-where rn>1000 and rn<31000 ;
+where rn>100 and rn<201000 ;
 
 

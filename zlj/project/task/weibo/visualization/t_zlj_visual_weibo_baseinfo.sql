@@ -1,6 +1,8 @@
 
 
 -- 418363499
+-- step1
+-- 关联基本信息与 教育 事业数据
 
 DROP  table  t_zlj_visual_weibo_baseinfo_step1 ;
 create table  t_zlj_visual_weibo_baseinfo_step1 as
@@ -10,12 +12,18 @@ case when  LENGTH(t4.birthday)>6 and 2016 -CAST (split(t4.birthday,'-')[0] as in
 then t4.birthday else NULL end  as birthday ,
 t1.gender ,t1.location,
 t1.profile_image_url ,
+t1.avatar_large,
+t1.avatar_hd ,
 weibo_colleges,
-weibo_company
-
+weibo_company ,
+followers_count  ,
+friends_count,
+statuses_count ,
+t1.verified ,
+t1.created_at ,
+t1.bi_followers_count
 from
 t_base_weibo_user t1
-
 left join t_base_weibo_user_basic t4  on t1.id =t4.id
 LEFT join
  (
@@ -28,10 +36,14 @@ LEFT join
   )t3 on t1.id=t3.weibo_id
   ;
 
+
+-- SELECT id ,friends_count ,followers_count ,log10(followers_count+1)*0.7+log10(friends_count+1)*0.3 from t_zlj_visual_weibo_baseinfo_step1 limit 100;
+
 -- step2
+Drop table t_zlj_visual_weibo_baseinfo ;
 create table t_zlj_visual_weibo_baseinfo as
 SELECT
-t1.* ,t2.pagerank as  weibo_pagerank ,t3.tags
+t1.* ,log10(followers_count+1)*0.7+log10(friends_count+1)*0.3 as  weibo_pagerank ,t3.tags
 from  t_zlj_visual_weibo_baseinfo_step1 t1
 left join t_zlj_weibo_pagerank_tel t2 on t1.weibo_id=t2.uid
 left join (SELECT  cast(id as string) weibo_id  ,tags from t_base_weibo_usertag group by id ,tags ) t3
