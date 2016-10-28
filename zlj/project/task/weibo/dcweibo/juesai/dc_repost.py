@@ -80,6 +80,8 @@ sc.textFile('/commit/weibo_dc/weibo_src_repost_20161026.json').map(lambda x:try_
 sc.textFile('/commit/weibo_dc/weibo_src_repost_20161027.json').map(lambda x:try_fun(x))\
     .filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_src_repost_20161027')
 
+sc.textFile('/commit/weibo_dc/weibo_src_repost_20161028.json').map(lambda x:try_fun(x))\
+    .filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_src_repost_20161028')
 
 
 # scr weibo
