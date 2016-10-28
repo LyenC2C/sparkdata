@@ -12,7 +12,17 @@ COMMENT 'DC 比赛数据'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
-
+-- /user/zlj/tmp/weibo_src_20161025
+CREATE  TABLE  if not exists t_zlj_dc_user_src_weibo(
+mid  string    COMMENT '',
+orgin_id string ,
+time String  ,
+content  string
+)
+COMMENT 'DC 比赛原始数据'
+PARTITIONED BY  (ds STRING )
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
+stored as textfile ;
 
 SELECT mid,
 case when next_user_name is null then  orgin_name ,

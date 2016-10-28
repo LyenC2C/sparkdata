@@ -19,17 +19,18 @@ def valid_jsontxt(content):
 def f(line):
     ss = line.strip().split("\t",3)
     if len(ss) != 4: return [None]
-    # user_id = ss[1]
+    user_id = ss[1]
     ts = ss[0]
     txt = valid_jsontxt(ss[3])
     if txt == "": return [None]
     ob = json.loads(txt)
     if type(ob) != type({}): return [None]
+    if ob.has_key("error"): return [None]
     statuses = ob.get("statuses",[])
     result = []
     for statuse in statuses:
         lv = []
-        user_id = statuse.get('uid','-')
+        # user_id = statuse.get('uid','-')
         mid = statuse.get('mid',"-")
         created_at = statuse.get('created_at','-')
         text = statuse.get('text',"-")
@@ -49,12 +50,10 @@ def f(line):
         thumbnail_pic = statuse.get('bmiddle_pic','-')
         geo = statuse.get('geo','-')
         if geo == None: geo = "-"
-
         reposts_count = statuse.get('reposts_count','-')
         comments_count = statuse.get('comments_count','-')
         attitudes_count = statuse.get('attitudes_count','-')
         weibo_type = statuse.get('visible',{}).get('type','-')#type取值，0：普通微博，1：私密微博，3：指定分组微博，4：密友微博；
-
         retweeted_status = statuse.get('retweeted_status',"-")
         if retweeted_status != "-":
             ori_uid = retweeted_status.get("uid","-")
@@ -96,10 +95,10 @@ def quchong(x, y):
     return "\001".join(lv)
 
 
-rdd_c = sc.textFile("/commit/weibo/tmp").flatMap(lambda x:f(x)).filter(lambda x:x != None)
+rdd_c = sc.textFile("/commit/weibo/tmp/20161026.1w.userweibo").flatMap(lambda x:f(x)).filter(lambda x:x != None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 rdd.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
-#LOAD DATA  INPATH '/user/wrt/temp/weibo_text' OVERWRITE INTO TABLE t_base_weibo_text PARTITION (ds='20161012');
+#LOAD DATA  INPATH '/user/wrt/temp/weibo_text' OVERWRITE INTO TABLE t_base_weibo_text PARTITION (ds='20161025');
