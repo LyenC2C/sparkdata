@@ -296,9 +296,11 @@ if __name__ == "__main__":
         output_item_inc_num = "/commit_feedbck/cmt/inc_item_num.20160824.test"
         output_user = "/data/develop/ec/tb/cmt/user/user.20160824.test"
         '''
+
         conf = SparkConf()
-        conf.set("spark.network.timeout","1000s")
-        conf.set("spark.akka.frameSize","500")
+        conf.set("spark.network.timeout","2000s")
+        conf.set("spark.akka.timeout","1000s")
+        conf.set("spark.akka.frameSize","1000")
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
 
         #历史uid-feedid [uid,feedidls]
