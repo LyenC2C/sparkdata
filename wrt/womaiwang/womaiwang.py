@@ -306,14 +306,13 @@ def f(line,foods):
         if valid_jsontxt(ln) in valid_jsontxt(title):
             # return valid_jsontxt(ln) + "\001" + valid_jsontxt(user_id)
             return (ln,user_id)
-        else:
-            return None
+    return None
 
 def quchong(x,y):
     num = str(len(set(y)))
     return valid_jsontxt(x) + "\001" + valid_jsontxt(num)
 
-rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true")
+rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true/000000_0")
 rdd_r = rdd.map(lambda x:f(x,foods)).filter(lambda x:x!=None).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
 rdd_r.saveAsTextFile("/user/wrt/temp/womaiwang_tongji")
 # spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120  womaiwang.py
