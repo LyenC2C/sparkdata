@@ -3,7 +3,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-
+sc = SparkContext(appName="womaiwang")
 
 
 
@@ -316,4 +316,4 @@ def quchong(x,y):
 rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true")
 rdd_r = rdd.map(lambda x:f(x,foods)).filter(lambda x:x!=None).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
 rdd_r.saveAsTextFile("/user/wrt/temp/womaiwang_tongji")
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  womaiwang.py
+# spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120  womaiwang.py
