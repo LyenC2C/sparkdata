@@ -7,7 +7,7 @@ iteminfo_day='20161013'
 
 zuotian=$1
 qiantian=$2
-#iteminfo_day=$3
+#iteminfo_ day=$3
 
 hfs -rmr /user/wrt/sale_tmp >> $pre_path/wrt/data_base_process/sh/log_date/log_$zuotian 2>&1
 
