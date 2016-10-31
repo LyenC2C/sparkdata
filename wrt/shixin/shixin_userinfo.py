@@ -15,7 +15,7 @@ def valid_jsontxt(content):
 
 
 def f(line):
-    ob = json.loads(line.strip())
+    ob = json.loads(valid_jsontxt(line.strip()))
     id = str(ob.get("id","-"))
     iname = ob.get("iname","-")
     casecode = ob.get("caseCode","-")
@@ -60,3 +60,6 @@ def f(line):
 rdd_c = sc.textFile("/commit/shixin.info.20161029.json").map(lambda x:f(x))
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid_jsontxt(i) for i in y[0]]))
 rdd.saveAsTextFile("/user/wrt/temp/shixin_info_20161029")
+
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
+# LOAD DATA  INPATH '/user/wrt/temp/shixin_info_20161029' OVERWRITE INTO TABLE t_court_shixin_person PARTITION (ds='20161029');
