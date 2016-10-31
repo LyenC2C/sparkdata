@@ -3,11 +3,11 @@ source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
-#iteminfo_day='20161013'
+iteminfo_day='20161013'
 
 zuotian=$1
 qiantian=$2
-iteminfo_day=$3
+#iteminfo_day=$3
 
 hfs -rmr /user/wrt/sale_tmp >> $pre_path/wrt/data_base_process/sh/log_date/log_$zuotian 2>&1
 
