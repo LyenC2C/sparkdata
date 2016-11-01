@@ -27,5 +27,5 @@ for line in sys.stdin:
     kw_2 = '|'.join(return_2)
     fraud_score = "%d"%(len(return_1)*2 + len(return_2)*1)
     keywords = '|'.join(return_1+return_2)
-    fields.extend([flag_1, kw_1, flag_2, kw_2,fraud_score,keywords])
+    fields.extend([fraud_score,keywords])
     print "\t".join(fields)
