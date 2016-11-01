@@ -1,0 +1,1 @@
+ADD FILE ADD FILE hdfs://192.168.4.220:9600/user/zlj/udf/udf_fraud.py;
