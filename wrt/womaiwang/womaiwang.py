@@ -302,6 +302,12 @@ def f(line,foods):
     ss = line.strip().split("\001")
     user_id = valid_jsontxt(ss[2])
     title = valid_jsontxt(ss[8])
+    root_cat_id = valid_jsontxt(ss[10])
+    dsn = int(valid_jsontxt(ss[5]))
+    if dsn < 20160000:
+        return [None]
+    if root_cat_id != "50050359":
+        return [None]
     result = []
     for ln in foods:
         if ln in title:
@@ -313,7 +319,14 @@ def quchong(x,y):
     num = str(len(set(y)))
     return valid_jsontxt(x) + "\001" + valid_jsontxt(num)
 
-rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true/000000_0")
-rdd_r = rdd.flatMap(lambda x:f(x,foods)).filter(lambda x:x!=None).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
+rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true")
+
+# rdd_r = rdd.flatMap(lambda x:f(x,foods)).filter(lambda x:x != None).groupByKey().mapValues(list).map(lambda (x,y):quchong(x,y))
+rdd_r = rdd.flatMap(lambda x:f(x,foods)).filter(lambda x:x != None)
+
+# ls = rdd_r.collect()
+# for ln in ls:
+#     print ln
+
 rdd_r.saveAsTextFile("/user/wrt/temp/womaiwang_tongji")
 # spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120  womaiwang.py
