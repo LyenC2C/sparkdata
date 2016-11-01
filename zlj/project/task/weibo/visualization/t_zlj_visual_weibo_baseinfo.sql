@@ -50,7 +50,10 @@ left join (SELECT  cast(id as string) weibo_id  ,tags from t_base_weibo_usertag 
  on t1.weibo_id =t3.weibo_id
   ;
 
+SELECT  max(weibo_pagerank) ,min(weibo_pagerank) ,avg(weibo_pagerank)  from t_zlj_visual_weibo_baseinfo
+SELECT  *   from t_zlj_visual_weibo_baseinfo where weibo_id=2071271691 ;
 
+select  *  from t_base_weiboid_career where  id=2071271691 ;
 
 weibo_id                bigint            微博id
 screen_name             string            微博昵称

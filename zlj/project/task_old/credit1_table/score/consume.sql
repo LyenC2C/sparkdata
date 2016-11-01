@@ -16,4 +16,4 @@ FROM
 t_base_credit_consume_basic_property t1
 join t_base_credit_consume_property t2 on t1.tb_id=t2.tb_id
 
-join t_base_credit_consume_perfer t3
+join t_base_credit_consume_perfer t3 ;
