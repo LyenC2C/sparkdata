@@ -83,6 +83,9 @@ sc.textFile('/commit/weibo_dc/weibo_src_repost_20161027.json').map(lambda x:try_
 sc.textFile('/commit/weibo_dc/weibo_src_repost_20161028.json').map(lambda x:try_fun(x))\
     .filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_src_repost_20161028')
 
+sc.textFile('/commit/weibo_dc/weibo_src_repost_20161029.json').map(lambda x:try_fun(x))\
+    .filter(lambda x:x!=None).flatMap(lambda x:x).saveAsTextFile('/user/zlj/tmp/weibo_src_repost_20161029')
+
 
 # scr weibo
 def fun1(line):
@@ -97,6 +100,9 @@ def fun1(line):
 
 sc.textFile('/commit/weibo_dc/weibo_repost_20161027.json').map(lambda x:fun1(x)).filter(lambda x:x!=None).\
     saveAsTextFile('/user/zlj/tmp/weibo_src_20161027')
+
+sc.textFile('/commit/weibo_dc/weibo_src_20161029.json').map(lambda x:fun1(x)).filter(lambda x:x!=None).\
+    saveAsTextFile('/user/zlj/tmp/weibo_src_20161029')
 
 
 # LOAD DATA   INPATH '/user/zlj/tmp/weibo_repost_20161019' OVERWRITE INTO TABLE t_zlj_dc_weibodata PARTITION (ds='20161019')
