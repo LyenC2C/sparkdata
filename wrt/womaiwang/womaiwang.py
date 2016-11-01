@@ -303,8 +303,8 @@ def f(line,foods):
     user_id = valid_jsontxt(ss[2])
     title = valid_jsontxt(ss[8])
     root_cat_id = valid_jsontxt(ss[10])
-    dsn = int(valid_jsontxt(ss[5]))
-    if dsn < 20160000:
+    dsn = valid_jsontxt(ss[5])
+    if dsn < "20160000":
         return [None]
     if root_cat_id != "50050359":
         return [None]
