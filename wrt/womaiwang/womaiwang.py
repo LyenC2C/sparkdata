@@ -312,7 +312,7 @@ def f(line,foods):
     for ln in foods:
         if ln in title:
             # return valid_jsontxt(ln) + "\001" + valid_jsontxt(user_id)
-            result.append((ln,user_id))
+            result.append(valid_jsontxt(ln) + "\001" + valid_jsontxt(user_id))
     return result
 
 def quchong(x,y):
@@ -329,4 +329,4 @@ rdd_r = rdd.flatMap(lambda x:f(x,foods)).filter(lambda x:x != None)
 #     print ln
 
 rdd_r.saveAsTextFile("/user/wrt/temp/womaiwang_tongji")
-# spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120  womaiwang.py
+# spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 160  womaiwang.py
