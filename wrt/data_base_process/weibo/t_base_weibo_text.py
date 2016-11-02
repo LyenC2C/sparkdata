@@ -16,6 +16,25 @@ def valid_jsontxt(content):
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 
+def error_out(line):
+    ss = line.strip().split("\t",3)
+    if len(ss) != 4: return None
+    user_id = ss[1]
+    ts = ss[0]
+    page = ss[2]
+    txt = valid_jsontxt(ss[3])
+    if txt == "": return None
+    ob = json.loads(txt)
+    if type(ob) != type({}): return None
+    if ob.has_key("error") and page == '1' : return user_id
+    total_number = str(ob.get("total_number",0))
+    if total_number == '0':
+        return None
+    statuses = ob.get("statuses",[])
+    if statuses == [] and total_number <> '0': return user_id
+    return None
+
+
 def f(line):
     ss = line.strip().split("\t",3)
     if len(ss) != 4: return [None]
@@ -26,6 +45,8 @@ def f(line):
     ob = json.loads(txt)
     if type(ob) != type({}): return [None]
     if ob.has_key("error"): return [None]
+    if str(ob.get("total_number",0)) == '0':
+        return [None]
     statuses = ob.get("statuses",[])
     result = []
     for statuse in statuses:
@@ -94,11 +115,14 @@ def quchong(x, y):
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
-
-rdd_c = sc.textFile("/commit/weibo/tmp/20161026.1w.userweibo").flatMap(lambda x:f(x)).filter(lambda x:x != None)
+rdd1 = sc.textFile("/commit/weibo/user_weibo/wrt_tmp/*/*")
+rdd_c = rdd1.flatMap(lambda x:f(x)).filter(lambda x:x != None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
+# rdd_error = rdd1.map(lambda x:error_out(x)).filter(lambda x:x != None)
+# rdd_error.saveAsTextFile('/user/wrt/temp/weibo_text_error')
 rdd.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
 #LOAD DATA  INPATH '/user/wrt/temp/weibo_text' OVERWRITE INTO TABLE t_base_weibo_text PARTITION (ds='20161025');
+#20161026的数据是新的1.8亿的微博用户数据
