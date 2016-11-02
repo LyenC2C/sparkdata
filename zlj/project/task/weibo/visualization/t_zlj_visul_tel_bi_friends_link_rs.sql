@@ -13,6 +13,8 @@ create table t_zlj_visul_tel_bi_friends_link_rs as
 SELECT *  from t_base_weibo_user_fri_bi_tel
 ;
 
+
+SELECT size(split(follow_ids,','))/10,count(1) from t_zlj_visul_tel_bi_friends_link_rs group by size(split(follow_ids,','))/10 ;
 --
 -- Insert  /user/zlj/tmp/t_base_weibo_user_fri_tel_table ;
 --

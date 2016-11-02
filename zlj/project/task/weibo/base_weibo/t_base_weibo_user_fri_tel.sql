@@ -2,8 +2,8 @@
 
 -- 100603551
 -- 打通手机号用户的关系数据
-alter table t_zlj_weibo_fri_tel rename to  t_base_weibo_user_fri_tel;
-CREATE TABLE t_zlj_weibo_fri_tel AS
+-- alter table t_zlj_weibo_fri_tel rename to  t_base_weibo_user_fri_tel;
+CREATE TABLE t_base_weibo_user_fri_tel AS
 
   SELECT
     /*+ mapjoin(t1)*/
