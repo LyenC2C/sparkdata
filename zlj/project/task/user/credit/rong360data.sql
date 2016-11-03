@@ -23,14 +23,18 @@ SELECT COUNT(1) from t_base_uid_tmp where ds='ttinfo' ;
 SELECT COUNT(1) from t_base_uid_tmp where ds='ttinfo'  and uid  rlike '^1(3[0-9]|4[57]|5[0-35-9]|7[01678]|8[0-9])\\d{8}';
 
 
---  提取这批手机号对应数据
+--step1  提取这批手机号对应数据
+
+Drop table t_rong360_distinct_user_uid_rank;
 create table t_rong360_distinct_user_uid_rank as
  SELECT id,phone_no,rn  from
 t_zlj_t_base_uid_tmp_rank t3
-join t_rong360_distinct_user t4 on t3.uid =t4.phone_no ;
+join (SELECT DISTINCT phone_no from wlfinance.t_hx_rong360_user ) t4 on t3.uid =t4.phone_no ;
 
 SELECT *  from t_rong360_distinct_user_uid_rank  where phone_no=13007141774
--- 提取record
+
+
+-- step2  提取record 所有原始数据
 Drop table  t_base_ec_record_dev_new_rong360 ;
 create table t_base_ec_record_dev_new_rong360 as
 SELECT
@@ -151,7 +155,7 @@ cast(qq_gender as int) as qq_gender
 t_base_ec_record_dev_new_rong360_feature_zlj t1 join
 t_base_user_profile t2 on t1.user_id =t2.tb_id
  join  wlfinance.t_hx_model_rong360_finnal t3  on t1.phone_no=t3.phone_no
- join wlfinance.t_hx_rong360_user  t4  on t1.phone_no=t4.phone_no and t4.class='tag_user';
+  join wlfinance.t_hx_rong360_user  t4  on t1.phone_no=t4.phone_no and t4.class='tag_user';
 
 --
 0       3383

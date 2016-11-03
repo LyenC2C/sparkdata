@@ -112,7 +112,6 @@ def fun(line):
                                                          next_user_name ,
                                                          str(t), txt]])
         rs.append(wstr2)
-
     return  rs
 
 def try_fun(line):
