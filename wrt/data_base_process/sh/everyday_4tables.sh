@@ -5,11 +5,14 @@ source ~/.bashrc
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
 
 
-sh ./item_sold.sh 20161026 20161023 20161013
-sh ./item_sold.sh 20161027 20161026 20161013
+#sh ./item_sold.sh 20161026 20161023 20161013
+#sh ./item_sold.sh 20161027 20161026 20161013
 sh ./item_sold.sh 20161028 20161027 20161013
 sh ./item_sold.sh 20161029 20161028 20161013
 sh ./item_sold.sh 20161030 20161029 20161013
+sh ./item_sold.sh 20161031 20161030 20161013
+sh ./item_sold.sh 20161101 20161031 20161013
+
 
 
 #sh ./item_sold.sh 20161023 20161014 2016101
