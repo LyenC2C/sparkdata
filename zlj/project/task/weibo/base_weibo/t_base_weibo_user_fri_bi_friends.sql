@@ -1,5 +1,8 @@
 
 
+
+LOAD DATA  INPATH '/user/zlj/tmp/weibo_friendships_20161101' OVERWRITE INTO TABLE t_base_weibo_user_fri PARTITION (ds='20161101')
+
 --  计算相互关注人数
 create table t_base_weibo_user_fri_bi_friends as
 SELECT
@@ -12,138 +15,43 @@ from t_base_weibo_user_fri where ds = 20160902 lateral view explode(split(ids,',
 )t group by id1,id2  HAVING COUNT(1)>1
 ;
 
---
---
---
---
 
+  create table t_base_weibo_user_fri_bi_friends_v12 as
+  SELECT
+  id1, id2 ,COUNT(1) as num
+  from
+  (
+  select
+  sort_array(array(id,fid))[0]  as id1 ,sort_array(array(id,fid))[1] as id2
+  from (select * from t_base_weibo_user_fri where ds=20161102 and length(ids)>0 )t lateral view explode(split(ids,',')) tt as fid
+  )t group by id1,id2  HAVING COUNT(1)>1
+  ;
 
-SELECT  avg(num) as avg_num, max(num) as max_num
-from (SELECT size(split(ids,',')) as num  from t_base_weibo_user_fri)t ;
-
-
-
-
-create table t_base_weibo_user_fri_bi_friends_tmp_louvain_testdata as
-SELECT id1 ,id2
-FROM
-  t_base_weibo_user_fri_bi_friends
-limit 1000000 ;
-
-
-INSERT  overwrite table t_base_uid_tmp partition(ds='wid1')
-SELECT split(uid,'\\s+')[0] as uid ,split(uid,'\\s+')[1] as id1 ,
-  '' as id2 ,
-  '' as id3 ,
-  '' as id4 ,
-  '' as id5 ,
-  '' as id6 ,
-  '' as id7
-  from t_base_uid_tmp where ds='wid' ;
-
-
-
-
--- 挑出真实tle数据
-
--- step1 挑出被关注着打通tel
--- create table t_base_weibo_user_fri_check_18kw_data_step1 as
---  SELECT  id ,ids_list
---           FROM(select cast(id1 as bigint) id1 from  t_base_uid_tmp where ds='wid')t2 join
---             (SELECT  id ,split(ids,',') as ids_list from t_base_weibo_user_fri
---             where  size(split(ids,','))>1) t1
---               on t1.id =t2.id1
---  ;
-
-
-create table t_base_weibo_user_fri_check_18kw_data_step1 as
-
-  SELECT id ,cast(follow_id as BIGINT) follow_id FROM
-        (
-          SELECT  id ,ids_list
-          FROM(select cast(id1 as bigint) id1 from  t_base_uid_tmp where ds='wid')t2 join
-            (SELECT  id ,split(ids,',') as ids_list from t_base_weibo_user_fri where size(split(ids,','))<5000 and size(split(ids,','))>1) t1
-              on t1.id =t2.id1
-        )t lateral view explode(ids_list) tt as follow_id ;
-
-
-
-
-SELECT  count(1) from (SELECT id from t_base_weibo_user_fri group by id)t;
-
-
--- 相互关注的id
--- 246816340
-SELECT COUNT(1 ) from
-(SELECT  *
-from
+-- 去重
+insert overwrite table t_base_weibo_user_fri partition(ds='20161102')
+select id ,ids
+  from
 (
-SELECT explode(array(id1,id2)) as id
-from t_base_weibo_user_fri_bi_friends
+select id ,ids ,row_number()  OVER (PARTITION BY id ORDER BY 1 desc) as rn
+ from t_base_weibo_user_fri where ds=20161101
+)t
+;
+-- 测试
 
-)t group by id
-)t1  ;
+SELECT * from t_base_weibo_user_fri where ds=20161101 and id in (1000009700,1916655407) ;
 
+重复数 165691458
+SELECT count(1) from  (SELECT id,count(1) from t_base_weibo_user_fri where ds=20161101 group by id HAVING count(1)>1)t;
 
-189136874
-SELECT count(1) from t_base_uid_tmp where  ds='wid' ;
-
-
--- 58537799
--- 有效用户
-SELECT COUNT(1 ) from
-(SELECT  id
-from
-(
-SELECT explode(array(id1,id2)) as id
-from t_base_weibo_user_fri_bi_friends
-
-)t group by id
-)t1 join t_base_uid_tmp t2 on t1.id =t2.id1 and t2.ds='wid'
- ;
-
--- INSERT  overwrite table t_base_uid_tmp partition(ds='weibo_pagerank_v1')
--- SELECT uid ,id1
--- FROM t_base_uid_tmp
--- WHERE ds = 'weibo_pagerank';
-
-
--- page rank
-DROP TABLE t_zlj_tmp ;
-
-create TABLE  t_zlj_tmp as
-
-SELECT uid ,id1 ,ROW_NUMBER() OVER (PARTITION BY 1 ORDER BY cast(id1 as FLOAT) ) AS rn
-     from t_base_uid_tmp
-WHERE ds = 'weibo_pagerank' and  cast(id1 as FLOAT)<0.16;
+--
+--
+--
+--
 
 
 
-create TABLE  t_zlj_tmp as
-SELECT  uid ,id1
- from t_base_uid_tmp
-WHERE ds = 'weibo_pagerank'
-
-  and  cast(id1 as FLOAT)<0.16
-sort by cast(id1 as FLOAT)  asc  limit 10000 ;
 
 
-SELECT  /*+ mapjoin(t1)*/ t2.* from (
-  SELECT  uid ,id1
- from t_base_uid_tmp
-WHERE ds = 'weibo_pagerank' and  cast(id1 as FLOAT)>0.16
-sort by cast(id1 as FLOAT)  desc  limit 10000
-                                    ) t1 join t_base_weibo_user t2 on t1.uid=t2.idstr ;
-
-
-
-SELECT  /*+ mapjoin(t1)*/ t2.* from t_zlj_tmp t1 join t_base_weibo_user t2 on t1.uid=t2.idstr
-limit 100 ;
-
-
-SELECT    avg(cast(id1 as FLOAT))  from t_base_uid_tmp WHERE ds = 'weibo_pagerank'
-
-SELECT    uid ,id1   from t_base_uid_tmp  WHERE ds = 'weibo_pagerank' limit 1000 ;
 
 
 

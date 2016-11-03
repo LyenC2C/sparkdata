@@ -56,6 +56,7 @@ hadoop fs -rmr ${uid_mark_output}
 hadoop fs -rmr ${uid_data_output}
 hadoop fs -rmr ${nouid_data_output}
 hadoop fs -rmr ${item_itc_num_output}
+hadoop fs -rmr ${user_data}
 
 spark-submit --executor-memory 16g --driver-memory 20g --total-executor-cores 180 ${workspace_path}/pzz/cmt/cmt_inc_updated_0824.py\
  -gen_data_inc ${uid_feed_input} ${uid_mark_input} ${new_data_input} ${uid_data_output} ${nouid_data_output} ${uid_feed_output} ${uid_mark_output} ${item_itc_num_output} ${user_data}

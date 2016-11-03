@@ -32,6 +32,7 @@ def parse(line):
     ob=json.loads(valid_jsontxt(line))
     if type(ob)!=type({}):return None
     id=ob.get('id','-1')
+    if  int(id)<-1:return None
     idstr=ob.get('idstr','-')
     screen_name=ob.get('screen_name','-')
     name=ob.get('name','-')
@@ -66,13 +67,23 @@ def parse(line):
     bi_followers_count=ob.get('bi_followers_count','-')
     lang=ob.get('lang','-')
     rs=[id,idstr,screen_name,name,province,city,location,description,url,profile_image_url,profile_url,domain,weihao,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,allow_all_act_msg,geo_enabled,verified,verified_type,remark,status,allow_all_comment,avatar_large,avatar_hd,verified_reason,follow_me,online_status,bi_followers_count,lang]
-    return (id,rs)
+    return (id,'\001'.join([ str(i) for i in rs] ))
 
 
+def try_parse(line):
+    try:
+        return  parse(line)
+    except:
+        return None
 
 sc.textFile('/data/develop/sinawb/user_info.json.20160401').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
     .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20160401')
 
 
 
+sc.textFile('/commit/weibo/userinfo/20161101/').map(lambda x:try_parse(x)).filter(lambda x:x!=None).\
+    groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20161101')
+
+
 # LOAD DATA   INPATH '/user/zlj/tmp/sinawb_user_info.json.20160401' OVERWRITE INTO TABLE t_base_weibo_user PARTITION (ds='20160829')
+# LOAD DATA   INPATH '/user/zlj/tmp/sinawb_user_info.json.20161101' OVERWRITE INTO TABLE t_base_weibo_user PARTITION (ds='20161101')
