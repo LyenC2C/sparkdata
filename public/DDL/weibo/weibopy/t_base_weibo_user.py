@@ -76,8 +76,8 @@ def try_parse(line):
     except:
         return None
 
-sc.textFile('/data/develop/sinawb/user_info.json.20160401').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
-    .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20160401')
+# sc.textFile('/data/develop/sinawb/user_info.json.20160401').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
+#     .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20160401')
 
 
 
