@@ -9,7 +9,7 @@ import rapidjson as json
 from pyspark import SparkContext
 now_day = sys.argv[1]
 last_day = sys.argv[2]
-sc = SparkContext(appName="t_base_item_info_"+now_day)
+sc = SparkContext(appName="shuyang_iteminfo_"+now_day)
 
 
 def parse_price(price_dic):
