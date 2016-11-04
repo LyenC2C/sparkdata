@@ -24,13 +24,14 @@ hiveContext = HiveContext(sc)
 
 
 
-# 555890126
-sc.textFile('/commit/weibo/userinfo/20161101').count()
+def try_fun(x):
+    ob=json.loads(x)
+    if type(ob)!=type({}):return  None
+    try:
+        if type(ob['ids'])!=type([]):return None
+        return [str(ob['uid']),','.join(set([str(i) for i in ob['ids']]))]
+    except:return None
 
-869686646
-sc.textFile('/commit/weibo/uid_8.8y_20161102').count()
-
-762848995
-sc.textFile('/commit/weibo/uid_8.8y_20161102').distinct().count()
-
-# 重复数 165691458
+sc.textFile('/commit/weibo/friendships/20161101/').map(lambda x:try_fun(x)).\
+    filter(lambda x:x is not None  and x[0] is not None and x[1] is not None)\
+    .map(lambda x:'\001'.join(x)).saveAsTextFile('/user/zlj/tmp/weibo_friendships_20161101')

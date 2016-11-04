@@ -2,7 +2,7 @@
 
 
 --  inner join 266352505
-
+-- 去重排序
 Drop table t_zlj_t_base_uid_tmp_rank;
 create table t_zlj_t_base_uid_tmp_rank as
 SELECT
@@ -33,6 +33,8 @@ join (SELECT DISTINCT phone_no from wlfinance.t_hx_rong360_user ) t4 on t3.uid =
 
 SELECT *  from t_rong360_distinct_user_uid_rank  where phone_no=13007141774
 
+-- test_1w 关联数据量
+SELECT COUNT(1) from t_rong360_distinct_user_uid_rank t1 join  wlfinance.t_hx_rong360_user t2 on t1.phone_no=t2.phone_no and t2.class='test_1w'
 
 -- step2  提取record 所有原始数据
 Drop table  t_base_ec_record_dev_new_rong360 ;
@@ -43,9 +45,12 @@ t2.*,t1.*
 from  t_rong360_distinct_user_uid_rank  t1 join
 t_base_ec_record_dev_new t2 on t2.ds='true'  and t1.id =t2.user_id;
 
-
-
--- 提取特征
+SELECT  label ,COUNT(1) from
+(
+select t2.phone_no, label from t_base_ec_record_dev_new_rong360 t1 join  wlfinance.t_hx_rong360_user t2 on t1.phone_no=t2.phone_no and t2.class='test_1w'
+group by t2.phone_no, label
+)t group by label ;
+-- step3 zlj 提取特征
 DROP  table t_base_ec_record_dev_new_rong360_feature_zlj ;
 create table  t_base_ec_record_dev_new_rong360_feature_zlj as
 SELECT
@@ -54,7 +59,7 @@ phone_no,
 max(user_id) as user_id ,
 COUNT(1) as local_buycount ,
 sum(price) as total_price,
-sum( case when root_cat_id IN  (  26, 50016768, 50024971, 124470006  ) then 1 else 0 end) as car_flag ,
+sum( case when root_cat_id IN  ( 26, 50016768, 50024971, 124470006  ) then 1 else 0 end) as car_flag ,
 sum( case when root_cat_id IN  ( 27,  50008164,50020332,50020808, 50022649,50022703, 50022987,50023804,50025881, 122852001,123302001,124698018  ) then 1 else 0 end)
 as house_flag ,
 sum( case when root_cat_id IN  (25 ,50008165,122650005  ) then 1 else 0 end) as child_flag ,
@@ -85,7 +90,7 @@ group by phone_no ;
 
 
 
---
+--step4
 Drop table t_base_ec_record_dev_new_rong360_feature_train_allclass;
 create table t_base_ec_record_dev_new_rong360_feature_train_allclass as
 SELECT
@@ -122,11 +127,12 @@ t_base_user_profile t2 on t1.user_id =t2.tb_id
  join wlfinance.t_hx_rong360_user  t4  on t1.phone_no=t4.phone_no ;
 
 -- SELECT qq_gender ,cast(qq_gender as int)+0,cast(qq_gender as int)  from t_base_user_profile limit 10;
--- 特征最终表
+-- step5 特征最终表
 Drop table t_base_ec_record_dev_new_rong360_feature_train;
 create table t_base_ec_record_dev_new_rong360_feature_train as
 SELECT
 t1.id   ,
+class ,
 label ,
 local_buycount           ,
 total_price              ,
@@ -148,14 +154,20 @@ b50_ratio               ,
  t3.*  ,
 case when alipay like '已通过支付宝实名认证' then 1 else 0 end  as alipay_flag  ,
 buycnt  ,
-cast(regexp_replace('verify', 'VIP等级', '')  as int) as  verify_level ,
+cast(regexp_replace(verify, 'VIP等级', '')  as int) as  verify_level ,
+verify,
 (12 * (2016 - YEAR(regexp_replace(regtime, '\\.', '-'))) + (7 - MONTH(regexp_replace(regtime, '\\.', '-')))) regtime_month ,
 cast(qq_gender as int) as qq_gender
  from
 t_base_ec_record_dev_new_rong360_feature_zlj t1 join
 t_base_user_profile t2 on t1.user_id =t2.tb_id
- join  wlfinance.t_hx_model_rong360_finnal t3  on t1.phone_no=t3.phone_no
-  join wlfinance.t_hx_rong360_user  t4  on t1.phone_no=t4.phone_no and t4.class='tag_user';
+ join  wlfinance.t_hx_model_rong360_finnal2 t3  on t1.phone_no=t3.phone_no
+  join wlfinance.t_hx_rong360_user  t4  on t1.phone_no=t4.phone_no  ;
+
+
+-- SELECT cast(regexp_replace(verify, 'VIP等级', '')  as int) as  verify_level from t_base_user_profile limit 10
+--
+-- create table wlfinance.t_zlj_tmp_uid like wlfinance.t_hx_rong360_user
 
 --
 0       3383
