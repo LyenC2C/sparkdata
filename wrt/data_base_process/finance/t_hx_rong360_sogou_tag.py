@@ -30,6 +30,8 @@ def f(x):
     return "\001".join([valid_jsontxt(i) for i in result])
 
 sc.textFile("/commit/credit/sogou").map(lambda x:f(x)).saveAsTextFile("/user/wrt/temp/t_hx_rong360_sogou_tag")
+"/commit/credit/sogou/20161104.phone.result.p2.complete"
+
 
 
 
