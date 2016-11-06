@@ -9,6 +9,9 @@ PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
 
+
+
+
 -- 非异常
 -- 620994234
 SELECT  COUNT(1) from t_base_weibo_user_fri where LENGTH(ids)>1 ;

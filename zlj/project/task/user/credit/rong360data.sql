@@ -76,7 +76,9 @@ sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
    sum(case when price <=50 then 1 else 0 end)/count(*) as b50_num_ratio,
    sum(case when price <=50 then price else 0 end)/sum(price ) as b50_ratio
 from t_base_ec_record_dev_new_rong360 where rn<4 and price<59999
-group by phone_no ;
+group by phone_no
+;
+
 
 
 

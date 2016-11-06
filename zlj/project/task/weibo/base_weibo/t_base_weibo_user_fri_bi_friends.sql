@@ -16,14 +16,14 @@ from t_base_weibo_user_fri where ds = 20160902 lateral view explode(split(ids,',
 ;
 
 
-  create table t_base_weibo_user_fri_bi_friends_v12 as
+  create table t_base_weibo_user_fri_bi_friends_1106 as
   SELECT
   id1, id2 ,COUNT(1) as num
   from
   (
   select
   sort_array(array(id,fid))[0]  as id1 ,sort_array(array(id,fid))[1] as id2
-  from (select * from t_base_weibo_user_fri where ds=20161102 and length(ids)>0 )t lateral view explode(split(ids,',')) tt as fid
+  from (select * from t_base_weibo_user_fri where ds=20161106 and length(ids)>0 )t lateral view explode(split(ids,',')) tt as fid
   )t group by id1,id2  HAVING COUNT(1)>1
   ;
 
