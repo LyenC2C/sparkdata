@@ -15,7 +15,7 @@ def valid_jsontxt(content):
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 
-def f(x):
+def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     phone = ob.get("phone","-")
     platform = ob.get("platform","-")
