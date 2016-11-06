@@ -22,6 +22,7 @@ def f(line):
     data = str(ob.get("data","-"))
     ret = ob.get("ret","-")
     msg = ob.get("msg","-")
+    result = []
     result.append(phone)
     result.append(platform)
     result.append(data)
