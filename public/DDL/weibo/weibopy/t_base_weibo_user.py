@@ -76,13 +76,13 @@ def try_parse(line):
     except:
         return None
 
-sc.textFile('/data/develop/sinawb/user_info.json.20160401').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
-    .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20160401')
+# sc.textFile('/data/develop/sinawb/user_info.json.20160401').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
+#     .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20160401')
 
 
 
 sc.textFile('/commit/weibo/userinfo/20161101/').map(lambda x:try_parse(x)).filter(lambda x:x!=None).\
-    groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20161101')
+    groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/wrt/temp/sinawb_user_info.json.20161101')
 
 
 # LOAD DATA   INPATH '/user/zlj/tmp/sinawb_user_info.json.20160401' OVERWRITE INTO TABLE t_base_weibo_user PARTITION (ds='20160829')
