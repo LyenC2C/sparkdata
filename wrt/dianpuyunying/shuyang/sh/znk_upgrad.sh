@@ -66,7 +66,7 @@ case when t2.item_id is null then "-" else t2.total end as sold
 FROM
 (select * from t_wrt_znk_iteminfo_new where ds = '$yes_day')t1
 left JOIN
-(select item_id,total from wlbase_dev.t_base_ec_item_sold_dev where ds = '$sold_day')t2
+(select item_id,total from wlbase_dev.t_base_ec_item_sold_dev where ds = '$yes_day')t2
 ON
 t1.item_id = t2.item_id
 )tt1
