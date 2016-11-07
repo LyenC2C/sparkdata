@@ -2,6 +2,9 @@
 __author__ = 'wrt'
 import sys
 import rapidjson as json
+from pyspark import SparkContext
+
+sc = SparkContext(appName="ppzs_itemid_brandid")
 
 def valid_jsontxt(content):
     # res = content
