@@ -31,5 +31,5 @@ rdd = sc.textFile("/commit/credit/taobao/20161104.yichang.iteminfo.complete").ma
 rdd.groupByKey().mapValues(list).map(lambda (x,y):valid_jsontxt(x) + "\001" + valid_jsontxt(y[0]))\
     .saveAsTextFile("/user/wrt/temp/ppzs_itemid_brandid")
 
-hfs -rmr /user/wrt/temp/ppzs_itemid_brandid
+# hfs -rmr /user/wrt/temp/ppzs_itemid_brandid
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  ppzs_itemid_brandid.py
