@@ -27,15 +27,15 @@ def f(line,brand_dict,cate_dict):
     ss = line.strip().split("\t")
     if len(ss) != 3: return None
     item_id = ss[1]
-    itemInfoModel = data.get('itemInfoModel',"-")
-    categoryId = itemInfoModel.get('categoryId','-')
-    root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
-    if not root_cat_id in ["50010788","1801"]: return None #不属于纸尿裤的直接舍弃掉
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) != type({}): return None
     data = ob.get('data',"-")
     if data == "-": return None
+    itemInfoModel = data.get('itemInfoModel',"-")
+    categoryId = itemInfoModel.get('categoryId','-')
+    root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
+    if not root_cat_id in ["50010788","1801"]: return None #不属于化妆品
     trackParams = data.get('trackParams',{})
     brandId = valid_jsontxt(trackParams.get('brandId','-'))
     # if brandId == "-": return None
