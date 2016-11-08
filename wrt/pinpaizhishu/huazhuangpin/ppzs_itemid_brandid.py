@@ -36,8 +36,9 @@ def f(line,brand_dict):
     return (item_id,brandId)
 
 
-rdd = sc.textFile("/commit/credit/taobao/20161104.yichang.iteminfo.complete").map(lambda x:f(x)).filter(lambda x:x!=None)
 s_dim = "/hive/warehouse/wlservice.db/t_wrt_tmp_ppzs_brandid"
+s = "/commit/credit/taobao/20161104.yichang.iteminfo.complete"
+rdd = sc.textFile(s).map(lambda x:f(x,brand_dict)).filter(lambda x:x!=None)
 brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd.groupByKey().mapValues(list).map(lambda (x,y):valid_jsontxt(x) + "\001" + valid_jsontxt(y[0]))\
     .saveAsTextFile("/user/wrt/temp/ppzs_itemid_brandid")
