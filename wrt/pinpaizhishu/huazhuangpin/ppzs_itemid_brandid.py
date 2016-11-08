@@ -18,11 +18,18 @@ def get_brand(line):
     brand_id = line.strip()
     return (brand_id,"1")
 
+def get_cate_dict(line):
+    ss = line.strip().split("\001")
+    return (ss[0],[ss[1],ss[3],ss[8]])
 
-def f(line,brand_dict):
+
+def f(line,brand_dict,cate_dict):
     ss = line.strip().split("\t")
     if len(ss) != 3: return None
     item_id = ss[1]
+    categoryId = itemInfoModel.get('categoryId','-')
+    root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
+    if not root_cat_id in ["50010788","1801"]: return None #不属于纸尿裤的直接舍弃掉
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) != type({}): return None
@@ -36,10 +43,12 @@ def f(line,brand_dict):
     return (item_id,brandId)
 
 
-s_dim = "/hive/warehouse/wlservice.db/t_wrt_tmp_ppzs_brandid"
+b_dim = "/hive/warehouse/wlservice.db/t_wrt_tmp_ppzs_brandid"
 s = "/commit/tb_tmp/iteminfo/20161107.pinpai.iteminfo.complete"
-rdd = sc.textFile(s).map(lambda x:f(x,brand_dict)).filter(lambda x:x!=None)
-brand_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
+c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
+brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
+cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
+rdd = sc.textFile(s).map(lambda x:f(x,brand_dict,cate_dict)).filter(lambda x:x!=None)
 rdd.groupByKey().mapValues(list).map(lambda (x,y):valid_jsontxt(x) + "\001" + valid_jsontxt(y[0]))\
     .saveAsTextFile("/user/wrt/temp/ppzs_itemid_brandid")
 
