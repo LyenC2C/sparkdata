@@ -10,7 +10,7 @@ import rapidjson as json
 from pyspark import SparkContext
 
 
-sc = SparkContext(appName="t_base_shop_info" )
+sc = SparkContext(appName="t_base_shop_info")
 
 # def valid_jsontxt(content):
 #     if type(content) == type(u""):

@@ -117,3 +117,45 @@ t1.shop_id = t2.shop_id;
 (select shop_id from t_base_shop_type where shop_type['globalgou'] = 'True' or shop_type['tmhk'] = 'True')t2
 ON
 t1.shop_id = t2.shop_id
+
+
+--四个省的店铺id,店铺城市，sellerid ,seller name, 商品数，销量，销售额
+
+create table t_wrt_3province_allshop_v2 as
+select tt1.shop_id,tt2.shop_name,tt1.location,tt2.seller_id,tt2.seller_name,tt2.itemcount,
+tt1.nian_sold,tt1.nian_sales from
+(
+  select t1.shop_id as shop_id ,max(t1.location) as location,
+(sum(t2.day_sold) * 2) as nian_sold,
+(sum(t2.day_sold_price) * 2) as nian_sales from
+(
+select item_id,location,shop_id from wlbase_dev.t_base_ec_item_dev_new
+where ds = 20160621
+and
+(substr(location,1,2) = '广东' or
+substr(location,1,2) = '四川' or
+substr(location,1,2) = '浙江' OR
+substr(location,1,2) = '山东')
+)t1
+JOIN
+(
+select * from  wlbase_dev.t_base_ec_item_daysale_dev_new where ds > 20151200 and ds < 20160600
+)t2
+ON
+t1.item_id = t2.item_id
+group by t1.shop_id
+)tt1
+JOIN
+(
+select t1.shop_id,t1.itemcount,t2.seller_id,t2.seller_name,t2.shop_name FROM
+(select shop_id,count(1) as itemcount from wlbase_dev.t_base_ec_item_dev_new where ds = 20160621 group by shop_id)t1
+JOIN
+(select * from wlbase_dev.t_base_ec_shop_dev_new where ds = 20160622)t2
+ON
+t1.shop_id = t2.shop_id
+)tt2
+ON
+tt1.shop_id = tt2.shop_id;
+
+
+

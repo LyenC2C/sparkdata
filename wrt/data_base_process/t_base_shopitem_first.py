@@ -16,6 +16,7 @@ def valid_jsontxt(content):
 
 def f(line):
     ss = line.strip().split("\t",4)
+    if len(ss) != 5: return [None]
     shop_id = ss[1]
     ts = ss[0]
     text = ss[4]

@@ -1,5 +1,6 @@
 #coding:utf-8
 __author__ = 'wrt'
+#采集上只能采集部分商品，因此先不使用此程序
 import sys
 import copy
 import math

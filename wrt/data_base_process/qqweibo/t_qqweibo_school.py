@@ -38,7 +38,7 @@ def f(line):
     sch_list = sorted(sch_dict.iteritems(), key = lambda d:d[0], reverse = False)
     school_res = ""
     lv = []
-    for ln in sch_list: #排好序后的前三位
+    for ln in sch_list:
         # for ls in ln[1]: #year,background,school,department
         lv.append('\002'.join(ln[1]))
     school_res = '\003'.join(lv)

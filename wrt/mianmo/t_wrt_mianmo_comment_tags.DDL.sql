@@ -8,3 +8,5 @@ CREATE EXTERNAL TABLE  if not exists t_wrt_mianmo_comment_tags(
 COMMENT '面膜评论标签表'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
+
+LOAD DATA  INPATH '/user/wrt/temp/comment_tags' OVERWRITE INTO TABLE t_wrt_mianmo_comment_tags;

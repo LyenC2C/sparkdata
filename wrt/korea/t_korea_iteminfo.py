@@ -1,7 +1,6 @@
 #coding:utf-8
 __author__ = 'wrt'
 import sys
-import re
 import rapidjson as json
 from pyspark import SparkContext
 
