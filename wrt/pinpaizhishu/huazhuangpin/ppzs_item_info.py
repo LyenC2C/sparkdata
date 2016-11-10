@@ -22,6 +22,25 @@ def get_cate_dict(line):
     ss = line.strip().split("\001")
     return (ss[0],[ss[1],ss[3],ss[8]])
 
+def parse_price(price_dic):
+    min = 1000000000.0
+    price = '0'
+    price_range = '-'
+    for value in price_dic:
+        tmp=value['price']
+        v = ""
+        if '-' in tmp:     v=tmp.split('-')[0]
+        else:             v=tmp
+        if v.replace('.',"").isdigit():
+            v = float(v)
+        else:
+            v = 0.0
+        if min > v:
+            min = v
+            price = v
+            if '-' in tmp: price_range = tmp
+    return [price,price_range]
+
 
 def f(line,brand_dict,cate_dict):
     ss = line.strip().split("\t")
@@ -37,11 +56,32 @@ def f(line,brand_dict,cate_dict):
     categoryId = itemInfoModel.get('categoryId','-')
     root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
     if not root_cat_id in ["50010788","1801"]: return None #不属于化妆品
+    title = itemInfoModel.get('title','-').replace("\n","")
+    picsPath = itemInfoModel.get('picsPath',[])
+    if picsPath == []: picurl = "-"
+    else: picurl = picsPath[0]
     trackParams = data.get('trackParams',{})
     brandId = valid_jsontxt(trackParams.get('brandId','-'))
     # if brandId == "-": return None
     if not brand_dict.has_key(brandId): return None
-    return (item_id,brandId)
+    apiStack = data.get("apiStack",[])
+    if apiStack == []:
+        return None
+    value_json = valid_jsontxt(apiStack[0].get("value",""))
+    if value_json == "": return None
+    value_ob = json.loads(value_json)
+    if type(value_ob) != type({}): return None
+    value = parse_price(value_ob["data"]["itemInfoModel"]["priceUnits"])
+    price = value[0]
+    if int(price) > 160000:
+        price = 1.0
+    result = []
+    result.append(item_id)
+    result.append(brandId)
+    result.append(title)
+    result.append(picurl)
+    result.append(price)
+    return (item_id,result)
 
 
 b_dim = "/hive/warehouse/wlservice.db/t_wrt_tmp_ppzs_brandid"
@@ -50,7 +90,7 @@ c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x,brand_dict,cate_dict)).filter(lambda x:x!=None)
-rdd.groupByKey().mapValues(list).map(lambda (x,y):valid_jsontxt(x) + "\001" + valid_jsontxt(y[0]))\
+rdd.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([str(valid_jsontxt(i)) for i in y[0]]))\
     .saveAsTextFile("/user/wrt/temp/ppzs_itemid_brandid")
 
 
