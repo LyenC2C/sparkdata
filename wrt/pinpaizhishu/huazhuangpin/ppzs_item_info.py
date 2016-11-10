@@ -34,7 +34,7 @@ def parse_price(price_dic):
         if v.replace('.',"").isdigit():
             v = float(v)
         else:
-            v = 0.0
+            v = 0.1
         if min > v:
             min = v
             price = v
@@ -94,6 +94,6 @@ rdd.groupByKey().mapValues(list).map(lambda (x,y): "\001".join([str(valid_jsontx
     .saveAsTextFile("/user/wrt/temp/ppzs_itemid_info")
 
 
-# hfs -rmr /user/wrt/temp/ppzs_itemid_brandid
+# hfs -rmr /user/wrt/temp/ppzs_itemid_info
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  ppzs_itemid_brandid.py
-# LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_brandid' OVERWRITE INTO TABLE ppzs_itemid_brandid PARTITION (ds='20161108');
+# LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_info' OVERWRITE INTO TABLE ppzs_itemid_info PARTITION (ds='20161108');
