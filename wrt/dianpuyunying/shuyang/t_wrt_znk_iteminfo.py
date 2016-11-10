@@ -24,7 +24,7 @@ def parse_price(price_dic):
         if v.replace('.',"").isdigit():
             v = float(v)
         else:
-            v = 0.0
+            v = 0.1
         if min > v:
             min = v
             price = v
