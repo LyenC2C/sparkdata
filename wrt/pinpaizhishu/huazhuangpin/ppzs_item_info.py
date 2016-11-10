@@ -90,11 +90,10 @@ c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x,brand_dict,cate_dict)).filter(lambda x:x!=None)
-rdd.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([str(valid_jsontxt(i)) for i in y[0]]))\
+rdd.groupByKey().mapValues(list).map(lambda (x,y): "\001".join([str(valid_jsontxt(i)) for i in y[0]]))\
     .saveAsTextFile("/user/wrt/temp/ppzs_itemid_brandid")
 
 
-# 所得item_id为店铺中的item_id，包括各种品牌，后续需要过滤掉非目标品牌
 # hfs -rmr /user/wrt/temp/ppzs_itemid_brandid
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  ppzs_itemid_brandid.py
 # LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_brandid' OVERWRITE INTO TABLE ppzs_itemid_brandid PARTITION (ds='20161108');
