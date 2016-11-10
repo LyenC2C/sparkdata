@@ -1,0 +1,2 @@
+create table t_wrt_baijiu_iteminfo like wlbase_dev.t_wrt_wine_ec_item_info_new;
+LOAD DATA  INPATH '/user/wrt/temp/baijiu_iteminfo_tmp' OVERWRITE INTO TABLE t_wrt_baijiu_iteminfo PARTITION (ds='20160306');

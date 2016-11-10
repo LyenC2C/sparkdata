@@ -52,7 +52,7 @@ rdd.saveAsTextFile("/user/wrt/temp/qqweibo_user_company")
 
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_qqweibo_company.py
 
-#LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user_school' OVERWRITE INTO TABLE t_qqweibo_user_company
+#LOAD DATA  INPATH '/user/wrt/temp/qqweibo_user_company' OVERWRITE INTO TABLE t_qqweibo_user_company
 
 
 #

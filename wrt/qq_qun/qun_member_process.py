@@ -68,7 +68,7 @@ s = "/data/develop/qq/group_member.json"
 rdd = sc.textFile(s).map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd.saveAsTextFile('/user/wrt/qun_member_info')
 
-#spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 qq_qun_process.py
+#spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 40 qun_member_process.py
 
 
 

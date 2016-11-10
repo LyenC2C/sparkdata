@@ -39,3 +39,5 @@ rdd.saveAsTextFile('/user/wrt/keywords_shop_tmp')
 
 #hfs -rmr /user/wrt/keywords_shop_tmp
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_keywords_shop.py
+#LOAD DATA  INPATH '/user/wrt/keywords_shop_tmp' OVERWRITE INTO TABLE t_base_keywords_shop PARTITION (ds='20160714');
+#

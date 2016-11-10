@@ -1,6 +1,6 @@
 use wlbase_dev;
 
-CREATE  TABLE  if not exists t_qqweibo_user_school(
+CREATE  TABLE  if not exists t_qqweibo_user_company(
 id String COMMENT '微博id',
 school_info String COMMENT '工作相关信息（各个工作由\003分隔，每个工作信息由\002分隔）'
 )

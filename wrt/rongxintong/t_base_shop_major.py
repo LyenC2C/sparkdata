@@ -22,4 +22,4 @@ rdd = sc.textFile("/commit/project/sichuanseller/sichuan.sellerid.info").map(lam
 rdd.saveAsTextFile('/user/wrt/temp/shop_major_tmp')
 
 #spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shop_major.py
-#LOAD DATA  INPATH '/user/wrt/temp/shop_major_tmp' OVERWRITE INTO TABLE t_base_shop_major
+#LOAD DATA  INPATH '/user/wrt/temp/shop_majork_tmp' OVERWRITE INTO TABLE t_base_shop_major
