@@ -4,7 +4,7 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 
-sc = SparkContext(appName="ppzs_itemid_brandid")
+sc = SparkContext(appName="ppzs_itemid_info")
 
 def valid_jsontxt(content):
     # res = content
@@ -84,14 +84,14 @@ def f(line,brand_dict,cate_dict):
     return (item_id,result)
 
 
-b_dim = "/hive/warehouse/wlservice.db/t_wrt_tmp_ppzs_brandid"
+b_dim = "/hive/warehouse/wlservice.db/ppzs_brandid_72ge"
 s = "/commit/tb_tmp/iteminfo/20161107.pinpai.iteminfo.complete"
 c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x,brand_dict,cate_dict)).filter(lambda x:x!=None)
 rdd.groupByKey().mapValues(list).map(lambda (x,y): "\001".join([str(valid_jsontxt(i)) for i in y[0]]))\
-    .saveAsTextFile("/user/wrt/temp/ppzs_itemid_brandid")
+    .saveAsTextFile("/user/wrt/temp/ppzs_itemid_info")
 
 
 # hfs -rmr /user/wrt/temp/ppzs_itemid_brandid
