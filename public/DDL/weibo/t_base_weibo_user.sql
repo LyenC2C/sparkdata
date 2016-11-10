@@ -1,5 +1,5 @@
 
-CREATE  TABLE  if not exists t_base_weibo_user_t (
+CREATE  TABLE  if not exists t_base_weibo_user(
 
 id bigint COMMENT ' 用户UID ' ,
 idstr string COMMENT ' 字符串型的用户UID ',

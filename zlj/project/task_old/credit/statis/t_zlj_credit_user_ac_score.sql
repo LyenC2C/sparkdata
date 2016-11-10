@@ -2,6 +2,7 @@
 
   DROP TABLE  IF EXISTS  t_zlj_credit_user_ac_score;
 
+  (sum(pow(2.8, datediff* (-0.005)))+20)/75
 
 CREATE TABLE t_zlj_credit_user_ac_score AS
   SELECT
