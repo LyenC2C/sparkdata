@@ -1,0 +1,10 @@
+t_base_ec_record_dev_new
+
+[依赖]
+wlbase_dev.t_base_ec_item_feed_dev_new
+wlbase_dev.t_base_ec_item_dev_new
+
+
+
+[更新]
+更新至:20161014   更新内容:至20160927-20161014   更新日期:20161014

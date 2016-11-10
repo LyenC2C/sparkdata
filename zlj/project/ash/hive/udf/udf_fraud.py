@@ -30,3 +30,5 @@ for line in sys.stdin:
     keywords = '|'.join(return_1+return_2)
     fields.extend([fraud_score,keywords])
     print "\t".join(fields)
+
+

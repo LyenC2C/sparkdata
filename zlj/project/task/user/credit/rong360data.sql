@@ -3,16 +3,6 @@
 
 
 
---  手机号生成index
- create table  t_zlj_phone_rank_index as
- SELECT t1.id ,rn , t2.id1 as  tel_index
-  from
-t_zlj_t_base_uid_tmp_rank  t1 join t_base_uid_tmp t2 on t2.ds='tel_index' and t1.uid=t2.uid  ;
-
--- create table t_zlj_dc_tmp as  SELECT DISTINCT  uid from t_zlj_t_base_uid_tmp_rank ;
-
-
-LOAD DATA  local  INPATH '/mnt/raid1/zlj/dcweibo/1029_1/tels_index' OVERWRITE INTO TABLE t_base_uid_tmp PARTITION (ds='tel_index')
 
 -- 328253366
 SELECT COUNT(1) from t_base_uid_tmp where ds='ttinfo' ;
