@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS t_ec_zlj_userbuy_history (
   cat_id STRING,
   brand_id STRING
 )
-  COMMENT '¹ºÂò¼ÇÂ¼±í'
+  COMMENT 'ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½'
   PARTITIONED BY  (ds STRING )
   ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001' LINES TERMINATED BY '\n'
   stored AS RCFile;
@@ -86,9 +86,9 @@ CREATE TABLE t_zlj_userProfile_cat2_num
       t
     GROUP BY user_id;
 
-#ÆÀÂÛ´ÎÊý
+#ï¿½ï¿½ï¿½Û´ï¿½ï¿½ï¿½
 
-# ÆÀ¼Û ÌØÕ÷¹ØÁª
+# ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 CREATE TABLE t_zlj_userProfile_cat2_num_userInfo
   AS
     SELECT
@@ -127,7 +127,7 @@ WHERE tage > 17 AND tage < 60;
 
 
 
-# ¸ñÁ¦
+# ï¿½ï¿½ï¿½ï¿½
 DROP TABLE t_zlj_tmp;
 CREATE TABLE t_zlj_tmp
   AS
@@ -164,41 +164,3 @@ SELECT
 from  t_zlj_tmp  where tage>0
 
 
-# ÉÏº£    6466
-# ÔÆÄÏ    1760
-# ÄÚÃÉ¹Å  335
-# ±±¾©    2816
-# ¼ªÁÖ    564
-# ËÄ´¨    5022
-# Ìì½ò    925
-# ÄþÏÄ    139
-# °²»Õ    4698
-# É½¶«    4920
-# É½Î÷    1360
-# ¹ã¶«    17657
-# ¹ãÎ÷    3511
-# ÐÂ½®    348
-# ½­ËÕ    13322
-# ½­Î÷    4724
-# ºÓ±±    2997
-# ºÓÄÏ    5339
-# Õã½­    12800
-# º£ÄÏ    690
-# ºþ±±    6331
-# ºþÄÏ    5956
-# ¸ÊËà    526
-# ¸£½¨    4907
-# Î÷²Ø    62
-# ¹óÖÝ    2344
-# ÁÉÄþ    1452
-# ÖØÇì    3248
-# ÉÂÎ÷    1931
-# Çàº£    83
-# Ïã¸Û    2
-# ºÚÁú½­  749
-select  provice ,count(1 ) from
-(
-select
-  split(tloc,' ')[0]  as provice
-  from t_zlj_tmp where  length(tloc)>0
-)t group by provice
