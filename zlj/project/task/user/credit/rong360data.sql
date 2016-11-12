@@ -59,7 +59,7 @@ sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
    sum(CASE WHEN bc_type = 'B'       THEN price         ELSE 0 END)/sum(price)     b_bc_price_ratio,
    sum(CASE WHEN CAST (brand_id as bigint )>10       THEN price         ELSE 0 END)/sum(price)   brand_effec_price_ratio,
    sum(CASE WHEN CAST (brand_id as bigint )>10     THEN 1        ELSE 0 END)/COUNT(1)            brand_effec_num_ratio,
-   sum(sdfagdsfadsagdsasdgfklj;lkjl;kjsafdsafdadfsadsadsacase when price <=50 then 1 else 0 end)/count(*) as b50_num_ratio,
+   sum(case when price <=50 then 1 else 0 end)/count(*) as b50_num_ratio,
    sum(case when price <=50 then price else 0 end)/sum(price ) as b50_ratio
 from t_base_ec_record_dev_new_rong360 where rn<4 and price<59999
 group by phone_no
@@ -172,6 +172,8 @@ t_base_user_profile t2 on t1.user_id =t2.tb_id
  join  wlfinance.t_hx_model_rong360_finnal2 t3  on t1.phone_no=t3.phone_no
   join wlfinance.t_hx_rong360_user  t4  on t1.phone_no=t4.phone_no  ;
 
+
+SELECT  count(1) from wlfinance.t_hx_rong360_user where class in  ( 'test_1w' ,'tag_user');
 
 -- SELECT cast(regexp_replace(verify, 'VIP等级', '')  as int) as  verify_level from t_base_user_profile limit 10
 --

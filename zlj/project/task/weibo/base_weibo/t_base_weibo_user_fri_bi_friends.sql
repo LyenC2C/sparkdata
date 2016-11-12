@@ -30,6 +30,7 @@ from t_base_weibo_user_fri where ds = 20160902 lateral view explode(split(ids,',
 
 
 -- 过滤掉不在user表中用户数据
+Drop table t_base_weibo_user_fri_bi_friends_1106_fiter_users;
 create table t_base_weibo_user_fri_bi_friends_1106_fiter_users as
 SELECT t1.*  from
 (
@@ -37,7 +38,8 @@ SELECT t1.* from t_base_weibo_user_fri_bi_friends_1106 t1
   join
 (select idstr as weibo_id from t_base_weibo_user where ds=20161104)t2
 on t1.id1=t2.weibo_id
-)t1 join  (select idstr as weibo_id from t_base_weibo_user where ds=20161104)t2   on t1.id1=t2.weibo_id ;
+)t1 join  (select idstr as weibo_id from t_base_weibo_user where ds=20161104)t2   on t1.id2=t2.weibo_id ;
+
 
 -- 去重
 
@@ -47,6 +49,13 @@ SELECT * from t_base_weibo_user_fri where ds=20161101 and id in (1000009700,1916
 
 重复数 165691458
 SELECT count(1) from  (SELECT id,count(1) from t_base_weibo_user_fri where ds=20161106 group by id HAVING count(1)>1)t;
+
+
+
+
+
+
+
 
 
 --

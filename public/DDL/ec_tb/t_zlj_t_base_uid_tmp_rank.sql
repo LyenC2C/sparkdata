@@ -31,7 +31,7 @@ LOAD DATA  local  INPATH '/mnt/raid1/zlj/dcweibo/1029_1/tels_index' OVERWRITE IN
 
 create table t_base_yhhx_tel as
  SELECT
- buy_month               ,
+buy_month               ,
 avg_cnt                 ,
 std_cnt                 ,
 avg_price               ,
@@ -48,9 +48,15 @@ brand_effec_num_ratio   ,
 total_price             ,
 b50_ratio               ,
 b50_num_ratio           ,
- t2.uid as tel
+t2.uid as tel ,
+t2.tel_tb_num ,
+COALESCE(t3.cnt_total,0) as cnt_total
   from
   t_base_yhhx t1 join
-  (select uid,tel_index from t_zlj_phone_rank_index  group by uid ,tel_index) t2 on t1.tel_index=t2.tel_index ;
+  (select uid,tel_index,count(1) as tel_tb_num  from t_zlj_phone_rank_index  group by uid ,tel_index) t2 on t1.tel_index=t2.tel_index
+  left join wlfinance.t_hx_taobao_fraud_userinfo t3 on t2.uid=t3.tel
+  ;
+
+
 
   SELECT  * from t_base_yhhx_tel where tel_index=20221166
