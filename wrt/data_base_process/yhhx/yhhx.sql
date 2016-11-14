@@ -1,20 +1,20 @@
 
 hive<<EOF
-use wlbase_dev;
-drop table wlbase_dev.t_base_user_profile_telindex;
-create table wlbase_dev.t_base_user_profile_telindex as
-select
-t1.tel_index,
-t2.*
-from
-t_zlj_phone_rank_index t1
-join
-t_base_user_profile t2
-on
-t1.tb_id = t2.tb_id
-and
-t1.rn = 1
-;
+-- use wlbase_dev;
+-- drop table wlbase_dev.t_base_user_profile_telindex;
+-- create table wlbase_dev.t_base_user_profile_telindex as
+-- select
+-- t1.tel_index,
+-- t2.*
+-- from
+-- t_zlj_phone_rank_index t1
+-- join
+-- t_base_user_profile t2
+-- on
+-- t1.tb_id = t2.tb_id
+-- and
+-- t1.rn = 1
+-- ;
 
 drop table wlbase_dev.t_hx_model_yhhx_avgprice_tmp1;
 create table wlbase_dev.t_hx_model_yhhx_avgprice_tmp1 as
@@ -28,7 +28,7 @@ round(sum(a.price),2) as price,
 count(*) as cnt,
 round(sum(a.price)/count(*),2) as avg_price,
 round(sum(a.price)/count(*),2)/c.price as price_ratio
-from wlbase_dev.t_base_ec_record_dev_new_telindex a
+from wlbase_dev.t_base_ec_record_dev_new_telindex_fix a
 left join wlfinance.t_hx_ec_dim b on a.root_cat_id=b.cate_level1_id
 left join wlbase_dev.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
 where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20141231'
@@ -173,7 +173,7 @@ sum(if (root_cat_id=50454031,1,0))/count(*) as cnt_ratio_50454031,
 sum(if (root_cat_id=50468001,1,0))/count(*) as cnt_ratio_50468001,
 sum(if (root_cat_id=50510002,1,0))/count(*) as cnt_ratio_50510002,
 sum(if (root_cat_id=99,1,0))/count(*) as cnt_ratio_99
-from wlbase_dev.t_base_ec_record_dev_new_telindex
+from wlbase_dev.t_base_ec_record_dev_new_telindex_fix
 where rn<4 and price<59999
 group by tel_index;
 
@@ -307,7 +307,7 @@ sum(if (root_cat_id=50454031,price,0))/sum(price) as price_ratio_50454031,
 sum(if (root_cat_id=50468001,price,0))/sum(price) as price_ratio_50468001,
 sum(if (root_cat_id=50510002,price,0))/sum(price) as price_ratio_50510002,
 sum(if (root_cat_id=99,price,0))/sum(price) as price_ratio_99
-from wlbase_dev.t_base_ec_record_dev_new_telindex
+from wlbase_dev.t_base_ec_record_dev_new_telindex_fix
 where rn<4 and price<59999
 group by tel_index;
 
@@ -316,7 +316,7 @@ drop table wlbase_dev.t_hx_model_yhhx_month_tmp1;
 create table wlbase_dev.t_hx_model_yhhx_month_tmp1 as
 select
 tel_index,substr(dsn,1,6) as month,count(*) as cnt,sum(price) as price
-from wlbase_dev.t_base_ec_record_dev_new_telindex
+from wlbase_dev.t_base_ec_record_dev_new_telindex_fix
 where rn<4 and price<59999 and dsn>'20141231'
 group by tel_index,substr(dsn,1,6) ;
 
@@ -622,7 +622,7 @@ sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
    sum(CASE WHEN CAST (brand_id as bigint )>10     THEN 1        ELSE 0 END)/COUNT(1)    as        brand_effec_num_ratio,
    sum(case when price <=50 then 1 else 0 end)/count(*) as b50_num_ratio,
    sum(case when price <=50 then price else 0 end)/sum(price ) as b50_ratio
-from t_base_ec_record_dev_new_telindex where rn<4 and price<59999
+from t_base_ec_record_dev_new_telindex_fix where rn<4 and price<59999
 group by tel_index
 ;
 
