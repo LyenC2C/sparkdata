@@ -14,12 +14,6 @@ and ds='ttinfo'
 left join t_base_user_profile t2 on t1.id1=t2.tb_id
  ;
 
- --  手机号生成index
- Drop table t_zlj_phone_rank_index ;
- create table  t_zlj_phone_rank_index as
- SELECT t1.id as tb_id  ,rn ,t1.uid, t2.id1 as  tel_index
-  from
-t_zlj_t_base_uid_tmp_rank  t1 join t_base_uid_tmp t2 on t2.ds='tel_index' and t1.uid=t2.uid  ;
 
 -- create table t_zlj_dc_tmp as  SELECT DISTINCT  uid from t_zlj_t_base_uid_tmp_rank ;
 
