@@ -53,7 +53,7 @@ def try_parse(line,flag):
 def parse(line,flag):
     ts=''
     txt=''
-    if flag=='insert':
+    if flag =='insert':
         txt=valid_jsontxt(line)
     else:
         lis=valid_jsontxt(line).split('\t')
@@ -84,9 +84,9 @@ def parse(line,flag):
     for v in props:
         if valid_jsontxt('品牌') in valid_jsontxt(v['name']):
             brand_name=v['value']
-    value=parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
-    price=value[0]
-    price_zone=value[1]
+    value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+    price = value[0]
+    price_zone = value[1]
     is_online=1
     off_time='-'
     seller=ob['seller']

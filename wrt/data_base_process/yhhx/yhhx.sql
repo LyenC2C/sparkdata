@@ -1,6 +1,20 @@
 
 hive<<EOF
 use wlbase_dev;
+drop table wlbase_dev.t_base_user_profile_telindex;
+create table wlbase_dev.t_base_user_profile_telindex as
+select
+t1.tel_index,
+t2.*
+from
+t_zlj_phone_rank_index t1
+join
+t_base_user_profile t2
+on
+t1.tb_id = t2.tb_id
+and
+t1.rn = 1
+;
 
 drop table wlbase_dev.t_hx_model_yhhx_avgprice_tmp1;
 create table wlbase_dev.t_hx_model_yhhx_avgprice_tmp1 as

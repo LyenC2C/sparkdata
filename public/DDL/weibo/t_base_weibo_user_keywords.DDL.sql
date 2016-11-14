@@ -1,4 +1,4 @@
-CREATE  TABLE  if not exists t_base_user_keywords(
+CREATE  TABLE  if not exists t_base_weibo_user_keywords(
 user_id string comment '用户id',
 keywords string comment '用户关键词及权值（关键词用tab隔开，每个用户最多20个关键词）'
 )

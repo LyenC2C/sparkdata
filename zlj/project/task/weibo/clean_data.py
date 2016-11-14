@@ -26,7 +26,7 @@ stopwords=set()
 for line in open('/common/stopwords.txt'):
     stopwords.add(line.strip().decode('utf-8'))
 # 分词
-def  cut(line):
+def cut(line):
     words=jd.seg(jpype.JString(line))
     coreStop.apply(words)
     return [i.word for i  in words if i.word not in stopwords]
@@ -40,7 +40,7 @@ def clean_weibo(line):
 
 
 # fin = open("/home/wrt/wrt/weibo/negative_label")
-fw=open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706_cutsd','w')
+fw = open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706_cutsd','w')
 
 fo = open('/mnt/raid2/zlj/weibo1/weibo_mts_20160706.txt')
 
