@@ -1,12 +1,12 @@
 CREATE EXTERNAL TABLE  if not exists t_base_ec_shopitem_dev (
 shop_id String COMMENT '店铺id',
-shopTitle String COMMENT '店铺名字',
+shop_name String COMMENT '店铺名字',
 item_count String COMMENT '店铺商品总数',
-auctionId String COMMENT '商品id',
-title String COMMENT '商品title',
+item_id String COMMENT '商品id',
+item_title String COMMENT '商品title',
 picUrl String COMMENT '商品图片url',
 sold BIGINT COMMENT '销量',
-day_sold BIGINT COMMET '日销量',
+day_sold BIGINT COMMENT '日销量',
 reservePrice float COMMENT '商品原价',
 salePrice float COMMENT '商品现价',
 auctionType String COMMENT '商品类型（非淘宝天猫）',
@@ -25,4 +25,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001' LINES TERMINATED BY '\n' ;
 
 -- 此表用于：
 -- 1.给采集组提供最新的item_id,其中item_id可以按照销量排序
+use wlservice;
+create table t_wrt_upgrade_itemid AS
+select item_id,sold from wlbase_dev.t_base_ec_shopitem_dev where ds = 20160722 order by sold desc
 -- 2.给开发组提供“店铺运营”项目数据

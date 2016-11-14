@@ -20,7 +20,7 @@ END AS weeksold
 FROM
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as now_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108)t1
 JOIN
 (select item_id,sold from wlbase_dev.t_base_ec_shopitem_b where ds = 20161107)t2
 ON
@@ -43,7 +43,7 @@ else tt1.now_sold - tt2.now_sold
 end
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as now_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108 and brand_id = 105076)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108 and brand_id = 105076)t1
 JOIN
 (select item_id,sold from wlbase_dev.t_base_ec_shopitem_b where ds = 20161106 and sold is not null)t2
 ON
@@ -52,7 +52,7 @@ t1.item_id = t2.item_id
 left JOIN
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as now_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108 and brand_id = 105076)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108 and brand_id = 105076)t1
 JOIN
 (select item_id,sold from wlbase_dev.t_base_ec_shopitem_b where ds = 20161030 and sold is not null)t2
 ON
@@ -62,7 +62,7 @@ t1.item_id = t2.item_id
 ------------------------------------------------------------
 insert overwrite table wlservice.ppzs_brandid_weeksold PARTITION(ds='20161106')
 select t1.brand_id,sum(t2.week_sold) as weeksold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108)t1
 JOIN
 (
 select item_id,sum(day_sold) as week_sold from wlbase_dev.t_base_ec_item_daysale_dev_new where ds >= 20161030 and ds <=20161108
@@ -88,7 +88,7 @@ end
 as week_sold from
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as now_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108)t1
 JOIN
 (
 select item_id,max(sold) as sold from wlbase_dev.t_base_ec_shopitem_b where ds <= 20161106 and ds >= 20161031
@@ -100,7 +100,7 @@ t1.item_id = t2.item_id
 left JOIN
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as last_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108)t1
 JOIN
 (
 select item_id,max(sold) as sold from wlbase_dev.t_base_ec_shopitem_b where ds <= 20161030 and ds >= 20161024
@@ -118,7 +118,7 @@ group by brand_id
 select tt1.item_id,tt1.now_sold,tt2.last_sold from
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as now_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108)t1
 JOIN
 (
 select item_id,max(sold) as sold from wlbase_dev.t_base_ec_shopitem_b where ds <= 20161106 and ds >= 20161031
@@ -130,7 +130,7 @@ t1.item_id = t2.item_id
 left JOIN
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as last_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_brandid where ds = 20161108)t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = 20161108)t1
 JOIN
 (
 select item_id,max(sold) as sold from wlbase_dev.t_base_ec_shopitem_b where ds <= 20161030 and ds >= 20161024
@@ -142,3 +142,4 @@ t1.item_id = t2.item_id
 ON
 tt1.item_id = tt2.item_id
 where tt1.brand_id = 14601550
+

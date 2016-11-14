@@ -36,3 +36,19 @@ left join
 on
 t1.item_id = t2.item_id
 
+--20161109临时脚本
+create table wlservice.t_wrt_tmp_record_b_20161109 as
+select item_id,ds,sold from
+(
+select
+t1.item_id,
+case when t2.ds is null then "19760101" else t2.ds end as ds,
+t1.sold
+from
+(select item_id,sold from wlbase_dev.t_base_ec_shopitem_b where ds = 20161107)t1
+left join
+(select item_id,max(dsn) as ds from wlbase_dev.t_base_ec_record_dev_new where ds = 'true' group by item_id)t2
+on
+t1.item_id = t2.item_id
+)t
+
