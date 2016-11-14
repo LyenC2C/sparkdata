@@ -60,7 +60,7 @@ def quchong_1(x, y):
 s1 = "/commit/itemsold/20161113/10.2.4.175_002590aded80.znk.2016-11-13.complete"
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
-rdd1.saveAstextFile("/user/wrt/temp/znk_sold_aid")
+rdd1.saveAsTextFile("/user/wrt/temp/znk_sold_aid")
 
 #hfs -rmr /user/wrt/temp/znk_sold_aid
 #spark-submit  --executor-memory 9G  --driver-memory 10G  --total-executor-cores 120 t_wrt_znk_sold_qiangjiu.py
