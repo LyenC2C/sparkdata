@@ -1,6 +1,7 @@
 
 create table t_base_yhhx_model_tel as
-SELECT
+select * from
+(SELECT
  uid  as tel ,
 buy_month              ,
 avg_cnt                ,
@@ -268,29 +269,35 @@ active_score           ,
 b50_num_ratio          ,
 qq_age                 ,
 qq_gender              ,
-tel_loc                ,
+
 case when alipay like '已通过支付宝实名认证' then 1 else 0 end  as alipay_flag  ,
 buycnt  ,
 cast(regexp_replace(verify, 'VIP等级', '')  as int) as  verify_level ,
 (12 * (2016 - YEAR(regexp_replace(regtime, '\\.', '-'))) + (7 - MONTH(regexp_replace(regtime, '\\.', '-')))) regtime_month ,
-tel_tb_num
-
+tel_tb_num ,
+tel_loc      ,
+           row_number()  OVER (distribute by uid sort by buycnt) as rn
  from t_base_yhhx_model t1 join
-
 (select uid,tel_index,count(1) as tel_tb_num  from t_zlj_phone_rank_index  group by uid ,tel_index) t2 on t1.tel_index=t2.tel_index
+
+)t where rn=1
 ;
 
 
-create table t_base_yhhx_model_tel_dup as
-SELECT  * from
-(
-SELECT  t1.* ,row_number()  OVER (PARTITION BY tel ORDER BY 1 desc) as rn
+-- create table t_base_yhhx_model_tel_dup as
+-- SELECT  * from
+-- (
+-- SELECT  t1.* ,row_number()  OVER (PARTITION BY tel ORDER BY 1 desc) as rn
+--
+--  from t_base_yhhx_model_tel t1
+--  )t where rn=1
+-- ;
 
- from t_base_yhhx_model_tel t1
- )t where rn=1
-;
+-- check
 
+162896734
+SELECT  count(1) from t_base_yhhx_model_tel ;
 
-SELECT  count(1) from t_base_yhhx_model ;
-
+162896734
+SELECT  count(1) from (select tel  from t_base_yhhx_model_tel group by tel )t;
 

@@ -1,5 +1,7 @@
 
 
+1男 2女
+
 -- tb_id	string	淘宝id
 -- alipay	string	支付宝实名验证
 -- buycnt	string	用户从注册到16年5月购买商品总数
@@ -115,7 +117,59 @@ from t_base_user_profile
 ;
 
 
-select sum( case when  weibo_verified='True' then 1 else 0 end )
+select sum( case when  weibo_verified='True' then 1 else 0 endy )
 from t_base_user_profile  ;
 
-SELECT count(DISTINCT tb_id ) from t_base_user_profile;
+523696596
+SELECT count(1) from
+  (select tb_id from t_base_user_profile GROUP BY  tb_id)t ;
+
+525891768
+select count(1) from t_base_user_profile  ;
+
+
+--2000w去重
+create table t_base_user_profile_disinct as
+SELECT
+  tb_id                 ,
+alipay                ,
+buycnt                ,
+verify                ,
+regtime               ,
+tb_nick               ,
+tb_location           ,
+qq_gender             ,
+qq_age                ,
+qq_name               ,
+qq_loc                ,
+qq_find_schools       ,
+tel_loc               ,
+xianyu_gender         ,
+xianyu_birthday       ,
+xianyu_constellation  ,
+xianyu_province       ,
+xianyu_city           ,
+xianyu_detail_loc     ,
+model_predict_gender  ,
+weibo_id              ,
+weibo_screen_name     ,
+weibo_gender          ,
+weibo_followers_count ,
+weibo_friends_count   ,
+weibo_statuses_count  ,
+weibo_created_at      ,
+weibo_location        ,
+weibo_verified        ,
+weibo_colleges        ,
+weibo_company         ,
+58_tel                ,
+58_nickname
+  from
+(
+select *, row_number() over(distribute by tb_id sort by buycnt) as rn
+
+from t_base_user_profile
+)t where rn=1;
+
+
+
