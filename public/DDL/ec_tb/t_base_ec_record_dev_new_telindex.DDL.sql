@@ -1,9 +1,11 @@
-create table wlbase_dev.t_base_ec_record_dev_new_telindex as
+
+t_base_ec_record_dev_new_telindex
+--
+create table wlbase_dev.t_base_ec_record_dev_new_telindex_fix as
 select
 t1.tel_index as tel_index,
 t1.rn as rn,
 t2.item_id  as item_id,
-t2.feed_id  as feed_id,
 t2.user_id  as user_id,
 t2.content_length as content_length,
 t2.annoy as annoy,
@@ -25,6 +27,6 @@ t_zlj_phone_rank_index t1
 join
 t_base_ec_record_dev_new t2
 on
-t1.id = t2.user_id
+t1.tb_id = t2.user_id
 and
 t2.ds = 'true'
