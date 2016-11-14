@@ -22,9 +22,10 @@ sc = SparkContext(appName="t_base_item_sale_" + today,conf = conf)
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
-        return content.encode("utf-8")
+        res = content.encode("utf-8")
     else:
-        return content
+        res = str(content)
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def f1(line):
     ss = line.strip().split("\t",1)
