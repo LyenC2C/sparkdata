@@ -18,14 +18,16 @@ def valid_jsontxt(content):
 def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     if type(ob) != type({}): return None
-    year = ob.get("year","-")
-    blacklist_info = ob.get("blacklist_info",{})
-    if blacklist_info == {}: return None
-    phone = blacklist_info.get("phone","-")
-    user_id_number = blacklist_info.get("user_id_number","-")
-    uname = blacklist_info.get("uname","-")
-    real_name = blacklist_info.get("real_name","-")
-    borrow_list = blacklist_info.get("borrow_list",[])
+    year = ob.get("year","-") #此人被拍拍贷公布的年份
+    # blacklist_info = ob.get("blacklist_info",{})
+    # if blacklist_info == {}: return None
+    user_phone = ob.get("user_phone",'-')
+    # phone = ob.get("phone","-")
+    id_card = ob.get("id_card","-")
+    user_name = ob.get("user_name","-")
+    real_name = ob.get("real_name","-")
+    borrow_list = ob.get("borrow_list",[])
+    borrow_money = ob.get("borrow_money",'-')
     if borrow_list == []: return None
     result = []
     for borrow in borrow_list:
@@ -36,11 +38,12 @@ def f(line):
         time_out_interest = borrow.get("time_out_interest","-")
         time_out_days = borrow.get("time_out_days","-")
         lv.append(list_number)
-        lv.append(uname)
+        lv.append(user_name)
         lv.append(real_name)
-        lv.append(phone)
-        lv.append(user_id_number)
+        lv.append(user_phone)
+        lv.append(id_card)
         lv.append(year)
+        lv.append(borrow_money)
         lv.append(borrow_date)
         lv.append(borrow_nper)
         lv.append(time_out_interest)
@@ -48,7 +51,7 @@ def f(line):
         result.append((list_number,lv))
     return result
 
-rdd_c = sc.textFile("/commit/credit/ppd/financial_blacklist_ppd_user_info").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
+rdd_c = sc.textFile("/commit/credit/ppd/ppdai.userinfo.20161115.sq").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): "\001".join([valid_jsontxt(i) for i in y[0]]))
 rdd.saveAsTextFile('/user/wrt/temp/ppd_info_tmp')
 
