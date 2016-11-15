@@ -55,6 +55,7 @@ rdd_c = sc.textFile("/commit/credit/ppd/ppdai.userinfo.20161115.sq").flatMap(lam
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): "\001".join([valid_jsontxt(i) for i in y[0]]))
 rdd.saveAsTextFile('/user/wrt/temp/ppd_info_tmp')
 
-# hfs -rmr /user/wrt/temp/ppd_info_tmp
+# hfs -rmr
+# /user/wrt/temp/ppd_info_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_ppd_info.py
 # LOAD DATA  INPATH '/user/wrt/temp/ppd_info_tmp' OVERWRITE INTO TABLE t_base_ppd_info PARTITION (ds='20160929');
