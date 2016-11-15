@@ -25,6 +25,7 @@ stored as textfile ;
 
 LOAD DATA   INPATH '/user/mc/weibo/edu_res/' OVERWRITE INTO TABLE t_base_weibo_edu PARTITION (ds='20160830') ;
 LOAD DATA   INPATH '/user/mc/weibo/education' OVERWRITE INTO TABLE t_base_weibo_edu PARTITION (ds='20161111') ;
+LOAD DATA   INPATH '/user/mc/weibo/education' OVERWRITE INTO TABLE t_base_weibo_edu PARTITION (ds='20161115') ;
 
 
 SELECT school,COUNT(1)  from t_base_weibo_edu group by school ;

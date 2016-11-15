@@ -9,6 +9,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
 
 LOAD DATA   INPATH '/user/mc/weibo/tag_res2/' OVERWRITE INTO TABLE t_base_weibo_usertag PARTITION (ds='20160830') ;
+LOAD DATA   INPATH '/user/mc/weibo/user_tag' OVERWRITE INTO TABLE t_base_weibo_usertag PARTITION (ds='20161115') ;
 
 
 select  tag, COUNT(1) from t_base_weibo_usertag lateral view explode(split(tags,'\002')) tt as tag where LENGTH(tag)>1
