@@ -27,7 +27,7 @@ count(*) as cnt,
 round(sum(a.price)/count(*),2) as avg_price,
 round(sum(a.price)/count(*),2)/c.price as price_ratio
 from wlservice.t_zlj_tmp_rong360_1w_record  a
-left join wlservice.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
+left join wlbase_dev.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
 where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20141231'
 group by a.tel,a.root_cat_id,a.root_cat_name,b.cat2,c.price;
 
