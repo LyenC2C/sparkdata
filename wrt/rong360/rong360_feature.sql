@@ -15,23 +15,21 @@ hive<<EOF
 -- t1.rn = 1
 -- ;
 
-drop table wlservice.t_wrt_model_rong360_avgprice_tmp1;
+drop table wlservice.t_wrt_model_rong360_avgprice_tmp1; --算平均价格
 create table wlservice.t_wrt_model_rong360_avgprice_tmp1 as
 select
 a.tel,
-b.cate_level1_id,
+a.root_cat_id,
 a.root_cat_name,
-b.cat2,
 c.price as cat_avg_price,
 round(sum(a.price),2) as price,
 count(*) as cnt,
 round(sum(a.price)/count(*),2) as avg_price,
 round(sum(a.price)/count(*),2)/c.price as price_ratio
 from wlservice.t_zlj_tmp_rong360_1w_record  a
-left join wlfinance.t_wrt_ec_dim b on a.root_cat_id=b.cate_level1_id
 left join wlservice.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
 where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20141231'
-group by a.tel,b.cate_level1_id,a.root_cat_name,b.cat2,c.price;
+group by a.tel,a.root_cat_id,a.root_cat_name,b.cat2,c.price;
 
 
 drop table wlservice.t_wrt_model_rong360_purchase_power;
