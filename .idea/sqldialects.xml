@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/public/DDL/SQL/cat_brand_topN.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/public/DDL/ec_tb/t_base_ec_tb_xianyu_item.DDL.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/service/task/ewrq.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/financial_api/t_zlj_credit_valid_api1.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/perfer/hive/1_t_zlj_ec_userbuy.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/perfer/hive/2_1_perfer_dim_tag.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/perfer/hive/4_perfer_shop.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/user/user_profile/data.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/user/user_profile/t_base_user_info_s_tbuserinfo_t_step6.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/user/user_profile/t_base_user_profile.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/userbuyAnalys/online.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/userbuyAnalys/t_base_ec_item_feed_dev_inc.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/userbuyAnalys/t_base_ec_record_dev_new.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/base_weibo/t_base_weibo_user_fri_bi_friends.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/base_weibo/t_base_weibo_user_fri_tel.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/dcweibo/chusai/t_zlj_dc_weibodata.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/dcweibo/juesai/dc_juesai_data.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/visualization/t_zlj_visul_tel_bi_friends_link_rs.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/brand/data.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/comment/anay.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/comment/data.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/comment/t_zlj_feed2015_parse_jion_cat_brand_shop.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/comment/t_zlj_user_brand_loyalty_point.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/credit/anay/data.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/credit/house/train_data.sql" dialect="DB2" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/credit/statis/t_base_credit_consume_per_price.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/credit/statis/t_zlj_credit_user_ac_score.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/credit/statis/t_zlj_credit_user_haitao.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/credit/statis/t_zlj_credit_user_level_info.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/credit/statis/t_zlj_credit_user_price_statis.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/gender/data.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/jiu/311_wine_check.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/jiu/wuliangye/wuliangye.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/qq/group/link.py" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/qq/group/link.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/0_table/t_zlj_shop_join_major.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/0_table/t_zlj_shop_shop_user_level_verify.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job1/t_zlj_shop_baseinfo_rn.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job2/t_zlj_shop_cat_dist.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job2/t_zlj_shop_item_count_favor.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job3/t_wrt_shop_monsold.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job3/t_zlj_shop_credit_fans_inc.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job4/t_wrt_tmp_14shop_totalsold.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job5/t_zlj_shop_user_age.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job5/t_zlj_shop_user_alipay_statis.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job5/t_zlj_shop_user_inc.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job5/t_zlj_shop_user_second_buy.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/25/job5/t_zlj_shop_user_verify_statis.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/modify/shop_join_major.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/user.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/v2.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/v4.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/广东/da1.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/shop/广东/data.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task_old/zhejiang/te.sql" dialect="MySQL" />
+  </component>
+</project>
