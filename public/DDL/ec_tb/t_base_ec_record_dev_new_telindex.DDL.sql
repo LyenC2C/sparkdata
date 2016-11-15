@@ -29,4 +29,4 @@ t_base_ec_record_dev_new t2
 on
 t1.tb_id = t2.user_id
 and
-t2.ds = 'true'
+t2.ds = 'true' ;

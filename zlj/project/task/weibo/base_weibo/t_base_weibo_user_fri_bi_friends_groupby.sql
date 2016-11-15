@@ -23,7 +23,7 @@ create table t_base_weibo_user_fri_bi_friends_groupby as
 Drop table t_base_weibo_user_fri_bi_friends_groupby_1106 ;
 create table t_base_weibo_user_fri_bi_friends_groupby_1106 as
   SELECT  id1 as weibo_id ,
-  concat_ws(',',collect_set( id2 )) as follow_ids
+    concat_ws(',',collect_set( id2 )) as follow_ids
   from
   (
     SELECT
