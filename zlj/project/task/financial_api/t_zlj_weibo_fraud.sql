@@ -7,7 +7,7 @@ ADD FILE hdfs://10.3.4.220:9600/user/zlj/udf/udf_fraud.py;
 ADD FILE hdfs://10.3.4.220:9600/user/zlj/udf/udf_fraud.py;
 Drop table t_zlj_api_weibo_fraud;
 
-create table t_zlj_api_weibo_fraud as
+create table t_zlj_api_weibo_fraud_step1 as
 SELECT weibo_id , description ,desc_fraud_score,desc_keywords  ,screen_name ,nick_fraud_score,nick_keywords
 from
 (
@@ -33,54 +33,51 @@ where desc_keywords is not NULL)t3 where desc_fraud_score>0 or nick_fraud_score>
 ;
 
 
-SELECT *  from t_zlj_api_weibo_fraud where  (desc_fraud_score+ nick_fraud_score)>3 limit 100;
---
-SELECT  weibo_id , description ,desc_fraud_score,desc_keywords  ,screen_name ,nick_fraud_score,nick_keywords
-from
+-- 加入关注金融微博粉丝
+Drop table t_zlj_api_weibo_fraud ;
+create table t_zlj_api_weibo_fraud as
+SELECT  /*+ mapjoin(t4)*/
+COALESCE(t3.weibo_id ,t4.id) as weibo_id  , description ,screen_name , desc_fraud_score,desc_keywords  ,nick_fraud_score,nick_keywords ,
+t4.follow_ids as finance_weiboids
+from t_zlj_api_weibo_fraud_step1 t3 full join
+
 (
-select * from t_zlj_api_weibo_fraud
-where  desc_keywords is not NULL )t  where (desc_fraud_score+ nick_fraud_score)>3 limit 100;
-
-SELECT  weibo_id , description ,desc_fraud_score,desc_keywords  ,screen_name ,nick_fraud_score,nick_keywords
-from
-(
-select * from t_zlj_api_weibo_fraud
-where  desc_keywords is not NULL )t  where (desc_fraud_score+ nick_fraud_score)>3 limit 100;
-
-
---
-create table t_zlj_api_weibo_fraud_step2 as
-SELECT  t1.id , screen_name ,description
-from
-(SELECT id from t_base_weibo_user_fri_tel  )t1
-join  t_base_weibo_user  t2 on  t1.id=t2.id and t2.ds=20160829 ;
-
-
-SELECT  weibo_id , description ,desc_fraud_score,desc_keywords  ,screen_name ,nick_fraud_score,nick_keywords from t_zlj_api_weibo_fraud
-where  desc_keywords is not NULL and  desc_fraud_score>0 or nick_fraud_score>0 limit 100;
-
-
---
-
-
-ADD FILE hdfs://10.3.4.220:9600/user/zlj/udf/udf_fraud.py;
-Drop table t_zlj_api_weibo_fraud_step1;
-create table t_zlj_api_weibo_fraud_step1  as
-
-
-
-Drop table t_zlj_api_weibo_fraud_step1;
-create table  t_zlj_api_weibo_fraud_step1 as
-
 SELECT
- id ,screen_name ,description, desc_keywords,desc_fraud_score
-from  (
-select
-TRANSFORM(t1.id , screen_name ,description)
-USING 'python udf_fraud.py'
-as (id ,screen_name ,description, desc_fraud_score,desc_keywords)
+t2.id ,
+concat_ws(',',collect_set( fid )) as follow_ids
 from
-(SELECT id from t_base_weibo_user_fri_tel limit 100000  )t1
-join  t_base_weibo_user  t2 on  t1.id=t2.id and t2.ds =20160829
+(
+	SELECT screen_name ,id
+from t_base_weibo_user where ds ='20161104' and screen_name  in (
+       '微贷网',
+       '宜人贷',
+       '拍拍贷',
+       '翼龙贷',
+       '积木盒子',
+       '和信贷',
+       '恒易融',
+       '口碑贷',
+       '招商贷',
+       '手机贷',
+       '点融网',
+       '北银消费金融',
+       '中银消费金融',
+       '锦程消费金融',
+       '捷信',
+       '招联金融',
+       '海尔消费金融',
+       '苏宁消费金融',
+       '马上消费金融官微',
+       '贷款易',
+       '分期乐'
+       )
+)t1 join
+(
+SELECT id ,fid
+from t_base_weibo_user_fri_tel
+lateral view explode(split(ids,',')) tt as fid
+) t2 on t1.id =t2.fid
+group by t2.id
+)t4 on t3.weibo_id =t4.id
+;
 
-)t
