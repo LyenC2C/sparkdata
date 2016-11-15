@@ -3,7 +3,7 @@ hive<<EOF
 -- drop table wlbase_dev.t_base_user_profile_telindex;
 -- create table wlbase_dev.t_base_user_profile_telindex as
 -- select
--- t1.tel_index,
+-- t1.tel,
 -- t2.*
 -- from
 -- t_zlj_phone_rank_index t1
@@ -18,7 +18,7 @@ hive<<EOF
 drop table wlservice.t_wrt_model_rong360_avgprice_tmp1;
 create table wlservice.t_wrt_model_rong360_avgprice_tmp1 as
 select
-a.tel_index,
+a.tel,
 b.cate_level1_id,
 a.root_cat_name,
 b.cat2,
@@ -31,23 +31,23 @@ from wlservice.t_zlj_tmp_rong360_1w_record  a
 left join wlfinance.t_wrt_ec_dim b on a.root_cat_id=b.cate_level1_id
 left join wlservice.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
 where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20141231'
-group by a.tel_index,b.cate_level1_id,a.root_cat_name,b.cat2,c.price;
+group by a.tel,b.cate_level1_id,a.root_cat_name,b.cat2,c.price;
 
 
 drop table wlservice.t_wrt_model_rong360_purchase_power;
 create table wlservice.t_wrt_model_rong360_purchase_power as
 select
-tel_index,
+tel,
 avg(price_ratio) as avg_price_ratio,
 std(price_ratio) as std_price_ratio
 from wlservice.t_wrt_model_rong360_avgprice_tmp1
-group by tel_index;
+group by tel;
 
 
 drop table wlservice.t_wrt_model_rong360_cnt_raio;
 create table wlservice.t_wrt_model_rong360_cnt_raio as
 select
-tel_index,
+tel,
 sum(if (root_cat_id=11,1,0))/count(*) as cnt_ratio_11,
 sum(if (root_cat_id=1101,1,0))/count(*) as cnt_ratio_1101,
 sum(if (root_cat_id=1201,1,0))/count(*) as cnt_ratio_1201,
@@ -174,14 +174,14 @@ sum(if (root_cat_id=50510002,1,0))/count(*) as cnt_ratio_50510002,
 sum(if (root_cat_id=99,1,0))/count(*) as cnt_ratio_99
 from wlservice.t_zlj_tmp_rong360_1w_record 
 where rn<4 and price<59999
-group by tel_index;
+group by tel;
 
 
 
 drop table  wlservice.t_wrt_model_rong360_price_raio;
 create table wlservice.t_wrt_model_rong360_price_raio as
 select
-tel_index,
+tel,
 sum(if (root_cat_id=11,price,0))/sum(price) as price_ratio_11,
 sum(if (root_cat_id=1101,price,0))/sum(price) as price_ratio_1101,
 sum(if (root_cat_id=1201,price,0))/sum(price) as price_ratio_1201,
@@ -308,35 +308,35 @@ sum(if (root_cat_id=50510002,price,0))/sum(price) as price_ratio_50510002,
 sum(if (root_cat_id=99,price,0))/sum(price) as price_ratio_99
 from wlservice.t_zlj_tmp_rong360_1w_record 
 where rn<4 and price<59999
-group by tel_index;
+group by tel;
 
 
 drop table wlservice.t_wrt_model_rong360_month_tmp1;
 create table wlservice.t_wrt_model_rong360_month_tmp1 as
 select
-tel_index,substr(dsn,1,6) as month,count(*) as cnt,sum(price) as price
+tel,substr(dsn,1,6) as month,count(*) as cnt,sum(price) as price
 from wlservice.t_zlj_tmp_rong360_1w_record 
 where rn<4 and price<59999 and dsn>'20141231'
-group by tel_index,substr(dsn,1,6) ;
+group by tel,substr(dsn,1,6) ;
 
 
 drop table wlservice.t_wrt_model_rong360_month_std;
 create table wlservice.t_wrt_model_rong360_month_std as
 select
-tel_index,
+tel,
 count(*) as buy_month,
 avg(cnt) as avg_cnt,
 std(cnt) as std_cnt,
 avg(price) as avg_price,
 std(price) as std_price
 from wlservice.t_wrt_model_rong360_month_tmp1
-group by tel_index;
+group by tel;
 
 
 drop table wlservice.t_wrt_model_rong360_finnal;
 create table wlservice.t_wrt_model_rong360_finnal as
 SELECT
-a.tel_index,
+a.tel,
 a.avg_price_ratio,
 a.std_price_ratio,
 round(b.cnt_ratio_11,4) as cnt_ratio_11,
@@ -593,15 +593,15 @@ d.std_cnt,
 d.avg_price,
 d.std_price
 from  wlservice.t_wrt_model_rong360_purchase_power a
-left join wlservice.t_wrt_model_rong360_cnt_raio b on a.tel_index=b.tel_index
-left join wlservice.t_wrt_model_rong360_price_raio c on a.tel_index=c.tel_index
-left join wlservice.t_wrt_model_rong360_month_std d on a.tel_index=d.tel_index;
+left join wlservice.t_wrt_model_rong360_cnt_raio b on a.tel=b.tel
+left join wlservice.t_wrt_model_rong360_price_raio c on a.tel=c.tel
+left join wlservice.t_wrt_model_rong360_month_std d on a.tel=d.tel;
 
 
 DROP  table wlservice.t_base_ec_record_dev_new_rong360_feature_wrt ;
 create table  wlservice.t_base_ec_record_dev_new_rong360_feature_wrt as
 SELECT
-tel_index as id ,
+tel,
 max(user_id) as user_id ,
 COUNT(1) as local_buycount ,
 sum(price) as total_price,
@@ -622,7 +622,7 @@ sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
    sum(case when price <=50 then 1 else 0 end)/count(*) as b50_num_ratio,
    sum(case when price <=50 then price else 0 end)/sum(price ) as b50_ratio
 from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999
-group by tel_index
+group by tel
 ;
 
 EOF
