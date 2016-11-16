@@ -619,6 +619,12 @@ sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
    sum(CASE WHEN CAST (brand_id as bigint )>10     THEN 1        ELSE 0 END)/COUNT(1)    as        brand_effec_num_ratio,
    sum(case when price <=50 then 1 else 0 end)/count(*) as b50_num_ratio,
    sum(case when price <=50 then price else 0 end)/sum(price ) as b50_ratio,
+      sum(case when price <=30 then 1 else 0 end)/count(*) as b30_num_ratio,
+   sum(case when price <=30 then price else 0 end)/sum(price ) as b30_ratio,
+      sum(case when price <=10 then 1 else 0 end)/count(*) as b10_num_ratio,
+   sum(case when price <=10 then price else 0 end)/sum(price ) as b10_ratio,
+      sum(case when price <=5 then 1 else 0 end)/count(*) as b5_num_ratio,
+   sum(case when price <=5 then price else 0 end)/sum(price ) as b5_ratio,
    (sum(pow(2.8, datediff* (-0.005)))+20)/75  as active_score
 from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999
 group by tel
