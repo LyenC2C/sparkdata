@@ -3,9 +3,24 @@
 -- 100603551
 -- 打通手机号相互关注的关系数据
 
+-- Drop table  t_base_weibo_user_fri_bi_tel;
+-- CREATE TABLE t_base_weibo_user_fri_bi_tel AS
+--
+--   SELECT
+--     /*+ mapjoin(t1)*/
+--     t2.weibo_id,
+--     t2.follow_ids
+--   FROM
+--     (
+--       SELECT id1 AS weibo_id
+--       FROM t_base_uid_tmp
+--       WHERE ds = 'wid'
+--     ) t1 JOIN
+--     t_base_weibo_user_fri_bi_friends_groupby t2 ON t1.weibo_id = t2.weibo_id ;
+
+
 Drop table  t_base_weibo_user_fri_bi_tel;
 CREATE TABLE t_base_weibo_user_fri_bi_tel AS
-
   SELECT
     /*+ mapjoin(t1)*/
     t2.weibo_id,
@@ -17,21 +32,6 @@ CREATE TABLE t_base_weibo_user_fri_bi_tel AS
       WHERE ds = 'wid'
     ) t1 JOIN
     t_base_weibo_user_fri_bi_friends_groupby t2 ON t1.weibo_id = t2.weibo_id ;
-
-
-Drop table  t_base_weibo_user_fri_bi_tel;
-CREATE TABLE t_base_weibo_user_fri_bi_tel AS
-  SELECT
-    /*+ mapjoin(t1)*/
-    t2.weibo_id,
-    t2.follow_ids
-  FROM
-    (
-      SELECT id1 AS weibo_id
-      FROM t_base_uid_tmp
-      WHERE ds = 'wid'
-    ) t1 JOIN
-    t_base_weibo_user_fri_bi_friends_groupby_1106 t2 ON t1.weibo_id = t2.weibo_id ;
 
 
 --
