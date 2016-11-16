@@ -50,7 +50,7 @@ def repair(x,y):
         elif int(t_list[2]) < int(y_list[2]):
             t_list[2] = y_list[2]
         result = t_list
-    else: result = [x]
+    else: return None
     return '\001'.join([valid_jsontxt(i) for i in result])
 
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + today
