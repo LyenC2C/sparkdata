@@ -54,10 +54,10 @@ def repair(x,y):
     return '\001'.join([valid_jsontxt(i) for i in result])
 
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + today
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + yesterday
+s2 = "/user/wrt/repair_shopitem_b/repair_" + yesterday
 rdd1 = sc.textFile(s1).map(lambda x:f1(x))
 rdd2 = sc.textFile(s2).map(lambda x:f2(x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):repair(x, y)).filter(lambda x:x!=None)
 rdd.saveAsTextFile("/user/wrt/repair_shopitem_b/repair_" + today)
 
-#spark-submit --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 repair_shopitem_b.py 20160906 20160905
+#spark-submit --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 repair_shopitem_b_sold.py 20160907 20160906
