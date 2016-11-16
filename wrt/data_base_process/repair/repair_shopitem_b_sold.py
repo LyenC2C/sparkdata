@@ -23,15 +23,20 @@ def valid_jsontxt(content):
 
 
 
-def f(line):
+def f1(line):
     ss = line.strip().split("\001")
+    ss.append(today)
+    return (ss[1],ss)
+def f2(line):
+    ss = line.strip().split("\001")
+    ss.append(yesterday)
     return (ss[1],ss)
 
 def repair(x,y):
     item_list = y
     if len(item_list) == 1:
         result = item_list[0][:-1]
-    else:
+    if len(item_list) == 2:
         if item_list[0][-1] == today:
             t_list = item_list[0][:-1]
             y_list = item_list[1][:-1]
@@ -39,7 +44,7 @@ def repair(x,y):
             t_list = item_list[1][:-1]
             y_list = item_list[0][:-1]
         else:
-            return None
+            return item_list[0][-1]
         if (t_list[2].isdigit() == False) or (int(t_list[2]) < int(y_list[2])):
             t_list[2] = y_list[2]
         result = t_list
@@ -47,8 +52,8 @@ def repair(x,y):
 
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + today
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + yesterday
-rdd1 = sc.textFile(s1).map(lambda x:f(x))
-rdd2 = sc.textFile(s2).map(lambda x:f(x))
+rdd1 = sc.textFile(s1).map(lambda x:f1(x))
+rdd2 = sc.textFile(s2).map(lambda x:f2(x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):repair(x, y))
 rdd.saveAsTextFile("/user/wrt/repair_shopitem_b/repair_" + today)
 
