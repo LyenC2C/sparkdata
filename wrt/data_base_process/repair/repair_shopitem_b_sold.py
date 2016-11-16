@@ -40,12 +40,10 @@ def repair(x,y):
         if item_list[0][-1] == today:
             t_list = item_list[0][:-1]
             y_list = item_list[1][:-1]
-        elif item_list[0][-1] == yesterday:
+        else:
             t_list = item_list[1][:-1]
             y_list = item_list[0][:-1]
-        else:
-            return item_list[0][-1]
-        if (t_list[2].isdigit() == False) or (int(t_list[2]) < int(y_list[2])):
+        if (not t_list[2].isdigit()) or (int(t_list[2]) < int(y_list[2])):
             t_list[2] = y_list[2]
         result = t_list
     return '\001'.join([valid_jsontxt(i) for i in result])
