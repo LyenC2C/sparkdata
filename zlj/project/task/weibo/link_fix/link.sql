@@ -1,5 +1,14 @@
--- 微博失联修复
+-- 招商银行 微博失联修复
+Drop table wlfinance.t_hx_cmcbank_user_link_fix;
 CREATE TABLE wlfinance.t_hx_cmcbank_user_link_fix AS
+  SELECT
+     t1.weibo_id,
+    weibo_id_tel,
+    weibo_colleges,
+    weibo_company ,
+    follow_ids
+    from
+  (
   SELECT
  weibo_id,
     weibo_id_tel,
@@ -38,7 +47,6 @@ CREATE TABLE wlfinance.t_hx_cmcbank_user_link_fix AS
 
             ) t1 JOIN
             t_base_weibo_user_fri_bi_friends_groupby t2 ON t1.weibo_id = t2.weibo_id
-
         ) t LATERAL VIEW explode(split(follow_ids, ',')) tt AS follow_id
 
     ) t3
@@ -46,4 +54,6 @@ CREATE TABLE wlfinance.t_hx_cmcbank_user_link_fix AS
 --     去重 、聚合
   group by   weibo_id,     weibo_id_tel,     follow_id,uid
   )t  group by weibo_id  ,weibo_id_tel
+
+  )t1 join t_zlj_visual_weibo_baseinfo t2 on t1.weibo_id=t2.weibo_id
 ;
