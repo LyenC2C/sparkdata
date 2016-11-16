@@ -39,7 +39,7 @@ def repair(x,y):
             t_list = item_list[1][:-1]
             y_list = item_list[0][:-1]
         else:
-            return None
+            return item_list[0][-1]
         if (t_list[2].isdigit() == False) or (int(t_list[2]) < int(y_list[2])):
             t_list[2] = y_list[2]
         result = t_list
