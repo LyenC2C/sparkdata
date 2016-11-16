@@ -631,7 +631,7 @@ group by tel
 ;
 
 drop table wlservice.t_rong360_model_features_new; --去掉偏好
-create table wlservice.t_rong 360_model_features_new as
+create table wlservice.t_rong360_model_features_new as
 SELECT
 t1.tel,
 t1.buy_month,
