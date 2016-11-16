@@ -27,12 +27,13 @@ from model_utils import *
 
 
 
-file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\rong360_all.csv')
+file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\融360_v3back.csv')
 
 '''
 data clean
 '''
+# print file.columns[3:]
 for i in file.columns[3:]:
     file[i]=file[i].map(lambda x:data_abnormal(x))
 
@@ -61,11 +62,13 @@ print set(index_data.columns)-set(test_featrue.columns)
 
 
 # 特征交叉
-index_data=feature_cross(index_data)
+cross_flag=0
+index_data=feature_cross(index_data) if cross_flag==1 else index_data
 
+print index_data.columns
 eta=0.05
-max_depth=8
-min_child_weight=12
+max_depth=4
+min_child_weight=1
 subsample=1.0
 colsample_bytree=0.8
 alpha=1
@@ -93,20 +96,22 @@ def xgb_sk(train_X,train_Y):
 # 特征分析
 def feature_anay(features,feature_importances_):
     pair=zip(features,feature_importances_)
-    data=sorted(pair,lambda t:t[-1],reverse=True)
-    return data[:50]
+    data=sorted(pair,key=lambda t:t[-1],reverse=True)
+    return data[:10]
 
 for step  in xrange(10):
     print '---------------------',step
 
+    # print list(index_data.columns)
     train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.3 , random_state=step)
-
+    print len(train_X),len(test_X)
+    print sum(train_Y['label']),sum(test_Y['label'])
 
     # print xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=round).predict(xgb.DMatrix(test_X))
     # xgb_pred=xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=200).predict(xgb.DMatrix(test_X))
     model=xgb_sk(train_X,train_Y)
     xgb_pred=model.predict_proba(test_X)[:,1]
-    # print feature_anay(features,model.feature_importances_)
+    print feature_anay(index_data.columns,model.feature_importances_)
     xgb_rs=model_rs_dataframe(test_Y,xgb_pred)
     xgb_auc=metrics.roc_auc_score(test_Y['label'], xgb_rs['rs'])
     xgb_ks=np.array([ i for  i in ks_calc(xgb_rs)['ks']]).max()

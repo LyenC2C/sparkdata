@@ -28,7 +28,8 @@ round(sum(a.price)/count(*),2) as avg_price,
 round(sum(a.price)/count(*),2)/c.price as price_ratio
 from wlservice.t_zlj_tmp_rong360_1w_record  a
 left join wlbase_dev.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
-where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20141231'
+where c.price is not null and a.rn<4 and a.price<59999
+-- and a.dsn >'20141231'
 group by a.tel,a.root_cat_id,a.root_cat_name,c.price;
 
 
@@ -314,7 +315,8 @@ create table wlservice.t_wrt_model_rong360_month_tmp1 as
 select
 tel,substr(dsn,1,6) as month,count(*) as cnt,sum(price) as price
 from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999 and dsn>'20141231'
+where rn<4 and price<59999
+-- and dsn>'20141231'
 group by tel,substr(dsn,1,6) ;
 
 
@@ -619,6 +621,12 @@ sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
    sum(CASE WHEN CAST (brand_id as bigint )>10     THEN 1        ELSE 0 END)/COUNT(1)    as        brand_effec_num_ratio,
    sum(case when price <=50 then 1 else 0 end)/count(*) as b50_num_ratio,
    sum(case when price <=50 then price else 0 end)/sum(price ) as b50_ratio,
+      sum(case when price <=30 then 1 else 0 end)/count(*) as b30_num_ratio,
+   sum(case when price <=30 then price else 0 end)/sum(price ) as b30_ratio,
+      sum(case when price <=10 then 1 else 0 end)/count(*) as b10_num_ratio,
+   sum(case when price <=10 then price else 0 end)/sum(price ) as b10_ratio,
+      sum(case when price <=5 then 1 else 0 end)/count(*) as b5_num_ratio,
+   sum(case when price <=5 then price else 0 end)/sum(price ) as b5_ratio,
    (sum(pow(2.8, datediff* (-0.005)))+20)/75  as active_score
 from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999
 group by tel
@@ -884,16 +892,30 @@ t1.price_ratio_50454031,
 t1.price_ratio_50468001,
 t1.price_ratio_50510002,
 t1.price_ratio_99,
-t2.brand_id_num,
-t2.root_cat_id_num,
-t2.b_bc_price_ratio,
-t2.b_bc_type_num_ratio,
-t2.brand_effec_price_ratio,
-t2.brand_effec_num_ratio,
-t2.total_price,
-t2.b50_ratio,
-t2.active_score,
-t2.b50_num_ratio
+t1.local_buycount          ,
+t1.total_price             ,
+t1.car_flag                ,
+t1.house_flag              ,
+t1.child_flag              ,
+t1.pet_flag                ,
+t1.annoy_num               ,
+t1.annoy_ratio             ,
+t1.brand_id_num            ,
+t1.root_cat_id_num         ,
+t1.b_bc_type_num           ,
+t1.b_bc_type_num_ratio     ,
+t1.b_bc_price_ratio        ,
+t1.brand_effec_price_ratio ,
+t1.brand_effec_num_ratio   ,
+t1.b50_num_ratio           ,
+t1.b50_ratio               ,
+t1.b30_num_ratio           ,
+t1.b30_ratio               ,
+t1.b10_num_ratio           ,
+t1.b10_ratio               ,
+t1.b5_num_ratio            ,
+t1.b5_ratio                ,
+t1.active_score
 from
 t_wrt_model_rong360_finnal t1
 join

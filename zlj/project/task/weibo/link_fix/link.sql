@@ -6,13 +6,15 @@ CREATE TABLE wlfinance.t_hx_cmcbank_user_link_fix AS
     weibo_id_tel,
     weibo_colleges,
     weibo_company ,
+    follow_tels,
     follow_ids
     from
   (
   SELECT
  weibo_id,
     weibo_id_tel,
-  concat_ws(',',collect_set( concat_ws(':',follow_id,  follow_id_tel ))) as follow_ids
+  concat_ws('^',collect_set( concat_ws(':',follow_id,  follow_id_tel ))) as follow_ids ,
+  concat_ws('^',collect_set( follow_id_tel )) as follow_tels
   from
   (
   SELECT
