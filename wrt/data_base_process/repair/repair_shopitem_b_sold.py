@@ -45,6 +45,8 @@ def repair(x,y):
             y_list = item_list[0][:-1]
         if not t_list[2].isdigit():
             t_list[2] = y_list[2]
+        elif not y_list[2].isdigit():
+            t_list[2] = t_list[2]
         elif int(t_list[2]) < int(y_list[2]):
             t_list[2] = y_list[2]
         result = t_list
