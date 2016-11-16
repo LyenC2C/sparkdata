@@ -31,7 +31,7 @@ def repair(x,y):
     item_list = y
     if len(item_list) == 1:
         result = item_list[0][:-1]
-    if len(item_list) == 2:
+    else:
         if item_list[0][-1] == today:
             t_list = item_list[0][:-1]
             y_list = item_list[1][:-1]
@@ -39,7 +39,7 @@ def repair(x,y):
             t_list = item_list[1][:-1]
             y_list = item_list[0][:-1]
         else:
-            return item_list[0][-1]
+            return None
         if (t_list[2].isdigit() == False) or (int(t_list[2]) < int(y_list[2])):
             t_list[2] = y_list[2]
         result = t_list
