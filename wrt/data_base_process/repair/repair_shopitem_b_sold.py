@@ -36,7 +36,7 @@ def repair(x,y):
     item_list = y
     if len(item_list) == 1:
         result = item_list[0][:-1]
-    if len(item_list) == 2:
+    elif len(item_list) == 2:
         if item_list[0][-1] == today:
             t_list = item_list[0][:-1]
             y_list = item_list[1][:-1]
@@ -50,6 +50,7 @@ def repair(x,y):
         elif int(t_list[2]) < int(y_list[2]):
             t_list[2] = y_list[2]
         result = t_list
+    else: result = [x]
     return '\001'.join([valid_jsontxt(i) for i in result])
 
 s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + today
