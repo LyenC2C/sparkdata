@@ -631,7 +631,7 @@ group by tel
 ;
 
 drop table wlservice.t_rong360_model_features_new; --去掉偏好
-create table wlservice.t_rong 360_model_features_new as
+create table wlservice.t_rong360_model_features_new as
 SELECT
 t1.tel,
 t1.buy_month,
@@ -889,16 +889,30 @@ t1.price_ratio_50454031,
 t1.price_ratio_50468001,
 t1.price_ratio_50510002,
 t1.price_ratio_99,
-t2.brand_id_num,
-t2.root_cat_id_num,
-t2.b_bc_price_ratio,
-t2.b_bc_type_num_ratio,
-t2.brand_effec_price_ratio,
-t2.brand_effec_num_ratio,
-t2.total_price,
-t2.b50_ratio,
-t2.active_score,
-t2.b50_num_ratio
+t2.local_buycount          ,
+t2.total_price             ,
+t2.car_flag                ,
+t2.house_flag              ,
+t2.child_flag              ,
+t2.pet_flag                ,
+t2.annoy_num               ,
+t2.annoy_ratio             ,
+t2.brand_id_num            ,
+t2.root_cat_id_num         ,
+t2.b_bc_type_num           ,
+t2.b_bc_type_num_ratio     ,
+t2.b_bc_price_ratio        ,
+t2.brand_effec_price_ratio ,
+t2.brand_effec_num_ratio   ,
+t2.b50_num_ratio           ,
+t2.b50_ratio               ,
+t2.b30_num_ratio           ,
+t2.b30_ratio               ,
+t2.b10_num_ratio           ,
+t2.b10_ratio               ,
+t2.b5_num_ratio            ,
+t2.b5_ratio                ,
+t2.active_score
 from
 wlservice.t_wrt_model_rong360_finnal t1
 join

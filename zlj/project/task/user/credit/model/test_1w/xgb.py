@@ -88,8 +88,8 @@ def xgb_sk(train_X,train_Y):
                  n_estimators=round, silent=True,
                  objective="binary:logistic",
                  nthread=-4, gamma=0, min_child_weight=1,
-                 max_delta_step=0, subsample=1, colsample_bytree=1, colsample_bylevel=1,
-                 reg_alpha=0, reg_lambda=1, scale_pos_weight=1,seed=0)
+                 max_delta_step=0, subsample=subsample, colsample_bytree=colsample_bytree, colsample_bylevel=1,
+                 reg_alpha=alpha, reg_lambda=llambda, scale_pos_weight=1,seed=0)
     xgb_model=xgbsk.fit(train_X,train_Y,eval_metric=['logloss','auc'])
     return xgb_model
 
@@ -97,7 +97,7 @@ def xgb_sk(train_X,train_Y):
 def feature_anay(features,feature_importances_):
     pair=zip(features,feature_importances_)
     data=sorted(pair,key=lambda t:t[-1],reverse=True)
-    return data[:10]
+    return data[:20]
 
 for step  in xrange(10):
     print '---------------------',step
