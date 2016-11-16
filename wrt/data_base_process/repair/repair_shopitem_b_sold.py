@@ -43,7 +43,9 @@ def repair(x,y):
         else:
             t_list = item_list[1][:-1]
             y_list = item_list[0][:-1]
-        if (not t_list[2].isdigit()) or (int(t_list[2]) < int(y_list[2])):
+        if not t_list[2].isdigit():
+            t_list[2] = y_list[2]
+        elif int(t_list[2]) < int(y_list[2]):
             t_list[2] = y_list[2]
         result = t_list
     return '\001'.join([valid_jsontxt(i) for i in result])
@@ -55,5 +57,4 @@ rdd2 = sc.textFile(s2).map(lambda x:f2(x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):repair(x, y))
 rdd.saveAsTextFile("/user/wrt/repair_shopitem_b/repair_" + today)
 
-#spark-submit
-# --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 repair_shopitem_b.py 20160905 20160904
+#spark-submit --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 repair_shopitem_b.py 20160906 20160905
