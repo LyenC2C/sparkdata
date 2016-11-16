@@ -625,7 +625,7 @@ group by tel
 ;
 
 drop table wlservice.t_rong360_model_features_new; --去掉偏好
-create table wlservice.t_rong360_model_features_new as
+create table wlservice.t_rong 360_model_features_new as
 SELECT
 t1.tel,
 t1.buy_month,
@@ -894,9 +894,9 @@ t2.b50_ratio,
 t2.active_score,
 t2.b50_num_ratio
 from
-t_wrt_model_rong360_finnal t1
+wlservice.t_wrt_model_rong360_finnal t1
 join
-t_base_ec_record_dev_new_rong360_feature_wrt t2
+wlservice.t_base_ec_record_dev_new_rong360_feature_wrt t2
 ON
 t1.tel = t2.tel;
 
