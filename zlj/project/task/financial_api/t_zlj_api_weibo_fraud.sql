@@ -71,13 +71,14 @@ from t_base_weibo_user where ds ='20161104' and screen_name  in (
        '贷款易',
        '分期乐'
        )
-)t1 join
+)
+t1 join
 (
 SELECT id ,fid
 from t_base_weibo_user_fri_tel
 lateral view explode(split(ids,',')) tt as fid
 ) t2 on t1.id =t2.fid
-group by t2.id
+group by t2.id,screen_name
 )t4 on t3.weibo_id =t4.id
 ;
 

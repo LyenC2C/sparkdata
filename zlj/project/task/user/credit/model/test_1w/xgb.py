@@ -99,6 +99,7 @@ def feature_anay(features,feature_importances_):
     data=sorted(pair,key=lambda t:t[-1],reverse=True)
     return data[:20]
 
+ls=[]
 for step  in xrange(10):
     print '---------------------',step
 
@@ -116,5 +117,7 @@ for step  in xrange(10):
     xgb_auc=metrics.roc_auc_score(test_Y['label'], xgb_rs['rs'])
     xgb_ks=np.array([ i for  i in ks_calc(xgb_rs)['ks']]).max()
     print  'xgb', xgb_auc,xgb_ks
+    ls.append([xgb_auc,xgb_ks])
 
-
+df= pd.DataFrame(ls)
+print df.mean(axis=0)
