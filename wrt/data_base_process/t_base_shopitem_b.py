@@ -83,6 +83,12 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
             tod_item = item_list[0]
             yes_item = item_list[1]
         tod_item[4] = yes_item[4] #无论此商品在曾经是否下过架，今天都已经上架了，那么复制他的上架时间即可
+        if not tod_item[2].isdigit(): #今日商品销量为null，直接复制昨日商品销量
+            tod_item[2] = yes_item[2]
+        elif not yes_item[2].isdigit(): #今日商品销量为一个数值，且昨日商品销量为null时，不复制昨日商品
+            tod_item[2] = tod_item[2]
+        elif int(tod_item[2]) < int(yes_item[2]): #今日和昨日商品销量皆为数值且今日销量小于昨日销量时，今日销量需复制昨日销量
+            tod_item[2] = yes_item[2]
         result = tod_item
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
