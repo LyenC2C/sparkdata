@@ -9,12 +9,12 @@ from t_zlj_api_weibo_fraud_step1 t3 full join
 (
 SELECT
 t2.id ,
-concat_ws('|',collect_set( concat_ws(':',fid,screen_name )) as follow_ids,
+concat_ws('|',collect_set( concat_ws(':',fid,screen_name ))) as follow_ids,
 concat_ws('|',collect_set(  screen_name )) as follow_names
 from
 (
 	SELECT screen_name ,id
-from t_base_weibo_user where ds ='20161104' and screen_name  in (
+from t_base_weibo_user where ds='20161104' and screen_name  in(
        '微贷网',
        '宜人贷',
        '拍拍贷',
