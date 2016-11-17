@@ -42,7 +42,8 @@ SELECT
   CASE WHEN cat_id IS NOT NULL
     THEN 'true1'
   ELSE 'false1' END AS ds
-FROM (SELECT
+FROM (
+       SELECT
         cast(item_id AS BIGINT) item_id,
         title,
         cat_id,
@@ -73,7 +74,6 @@ when content = '好评！' then date_add(f_date,-11)
 else then date_add(f_date,-9)
 end  as date_predict ,
       sku
-
    FROM t_base_ec_item_feed_dev_inc_new
         WHERE ds='$ds' and item_id IS NOT NULL AND f_date IS NOT NULL
 
