@@ -171,7 +171,7 @@ sum(if (root_cat_id=50468001,1,0)) as cnt_ratio_50468001,
 sum(if (root_cat_id=50510002,1,0)) as cnt_ratio_50510002,
 sum(if (root_cat_id=99,1,0)) as cnt_ratio_99
 from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999   and  dsn >'20141231'
+where rn<4 and price<59999
 group by tel;
 
 
@@ -304,8 +304,8 @@ sum(if (root_cat_id=50454031,price,0)) as price_ratio_50454031,
 sum(if (root_cat_id=50468001,price,0)) as price_ratio_50468001,
 sum(if (root_cat_id=50510002,price,0)) as price_ratio_50510002,
 sum(if (root_cat_id=99,price,0)) as price_ratio_99
-from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999   and  dsn >'20141231'
+from wlservice.t_zlj_tmp_rong360_1w_record
+where rn<4 and price<59999
 group by tel;
 
 
@@ -314,7 +314,7 @@ create table wlservice.t_wrt_model_rong360_month_tmp1 as
 select
 tel,substr(dsn,1,6) as month,count(*) as cnt,sum(price) as price
 from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999   and  dsn >'20141231'
+where rn<4 and price<59999 and dsn>'20141231'
 group by tel,substr(dsn,1,6) ;
 
 
@@ -603,16 +603,15 @@ tel,
 max(user_id) as user_id ,
 COUNT(1) as local_buycount ,
 sum(price) as total_price,
--- sum( case when root_cat_id IN  ( 26, 50016768, 50024971, 124470006  ) then 1 else 0 end) as car_flag ,
--- sum( case when root_cat_id IN  ( 27,  50008164,50020332,50020808, 50022649,50022703, 50022987,50023804,50025881, 122852001,123302001,124698018  ) then 1 else 0 end)
--- as house_flag ,
--- sum( case when root_cat_id IN  (25 ,50008165,122650005  ) then 1 else 0 end) as child_flag ,
--- sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
+sum( case when root_cat_id IN  ( 26, 50016768, 50024971, 124470006  ) then 1 else 0 end) as car_flag ,
+sum( case when root_cat_id IN  ( 27,  50008164,50020332,50020808, 50022649,50022703, 50022987,50023804,50025881, 122852001,123302001,124698018  ) then 1 else 0 end)
+as house_flag ,
+sum( case when root_cat_id IN  (25 ,50008165,122650005  ) then 1 else 0 end) as child_flag ,
+sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
   sum(CASE WHEN annoy = '1'       THEN 1        ELSE 0 END)     as        annoy_num,
   sum(CASE WHEN annoy = '1'       THEN 1        ELSE 0 END)/COUNT(1) as  annoy_ratio,
    COUNT(DISTINCT brand_id)  as  brand_id_num,
    COUNT(DISTINCT root_cat_id) as root_cat_id_num,
-   COUNT(DISTINCT cat_id) as cat_id_num,
    sum(CASE WHEN bc_type = 'B'       THEN 1         ELSE 0 END)       as          b_bc_type_num,
    sum(CASE WHEN bc_type = 'B'       THEN 1         ELSE 0 END)/COUNT(1)      as     b_bc_type_num_ratio,
    sum(CASE WHEN bc_type = 'B'       THEN price         ELSE 0 END)/sum(price)   as  b_bc_price_ratio,
@@ -627,7 +626,7 @@ sum(price) as total_price,
       sum(case when price <=5 then 1 else 0 end)/count(*) as b5_num_ratio,
    sum(case when price <=5 then price else 0 end)/sum(price ) as b5_ratio,
    (sum(pow(2.8, datediff* (-0.005)))+20)/75  as active_score
-from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999   and  dsn >'20141231'
+from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999
 group by tel
 ;
 
@@ -635,13 +634,13 @@ drop table wlservice.t_rong360_model_features_new; --去掉偏好
 create table wlservice.t_rong360_model_features_new as
 SELECT
 t1.tel,
-round(t1.buy_month,4) as buy_month,
-round(t1.avg_cnt,4) as avg_cnt,
-round(t1.std_cnt,4) as std_cnt,
-round(t1.avg_price,4) as avg_price,
-round(t1.std_price,4) as std_price,
-round(t1.avg_price_ratio,4) as avg_price_ratio,
-round(t1.std_price_ratio,4) as std_price_ratio,
+t1.buy_month,
+t1.avg_cnt,
+t1.std_cnt,
+t1.avg_price,
+t1.std_price,
+t1.avg_price_ratio,
+t1.std_price_ratio,
 t1.cnt_ratio_11,
 t1.cnt_ratio_1101,
 t1.cnt_ratio_1201,
@@ -890,41 +889,35 @@ t1.price_ratio_50454031,
 t1.price_ratio_50468001,
 t1.price_ratio_50510002,
 t1.price_ratio_99,
-round(t2.local_buycount          ,4) as local_buycount          ,
-round(t2.total_price             ,4) as total_price             ,
-round(t2.car_flag                ,4) as car_flag                ,
-round(t2.house_flag              ,4) as house_flag              ,
-round(t2.child_flag              ,4) as child_flag              ,
-round(t2.pet_flag                ,4) as pet_flag                ,
-round(t2.annoy_num               ,4) as annoy_num               ,
-round(t2.annoy_ratio             ,4) as annoy_ratio             ,
-round(t2.brand_id_num            ,4) as brand_id_num            ,
-round(t2.root_cat_id_num         ,4) as root_cat_id_num         ,
-round(t2.cat_id_num         ,4)      as cat_id_num         ,
-round(t2.b_bc_type_num           ,4) as b_bc_type_num           ,
-round(t2.b_bc_type_num_ratio     ,4) as b_bc_type_num_ratio     ,
-round(t2.b_bc_price_ratio        ,4) as b_bc_price_ratio        ,
-round(t2.brand_effec_price_ratio ,4) as brand_effec_price_ratio ,
-round(t2.brand_effec_num_ratio   ,4) as brand_effec_num_ratio   ,
-round(t2.b50_num_ratio           ,4) as b50_num_ratio           ,
-round(t2.b50_ratio               ,4) as b50_ratio               ,
-round(t2.b30_num_ratio           ,4) as b30_num_ratio           ,
-round(t2.b30_ratio               ,4) as b30_ratio               ,
-round(t2.b10_num_ratio           ,4) as b10_num_ratio           ,
-round(t2.b10_ratio               ,4) as b10_ratio               ,
-round(t2.b5_num_ratio            ,4) as b5_num_ratio            ,
-round(t2.b5_ratio                ,4) as b5_ratio                ,
-round(t2.active_score,4) as active_score ,
-flow_price,
-tel_price,
-province_num
+t2.local_buycount          ,
+t2.total_price             ,
+t2.car_flag                ,
+t2.house_flag              ,
+t2.child_flag              ,
+t2.pet_flag                ,
+t2.annoy_num               ,
+t2.annoy_ratio             ,
+t2.brand_id_num            ,
+t2.root_cat_id_num         ,
+t2.b_bc_type_num           ,
+t2.b_bc_type_num_ratio     ,
+t2.b_bc_price_ratio        ,
+t2.brand_effec_price_ratio ,
+t2.brand_effec_num_ratio   ,
+t2.b50_num_ratio           ,
+t2.b50_ratio               ,
+t2.b30_num_ratio           ,
+t2.b30_ratio               ,
+t2.b10_num_ratio           ,
+t2.b10_ratio               ,
+t2.b5_num_ratio            ,
+t2.b5_ratio                ,
+t2.active_score
 from
 wlservice.t_wrt_model_rong360_finnal t1
 join
 wlservice.t_base_ec_record_dev_new_rong360_feature_wrt t2
 ON
-t1.tel = t2.tel
-join  wlfinance.t_hx_model_rong360_recharge t3 on t1.tel=t3.tel
-;
+t1.tel = t2.tel;
 
 EOF
