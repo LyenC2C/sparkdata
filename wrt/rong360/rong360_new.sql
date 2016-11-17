@@ -917,14 +917,35 @@ round(t2.b5_ratio                ,4) as b5_ratio                ,
 round(t2.active_score,4) as active_score ,
 flow_price,
 tel_price,
-province_num
+province_num ,
+alipay_flag ,
+buycnt ,
+verify_level ,
+regtime_month
 from
 wlservice.t_wrt_model_rong360_finnal t1
 join
-wlservice.t_base_ec_record_dev_new_rong360_feature_wrt t2
-ON
-t1.tel = t2.tel
-join  wlfinance.t_hx_model_rong360_recharge t3 on t1.tel=t3.tel
+wlservice.t_base_ec_record_dev_new_rong360_feature_wrt t2 ON t1.tel = t2.tel
+left join  wlfinance.t_hx_model_rong360_recharge t3 on t1.tel=t3.phone_no
+left  join
+(
+SELECT
+tel,
+case when alipay like '已通过支付宝实名认证' then 1 else 0 end  as alipay_flag  ,
+buycnt  ,
+cast(regexp_replace(verify, 'VIP等级', '')  as int) as  verify_level ,
+verify,
+(12 * (2016 - YEAR(regexp_replace(regtime, '\\.', '-'))) + (7 - MONTH(regexp_replace(regtime, '\\.', '-')))) regtime_month
+from
+(
+SELECT tel ,tel_index  from
+(
+SELECT  tel  from   wlfinance.t_zlj_base_match   group by tel
+    )t1
+    join
+t_zlj_phone_rank_index t2 on t1.tel =t2.uid
+)t3 join t_base_user_profile_telindex t4 on t3.tel_index=t4.tel_index
+)t4  on t4.tel =t1.tel
 ;
 
 EOF
