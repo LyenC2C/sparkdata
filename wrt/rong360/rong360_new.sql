@@ -28,7 +28,7 @@ round(sum(a.price)/count(*),2) as avg_price,
 round(sum(a.price)/count(*),2)/c.price as price_ratio
 from wlservice.t_zlj_tmp_rong360_1w_record  a
 left join wlbase_dev.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
-where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20140301'
+where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20141231'
 group by a.tel,a.root_cat_id,a.root_cat_name,c.price;
 
 
@@ -171,7 +171,7 @@ sum(if (root_cat_id=50468001,1,0)) as cnt_ratio_50468001,
 sum(if (root_cat_id=50510002,1,0)) as cnt_ratio_50510002,
 sum(if (root_cat_id=99,1,0)) as cnt_ratio_99
 from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999   and  dsn >'20140301'
+where rn<4 and price<59999   and  dsn >'20141231'
 group by tel;
 
 
@@ -305,7 +305,7 @@ sum(if (root_cat_id=50468001,price,0)) as price_ratio_50468001,
 sum(if (root_cat_id=50510002,price,0)) as price_ratio_50510002,
 sum(if (root_cat_id=99,price,0)) as price_ratio_99
 from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999   and  dsn >'20140301'
+where rn<4 and price<59999   and  dsn >'20141231'
 group by tel;
 
 
@@ -314,7 +314,7 @@ create table wlservice.t_wrt_model_rong360_month_tmp1 as
 select
 tel,substr(dsn,1,6) as month,count(*) as cnt,sum(price) as price
 from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999   and  dsn >'20140301'
+where rn<4 and price<59999   and  dsn >'20141231'
 group by tel,substr(dsn,1,6) ;
 
 
@@ -627,7 +627,7 @@ sum( case when root_cat_id IN  (29 ) then 1 else 0 end) as pet_flag ,
       sum(case when price <=5 then 1 else 0 end)/count(*) as b5_num_ratio,
    sum(case when price <=5 then price else 0 end)/sum(price ) as b5_ratio,
    (sum(pow(2.8, datediff* (-0.005)))+20)/75  as active_score
-from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999   and  dsn >'20140301'
+from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999   and  dsn >'20141231'
 group by tel
 ;
 
