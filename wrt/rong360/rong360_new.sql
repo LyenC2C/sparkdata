@@ -914,12 +914,17 @@ round(t2.b10_num_ratio           ,4) as b10_num_ratio           ,
 round(t2.b10_ratio               ,4) as b10_ratio               ,
 round(t2.b5_num_ratio            ,4) as b5_num_ratio            ,
 round(t2.b5_ratio                ,4) as b5_ratio                ,
-round(t2.active_score,4) as active_score
+round(t2.active_score,4) as active_score ,
+flow_price,
+tel_price,
+province_num
 from
 wlservice.t_wrt_model_rong360_finnal t1
 join
 wlservice.t_base_ec_record_dev_new_rong360_feature_wrt t2
 ON
-t1.tel = t2.tel;
+t1.tel = t2.tel
+join  wlfinance.t_hx_model_rong360_recharge t3 on t1.tel=t3.tel
+;
 
 EOF
