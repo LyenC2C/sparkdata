@@ -40,11 +40,11 @@ SELECT  /*+ mapjoin(t4)*/
 COALESCE(t3.weibo_id ,t4.id) as weibo_id  , description ,screen_name , desc_fraud_score,desc_keywords  ,nick_fraud_score,nick_keywords ,
 t4.follow_ids as finance_weiboids
 from t_zlj_api_weibo_fraud_step1 t3 full join
-
 (
 SELECT
 t2.id ,
-concat_ws(',',collect_set( fid )) as follow_ids
+concat_ws('|',collect_set( concat_ws(':',fid,screen_name )) as follow_ids,
+concat_ws('|',collect_set(  screen_name ) as follow_names
 from
 (
 	SELECT screen_name ,id
@@ -78,7 +78,7 @@ SELECT id ,fid
 from t_base_weibo_user_fri_tel
 lateral view explode(split(ids,',')) tt as fid
 ) t2 on t1.id =t2.fid
-group by t2.id,screen_name
+group by t2.id
 )t4 on t3.weibo_id =t4.id
 ;
 
