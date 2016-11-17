@@ -24,8 +24,9 @@ warnings.filterwarnings("ignore")
 from model_utils import *
 import sklearn
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\test1w\\融360_v3back.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
-file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_std.csv')
+file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
+# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_std.csv')
+# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_std_avg.csv')
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k.csv')
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\融360_v3back.csv')
 
@@ -34,10 +35,11 @@ data clean
 '''
 for i in file.columns[3:]:
     file[i]=file[i].map(lambda x:data_abnormal(x))
-    # if 'cnt_ratio' in i or 'price_ratio' in i :
-    #     col=file[i]
-    #     min, max=col.min(),math.log(col.max()+1,2)
-    #     file[i]=(col - min) / (min - max)
+    if 'cnt_ratio' in i or 'price_ratio' in i :
+        col=file[i]
+        min, max=col.min(),math.log(col.max()+1,2)
+        file[i]=(col - min) / (min - max)
+
 import  math
 for i  in ['total_price','avg_price','std_price']:
     file[i]=file[i].map(lambda x:math.log(x+0.1,2))

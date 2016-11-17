@@ -1,39 +1,4 @@
-
-
-ADD FILE hdfs://10.3.4.220:9600/user/zlj/udf/udf_fraud.py;
-
-
--- 征信微博API
-ADD FILE hdfs://10.3.4.220:9600/user/zlj/udf/udf_fraud.py;
-Drop table t_zlj_api_weibo_fraud;
-
-create table t_zlj_api_weibo_fraud_step1 as
-SELECT weibo_id , description ,desc_fraud_score,desc_keywords  ,screen_name ,nick_fraud_score,nick_keywords
-from
-(
-SELECT
-id as weibo_id , description ,screen_name , desc_fraud_score,desc_keywords  ,nick_fraud_score,nick_keywords
-from
-(
-SELECT
-TRANSFORM(id , description ,desc_fraud_score,desc_keywords ,screen_name )
-USING 'python udf_fraud.py'
-as (id , description ,desc_fraud_score,desc_keywords ,screen_name, nick_fraud_score,nick_keywords)
-from
-(
-select
-TRANSFORM(id , screen_name ,description)
-USING 'python udf_fraud.py'
-as (id ,screen_name ,description, desc_fraud_score,desc_keywords)
-from
-t_zlj_api_weibo_fraud_step2
-)t1
-)t2
-where desc_keywords is not NULL)t3 where desc_fraud_score>0 or nick_fraud_score>0
-;
-
-
--- 加入关注金融微博粉丝
+hive<<EOF
 Drop table t_zlj_api_weibo_fraud ;
 create table t_zlj_api_weibo_fraud as
 SELECT  /*+ mapjoin(t4)*/
@@ -83,3 +48,6 @@ group by t2.id
 )t4 on t3.weibo_id =t4.id
 ;
 
+
+
+EOF
