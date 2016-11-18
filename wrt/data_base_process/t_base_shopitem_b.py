@@ -74,6 +74,8 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         if len(item_list[0]) == 7:
             tod_item = item_list[0] #此商品为今日商品，说明此商品今天上架，此前没出现过
             result = tod_item #使用默认值即可
+        else:
+            result = item_list[0]
     elif len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
         #判断今日和昨日的位置并分别命名赋值
         if len(item_list[0]) == 8:
@@ -90,7 +92,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         elif int(tod_item[2]) < int(yes_item[2]): #今日和昨日商品销量皆为数值且今日销量小于昨日销量时，今日销量需复制昨日销量
             tod_item[2] = yes_item[2]
         result = tod_item
-    else: return '\001'.join([str(valid_jsontxt(i)) for i in item_list])
+    # else: return '\001'.join([str(valid_jsontxt(i)) for i in item_list])
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
