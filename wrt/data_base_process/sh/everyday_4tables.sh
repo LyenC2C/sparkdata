@@ -4,36 +4,41 @@ source ~/.bashrc
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
 
+sh ./shopitem_b.sh 20161113 20161112
+sh ./shopitem_b.sh 20161114 20161113
+sh ./shopitem_b.sh 20161115 20161114
+sh ./shopitem_b.sh 20161116 20161115
+sh ./shopitem_b.sh 20161117 20161116
 
-sh ./shopitem_b.sh 20160930 20160929
-sh ./shopitem_b.sh 20161001 20160930
-sh ./shopitem_b.sh 20161002 20161001
-sh ./shopitem_b.sh 20161003 20161002
-sh ./shopitem_b.sh 20161004 20161003
-sh ./shopitem_b.sh 20161005 20161004
-sh ./shopitem_b.sh 20161006 20161005
-sh ./shopitem_b.sh 20161007 20161006
-sh ./shopitem_b.sh 20161011 20161007
-sh ./shopitem_b.sh 20161012 20161011
-sh ./shopitem_b.sh 20161013 20161012
-sh ./shopitem_b.sh 20161014 20161013
-sh ./shopitem_b.sh 20161015 20161014
-sh ./shopitem_b.sh 20161016 20161015
-sh ./shopitem_b.sh 20161017 20161016
-sh ./shopitem_b.sh 20161018 20161017
-sh ./shopitem_b.sh 20161019 20161018
-sh ./shopitem_b.sh 20161020 20161019
-sh ./shopitem_b.sh 20161021 20161020
-sh ./shopitem_b.sh 20161022 20161021
-sh ./shopitem_b.sh 20161023 20161022
-sh ./shopitem_b.sh 20161026 20161023
-sh ./shopitem_b.sh 20161027 20161026
-sh ./shopitem_b.sh 20161028 20161027
-sh ./shopitem_b.sh 20161029 20161028
-sh ./shopitem_b.sh 20161030 20161029
-sh ./shopitem_b.sh 20161031 20161030
-sh ./shopitem_b.sh 20161101 20161031
-sh ./shopitem_b.sh 20161102 20161101
+#sh ./shopitem_b.sh 20160930 20160929
+#sh ./shopitem_b.sh 20161001 20160930
+#sh ./shopitem_b.sh 20161002 20161001
+#sh ./shopitem_b.sh 20161003 20161002
+#sh ./shopitem_b.sh 20161004 20161003
+#sh ./shopitem_b.sh 20161005 20161004
+#sh ./shopitem_b.sh 20161006 20161005
+#sh ./shopitem_b.sh 20161007 20161006
+#sh ./shopitem_b.sh 20161011 20161007
+#sh ./shopitem_b.sh 20161012 20161011
+#sh ./shopitem_b.sh 20161013 20161012
+#sh ./shopitem_b.sh 20161014 20161013
+#sh ./shopitem_b.sh 20161015 20161014
+#sh ./shopitem_b.sh 20161016 20161015
+#sh ./shopitem_b.sh 20161017 20161016
+#sh ./shopitem_b.sh 20161018 20161017
+#sh ./shopitem_b.sh 20161019 20161018
+#sh ./shopitem_b.sh 20161020 20161019
+#sh ./shopitem_b.sh 20161021 20161020
+#sh ./shopitem_b.sh 20161022 20161021
+#sh ./shopitem_b.sh 20161023 20161022
+#sh ./shopitem_b.sh 20161026 20161023
+#sh ./shopitem_b.sh 20161027 20161026
+#sh ./shopitem_b.sh 20161028 20161027
+#sh ./shopitem_b.sh 20161029 20161028
+#sh ./shopitem_b.sh 20161030 20161029
+#sh ./shopitem_b.sh 20161031 20161030
+#sh ./shopitem_b.sh 20161101 20161031
+#sh ./shopitem_b.sh 20161102 20161101
 
 #sh ./item_sold.sh 20161102 20161101 20161013
 #sh ./item_sold.sh 20161026 20161023 20161013
