@@ -30,7 +30,8 @@ def f1(line):
     for item in ob:
         lv = []
         item_id = item.get("item_id","-")
-        if item_id == None or item_id == 'None': item_id = '-'
+        # if item_id == None or item_id == 'None': item_id = '-'
+        if not valid_jsontxt(item_id).isdigit(): continue
         # title = item.get("title","-")
         # picUrl = item.get("picUrl","-")
         sold = item.get("sold","-")
@@ -51,6 +52,7 @@ def f1(line):
 
 def f2(line):
     ss = line.strip().split('\001')
+    if len(ss) != 7: return None
     ss.append(yesterday) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
     return (ss[1],ss)
 
@@ -74,8 +76,6 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         if len(item_list[0]) == 7:
             tod_item = item_list[0] #此商品为今日商品，说明此商品今天上架，此前没出现过
             result = tod_item #使用默认值即可
-        else:
-            result = item_list[0]
     elif len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
         #判断今日和昨日的位置并分别命名赋值
         if len(item_list[0]) == 8:
