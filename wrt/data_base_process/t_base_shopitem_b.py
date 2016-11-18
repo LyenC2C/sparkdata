@@ -53,6 +53,7 @@ def f1(line):
 def f2(line):
     ss = line.strip().split('\001')
     if len(ss) != 7: return None
+    if not ss[1].isdigit(): return None
     ss.append(yesterday) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
     return (ss[1],ss)
 
@@ -111,4 +112,4 @@ rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
 # rdd.filter(lambda x:len(x.split("\001")) != 7).saveAsTextFile('/user/wrt/shopitem_b_error')
 #hfs -rmr /user/wrt/shopitem_tmp
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20161112 20161111
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20160906');
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20161112');
