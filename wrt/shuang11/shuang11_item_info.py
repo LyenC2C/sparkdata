@@ -115,6 +115,6 @@ rdd_c.groupByKey().mapValues(list).map(lambda (x,y): quchong(x,y))\
     .saveAsTextFile("/user/wrt/temp/shuang11_iteminfo")
 
 
-# hfs -rmr /user/wrt/temp/ppzs_itemid_info
+# hfs -rmr /user/wrt/temp/shuang11_iteminfo
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  ppzs_itemid_brandid.py
 # LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_info' OVERWRITE INTO TABLE ppzs_itemid_info PARTITION (ds='20161108');
