@@ -25,7 +25,6 @@ def f(line,cate_dict):
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) == type(1.0): return None
-    ob = json.loads(ss[2])
     seller = ob.get("seller",[])
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
@@ -116,5 +115,5 @@ rdd_c.groupByKey().mapValues(list).map(lambda (x,y): quchong(x,y))\
 
 
 # hfs -rmr /user/wrt/temp/shuang11_iteminfo
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  ppzs_itemid_brandid.py
-# LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_info' OVERWRITE INTO TABLE ppzs_itemid_info PARTITION (ds='20161108');
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  shuang11_item_info.py
+# LOAD DATA  INPATH '/user/wrt/temp/shuang11_iteminfo' OVERWRITE INTO TABLE ppzs_itemid_info PARTITION (ds='20161108');
