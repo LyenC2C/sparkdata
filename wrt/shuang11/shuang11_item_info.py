@@ -22,13 +22,14 @@ def get_cate_dict(line):
 def f(line,cate_dict):
     ss = line.strip().split("\t")
     if len(ss) != 3: return None
+    ts = ss[0]
+    item_id = ss[1]
     txt = valid_jsontxt(ss[2])
     ob = json.loads(txt)
     if type(ob) == type(1.0): return None
     seller = ob.get("seller",[])
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
-    item_id = itemInfoModel.get('itemId','-')
     title = itemInfoModel.get('title','-').replace("\n","")
     categoryId = itemInfoModel.get('categoryId','-')
     root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
