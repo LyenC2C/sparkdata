@@ -57,7 +57,7 @@ def parse(line):
     verified=ob.get('verified','-')
     verified_type=ob.get('verified_type','-1')
     remark=ob.get('remark','-')
-    status=ob.get('status','-')
+    # status=ob.get('status','-')
     allow_all_comment=ob.get('allow_all_comment','-')
     avatar_large=ob.get('avatar_large','-')
     avatar_hd=ob.get('avatar_hd','-')
@@ -81,8 +81,8 @@ def try_parse(line):
 
 
 
-sc.textFile('/commit/weibo/userinfo/20161101/').map(lambda x:try_parse(x)).filter(lambda x:x!=None).\
-    groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/wrt/temp/sinawb_user_info.json.20161101')
+sc.textFile('/commit/weibo/userinfo/*/*').map(lambda x:try_parse(x)).filter(lambda x:x!=None).\
+    groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/wrt/temp/userinfo_all')
 
 
 # LOAD DATA   INPATH '/user/zlj/tmp/sinawb_user_info.json.20160401' OVERWRITE INTO TABLE t_base_weibo_user PARTITION (ds='20160829')
