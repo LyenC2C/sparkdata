@@ -87,3 +87,4 @@ sc.textFile('/commit/weibo/userinfo/*/*').map(lambda x:try_parse(x)).filter(lamb
 
 # LOAD DATA   INPATH '/user/zlj/tmp/sinawb_user_info.json.20160401' OVERWRITE INTO TABLE t_base_weibo_user PARTITION (ds='20160829')
 # LOAD DATA   INPATH '/user/zlj/tmp/sinawb_user_info.json.20161101' OVERWRITE INTO TABLE t_base_weibo_user PARTITION (ds='20161101')
+#LOAD DATA   INPATH '/user/wrt/temp/userinfo_all' OVERWRITE INTO TABLE t_base_weibo_user_new PARTITION (ds='20161120')
