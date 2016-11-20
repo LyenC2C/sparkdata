@@ -35,6 +35,7 @@ def f(line,cate_dict):
     root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
     cat_name = cate_dict.get(categoryId,["-","-","-"])[0]
     root_cat_name = cate_dict.get(categoryId,["-","-","-"])[2]
+    location = valid_jsontxt(itemInfoModel.get('location', '-').replace("省",""))
     trackParams = ob.get('trackParams',{})
     brand_name = "-"
     props = ob.get('props',[])
@@ -85,6 +86,7 @@ def f(line,cate_dict):
     result.append(desc_highGap)
     result.append(service_highGap)
     result.append(wuliu_highGap)
+    result.append(location)
     result.append(ts)
     return (item_id,result)
     # return "\001".join([str(valid_jsontxt(i)) for i in result])
@@ -117,4 +119,4 @@ rdd_c.groupByKey().mapValues(list).map(lambda (x,y): quchong(x,y))\
 
 # hfs -rmr /user/wrt/temp/shuang11_iteminfo
 # spark-submit  --executor-memory 6G   --driver-memory 8G  --total-executor-cores 80  shuang11_item_info.py
-# LOAD DATA  INPATH '/user/wrt/temp/shuang11_iteminfo' OVERWRITE INTO TABLE ppzs_itemid_info PARTITION (ds='20161108');
+# LOAD DATA  INPATH '/user/wrt/temp/shuang11_iteminfo' OVERWRITE INTO TABLE wlservice.t_wrt_tmp_shuang11_iteminfo;
