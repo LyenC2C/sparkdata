@@ -62,8 +62,22 @@ ON
 t1.item_id = t2.item_id
 )t
 where dj = "1"
+
+
+select
+count(1)
+from
+(select item_id, min(saleprice)as min_price from  t_base_ec_shopitem_b
+ where ds < 20161111 group by item_id)t1
+JOIN
+(select item_id, saleprice from t_base_ec_shopitem_b where ds = 20161111)t2
+ON
+t1.item_id = t2.item_id
+where t1.min_price = t2.saleprice
+
 --3.2
-select count(1) from t_base_ec_shopitem_b where ds = 20161111
+select count(1) from t_base_ec_shopitem_b where ds = 20161110
+
 
 
 --4.
@@ -92,6 +106,31 @@ t1.item_id = t2.item_id
 )t
 where dj = "1"
 group by root_cat_name
+
+
+
+select
+t2.root_cat_name,count(1)
+  from
+(select item_id, min(saleprice)as min_price from  t_base_ec_shopitem_b
+ where ds < 20161111 group by item_id)t1
+JOIN
+(
+select a.item_id, a.saleprice,b.root_cat_name from
+(select * from t_base_ec_shopitem_b where ds = 20161111)a
+JOIN
+wlservice.t_wrt_tmp_shuang11_iteminfo b
+ON
+a.item_id = b.item_id
+)t2
+ON
+t1.item_id = t2.item_id
+where t1.min_price = t2.saleprice
+group by t2.root_cat_name
+
+
+
+
 --4.2
 select b.root_cat_name as cat,count(1) as num from
 (select * from t_base_ec_shopitem_b where ds = 20161111)a
@@ -163,7 +202,7 @@ t1.item_id = t2.item_id
 
 --6.2
 select sum((t1.sold - t2.sold)) as sold, sum((t1.sold - t2.sold) * t1.saleprice) as sales from
-(select item_id,sold,saleprice from t_base_ec_shopitem_b where ds = 20161111)t1
+(select item_id,sold,saleprice from t_base_ec_shopitem_b where ds = 20161112)t1
 JOIN
 (select item_id,sold from t_base_ec_shopitem_b where ds = 20161110)t2
 ON
@@ -197,17 +236,46 @@ ON
 tt1.item_id = tt2.item_id
 group by tt2.root_cat_name
 --8
-
 select
 cast(((cast(desc_highgap as float) + cast(service_highgap as float) + cast(wuliu_highgap as float)
 + 279.260009765625) / 57.926000976562499)
-as int ) as point,count(1)
+as int ) as point,sum(sales),count(1)
 from
-(select shopid,max(desc_highgap) as desc_highgap,max(service_highgap) as service_highgap ,max(wuliu_highgap) as wuliu_highgap
-from wlservice.t_wrt_tmp_shuang11_iteminfo
-group by shopid
+(
+select t1.shopid,max(desc_highgap) as desc_highgap,max(service_highgap) as service_highgap ,
+max(wuliu_highgap) as wuliu_highgap,
+sum(sold) as sold,sum(sales) as sales from
+(select item_id,shopid,desc_highgap,service_highgap,wuliu_highgap
+from wlservice.t_wrt_tmp_shuang11_iteminfo)t1
+join
+(
+select t1.item_id,(t1.sold - t2.sold) as sold, (t1.sold - t2.sold) * t1.saleprice as sales from
+(select item_id,sold,saleprice from t_base_ec_shopitem_b where ds = 20161111)t1
+JOIN
+(select item_id,sold from t_base_ec_shopitem_b where ds = 20161110)t2
+ON
+t1.item_id = t2.item_id
+)t2
+ON
+t1.item_id = t2.item_id
+group by t1.shopid
 )t
 group by
 cast(((cast(desc_highgap as float) + cast(service_highgap as float) + cast(wuliu_highgap as float)
 + 279.260009765625) / 57.926000976562499)
 as int )
+
+--9
+
+select province,count(1)
+(
+select shopid,
+substr(location,1,2) as pronvince
+from wlservice.t_wrt_tmp_shuang11_iteminfo_new
+where
+(cast(desc_highgap as float)+cast(service_highgap as float)+cast(wuliu_highgap as float)) > -48
+and
+(cast(desc_highgap as float)+cast(service_highgap as float)+cast(wuliu_highgap as float)) < 126
+group by shopid
+)t
+group by province
