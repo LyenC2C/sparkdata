@@ -6,7 +6,7 @@ from pyspark import SparkContext
 
 yes_day = sys.argv[1]
 
-sc = SparkContext(appName="ppzs_itemid_info_" + now_day)
+sc = SparkContext(appName="ppzs_itemid_info_" + yes_day)
 
 def valid_jsontxt(content):
     # res = content
@@ -97,5 +97,5 @@ rdd.groupByKey().mapValues(list).map(lambda (x,y): "\001".join([str(valid_jsontx
 
 
 # hfs -rmr /user/wrt/temp/ppzs_itemid_info
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  ppzs_itemid_brandid.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  ppzs_item_info.py
 # LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_info' OVERWRITE INTO TABLE ppzs_itemid_info PARTITION (ds='20161108');
