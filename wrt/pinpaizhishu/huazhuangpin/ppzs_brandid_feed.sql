@@ -25,17 +25,17 @@ select
 case when t1.brand_id is null then t2.brand_id else t1.brand_id end as brand_id,
 case when t1.ct is null then 0 else t1.ct end as good_count,
 case when t2.ct is null then 0 else t2.ct end as mid_count from
-(select brand_id,count(1) as ct from ppzs_brandid_feed
+(select brand_id,count(1) as ct from wlservice.ppzs_brandid_feed
 where ds = 20161108 and rate_type = '1' group by brand_id)t1
 full JOIN
-(select brand_id,count(1) as ct from ppzs_brandid_feed
+(select brand_id,count(1) as ct from wlservice.ppzs_brandid_feed
 where ds = 20161108 and rate_type = '0' group by brand_id)t2
 ON
 t1.brand_id = t2.brand_id
 )t12
 full join
 (
-select brand_id,count(1) as ct from ppzs_brandid_feed
+select brand_id,count(1) as ct from wlservice.ppzs_brandid_feed
 where ds = 20161108 and rate_type = '-1' group by brand_id
 )t3
 ON
