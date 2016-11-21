@@ -4,7 +4,9 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 
-sc = SparkContext(appName="ppzs_itemid_info")
+now_day = sys.argv[1]
+
+sc = SparkContext(appName="ppzs_itemid_info_" + now_day)
 
 def valid_jsontxt(content):
     # res = content
@@ -85,7 +87,7 @@ def f(line,brand_dict,cate_dict):
 
 
 b_dim = "/hive/warehouse/wlservice.db/ppzs_brandid_72ge"
-s = "/commit/tb_tmp/iteminfo/20161107.pinpai.iteminfo.complete"
+s = "/commit/tb_tmp/iteminfo/" + now_day
 c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
