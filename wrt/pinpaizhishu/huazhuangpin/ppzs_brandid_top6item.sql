@@ -1,4 +1,6 @@
 -- insert overwrite table ppzs_brandid_top6item partition (ds = '${hiveconf:yes_day}')
+drop table wlservice.ppzs_brandid_top6item;
+create table wlservice.ppzs_brandid_top6item as
 select brand_id,item_id,title,price,picurl,now_sold,rn
 from
 (
