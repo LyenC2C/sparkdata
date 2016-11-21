@@ -43,8 +43,40 @@ def parse_price(price_dic):
             if '-' in tmp: price_range = tmp
     return [price,price_range]
 
-
 def f(line,brand_dict,cate_dict):
+    ss = line.strip().split("\t")
+    if len(ss) != 3: return None
+    item_id = ss[1]
+    txt = valid_jsontxt(ss[2])
+    ob = json.loads(txt)
+    if type(ob) != type({}): return None
+    itemInfoModel = ob.get('itemInfoModel',"-")
+    if itemInfoModel == "-": return None
+    categoryId = itemInfoModel.get('categoryId','-')
+    root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
+    if not root_cat_id in ["50010788","1801"]: return None #不属于化妆品
+    title = itemInfoModel.get('title','-').replace("\n","")
+    picsPath = itemInfoModel.get('picsPath',[])
+    if picsPath == []: picurl = "-"
+    else: picurl = picsPath[0]
+    trackParams = ob.get('trackParams',{})
+    brandId = valid_jsontxt(trackParams.get('brandId','-'))
+    # if brandId == "-": return None
+    if not brand_dict.has_key(brandId): return None
+    value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
+    price = value[0]
+    if int(price) > 160000:
+        price = 1.0
+    result = []
+    result.append(item_id)
+    result.append(brandId)
+    result.append(title)
+    result.append(picurl)
+    result.append(price)
+    return (item_id,result)
+
+
+def f_old(line,brand_dict,cate_dict):
     ss = line.strip().split("\t")
     if len(ss) != 3: return None
     item_id = ss[1]
@@ -87,8 +119,8 @@ def f(line,brand_dict,cate_dict):
 
 
 b_dim = "/hive/warehouse/wlservice.db/ppzs_brandid_72ge"
-# s = "/commit/tb_tmp/iteminfo/" + yes_day
-s = "/commit/tb_tmp/iteminfo/20161120/*2016-11-21"
+s = "/commit/tb_tmp/iteminfo/" + yes_day
+# s = "/commit/tb_tmp/iteminfo/20161120/*2016-11-21"
 c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
 brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
