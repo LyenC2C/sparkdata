@@ -4,11 +4,20 @@ source ~/.bashrc
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
 
-sh ./shopitem_b.sh 20161113 20161112
-sh ./shopitem_b.sh 20161114 20161113
-sh ./shopitem_b.sh 20161115 20161114
-sh ./shopitem_b.sh 20161116 20161115
-sh ./shopitem_b.sh 20161117 20161116
+sh ./item_sold.sh 20161112 20161111 20161104
+sh ./item_sold.sh 20161113 20161112 20161104
+sh ./item_sold.sh 20161114 20161113 20161104
+sh ./item_sold.sh 20161115 20161114 20161104
+sh ./item_sold.sh 20161116 20161115 20161104
+sh ./item_sold.sh 20161117 20161116 20161104
+sh ./item_sold.sh 20161118 20161117 20161104
+sh ./item_sold.sh 20161119 20161118 20161104
+
+#sh ./shopitem_b.sh 20161113 20161112
+#sh ./shopitem_b.sh 20161114 20161113
+#sh ./shopitem_b.sh 20161115 20161114
+#sh ./shopitem_b.sh 20161116 20161115
+#sh ./shopitem_b.sh 20161117 20161116
 
 #sh ./shopitem_b.sh 20160930 20160929
 #sh ./shopitem_b.sh 20161001 20160930
