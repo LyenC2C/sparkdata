@@ -30,7 +30,8 @@ def f1(line):
     for item in ob:
         lv = []
         item_id = item.get("item_id","-")
-        if item_id == None or item_id == 'None': item_id = '-'
+        # if item_id == None or item_id == 'None': item_id = '-'
+        if not valid_jsontxt(item_id).isdigit(): continue
         # title = item.get("title","-")
         # picUrl = item.get("picUrl","-")
         sold = item.get("sold","-")
@@ -51,6 +52,8 @@ def f1(line):
 
 def f2(line):
     ss = line.strip().split('\001')
+    if len(ss) != 7: return None
+    if not ss[1].isdigit(): return None
     ss.append(yesterday) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
     return (ss[1],ss)
 
@@ -74,7 +77,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         if len(item_list[0]) == 7:
             tod_item = item_list[0] #此商品为今日商品，说明此商品今天上架，此前没出现过
             result = tod_item #使用默认值即可
-    if len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
+    elif len(item_list) == 2: #有两个商品，一个是昨日，一个是今日
         #判断今日和昨日的位置并分别命名赋值
         if len(item_list[0]) == 8:
             yes_item = item_list[0]
@@ -90,6 +93,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         elif int(tod_item[2]) < int(yes_item[2]): #今日和昨日商品销量皆为数值且今日销量小于昨日销量时，今日销量需复制昨日销量
             tod_item[2] = yes_item[2]
         result = tod_item
+    # else: return '\001'.join([str(valid_jsontxt(i)) for i in item_list])
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 
@@ -105,6 +109,7 @@ rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y)) #去
 rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None) #导入昨天数据
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
+# rdd.filter(lambda x:len(x.split("\001")) != 7).saveAsTextFile('/user/wrt/shopitem_b_error')
 #hfs -rmr /user/wrt/shopitem_tmp
-#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20160906 20160905
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20160906');
+#spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20161112 20161111
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20161112');
