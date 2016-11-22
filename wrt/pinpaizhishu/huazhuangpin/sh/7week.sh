@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source ~/.bashrc
-dev_path='/home/wrt/sparkdata/wrt/pinpaizhishu/huangzhuangpin'
+dev_path='/home/wrt/sparkdata/wrt/pinpaizhishu/huazhuangpin'
 save_path='/mnt/raid1/wrt/pinpaizhishu/development'
 #昨日时间（周日）
 yes_day=$1
