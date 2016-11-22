@@ -11,7 +11,7 @@ END AS weeksold
 FROM
 (
 select t1.item_id as item_id,t1.brand_id as brand_id,t2.sold as now_sold from
-(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = '20161120')t1
+(select brand_id,item_id from wlservice.ppzs_itemid_info where ds = '${hiveconf:yes_day}')t1
 JOIN
 (select item_id,sold from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:yes_day}')t2
 ON
