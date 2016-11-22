@@ -13,10 +13,10 @@ case when t1.feed_id is null then t2.rate_type else t1.rate_type end as rate_typ
 rand() as num
 from
 (select * from wlservice.ppzs_brandid_feed
-where ds = '20161108' and content <> '评价方未及时做出评价,系统默认好评\!' and content <> '好评！' and rate_type = '1')t1
+where ds = '${hiveconf:yes_day}' and content <> '评价方未及时做出评价,系统默认好评\!' and content <> '好评！' and rate_type = '1')t1
 full JOIN
 (select * from wlservice.ppzs_brandid_feed
-where ds = '20161108' and content <> '评价方未及时做出评价,系统默认好评\!' and content <> '好评！' and rate_type = '-1')t2
+where ds = '${hiveconf:yes_day}' and content <> '评价方未及时做出评价,系统默认好评\!' and content <> '好评！' and rate_type = '-1')t2
 ON
 t1.feed_id = t2.feed_id
 )t
