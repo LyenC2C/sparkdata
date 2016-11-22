@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
+source ~/.bashrc
+dev_path='/home/wrt/sparkdata/wrt/pinpaizhishu/huazhuangpin'
+yes_day=$(date -d '1 days ago' +%Y%m%d)
+last_day=$(date -d '8 days ago' +%Y%m%d)
+threemonth_day=$(date -d '93 days ago' +%Y%m%d)
+save_day=$(date -d '0 days ago' +%Y%m%d)
 
-sh ./7week.sh 20161114 20161107 20160814 20161115
-sh ./7week.sh 20161107 20161031 20160807 20161108
-sh ./7week.sh 20161031 20161024 20160731 20161101
-sh ./7week.sh 20161024 20161017 20160724 20161025
-sh ./7week.sh 20161017 20161010 20160717 20161018
-sh ./7week.sh 20161010 20161003 20160710 20161011
+sh $dev_path/sh/ppzs_upgrad.sh 20161120 20161114 20160820 20161121
+#sh $dev_path/sh/ppzs_upgrad.sh $yes_day $last_day $threemonth_day $save_day
+
 
