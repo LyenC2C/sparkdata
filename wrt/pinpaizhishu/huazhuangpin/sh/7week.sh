@@ -16,8 +16,8 @@ hive -hiveconf yes_day=$yes_day 3month_day=$3month_day -f $dev_path/ppzs_brandid
 hive -hiveconf yes_day=$yes_day -f $dev_path/ppzs_brandid_weeksold_feedcount.sql
 
 hfs -cat /hive/warehouse/wlservice.db/ppzs_brandid_weeksold_feedcount/* \
-> $save_path/ppzs_brandid_weeksold_feedcount_$save_day
+> $save_path/7week/ppzs_brandid_weeksold_feedcount_$save_day
 
-scp $save_path/ppzs_brandid_weeksold_feedcount_$save_day gutao@10.2.4.177:/home/gutao/data/brand_data/tongtong/7week_history/
+scp $save_path/7week/ppzs_brandid_weeksold_feedcount_$save_day gutao@10.2.4.177:/home/gutao/data/brand_data/tongtong/7week_history/
 
 
