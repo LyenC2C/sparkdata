@@ -121,7 +121,7 @@ def f_old(line,brand_dict,cate_dict):
 b_dim = "/hive/warehouse/wlservice.db/ppzs_brandid_72ge"
 s = "/commit/tb_tmp/iteminfo/" + yes_day
 # s = "/commit/tb_tmp/iteminfo/20161120/*2016-11-21"
-c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
+c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20161122/000000_0"
 brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd = sc.textFile(s).map(lambda x:f(x,brand_dict,cate_dict)).filter(lambda x:x!=None)
