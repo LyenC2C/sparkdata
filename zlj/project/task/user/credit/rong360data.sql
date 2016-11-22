@@ -180,4 +180,27 @@ SELECT  count(1) from wlfinance.t_hx_rong360_user where class in  ( 'test_1w' ,'
 -- create table wlfinance.t_zlj_tmp_uid like wlfinance.t_hx_rong360_user
 
 --
-=
+
+-- 获取所有特征
+SELECT  class,label ,gender,age,t4.*
+from
+(
+SELECT tel ,tel_index,class,label ,gender,age from
+(
+SELECT  tel,'8000_c' as class , id1 as label,id3 as gender,id4 as age
+   from
+   wlfinance.t_zlj_base_match where ds='ygz_part'
+   union all
+    SELECT tel,'2000_c' as class,'' as label ,id1 as gender,id2 as age
+   from
+   wlfinance.t_zlj_base_match where ds='rong360_test_1111'
+    union all
+   SELECT  tel,'data_2k' as class , id1 as label,id3 as gender,id4 as age
+   from
+   wlfinance.t_zlj_base_match where ds='data_2k'
+    )t1
+    join
+t_zlj_phone_rank_index t2 on t1.tel =t2.uid
+group by tel_index,class,label ,gender,age,t1.tel
+)t3 join
+wlservice.t_rong360_model_features_new  t4 on t3.tel=t4.tel ;

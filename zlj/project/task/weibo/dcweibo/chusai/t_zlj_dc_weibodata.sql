@@ -222,7 +222,30 @@ SELECT  orgin_name , orgin_id  from t_zlj_dc_weibodata_3w
 UNION  ALL
 SELECT user_name  orgin_name , user_id  orgin_id  from t_zlj_dc_weibodata_3w
 )t1
-
 group by  orgin_id
 
 )t2 ;
+
+-- 增加新一批id匿名化
+drop table t_zlj_dc_weibodata_3w_username_id_inc_1119 ;
+create table t_zlj_dc_weibodata_3w_username_id_inc_1119 as
+SELECT  orgin_id,rn  from t_zlj_dc_weibodata_3w_username_id
+union all
+  select  t2.orgin_id , ROW_NUMBER() OVER (PARTITION BY 1 ORDER BY t2.orgin_id  DESC)+9000000 AS rn
+  from t_zlj_dc_weibodata_3w_username_id t1 RIGHT  join
+(
+  SELECT
+    CAST(orgin_id AS BIGINT) orgin_id
+  FROM
+    (
+      SELECT
+        orgin_id
+      FROM t_zlj_dc_weibodata_final_3w_buquan_1119
+      UNION ALL
+      SELECT
+        user_id   orgin_id
+      FROM t_zlj_dc_weibodata_final_3w_buquan_1119
+    ) t1
+  GROUP BY orgin_id
+)t2 on t1.orgin_id=t2.orgin_id  where t1.orgin_id is null
+;

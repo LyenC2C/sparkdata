@@ -41,3 +41,46 @@ stored as textfile ;
 
 -- LOAD DATA  INPATH '/user/zlj/data/dim.txt' OVERWRITE INTO TABLE t_base_ec_dim PARTITION (ds='20151023') ;
 -- LOAD DATA  INPATH '/commit/t_base_ec_dim' OVERWRITE INTO TABLE t_base_ec_dim PARTITION (ds='20151023') ;
+
+ALTER TABLE t_base_ec_dim DROP IF EXISTS PARTITION (ds='20151023');
+
+ALTER table  t_base_ec_dim add COLUMNS (rn int) ;
+
+INSERT OVERWRITE table t_base_ec_dim PARTITION(ds='20161122')
+SELECT
+cate_id                ,
+cate_name              ,
+cate_level             ,
+cate_level1_id         ,
+cate_level2_id         ,
+cate_level3_id         ,
+cate_level4_id         ,
+cate_level5_id         ,
+cate_level1_name       ,
+cate_level2_name       ,
+cate_level3_name       ,
+cate_level4_name       ,
+cate_level5_name       ,
+cate_full_name         ,
+is_leaf                ,
+parent_id              ,
+parent_name            ,
+features               ,
+is_virtual             ,
+properties             ,
+commodity_id           ,
+commodity_name         ,
+deleted                ,
+cate_type              ,
+industry_id            ,
+industry_name          ,
+is_industry_valid      ,
+industry_360_id        ,
+industry_360_name      ,
+is_industry_360_valid  ,
+industry_his_id        ,
+industry_his_name      ,
+is_industry_his_valid  ,
+stat_date              ,
+row_number()  OVER (PARTITION BY 1 ORDER BY cate_id  desc) as rn
+from t_base_ec_dim ;

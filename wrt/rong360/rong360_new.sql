@@ -931,6 +931,15 @@ left  join
 (
 SELECT
 tel,
+max(alipay_flag) as alipay_flag,
+max(buycnt) as buycnt,
+max(verify_level) as verify_level,
+max(regtime_month) as regtime_month
+from
+(
+
+SELECT
+tel,
 case when alipay like '已通过支付宝实名认证' then 1 else 0 end  as alipay_flag  ,
 buycnt  ,
 cast(regexp_replace(verify, 'VIP等级', '')  as int) as  verify_level ,
@@ -945,6 +954,8 @@ SELECT  tel  from   wlfinance.t_zlj_base_match   group by tel
     join
 t_zlj_phone_rank_index t2 on t1.tel =t2.uid
 )t3 join t_base_user_profile_telindex t4 on t3.tel_index=t4.tel_index
+
+)t5 group by tel
 )t4  on t4.tel =t1.tel
 ;
 

@@ -36,7 +36,6 @@ parsedData = data.map(parsePoint)
 # Build the model
 model = LogisticRegressionWithLBFGS.train(parsedData)
 
-model.predict
 # Evaluating the model on training data
 labelsAndPreds = parsedData.map(lambda p: (p.label, model.predict(p.features)))
 trainErr = labelsAndPreds.filter(lambda (v, p): v != p).count() / float(parsedData.count())
