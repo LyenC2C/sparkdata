@@ -17,7 +17,6 @@ from
 JOIN
 (
 select item_id,sold as now_sold from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:yes_day}'
-group by item_id
 )t2
 ON
 t1.item_id = t2.item_id
