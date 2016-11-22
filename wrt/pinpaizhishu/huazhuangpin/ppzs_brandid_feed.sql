@@ -10,7 +10,7 @@ from
 (select brand_id,item_id from wlservice.ppzs_itemid_info where ds = '${hiveconf:yes_day}')t1
 JOIN
 (select feed_id,item_id,user_id,rate_type,content from
-wlbase_dev.t_base_ec_item_feed_dev_new where ds> '${hiveconf:3month_day }')t2
+wlbase_dev.t_base_ec_item_feed_dev_new where ds> '${hiveconf:threemonth_day }')t2
 ON
 t1.item_id = t2.item_id;
 
