@@ -1,7 +1,7 @@
-insert overwrite table t_wrt_caiji_ppzs_itemid partition(ds = '${hiveconf:friday}')
+insert overwrite table wlservice.t_wrt_caiji_ppzs_itemid partition(ds = '${hiveconf:friday}')
 select tt2.item_id from
 (select t2.shop_id as shop_id from
-(select brand_id from ppzs_brandid_72ge)t1
+(select brand_id from wlservice.ppzs_brandid_72ge)t1
 JOIN
 (select shop_id,brand_id from wlbase_dev.t_base_ec_item_dev_new
 where ds='${hiveconf:iteminfo_day}' and bc_type = 'B')t2
