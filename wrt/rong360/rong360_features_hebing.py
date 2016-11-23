@@ -58,9 +58,9 @@ def hebing(x,y):
         return None
     else:
         if len(y[0]) < len(y[1]):
-            lv = [y[0]] + [y[1]]
+            lv = y[0] + y[1]
         else:
-            lv = [y[1]] + [y[0]]
+            lv = y[1] + y[0]
     result.append(x)
     for i in range(len(lv)):
         result.append(str(i) + ":" + str(y[0]))
@@ -74,10 +74,15 @@ s_main = "/hive/warehouse/wlservice.db/t_rong360_model_features_new/000000_0"
 # rdd = sc.textFile(s_main).flatMap()
 rdd1 = sc.textFile(s_main).map(lambda x:f(x))
 rdd_col = sc.textFile(s_3j).flatMap(lambda x:f_3j_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
-rdd_col.saveAsTextFile('/user/wrt/temp/rong360_3j_features')
+# rdd_col.saveAsTextFile('/user/wrt/temp/rong360_3j_features')
 # fea_3j = sc.broadcast(rdd.collect()).value
 fea_3j = list(rdd_col.collect())
 rdd2 = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): hebing(x,y)).filter(lambda x:x!=None)
 # rdd2.map(lambda x:x.strip() + "".join(fea_3j)).saveAsTextFile('/user/wrt/temp/collect_test')
-# rdd.saveAsTextFile('/user/wrt/temp/rong360_3j_features')
+rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features')
+
+
+#hfs -rmr /user/wrt/temp/rong360_tel_features
+#hfs -rmr /user/wrt/temp/rong360_3j_features
+#spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 rong360_features_hebing.py
