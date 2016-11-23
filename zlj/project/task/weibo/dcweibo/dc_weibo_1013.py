@@ -17,7 +17,10 @@ conf.set("spark.akka.frameSize", "100")
 conf.set("spark.network.timeout", "1000s")
 conf.set("spark.driver.maxResultSize", "8g")
 
+import pyspark.ml.classification
 sc = SparkContext(appName="user_cattags", conf=conf)
+
+
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)

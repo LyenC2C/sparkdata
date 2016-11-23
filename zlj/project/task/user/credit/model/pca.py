@@ -66,3 +66,4 @@ def plotBestFit(data1, data2):
     plt.xlabel('x1'); plt.ylabel('x2');
     plt.savefig("outfile.png")
     plt.show()
+
