@@ -1,4 +1,4 @@
-insert overwrite table t_wrt_caiji_ppzs_itemid partition(ds = '${hiveconf:saturday}')
+insert overwrite table t_wrt_caiji_ppzs_itemid partition(ds = '${hiveconf:friday}')
 select tt2.item_id from
 (select t2.shop_id as shop_id from
 (select brand_id from ppzs_brandid_72ge)t1
@@ -12,7 +12,7 @@ t2.shop_id
 )tt1
 JOIN
 (
-select item_id,shop_id from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:saturday}'
+select item_id,shop_id from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:friday}'
 )tt2
 ON
 tt1.shop_id = tt2.shop_id
