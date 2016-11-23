@@ -38,6 +38,6 @@ s_main = "/hive/warehouse/wlservice.db/ppzs_itemid_brandid/ds=20161108/*"
 # rdd = sc.textFile(s_main).flatMap()
 rdd = sc.textFile(s_3j).flatMap(lambda x:f_3j_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
 fea_3j = sc.broadcast(rdd.collect()).value
-# rdd2 = sc.textFile(s_main) sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x))
+rdd2 = sc.textFile(s_main)
 rdd2.map(lambda x:x.strip() + "".join(fea_3j)).saveAsTextFile('/user/wrt/temp/collect_test')
 # rdd.saveAsTextFile('/user/wrt/temp/rong360_3j_features')
