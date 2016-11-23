@@ -66,7 +66,7 @@ def parse(line):
     online_status=ob.get('online_status','-1')
     bi_followers_count=ob.get('bi_followers_count','-')
     lang=ob.get('lang','-')
-    rs=[id,idstr,screen_name,name,province,city,location,description,url,profile_image_url,profile_url,domain,weihao,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,allow_all_act_msg,geo_enabled,verified,verified_type,remark,status,allow_all_comment,avatar_large,avatar_hd,verified_reason,follow_me,online_status,bi_followers_count,lang]
+    rs=[id,idstr,screen_name,name,province,city,location,description,url,profile_image_url,profile_url,domain,weihao,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,allow_all_act_msg,geo_enabled,verified,verified_type,remark,allow_all_comment,avatar_large,avatar_hd,verified_reason,follow_me,online_status,bi_followers_count,lang]
     return (id,'\001'.join([ str(i) for i in rs] ))
 
 
