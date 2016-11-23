@@ -63,7 +63,7 @@ def hebing(x,y):
             lv = y[1] + y[0]
     result.append(x)
     for i in range(len(lv)):
-        result.append(str(i) + ":" + str(y[0]))
+        result.append(str(i) + ":" + str(lv[i]))
     return " ".join([valid_jsontxt(ln) for ln in result])
 
 
