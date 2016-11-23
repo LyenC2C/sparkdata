@@ -31,7 +31,10 @@ def valid_jsontxt(content):
 
 def parse(line):
     txt = valid_jsontxt(line.strip())
-    ob=json.loads(txt)
+    try:
+        ob=json.loads(txt)
+    except:
+        return None
     if type(ob)!=type({}):return None
     id=ob.get('id','-1')
     if  int(id)<-1:return None
