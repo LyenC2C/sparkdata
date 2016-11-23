@@ -37,7 +37,8 @@ def parse(line):
         return None
     if type(ob)!=type({}):return None
     id=ob.get('id','-1')
-    if id == '':return None
+    # if id == '':return None
+    if not id.isdigit(): return None
     if  int(id)<-1:return None
     idstr=ob.get('idstr','-')
     screen_name=ob.get('screen_name','-')
