@@ -3,8 +3,12 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
+from pyspark.sql import *
 
 sc = SparkContext(appName="rong360_features_hebing")
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
+
 
 def valid_jsontxt(content):
     # res = content
@@ -54,7 +58,7 @@ def feature_3j(line,fea_3j):
 def hebing(x,y):
     # lv = []
     result = []
-    if len(y) !=2:
+    if len(y) != 2:
         return None
     else:
         if len(y[0]) < len(y[1]):
@@ -70,17 +74,20 @@ def hebing(x,y):
 
 s_3j = "/hive/warehouse/wlservice.db/t_zlj_tmp_rong360_1w_record_level3_feature/*"
 s_main = "/hive/warehouse/wlservice.db/t_rong360_model_features_new/000000_0"
-# s_main = "/hive/warehouse/wlservice.db/ppzs_itemid_brandid/ds=20161108/*"
-# rdd = sc.textFile(s_main).flatMap()
-rdd1 = sc.textFile(s_main).map(lambda x:feature_main(x))
-rdd_col = sc.textFile(s_3j).flatMap(lambda x:f_3j_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
-# rdd_col.saveAsTextFile('/user/wrt/temp/rong360_3j_features')
-# fea_3j = sc.broadcast(rdd.collect()).value
-fea_3j = list(rdd_col.collect())
-rdd2 = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j))
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y): hebing(x,y)).filter(lambda x:x!=None)
-# rdd2.map(lambda x:x.strip() + "".join(fea_3j)).saveAsTextFile('/user/wrt/temp/collect_test')
-rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features')
+
+
+rdd_fea_3j = sc.textFile(s_3j).flatMap(lambda x:f_3j_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
+fea_3j = list(rdd_fea_3j.collect())
+# rdd_3j = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j))
+rdd_fea_main = hiveContext.sql('desc wlservice.t_rong360_model_features_new')
+# rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
+# rdd = rdd_main.union(rdd_3j).groupByKey().mapValues(list).map(lambda (x, y): hebing(x,y)).filter(lambda x:x!=None)
+# rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features')
+
+fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()]
+fea_all = fea_main + fea_3j
+sc.parallelize(fea_all).saveAsTextFile('/user/wrt/temp/rong360_features_name')
+
 
 
 #hfs -rmr /user/wrt/temp/rong360_tel_features
