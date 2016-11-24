@@ -3,6 +3,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
+import time
 sc = SparkContext(appName="phone_tag_sogou")
 
 def valid_jsontxt(content):
@@ -23,6 +24,7 @@ def f(line):
     tag = ob.get("tag","-")
     place = ob.get("place","-")
     tel_co = ob.get("tel_co","-")
+    ts = int(time.time())
     result = []
     result.append(phone)
     result.append(platform)
@@ -31,7 +33,10 @@ def f(line):
     result.append(tag)
     result.append(place)
     result.append(tel_co)
+    result.append(ts)
     return "\001".join([valid_jsontxt(i) for i in result])
 
 
 sc.textFile("/commit/credit/sogou").map(lambda x:f(x)).saveAsTextFile("/user/wrt/temp/t_credit_phone_tag_sogou")
+
+#spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 t_credit_phone_tag_sogou.py
