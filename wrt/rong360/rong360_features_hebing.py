@@ -83,22 +83,27 @@ def hebing_2(x,y):
 s_3j = "/hive/warehouse/wlservice.db/t_zlj_tmp_rong360_1w_record_level3_feature/*"
 s_main = "/hive/warehouse/wlservice.db/t_rong360_model_features_new/000000_0"
 
-
+#三级特征字段去重并按照一定顺序排列好
 rdd_fea_3j = sc.textFile(s_3j).flatMap(lambda x:f_3j_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
 fea_3j = list(rdd_fea_3j.collect())
+#每个电话按照新的三级特征顺序，将每个三级特征值依次输出，之前没有的特征用0代替
 rdd_3j = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j))
+#主要特征字段提取并自动排列好
 rdd_fea_main = hiveContext.sql('desc wlservice.t_rong360_model_features_new')
+#每个电话按照主要特征书序，将每个一级特征值依次输出
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 # rdd = rdd_main.union(rdd_3j).groupByKey().mapValues(list).map(lambda (x, y): hebing(x,y)).filter(lambda x:x!=None)
+#两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先主要特征，后三级特征的顺序
 rdd = rdd_main.join(rdd_3j).map(lambda (x,y):hebing_2(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features')
 
+#特征输出.
 fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()]
 fea_all = fea_main + fea_3j
 sc.parallelize(fea_all).saveAsTextFile('/user/wrt/temp/rong360_features_name')
 
 
 
-#hfs -rmr /user/wrt/temp/rong360_tel_features
-#hfs -rmr /user/wrt/temp/rong360_3j_features
-#spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 rong360_features_hebing.py
+# hfs -rmr /user/wrt/temp/rong360_tel_features
+# hfs -rmr /user/wrt/temp/rong360_features_name
+# spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 rong360_features_hebing.py
