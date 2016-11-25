@@ -77,6 +77,7 @@ SELECT class,COUNT(1) from t_zlj_tmp_rong360_1w_record group by  class
 
 
 -- 提取特征
+
 SELECT  class,label ,gender,age,t4.*
 from
 (
@@ -110,6 +111,7 @@ wlservice.t_rong360_model_features_new  t4 on t3.tel=t4.tel ;
 
 
 -- 三级类目特征
+drop table wlservice.t_zlj_tmp_rong360_1w_record_level3_feature ;
 create table wlservice.t_zlj_tmp_rong360_1w_record_level3_feature as
 SELECT
 tel , concat_ws(' ', collect_set(concat_ws(' ',
@@ -118,7 +120,8 @@ buy_count_rn,
 price_avg_rn,
 price_max_rn,
 price_min_rn,
-price_std_rn)))
+price_std_rn
+))) as feature
 from
 (
 SELECT

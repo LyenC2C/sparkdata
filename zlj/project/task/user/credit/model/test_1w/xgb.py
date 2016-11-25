@@ -27,7 +27,8 @@ from model_utils import *
 
 
 
-file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
+file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\chi_merge.csv')
+# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\融360_v3back.csv')
 
 '''
@@ -67,7 +68,7 @@ index_data=feature_cross(index_data) if cross_flag==1 else index_data
 
 print index_data.columns
 eta=0.05
-max_depth=4
+max_depth=8
 min_child_weight=1
 subsample=1.0
 colsample_bytree=0.8

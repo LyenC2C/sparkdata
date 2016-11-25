@@ -1,6 +1,7 @@
 #coding:utf-8
 from sklearn.decomposition import PCA
 from sklearn.utils import column_or_1d
+from zlj.project.task.user.credit.model.test_1w.model_utils import data_abnormal
 
 __author__ = 'zlj'
 import sys
@@ -22,7 +23,6 @@ import pandas as pd
 from pandas import Series, DataFrame
 import warnings
 warnings.filterwarnings("ignore")
-from model_utils import *
 import sklearn
 import collections as coll
 from xgboost.sklearn import XGBClassifier
@@ -134,62 +134,3 @@ ls=[]
 feature_kv=coll.defaultdict(int)
 kflod=[]
 # for step  in [6]:
-for step  in xrange(1):
-    print '---------------------',step
-    train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=step)
-    from imblearn.combine import SMOTEENN,SMOTETomek
-    from imblearn.over_sampling import *
-    sm = SMOTE()
-    # sm = SMOTEENN()
-    # sm = SMOTETomek()
-    # sm = ADASYN()
-
-    print len(train_X),len(test_X) ,len(train_X)+len(test_X)
-    print sum(train_Y['label']),sum(test_Y['label']),sum(train_Y['label'])+sum(test_Y['label'])
-    logisReg = linear_model.LogisticRegression(penalty='l1',
-                                               C=1.0,
-                                               solver='liblinear' ,n_jobs=4,
-                                               # class_weight={1:0.9, 0:0.1}
-                                               class_weight='balanced'
-                                               )
-
-    weight=np.array([i*5 if i==1 else 1 for i in list(train_Y)])
-    lr =logisReg.fit(train_X,train_Y)
-    print len(lr.coef_[0])
-
-    f_value= np.sum(np.abs(lr.coef_), axis=0)
-    # print f_value
-    top_features=feature_anay(features,f_value,50)
-    for k,v  in top_features:
-        feature_kv[k]=feature_kv[k]+v
-    # print sklearn.feature_selection()._get_feature_importances(lr)
-    lr_pred_p= lr.predict_proba(test_X)
-    print type(lr_pred_p[:,1])
-    kflod.append(lr_pred_p[:,1])
-
-    lr_rs=model_rs_dataframe(test_Y,lr_pred_p[:,1])
-    lr_auc=metrics.roc_auc_score(test_Y, lr_rs['rs'])
-    lr_ks=np.array([ i for  i in ks_calc(lr_rs)['ks']]).max()
-    # model=xgb_sk(train_X,train_Y)
-    # xgb_pred=model.predict_proba(test_X)[:,1]
-    # print feature_anay(index_data.columns,model.feature_importances_)
-    # xgb_rs=model_rs_dataframe(test_Y,xgb_pred)
-    # xgb_auc=metrics.roc_auc_score(test_Y['label'], xgb_rs['rs'])
-    # xgb_ks=np.array([ i for  i in ks_calc(xgb_rs)['ks']]).max()
-
-    print 'lr'   ,lr_auc ,lr_ks
-    ls.append([lr_auc, lr_ks])
-for i in [get_feature_name(k)+str(v) for k,v in sorted(feature_kv.items() , key=lambda t:t[-1],reverse=True)]:print i
-df= pd.DataFrame(ls)
-
-print df.mean(axis=0)
-
-df1=pd.DataFrame(kflod)
-means= df1.mean(axis=0)
-print len(test_Y),len(means)
-mean_rs=model_rs_dataframe(test_Y,means)
-
-print len(test_Y['label']), len(mean_rs['rs'])
-mean_auc=metrics.roc_auc_score(test_Y, mean_rs['rs'])
-mean_ks=np.array([ i for  i in ks_calc(mean_rs)['ks']]).max()
-print mean_auc,mean_ks
