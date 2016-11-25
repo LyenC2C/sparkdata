@@ -123,14 +123,16 @@ def test_rflasso():
     XX = randomized_logistic.transform(train_X)
     print XX.shape
 
-test_rflasso()
 
 
-import os
-os._exit(0)
+if __name__ == '__main__':
+    test_rflasso()
 
-# step=2     blag 0.747359870024
-ls=[]
-feature_kv=coll.defaultdict(int)
-kflod=[]
+# import os
+# os._exit(0)
+#
+# # step=2     blag 0.747359870024
+# ls=[]
+# feature_kv=coll.defaultdict(int)
+# kflod=[]
 # for step  in [6]:
