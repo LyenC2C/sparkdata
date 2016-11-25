@@ -37,10 +37,13 @@ SELECT
   price,
   shop_id,
   location,
+  t3.tel_index ,
+  t3.rn as tel_user_rn,
   CASE WHEN cat_id IS NOT NULL
     THEN 'true1'
   ELSE 'false1' END AS ds
-FROM (SELECT
+FROM (
+       SELECT
         cast(item_id AS BIGINT) item_id,
         title,
         cat_id,
@@ -53,7 +56,7 @@ FROM (SELECT
         shop_id,
         location
       FROM t_base_ec_item_dev_new
-      WHERE ds = 20161104
+      WHERE ds = 20161013
      ) t1
  RIGHT JOIN
   (
@@ -65,12 +68,17 @@ FROM (SELECT
       annoy,
       SUBSTRING(regexp_replace(f_date, '-', ''), 0, 8)                                  AS dsn,
       datediff(from_unixtime(unix_timestamp(), 'yyyy-MM-dd'), SUBSTRING(f_date, 0, 10)) AS datediff,
+      case
+when content = '评价方未及时做出评价,系统默认好评!' then date_add(f_date,-22)
+when content = '好评！' then date_add(f_date,-11)
+else then date_add(f_date,-9)
+end  as date_predict ,
       sku
-
    FROM t_base_ec_item_feed_dev_inc_new
         WHERE ds='$ds' and item_id IS NOT NULL AND f_date IS NOT NULL
 
   ) t2 ON t1.item_id = t2.item_id
+  left join t_zlj_phone_rank_index t3 on t2.user_id=t3.tb_id
 ;
 
 

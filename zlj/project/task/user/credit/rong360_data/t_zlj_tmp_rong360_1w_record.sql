@@ -126,12 +126,12 @@ from
 (
 SELECT
 tel ,
-concat_ws(':', concat_ws('_' , cast(rn as string),'1')  , price_sum) price_sum_rn ,
-concat_ws(':', concat_ws('_' , cast(rn as string),'2')  , buy_count) buy_count_rn ,
-concat_ws(':', concat_ws('_' , cast(rn as string),'3')  , price_avg) price_avg_rn ,
-concat_ws(':', concat_ws('_' , cast(rn as string),'4')  , price_max) price_max_rn ,
-concat_ws(':', concat_ws('_' , cast(rn as string),'5')  , price_min) price_min_rn ,
-concat_ws(':', concat_ws('_' , cast(rn as string),'6')  , price_std) price_std_rn
+concat_ws(':', concat_ws('_' , cast(rn as string),'sum_price')  , price_sum) price_sum_rn ,
+concat_ws(':', concat_ws('_' , cast(rn as string),'count')  , buy_count) buy_count_rn ,
+concat_ws(':', concat_ws('_' , cast(rn as string),'avg_price')  , price_avg) price_avg_rn ,
+concat_ws(':', concat_ws('_' , cast(rn as string),'max_price')  , price_max) price_max_rn ,
+concat_ws(':', concat_ws('_' , cast(rn as string),'min_pricc')  , price_min) price_min_rn ,
+concat_ws(':', concat_ws('_' , cast(rn as string),'price_std')  , price_std) price_std_rn
 from
 (
 SELECT
