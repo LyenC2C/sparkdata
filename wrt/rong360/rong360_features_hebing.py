@@ -26,8 +26,8 @@ def feature_main(line):
     i = -1
     for ln in ss[1:]:
         i +=1
-        if float(ln) == 0.0:
-            continue
+        if not ln.replace(".","").isdigit():continue
+        if float(ln) == 0.0:continue
         result.append(valid_jsontxt(i) + ":" + valid_jsontxt(ln))
     # result = ss[1:]
     return (tel,result)
