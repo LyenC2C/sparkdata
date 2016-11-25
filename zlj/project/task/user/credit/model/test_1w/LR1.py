@@ -1,5 +1,4 @@
 #coding:utf-8
-from sklearn.decomposition import PCA
 from sklearn.utils import column_or_1d
 
 __author__ = 'zlj'
@@ -25,11 +24,10 @@ warnings.filterwarnings("ignore")
 from model_utils import *
 import sklearn
 import collections as coll
-from xgboost.sklearn import XGBClassifier
-from sklearn.preprocessing import Imputer, StandardScaler
 
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\test1w\\融360_v3back.csv')
 file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
+# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\chi_merge.csv')
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_flow.csv')
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_2014.csv')
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_2015.csv')
@@ -39,26 +37,42 @@ file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_lab
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\融360_v3back.csv')
 
 
-mulddata= pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\multload.csv')
-kv=coll.defaultdict(int)
-for k,v in zip(mulddata['tel'],mulddata['hit']):
-    kv[k]=v if kv[k]<v else kv[k]
+# mulddata= pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\multload.csv')
+# kv=coll.defaultdict(int)
+# for k,v in zip(mulddata['tel'],mulddata['hit']):
+#     kv[k]=v if kv[k]<v else kv[k]
 
 
 # file['mult_load']= [kv[i] if kv[i]>0 else 0 for i in file['tel']  ]
+# import sklearn.datasets.load_svmlight_file as ps
 
 '''
 data clean
 '''
 
+file.drop(['avg_price','avg_cnt'],axis=1,inplace=False)
 
+# drop_cols=[]
+# for col in file.columns[3:]:
+#     size=len(file[col])
+#     black_size=len([i for i in file[col] if i<0.1])
+#     if (black_size/(size*1.0))>0.85:
+#         drop_cols.append(col)
+#
+#
+# print '---',drop_cols
+# file.drop(drop_cols,axis=1,inplace=True)
 
 for i in file.columns[3:]:
     file[i]=file[i].map(lambda x:data_abnormal(x))
-    if 'cnt_ratio' in i or 'price_ratio' in i :
+    # if 'cnt_ratio' in i or 'price_ratio' in i :
+    if 1==1 :
         col=file[i]
+        # min, max=col.min(),col.max()+1
+
         min, max=col.min(),math.log(col.max()+1,2)
-        file[i]=(col - min) / (min - max)
+        # file[i]=(col - min) / (min - max)
+        # file[i]=(col - col.mean()) / col.std()  #zscore
 
 import  math
 
@@ -94,47 +108,45 @@ test_featrue=valid_data.loc[:,index_data.columns]
 print test_featrue.columns
 print set(index_data.columns)-set(test_featrue.columns)
 
-features=index_data.columns
-'''
-降维
-'''
-index_data=Imputer().fit_transform(index_data)
-# pca=PCA(50)
-# # pca=IncrementalPCA(200)
-# pca.fit(index_data)
-# index_data=pca.transform(index_data)
+# 删除相关性
+
 
 # 特征交叉
 # index_data=feature_cross(index_data)
 # test_featrue=feature_cross(test_featrue)
 
 # 划分训练测试集
-
-
-def test_rflasso():
-    train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=1)
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.feature_selection import SelectFromModel
-    from sklearn.svm import SVC
-    from sklearn.cross_validation import StratifiedKFold
-    from sklearn.linear_model import RandomizedLogisticRegression
-    randomized_logistic = RandomizedLogisticRegression(C=0.1,n_jobs=2)
-    randomized_logistic.fit(train_X,train_Y)
-    XX = randomized_logistic.transform(train_X)
-    print XX.shape
-
-test_rflasso()
-
-
-import os
-os._exit(0)
+from xgboost.sklearn import XGBClassifier
+from sklearn.preprocessing import Imputer, StandardScaler
+features=index_data.columns
 
 # step=2     blag 0.747359870024
 ls=[]
 feature_kv=coll.defaultdict(int)
-kflod=[]
+
+from sklearn.decomposition import PCA, SparsePCA,IncrementalPCA
+
+
 # for step  in [6]:
-for step  in xrange(1):
+
+index_data=Imputer().fit_transform(index_data)
+
+
+
+
+# 丢弃覆盖率低的特征
+# from sklearn.feature_selection import VarianceThreshold
+# sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
+# print  len(index_data.columns)
+# val =sel.fit(index_data)
+# print index_data.shape
+
+from sklearn.linear_model import (RandomizedLasso, lasso_stability_path,
+                                  LassoLarsCV)
+
+
+
+for step  in xrange(10):
     print '---------------------',step
     train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=step)
     from imblearn.combine import SMOTEENN,SMOTETomek
@@ -144,14 +156,35 @@ for step  in xrange(1):
     # sm = SMOTETomek()
     # sm = ADASYN()
 
-    print len(train_X),len(test_X) ,len(train_X)+len(test_X)
-    print sum(train_Y['label']),sum(test_Y['label']),sum(train_Y['label'])+sum(test_Y['label'])
+    print '训练 测试 总共样本' , len(train_X),len(test_X) ,len(train_X)+len(test_X)
+    print '训练正样本 测试正样本 总共正样本',sum(train_Y['label']),sum(test_Y['label']),sum(train_Y['label'])+sum(test_Y['label'])
+    # train_X = Imputer().fit_transform(train_X)
+    # test_X = Imputer().fit_transform(test_X)
+    # train_X, train_Y = sm.fit_sample(train_X, train_Y)
+
+    # logisReg = linear_model.LogisticRegression(penalty='l2',solver='liblinear' ,n_jobs=4
+    #                                            ,
+    #                                            class_weight='balanced' ,max_iter=100, tol=0.0001
+    #                                            )
+
+    # alpha_grid, scores_path = lasso_stability_path(train_X, train_Y, random_state=42,
+    #                                                eps=0.05)
+
+
     logisReg = linear_model.LogisticRegression(penalty='l1',
                                                C=1.0,
-                                               solver='liblinear' ,n_jobs=4,
+                                               solver='liblinear' ,n_jobs=6,
                                                # class_weight={1:0.9, 0:0.1}
                                                class_weight='balanced'
                                                )
+
+
+    # from sklearn.feature_selection import SelectFromModel
+    # df=SelectFromModel(logisReg,threshold=0.5).fit(train_X,train_Y)
+    # mask=df._get_support_mask()
+    # print mask
+
+    # print [v  for k,v in zip(mask,features) if k==True]
 
     weight=np.array([i*5 if i==1 else 1 for i in list(train_Y)])
     lr =logisReg.fit(train_X,train_Y)
@@ -164,9 +197,6 @@ for step  in xrange(1):
         feature_kv[k]=feature_kv[k]+v
     # print sklearn.feature_selection()._get_feature_importances(lr)
     lr_pred_p= lr.predict_proba(test_X)
-    print type(lr_pred_p[:,1])
-    kflod.append(lr_pred_p[:,1])
-
     lr_rs=model_rs_dataframe(test_Y,lr_pred_p[:,1])
     lr_auc=metrics.roc_auc_score(test_Y, lr_rs['rs'])
     lr_ks=np.array([ i for  i in ks_calc(lr_rs)['ks']]).max()
@@ -179,17 +209,8 @@ for step  in xrange(1):
 
     print 'lr'   ,lr_auc ,lr_ks
     ls.append([lr_auc, lr_ks])
-for i in [get_feature_name(k)+str(v) for k,v in sorted(feature_kv.items() , key=lambda t:t[-1],reverse=True)]:print i
+for i in [k+str(v) for k,v in sorted(feature_kv.items() , key=lambda t:t[-1],reverse=True)]:print i
 df= pd.DataFrame(ls)
-
 print df.mean(axis=0)
 
-df1=pd.DataFrame(kflod)
-means= df1.mean(axis=0)
-print len(test_Y),len(means)
-mean_rs=model_rs_dataframe(test_Y,means)
 
-print len(test_Y['label']), len(mean_rs['rs'])
-mean_auc=metrics.roc_auc_score(test_Y, mean_rs['rs'])
-mean_ks=np.array([ i for  i in ks_calc(mean_rs)['ks']]).max()
-print mean_auc,mean_ks
