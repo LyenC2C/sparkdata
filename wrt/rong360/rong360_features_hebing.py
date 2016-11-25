@@ -89,7 +89,7 @@ def hebing(x,y):
 
 
 s_3j = "/hive/warehouse/wlservice.db/t_zlj_tmp_rong360_1w_record_level3_feature/*"
-
+s_main = "/hive/warehouse/wlservice.db/t_rong360_model_features_new/000000_0"
 
 #主要特征字段提取并自动排列好
 rdd_fea_main = hiveContext.sql('desc wlservice.t_rong360_model_features_new')
