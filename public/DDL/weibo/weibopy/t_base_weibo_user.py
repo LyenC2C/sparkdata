@@ -22,16 +22,23 @@ sc = SparkContext(appName="weibo_user", conf=conf)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 def valid_jsontxt(content):
-    res = content
+    # res = content
     if type(content) == type(u""):
         res = content.encode("utf-8")
-        return res.replace("\\n", " ").replace("\n"," ").replace("\u0001"," ").replace("\001", "").replace("\\r", "")
-    else: return res
+    else:
+        res = str(content)
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def parse(line):
-    ob=json.loads(valid_jsontxt(line))
+    txt = valid_jsontxt(line.strip())
+    try:
+        ob=json.loads(txt)
+    except:
+        return None
     if type(ob)!=type({}):return None
     id=ob.get('id','-1')
+    # if id == '':return None
+    if not str(id).isdigit(): return None
     if  int(id)<-1:return None
     idstr=ob.get('idstr','-')
     screen_name=ob.get('screen_name','-')
@@ -66,7 +73,7 @@ def parse(line):
     online_status=ob.get('online_status','-1')
     bi_followers_count=ob.get('bi_followers_count','-')
     lang=ob.get('lang','-')
-    rs=[id,idstr,screen_name,name,province,city,location,description,url,profile_image_url,profile_url,domain,weihao,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,allow_all_act_msg,geo_enabled,verified,verified_type,remark,status,allow_all_comment,avatar_large,avatar_hd,verified_reason,follow_me,online_status,bi_followers_count,lang]
+    rs=[id,idstr,screen_name,name,province,city,location,description,url,profile_image_url,profile_url,domain,weihao,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,allow_all_act_msg,geo_enabled,verified,verified_type,remark,allow_all_comment,avatar_large,avatar_hd,verified_reason,follow_me,online_status,bi_followers_count,lang]
     return (id,'\001'.join([ str(i) for i in rs] ))
 
 
@@ -81,7 +88,7 @@ def try_parse(line):
 
 
 
-sc.textFile('/commit/weibo/userinfo/*/*').map(lambda x:try_parse(x)).filter(lambda x:x!=None).\
+sc.textFile('/commit/weibo/userinfo/*/*').map(lambda x:parse(x)).filter(lambda x:x!=None).\
     groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/wrt/temp/userinfo_all')
 
 
