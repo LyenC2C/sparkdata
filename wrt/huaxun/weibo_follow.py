@@ -36,6 +36,6 @@ s_v = "/hive/warehouse/wlservice.db/t_wrt_huaxun_weibo_gupiaov/*"
 
 rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_user_fri/*/*")
 v_list = sc.broadcast(sc.textFile(s_v).map(lambda x:f2(x)).collectAsMap()).value
-rdd.map(lambda x:f(x,v_list))
+rdd.map(lambda x:f(x,v_list)).saveAsTextFile("/user/wrt/temp/weibo_follow_guopiaov")
 
 # spark-submit  --executor-memory 16G  --driver-memory 16G  --total-executor-cores 200 weibo_follow.py
