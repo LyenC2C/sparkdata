@@ -42,9 +42,11 @@ t4.follow_ids as finance_weiboids,
 t4.follow_names as finance_weibonames
 from t_zlj_api_weibo_fraud_step1 t3 full join
 (
+(
+
 SELECT
 t2.id ,
-concat_ws('|',collect_set( concat_ws(':',fid,screen_name )) as follow_ids,
+concat_ws('|',collect_set( concat_ws(':',fid,screen_name ))) as follow_ids,
 concat_ws('|',collect_set(  screen_name )) as follow_names
 from
 (
@@ -80,6 +82,7 @@ from t_base_weibo_user_fri_tel
 lateral view explode(split(ids,',')) tt as fid
 ) t2 on t1.id =t2.fid
 group by t2.id
+) tn join t_base_weibo_user tn1 on tn.id =tn1.id and tn1.ds='20161104'
 )t4 on t3.weibo_id =t4.id
 ;
 

@@ -1,0 +1,1 @@
+alter table t_zlj_record_tmp_dim234 rename to t_base_record_cate;

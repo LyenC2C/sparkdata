@@ -1,7 +1,7 @@
 #coding:utf-8
 from sklearn.decomposition import PCA
 from sklearn.utils import column_or_1d
-from zlj.project.task.user.credit.model.test_1w.model_utils import data_abnormal
+# from zlj.project.task.user.credit.model.test_1w.model_utils import data_abnormal
 
 __author__ = 'zlj'
 import sys
@@ -11,11 +11,8 @@ sys.setdefaultencoding('utf8')
 
 
 
-import numpy as np
-import matplotlib.pyplot as plt
 from sklearn import linear_model, preprocessing
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import GradientBoostingClassifier
 from   sklearn import  metrics
 from sklearn.metrics import roc_curve, roc_auc_score
 from sklearn.cross_validation import train_test_split
@@ -25,24 +22,17 @@ import warnings
 warnings.filterwarnings("ignore")
 import sklearn
 import collections as coll
-from xgboost.sklearn import XGBClassifier
 from sklearn.preprocessing import Imputer, StandardScaler
 
 # file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\test1w\\融360_v3back.csv')
 file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_flow.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_2014.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_2015.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_std.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_std_avg.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\融360_v3back.csv')
+file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\chi_merge.csv')
 
-
-mulddata= pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\multload.csv')
-kv=coll.defaultdict(int)
-for k,v in zip(mulddata['tel'],mulddata['hit']):
-    kv[k]=v if kv[k]<v else kv[k]
+#
+# mulddata= pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\multload.csv')
+# kv=coll.defaultdict(int)
+# for k,v in zip(mulddata['tel'],mulddata['hit']):
+#     kv[k]=v if kv[k]<v else kv[k]
 
 
 # file['mult_load']= [kv[i] if kv[i]>0 else 0 for i in file['tel']  ]
@@ -52,24 +42,24 @@ data clean
 '''
 
 
-
-for i in file.columns[3:]:
-    file[i]=file[i].map(lambda x:data_abnormal(x))
-    if 'cnt_ratio' in i or 'price_ratio' in i :
-        col=file[i]
-        min, max=col.min(),math.log(col.max()+1,2)
-        file[i]=(col - min) / (min - max)
-
-import  math
-
-
+import math
+# for i in file.columns[3:]:
+#     # file[i]=file[i].map(lambda x:data_abnormal(x))
+#     if 'cnt_ratio' in i or 'price_ratio' in i :
+#         col=file[i]
+#         min, max=col.min(),math.log(col.max()+1,2)
+#         file[i]=(col - min) / (min - max)
 
 import  math
-for i  in ['total_price','avg_price','std_price']:
-    file[i]=file[i].map(lambda x:math.log(x+0.1,2))
 
-file['total_price_mean']=file['total_price']/(file['age']+1)
-file['total_price_mean_month']=file['total_price']/(file['buy_month']+1)
+
+
+# import  math
+# for i  in ['total_price','avg_price','std_price']:
+#     file[i]=file[i].map(lambda x:math.log(x+0.1,2))
+#
+# file['total_price_mean']=file['total_price']/(file['age']+1)
+# file['total_price_mean_month']=file['total_price']/(file['buy_month']+1)
 
 print 'len(data):',len(file)
 
@@ -94,7 +84,7 @@ test_featrue=valid_data.loc[:,index_data.columns]
 print test_featrue.columns
 print set(index_data.columns)-set(test_featrue.columns)
 
-features=index_data.columns
+feature_name=index_data.columns
 '''
 降维
 '''
@@ -118,8 +108,17 @@ def test_rflasso():
     from sklearn.svm import SVC
     from sklearn.cross_validation import StratifiedKFold
     from sklearn.linear_model import RandomizedLogisticRegression
-    randomized_logistic = RandomizedLogisticRegression(C=0.1,n_jobs=2)
+    randomized_logistic = RandomizedLogisticRegression(C=1,
+                                                       scaling=0.8,
+                                                       n_resampling=100,
+                                                       selection_threshold=0.00001,
+                                                       n_jobs=1)
     randomized_logistic.fit(train_X,train_Y)
+    print len(train_X)
+    print randomized_logistic.get_support()
+    print randomized_logistic.all_scores_
+    ls=[(k,v)for k,v in zip(feature_name,randomized_logistic.all_scores_ )if v>0]
+    print ls
     XX = randomized_logistic.transform(train_X)
     print XX.shape
 
