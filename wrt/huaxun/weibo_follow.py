@@ -28,7 +28,7 @@ def f(line,v_list):
     return result
 
 def f2(line):
-    ss = line.strip.split("\001")
+    ss = line.strip().split("\001")
     text = valid_jsontxt(ss[1] + ss[2])
     return [valid_jsontxt(ss[0]),text]
 
