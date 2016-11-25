@@ -1,5 +1,5 @@
-__author__ = 'wrt'
 #coding:utf-8
+__author__ = 'wrt'
 import sys
 import time
 from pyspark import SparkContext
