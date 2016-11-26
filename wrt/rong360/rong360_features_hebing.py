@@ -104,13 +104,15 @@ rdd_3j = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j,len_main))
 #每个电话按照主要顺序，将每个一级特征值依次输出,0的过滤
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先主要特征，后三级特征的顺序
-rdd = rdd_main.join(rdd_3j).map(lambda x:x)
+rdd = rdd_main.join(rdd_3j)
+    # .map(lambda x:x)
     # .map(lambda (x,y):hebing(x,y))
-rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features_test')
+# rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features_test')
 #全部特征字段输出.
 fea_all = fea_main + fea_3j
-sc.parallelize(fea_all).saveAsTextFile('/user/wrt/temp/rong360_features_name_test')
+# sc.parallelize(fea_all).saveAsTextFile('/user/wrt/temp/rong360_features_name_test')
 
+#
 # hfs -rmr /user/wrt/temp/rong360_tel_features
 # hfs -rmr /user/wrt/temp/rong360_features_name
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 rong360_features_hebing.py
