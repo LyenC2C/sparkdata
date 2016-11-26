@@ -16,3 +16,5 @@ SELECT  COUNT(1) from t_zlj_t_base_uid_tmp_rank ;
 
 325857943
 select count(1) from(select  id from t_zlj_t_base_uid_tmp_rank group by id )t;
+
+

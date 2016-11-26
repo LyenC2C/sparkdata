@@ -3,14 +3,6 @@
 
 
 
--- 包含所有类目
-create  table t_zlj_record_tmp_dim234  as
-SELECT  /*+ mapjoin(t1)*/
-t2.* ,t1.cate_level2_id,t1.cate_level3_id ,cate_level4_id
-from
-t_base_ec_dim t1
-join
-t_zlj_record_tmp t2 on t1.cate_id =t2.cat_id ;
 
 
 -- 三级类目统计数据、如果没有三级，统计二级
