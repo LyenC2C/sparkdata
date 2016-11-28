@@ -14,7 +14,8 @@ pattern1 = re.compile(r"\[(.*?)\]", re.I|re.X)
 pattern2 = re.compile(r"\#(.*?)\#", re.I|re.X)
 pattern3 = re.compile(r"\@(.*?)\:", re.I|re.X)
 pattern4 = re.compile(r"\@(.*?)\ ", re.I|re.X)
-pattern5 = re.compile(r"(http://|https://)([A-Za-z0-9\./-_%\?\&=:]*)?", re.I)
+#pattern5 = re.compile(r"(http://|https://)([A-Za-z0-9\./-_%\?\&=:]*)?", re.I)
+pattern5 = re.compile(r"(http://|https://)([A-Za-z0-9\./-_%\?\&=:]*)", re.I)
 
 # def clean_weibo(line):
 # 	txt=pattern5.sub('',pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',line)))))
@@ -32,7 +33,7 @@ def f(line):
     ss = line.strip().split("\001")
     #微博清洗，去掉链接，@的人，话题以及表情
     text = pattern5.sub('',pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3]))))))
-    # text = pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3])))))
+    #text = pattern4.sub('',pattern3.sub('',pattern2.sub('',pattern1.sub('',valid_jsontxt(ss[3])))))
     text = text.split("//")[0]  #去掉转发
     text = text.split("@")[0]   #将刚才未清洗干净的@去掉
     # if text.strip() == "" or text.strip() == "转发微博": return None
@@ -52,7 +53,7 @@ def weibo_juhe(x,y):
 
 
 
-rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161025")
+rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161126")
 rdd1 = rdd.map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe(x, y))
 rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
