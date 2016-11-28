@@ -1,4 +1,4 @@
-select '${hiveconf:friday}';
+select '${hiveconf:iteminfo_day}';
 -- insert overwrite table wlservice.t_wrt_caiji_ppzs_itemid partition(ds = '${hiveconf:friday}')
 -- select item_id from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:iteminfo_day}';
 -- select tt2.item_id from
