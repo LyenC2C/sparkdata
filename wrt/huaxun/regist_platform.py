@@ -19,7 +19,7 @@ def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     ret = ob.get("ret",False)
     if not ret: return None
-    flag = ob.get("flag",Flase)
+    flag = ob.get("flag",False)
     if not flag: return None
     phone = ob.get("phone","-")
     # if phone == "-": return None
