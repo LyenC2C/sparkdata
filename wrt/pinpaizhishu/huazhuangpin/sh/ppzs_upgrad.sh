@@ -11,15 +11,15 @@ threemonth_day=$3
 #存储时间（一般为今日，周一）
 save_day=$4
 
-hfs -rmr /user/wrt/temp/ppzs_itemid_info
-
-spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 \
-$dev_path/ppzs_item_info.py $yes_day
-
-hive<<EOF
-LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_info' OVERWRITE INTO TABLE
-wlservice.ppzs_itemid_info PARTITION (ds=$yes_day);
-EOF
+#hfs -rmr /user/wrt/temp/ppzs_itemid_info
+#
+#spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 \
+#$dev_path/ppzs_item_info.py $yes_day
+#
+#hive<<EOF
+#LOAD DATA  INPATH '/user/wrt/temp/ppzs_itemid_info' OVERWRITE INTO TABLE
+#wlservice.ppzs_itemid_info PARTITION (ds=$yes_day);
+#EOF
 
 #创建品牌周销量表：ppzs_brandid_weeksold
 hive -hiveconf yes_day=$yes_day -hiveconf last_day=$last_day -f $dev_path/ppzs_brandid_weeksold.sql
