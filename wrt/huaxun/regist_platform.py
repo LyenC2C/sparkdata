@@ -16,7 +16,7 @@ def valid_jsontxt(content):
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def f(line):
-    ob = json.loads(line.strip())
+    ob = json.loads(valid_jsontxt(line.strip()))
     ret = ob.get("ret",False)
     if not ret: return None
     flag = ob.get("flag",Flase)
