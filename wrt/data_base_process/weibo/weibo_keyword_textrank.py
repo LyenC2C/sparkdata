@@ -27,7 +27,7 @@ def valid_jsontxt(content):
         res = content.encode("utf-8")
     else:
         res = str(content)
-    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
+    return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","").replace("\t"," ")
 
 def f(line):
     ss = line.strip().split("\001")
@@ -51,12 +51,24 @@ def weibo_juhe(x,y):
     return valid_jsontxt(x) + "\001" + "\t".join(words)
     # return user_weibo
 
-
+def weibo_juhe2(x,y):
+    text_list = y
+    user_weibo = "\t".join([valid_jsontxt(i) for i in text_list])
+    # res = ja.textrank(user_weibo, topK=20, withWeight=True,
+    #                          allowPOS=('an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'eng'))
+    # words = []
+    # for ln in res:
+        # words.append(valid_jsontxt(ln[0]) + "_" + valid_jsontxt(ln[1]))
+    # return valid_jsontxt(x) + "\001" + "\t".join(words)
+    return valid_jsontxt(x) + "\001" + user_weibo
 
 rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161126")
 rdd1 = rdd.map(lambda x:f(x)).filter(lambda x:x!=None)
-rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe(x, y))
-rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
+# rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe(x, y))
+# rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
+rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe2(x, y))
+rdd2.saveAsTextFile('/user/wrt/temp/weibo_user_weibotext')
+
 
 # hfs -rmr  /user/wrt/temp/weibo_keyword_textrank
 # spark-submit  --executor-memory 4G  --driver-memory 4G  --total-executor-cores 60 weibo_keyword_textrank.py
