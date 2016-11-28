@@ -22,9 +22,9 @@ wlservice.ppzs_itemid_info PARTITION (ds=$yes_day);
 EOF
 
 #创建品牌周销量表：ppzs_brandid_weeksold
-hive -hiveconf yes_day=$yes_day last_day=$last_day -f $dev_path/ppzs_brandid_weeksold.sql
+hive -hiveconf yes_day=$yes_day -hiveconf last_day=$last_day -f $dev_path/ppzs_brandid_weeksold.sql
 #创建品牌评论表记录表与品牌好中差评表：ppzs_brandid_feed 与 ppzs_brandid_rate_count
-hive -hiveconf yes_day=$yes_day threemonth_day=$threemonth_day -f $dev_path/ppzs_brandid_feed.sql
+hive -hiveconf yes_day=$yes_day -hiveconf threemonth_day=$threemonth_day -f $dev_path/ppzs_brandid_feed.sql
 #产出品牌销量与中好差评到本地表（产出表均无分区）
 hive -hiveconf yes_day=$yes_day -f $dev_path/ppzs_brandid_weeksold_feedcount.sql
 #产出每个品牌的top6的商品信息表（产出表均无分区）
