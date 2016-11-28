@@ -21,6 +21,8 @@ concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'max_price' ) ,cast( 
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'min_price' ) ,cast( round(min(price),2) as string) ) price_min,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_std' ) ,cast( round(std(price),2) as string) ) price_std
 from wlbase_dev.t_base_record_cate where tel_index is not null and tel_user_rn<4 and price<160000
+and ds='true1'
 group by tel_index,root_cat_id
+
 )t group by tel_index
 ;
