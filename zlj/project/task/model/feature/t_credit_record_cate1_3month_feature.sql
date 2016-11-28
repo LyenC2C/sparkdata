@@ -1,4 +1,7 @@
 
+
+--3个月用户购买记录分析
+
 drop table wlcredit.t_credit_record_cate1_3month_feature ;
 create table wlcredit.t_credit_record_cate1_3month_feature as
 SELECT
@@ -22,7 +25,8 @@ concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'min_price' ) ,cast( 
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_std' ) ,cast( round(std(price),2) as string) ) price_std
 from wlbase_dev.t_base_record_cate where tel_index is not null and tel_user_rn<4 and price<160000
 
-and regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )>ds
+and regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )>dsn
+and ds='true1'
 group by tel_index,root_cat_id
 )t group by tel_index
 ;
