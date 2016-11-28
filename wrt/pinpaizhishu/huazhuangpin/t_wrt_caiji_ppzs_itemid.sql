@@ -1,21 +1,22 @@
 insert overwrite table wlservice.t_wrt_caiji_ppzs_itemid partition(ds = '${hiveconf:friday}')
-select tt2.item_id from
-(select t2.shop_id as shop_id from
-(select brand_id from wlservice.ppzs_brandid_72ge)t1
-JOIN
-(select shop_id,brand_id from wlbase_dev.t_base_ec_item_dev_new
-where ds='${hiveconf:iteminfo_day}' and bc_type = 'B')t2
-ON
-t1.brand_id = t2.brand_id
-group by
-t2.shop_id
-)tt1
-JOIN
-(
-select item_id,shop_id from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:friday}'
-)tt2
-ON
-tt1.shop_id = tt2.shop_id
+select item_id from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:iteminfo_day}';
+-- select tt2.item_id from
+-- (select t2.shop_id as shop_id from
+-- (select brand_id from wlservice.ppzs_brandid_72ge)t1
+-- JOIN
+-- (select shop_id,brand_id from wlbase_dev.t_base_ec_item_dev_new
+-- where ds='${hiveconf:iteminfo_day}' and bc_type = 'B')t2
+-- ON
+-- t1.brand_id = t2.brand_id
+-- group by
+-- t2.shop_id
+-- )tt1
+-- JOIN
+-- (
+-- select item_id,shop_id from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:friday}'
+-- )tt2
+-- ON
+-- tt1.shop_id = tt2.shop_id
 
 
 
