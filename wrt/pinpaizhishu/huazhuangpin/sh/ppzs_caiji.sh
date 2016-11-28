@@ -8,4 +8,4 @@ iteminfo_day=$(date -d '1 days ago' +%Y%m%d)
 
 #hive -hiveconf friday=$friday iteminfo_day=$iteminfo_day -f \
 #$dev_path/t_wrt_caiji_ppzs_itemid.sql &>  $dev_path/sh/ppzs_log/caiji_log_$friday
-hive -hiveconf friday=$friday iteminfo_day=$iteminfo_day -f $dev_path/t_wrt_caiji_ppzs_itemid.sql
+hive -hiveconf iteminfo_day=$iteminfo_day -f $dev_path/t_wrt_caiji_ppzs_itemid.sql
