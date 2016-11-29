@@ -53,7 +53,7 @@ def weibo_juhe(x,y):
     # return user_weibo
 
 def weibo_textrank(line):
-    ss = line.strip()
+    ss = line.strip().split("\001")
     user_id = ss[0]
     user_weibo = ss[1]
     res = ja.textrank(user_weibo, topK=20, withWeight=True,
