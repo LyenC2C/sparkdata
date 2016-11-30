@@ -1,4 +1,4 @@
--- 招商银行 微博失联修复
+-- 中国银行 微博失联修复
 Drop table wlfinance.t_hx_boc_user_link_fix;
 CREATE TABLE wlfinance.t_hx_boc_user_link_fix AS
   SELECT

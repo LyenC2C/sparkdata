@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/public/DDL/SQL/cat_brand_topN.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/public/DDL/ec_tb/t_base_ec_tb_xianyu_item.DDL.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/busyness_check/weibo_link/zhaohang_link.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/service/task/ewrq.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/financial_api/t_zlj_credit_valid_api1.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/perfer/hive/1_t_zlj_ec_userbuy.sql" dialect="MySQL" />
@@ -18,7 +19,6 @@
     <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/base_weibo/t_base_weibo_user_fri_tel.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/dcweibo/chusai/t_zlj_dc_weibodata.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/dcweibo/juesai/dc_juesai_data.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/link_fix/zhaohang_link.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/weibo/visualization/t_zlj_visul_tel_bi_friends_link_rs.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task_old/brand/data.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task_old/comment/anay.sql" dialect="MySQL" />
