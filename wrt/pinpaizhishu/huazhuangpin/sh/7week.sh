@@ -11,8 +11,8 @@ threemonth_day=$3
 #存储时间（一般为今日，周一）
 save_day=$4
 
-hive -hiveconf yes_day=$yes_day last_day=$last_day -f $dev_path/ppzs_brandid_weeksold.sql
-hive -hiveconf yes_day=$yes_day threemonth_day=$threemonth_day -f $dev_path/ppzs_brandid_feed.sql
+hive -hiveconf yes_day=$yes_day -hiveconf last_day=$last_day -f $dev_path/ppzs_brandid_weeksold.sql
+hive -hiveconf yes_day=$yes_day -hiveconf threemonth_day=$threemonth_day -f $dev_path/ppzs_brandid_feed.sql
 hive -hiveconf yes_day=$yes_day -f $dev_path/ppzs_brandid_weeksold_feedcount.sql
 
 hfs -cat /hive/warehouse/wlservice.db/ppzs_brandid_weeksold_feedcount/* \
