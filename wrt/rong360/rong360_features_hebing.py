@@ -42,7 +42,7 @@ def f_3j_reindex(line):
 # a = 34
 # a_list = [0]*1000000
 
-def feature_3j(line,fea_3j,len_main):
+def feature_3j(line,fea_3j_dict,len_main):
     ss = line.strip().split("\001")
     tel = ss[0]
     features = ss[1].split(" ")
@@ -53,7 +53,8 @@ def feature_3j(line,fea_3j,len_main):
         f_value = ff[0]
         v_value = ff[1]
         if float(v_value) == 0.0: continue
-        f_index = valid_jsontxt(fea_3j.index(f_value) + len_main)
+        # f_index = valid_jsontxt(fea_3j.index(f_value) + len_main)
+        f_index = valid_jsontxt(fea_3j_dict[f_value] + len_main)
         result.append(f_index + ":" + valid_jsontxt(v_value))
         # f_map[f_index] = v_value
     # for i in range(len(fea_3j)):
@@ -77,7 +78,11 @@ def feature_3j(line,fea_3j,len_main):
 #     for i in range(len(lv)):
 #         result.append(str(i) + ":" + str(lv[i]))
 #     return " ".join([valid_jsontxt(ln) for ln in result])
-
+def tran_dict(fea_3j):
+    fea_3j_dict = {}
+    for i in range(len(fea_3j)):
+        fea_3j_dict[fea_3j[i]] = str(i)
+    return fea_3j_dict
 
 def hebing(x,y):
     # result = []
@@ -90,6 +95,12 @@ def hebing(x,y):
 
 s_3j = "/hive/warehouse/wlservice.db/t_zlj_tmp_rong360_1w_record_level3_feature/*"
 s_main = "/hive/warehouse/wlservice.db/t_rong360_model_features_new/000000_0"
+# s_3j = "/hive/warehouse/wlcredit.db/t_credit_record_cate3_feature/*"
+# s_2j = "/hive/warehouse/wlcredit.db/t_credit_record_cate2_feature/*"
+
+
+
+
 
 #主要特征字段提取并自动排列好
 rdd_fea_main = hiveContext.sql('desc wlservice.t_rong360_model_features_new')
@@ -99,13 +110,14 @@ len_main = len(fea_main)
 #三级特征字段去重并按照一定顺序排列好
 rdd_fea_3j = sc.textFile(s_3j).flatMap(lambda x:f_3j_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
 fea_3j = list(rdd_fea_3j.collect())
+#将三级特征字段变成map形式，以提高效率
+fea_3j_dict = tran_dict(fea_3j)
 #每个电话按照新的三级特征顺序，将每个三级特征值依次输出，之前没有的特征用0代替
-rdd_3j = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j,len_main))
+rdd_3j = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j_dict,len_main)).value
 #每个电话按照主要顺序，将每个一级特征值依次输出,0的过滤
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先主要特征，后三级特征的顺序
-rdd = rdd_main.join(rdd_3j)
-    # .map(lambda x:x)
+rdd = rdd_main.join(rdd_3j).map(lambda x:x)
     # .map(lambda (x,y):hebing(x,y))
 # rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features_test')
 #全部特征字段输出.
