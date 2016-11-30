@@ -24,7 +24,7 @@ concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'price_std' ) ,cas
 
 from wlbase_dev.t_base_record_cate where tel_index is not null and tel_user_rn<4 and cate_level2_id is not null
  and price<160000
- and ds='true1'
+ and ds='true'
  group by tel_index,cate_level2_id
 
 )t group by tel_index
