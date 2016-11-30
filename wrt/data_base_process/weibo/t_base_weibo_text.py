@@ -97,9 +97,11 @@ def f(line):
         lv.append(isLongText)
         lv.append(retweeted_status)
         lv.append(ts)
-        result.append((mid,lv))
+        # result.append((mid,lv))
+        result.append("\001".join([valid_jsontxt(ln) for ln in lv]))
         # result.append(lv)
     return result
+    # return result
 
 
 def quchong(x, y):
@@ -115,12 +117,12 @@ def quchong(x, y):
         lv.append(str(valid_jsontxt(ln)))
     return "\001".join(lv)
 
-rdd1 = sc.textFile("/commit/weibo/user_weibo/wrt_tmp/*/*")
+rdd1 = sc.textFile("/commit/weibo/user_weibo/wrt_tmp2/*/*")
 rdd_c = rdd1.flatMap(lambda x:f(x)).filter(lambda x:x != None)
-rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
+# rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 # rdd_error = rdd1.map(lambda x:error_out(x)).filter(lambda x:x != None)
 # rdd_error.saveAsTextFile('/user/wrt/temp/weibo_text_error')
-rdd.saveAsTextFile('/user/wrt/temp/weibo_text')
+rdd_c.saveAsTextFile('/user/wrt/temp/weibo_text')
 
 #hfs -rmr /user/wrt/temp/weibo_text
 # spark-submit  --executor-memory 20G  --driver-memory 20G  --total-executor-cores 300 t_base_weibo_text.py

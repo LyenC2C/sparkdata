@@ -15,7 +15,7 @@ JOIN
 select item_id,shop_id from wlbase_dev.t_base_ec_shopitem_b where ds = '${hiveconf:friday}'
 )tt2
 ON
-tt1.shop_id = tt2.shop_id
+tt1.shop_id = tt2.shop_id;
 
 
 
