@@ -79,7 +79,7 @@ rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main))
 #每个电话按照主要顺序，将每个一级特征值依次输出,0的过滤
 rdd_m = hiveContext.sql('select tel_index,buycnt,weibo_followers_count from wlbase_dev.t_base_user_profile_telindex')
 rdd_main = rdd_m.map(lambda x:valid_jsontxt(valid_jsontxt(x.tel_index) + "\001" + valid_jsontxt(x.buycnt) + "\001" \
-                                            + valid_jsontxt(x.weibo_followers_count)).map(lambda x:feature_main(x)))
+                                            + valid_jsontxt(x.weibo_followers_count))).map(lambda x:feature_main(x))
 # rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先主要特征，后三级特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
