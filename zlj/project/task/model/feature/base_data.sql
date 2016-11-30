@@ -3,7 +3,7 @@
 
 
 
-
+Drop table t_base_record_cate ;
 create table t_base_record_cate as
 SELECT
   t2.*,
@@ -11,6 +11,11 @@ SELECT
   cat_id,
   root_cat_id,
   root_cat_name,
+  cate_level1_id,
+  cate_level2_id,
+  cate_level3_id,
+  cate_level4_id,
+  cate_level5_id,
   brand_id,
   brand_name,
   bc_type,
@@ -20,8 +25,8 @@ SELECT
   t3.tel_index ,
   t3.rn as tel_user_rn,
   CASE WHEN cat_id IS NOT NULL
-    THEN 'true1'
-  ELSE 'false1' END AS ds
+    THEN 'true'
+  ELSE 'false' END AS ds
 FROM (
        SELECT
         cast(item_id AS BIGINT) item_id,
@@ -40,7 +45,6 @@ FROM (
         price,
         shop_id,
         location
-        select
       FROM t_base_ec_item_dev_new t1
       join t_base_ec_dim t2
       on t1.ds = 20161104  and  t1.cat_id =t2.cate_id
