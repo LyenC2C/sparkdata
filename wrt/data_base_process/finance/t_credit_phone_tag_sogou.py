@@ -20,10 +20,10 @@ def f(line):
     platform = ob.get("platform","-")
     data = ob.get("data",{})
     source = data.get("source","-")
-    amount = ob.get("amount","-")
-    tag = ob.get("tag","-")
-    place = ob.get("place","-")
-    tel_co = ob.get("tel_co","-")
+    amount = data.get("amount","-")
+    tag = data.get("tag","-")
+    place = data.get("place","-")
+    tel_co = data.get("tel_co","-")
     ts = int(time.time())
     result = []
     result.append(phone)
@@ -40,3 +40,4 @@ def f(line):
 sc.textFile("/commit/credit/sogou").map(lambda x:f(x)).saveAsTextFile("/user/wrt/temp/t_credit_phone_tag_sogou")
 
 #spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 t_credit_phone_tag_sogou.py
+#LOAD DATA INPATH '/user/wrt/temp/t_credit_phone_tag_sogou' INTO TABLE wlcredit.t_credit_phone_tag_sogou;
