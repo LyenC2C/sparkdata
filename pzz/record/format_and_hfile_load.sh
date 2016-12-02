@@ -7,7 +7,7 @@ workspace_path=/mnt/raid1/pzz/workspace/sparkdata
 start=$1
 end=$2
 
-input_path=/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_${end}
+input_path=/hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_${end}
 csv_path=/data/develop/ecportrait/record_csv_hbase.${start}-${end}
 hfile_path=/data/develop/ecportrait/record_new_hfile.${start}-${end}
 
