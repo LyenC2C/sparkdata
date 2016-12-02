@@ -10,8 +10,6 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import os
 
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import linear_model, preprocessing
@@ -62,14 +60,19 @@ file['total_price_mean_month']=file['total_price']/(file['buy_month']+1)
 print 'len(data):',len(file)
 
 
-# 清理特征占比小于0.03 的特征
+'''
+ 清理特征占比小于0.03 的特征
+'''
 t=(file<=0).sum(axis=0)/len(file)
-drop_f_list=filter_feature(t,0.96)
+drop_f_list=filter_feature(t,0.97)
 print 'drop f ',drop_f_list
 file.drop(drop_f_list,axis=1,inplace=True)
 
 print file.columns
 
+'''
+新增特征
+'''
 rank_size=10
 for  col in file.columns[5:]:
     v=file[col].map(lambda x:data_abnormal(x))
@@ -83,8 +86,7 @@ for i in xrange(rank_size):
     file['n_'+str(j)]=(file==j).sum(axis=1)
 
 
-# data=      file[file['class'] != '2000_c' ['8000_c','data_2k']]
-data=      file[file['class'] == '8000_c' ]
+data= file[file['class'] == '8000_c' ]
 
 
 
@@ -136,20 +138,14 @@ def test_rflasso():
     XX = randomized_logistic.transform(train_X)
     print XX.shape
 
-# test_rflasso()
-#
-#
-# import os
-# os._exit(0)
 
-# step=2     blag 0.747359870024
 ls=[]
 feature_kv=coll.defaultdict(int)
 kflod=[]
 # for step  in [6]:
 result_preb=pd.DataFrame({'tel':valid['tel']})
 text_preb  =pd.DataFrame()
-for step  in  xrange(10):
+for step  in  [7]:
     print '---------------------',step
     train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=step)
     from imblearn.combine import SMOTEENN,SMOTETomek
@@ -197,10 +193,11 @@ for step  in  xrange(10):
 
 
 text_preb['final']=text_preb.iloc[:,1:].mean(axis=1)
-text_preb.to_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\text_preb.csv')
 
 result_preb['final']=result_preb.iloc[:,1:].mean(axis=1)
-result_preb.to_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\result_preb.csv')
+
+# text_preb.to_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\text_preb.csv')
+# result_preb.to_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\result_preb.csv')
 
 
 lr_rs=model_rs_dataframe(text_preb ,text_preb['final'])
