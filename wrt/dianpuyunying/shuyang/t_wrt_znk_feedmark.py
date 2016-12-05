@@ -29,7 +29,7 @@ def f(line):
     line = valid_jsontxt(line)
     ls = line.strip().split("\t")
     if len(ls) != 5:
-        return None
+        return [None]
     json_txt = ls[4][11:-1]
     ob = json.loads(json_txt)
     if type(ob) == type({}) and ob.has_key("data") and ob["data"].has_key("rateList"):
@@ -65,7 +65,7 @@ def f(line):
             # result.append("\001".join([valid_jsontxt(i) for i in lv]))
         return result
     else:
-        return None
+        return [None]
 
 def f2(line):
     ss = line.strip().split("\001")
