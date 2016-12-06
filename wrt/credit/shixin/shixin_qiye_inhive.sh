@@ -35,7 +35,7 @@ t1.unperformpart
 from
 (select * from t_wrt_shixin_qiye where ds = 'temp')t1
 left join
-(select * from t_wrt_shixin_person where ds = $last_day)t2
+(select * from t_wrt_shixin_qiye where ds = $last_day)t2
 on
 t1.id = t2.id
 where
