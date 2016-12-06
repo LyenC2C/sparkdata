@@ -36,7 +36,7 @@ t1.dsn
 from
 t_wrt_znk_feedmark t1
 join
-(select id1,uid from wlbase_dev.t_base_uid_tmp where ds = 'uid_mark') t2
+(select id1,uid from wlbase_dev.t_base_uid_mask) t2
 ON
 t1.usermark = t2.uid
 )tt1
