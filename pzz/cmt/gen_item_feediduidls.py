@@ -42,4 +42,4 @@ if __name__ == '__main__':
         .filter(lambda x:x!=None)\
         .groupByKey()\
         .map(lambda (x,y):uniq_gen(x,y))
-    rdd1.saveAsTextFile("/data/develop/ec/tb/cmt/itemid_feedid/itemid_feediduidls"+tilldate)
+    rdd1.saveAsTextFile("/data/develop/ec/tb/cmt/itemid_feedid/itemid_feediduidls."+tilldate)
