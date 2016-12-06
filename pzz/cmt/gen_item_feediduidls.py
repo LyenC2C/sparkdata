@@ -1,5 +1,6 @@
 #coding:utf-8
 import sys
+from pyspark import *
 
 def clean(x):
     ls = x.strip().split("\001")
