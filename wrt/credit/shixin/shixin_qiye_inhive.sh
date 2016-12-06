@@ -3,7 +3,6 @@ source ~/.bashrc
 dev_path='/home/wrt/sparkdata/wrt/credit/'
 now_day=$1
 last_day=$2
-
 hfs -rmr /user/wrt/temp/shixin_personinfo
 spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 $dev_path/shixin_qiye.py $now_day
 
