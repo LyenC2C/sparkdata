@@ -16,6 +16,7 @@ def valid_jsontxt(content):
 
 def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
+    if type(ob) != type({}): return None
     id = str(ob.get("id","-"))
     iname = ob.get("iname","-")
     casecode = ob.get("caseCode","-")
@@ -57,9 +58,10 @@ def f(line):
     result.append(unperformpart)
     return (id,result)
 
-rdd_c = sc.textFile("/commit/shixin.info.20161029.json").map(lambda x:f(x))
+# rdd_c = sc.textFile("/commit/shixin.info.20161029.json").map(lambda x:f(x))
+rdd_c = sc.textFile("/commit/credit/shixin/shixin.info.person.20161205").map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid_jsontxt(i) for i in y[0]]))
-rdd.saveAsTextFile("/user/wrt/temp/shixin_info_20161029")
+rdd.saveAsTextFile("/user/wrt/temp/shixin_personinfo")
 
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_weibo_text.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 shixin_person.py
 # LOAD DATA  INPATH '/user/wrt/temp/shixin_info_20161029' OVERWRITE INTO TABLE t_court_shixin_person PARTITION (ds='20161029');
