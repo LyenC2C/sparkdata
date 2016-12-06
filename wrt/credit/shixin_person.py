@@ -59,7 +59,7 @@ def f(line):
     return (id,result)
 
 # rdd_c = sc.textFile("/commit/shixin.info.20161029.json").map(lambda x:f(x))
-rdd_c = sc.textFile("/commit/credit/shixin/shixin.info.person.20161205").map(lambda x:f(x))
+rdd_c = sc.textFile("/commit/credit/shixin/shixin.info.person.20161205").map(lambda x:f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid_jsontxt(i) for i in y[0]]))
 rdd.saveAsTextFile("/user/wrt/temp/shixin_personinfo")
 
