@@ -5,7 +5,7 @@ ds=$1
 
 /home/yarn/hive/bin/hive<<EOF
 
-use wlbase_dev;
+use wl_base;
 
 SET hive.exec.dynamic.partition= TRUE;
 SET hive.exec.dynamic.partition.mode=nonstrict;
@@ -77,24 +77,24 @@ FROM (SELECT
 EOF
 
 
-tmp_true_path='/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_tmp/ds=true1'
+tmp_true_path='/hive/warehouse/wl_base.db/t_base_ec_record_dev_new_tmp/ds=true1'
 
-tmp_false_path='/hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new_tmp/ds=false1'
+tmp_false_path='/hive/warehouse/wl_base.db/t_base_ec_record_dev_new_tmp/ds=false1'
 
 
 hadoop fs -cat $tmp_true_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
+ 
+hadoop fs -rm   /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$ds
 
-hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$ds
-
-hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=true/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
 
 
 hadoop fs -cat $tmp_false_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
-hadoop fs -rm   /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false/cmt_inc_data_$ds
+hadoop fs -rm   /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=false/cmt_inc_data_$ds
 
-hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wlbase_dev.db/t_base_ec_record_dev_new/ds=false/
+hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=false/
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
