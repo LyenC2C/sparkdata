@@ -250,9 +250,13 @@ def merge_item_feedid(x,y):
         else:
             dic[2].append(each[1])
     if dic[1] != None and len(dic[2]) != 0: #有旧的,有新的
-        for feeds in dic[1].split("\002"):
+        for each in dic[1].split("\002"):
+            '''
             for feed in feeds.split("\003"):
                 res_dic[feed[0]] = feed[1]
+            '''
+            fid,uid = each.split("\003")
+            org_feedid_uid_dic[fid] = uid
         for feed in dic[2]:
             res_dic[feed[0]] = feed[1]
         fiduidstrls = []
