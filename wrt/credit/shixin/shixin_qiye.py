@@ -6,6 +6,8 @@ from pyspark import SparkContext
 
 sc = SparkContext(appName="shixin_qiye")
 
+now_day = sys.argv[1]
+
 def valid_jsontxt(content):
     res = content
     if type(content) == type(u""):
