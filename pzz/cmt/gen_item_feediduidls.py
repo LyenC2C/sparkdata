@@ -36,7 +36,7 @@ if __name__ == '__main__':
     conf.set("spark.network.timeout","2000s")
     conf.set("spark.akka.timeout","1000s")
     conf.set("spark.akka.frameSize","1000")
-    sc = SparkContext(appName="gen itemid feediduidls"+cmt_input_data,conf=conf)
+    sc = SparkContext(appName="gen itemid feediduidls "+tilldate,conf=conf)
     rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_item_feed_dev_new/ds=*/*")
     rdd1 = rdd.map(lambda x:clean(x))\
         .filter(lambda x:x!=None)\
