@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source ~/.bashrc
-dev_path='/home/wrt/sparkdata/wrt/credit/'
+dev_path='/home/wrt/sparkdata/wrt/credit/shixin/'
 now_day=$1
 last_day=$2
 hfs -rmr /user/wrt/temp/shixin_personinfo
