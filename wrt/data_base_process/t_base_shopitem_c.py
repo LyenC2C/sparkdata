@@ -55,7 +55,7 @@ def f2(line):
     ss = line.strip().split('\001')
     if len(ss) != 7: return None
     if not ss[1].isdigit(): return None
-    ss.append(yesterday) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
+    ss.append(last_day) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
     return (ss[1],ss)
 
 def quchong(x,y):
