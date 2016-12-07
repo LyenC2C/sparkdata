@@ -5,7 +5,8 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 
-last_day = sys.argv[1]
+now_day = sys.argv[1]
+last_day = sys.argv[2]
 # yesterday = sys.argv[2]
 
 sc = SparkContext(appName="t_base_shopitem_c")
@@ -38,7 +39,7 @@ def f1(line):
         # reservePrice = item.get("reservePrice","-")
         # if reservePrice == "": reservePrice = "-"
         salePrice = item.get("salePrice","-")
-        up_day = today #默认为今日新上架，后面会进行调整
+        up_day = now_day #默认为今日新上架，后面会进行调整
         down_day = "0"
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(item_id))
@@ -72,7 +73,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
         if len(item_list[0]) == 8:
             yes_item = item_list[0] #此商品为昨日商品（昨日商品多个ds字段），今日商品需要复制昨日商品
             if yes_item[5] == '0': #此昨日商品在今天之前没下架，但是今天下架了;否则是今天之前就下架了，那么复制即可
-                yes_item[5] = today #设置down_day为今日日期
+                yes_item[5] = now_day #设置down_day为今日日期
             result = yes_item[:-1]   #记得将最后的ds去掉，不要复制进来
         if len(item_list[0]) == 7:
             tod_item = item_list[0] #此商品为今日商品，说明此商品今天上架，此前没出现过
