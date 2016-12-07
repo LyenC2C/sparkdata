@@ -256,7 +256,7 @@ def merge_item_feedid(x,y):
                 res_dic[feed[0]] = feed[1]
             '''
             fid,uid = each.split("\003")
-            org_feedid_uid_dic[fid] = uid
+            res_dic[fid] = uid
         for feed in dic[2]:
             res_dic[feed[0]] = feed[1]
         fiduidstrls = []
