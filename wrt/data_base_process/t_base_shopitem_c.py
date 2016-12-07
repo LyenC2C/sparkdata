@@ -5,8 +5,8 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 
-today = sys.argv[1]
-yesterday = sys.argv[2]
+last_day = sys.argv[1]
+# yesterday = sys.argv[2]
 
 sc = SparkContext(appName="t_base_shopitem_c")
 
@@ -98,8 +98,6 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 
 
 # today = sys.argv[1]
-last_day = sys.argv[1]
-
 
 s1 = "/commit/shopitem_c/20*/*"
 s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_c/ds=" + last_day
