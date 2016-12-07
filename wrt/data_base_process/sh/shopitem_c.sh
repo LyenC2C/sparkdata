@@ -10,11 +10,11 @@ pre_path='/home/wrt/sparkdata'
 now_day=$1
 last_day=$2
 
-hfs -rmr /user/wrt/shopitem_tmp >> $pre_path/wrt/data_base_process/sh/log_shopitem/log_c_$last_day 2>&1
+hfs -rmr /user/wrt/shopitem_tmp >> $pre_path/wrt/data_base_process/sh/log_shopitem/log_c_$now_day 2>&1
 
 spark-submit  --executor-memory 6G  --driver-memory 5G  --total-executor-cores 80 \
 $pre_path/wrt/data_base_process/t_base_shopitem_c.py $last_day >> \
-$pre_path/wrt/data_base_process/sh/log_shopitem/log_c_$last_day 2>&1
+$pre_path/wrt/data_base_process/sh/log_shopitem/log_c_$now_day 2>&1
 
 hive<<EOF
 use wlbase_dev;
