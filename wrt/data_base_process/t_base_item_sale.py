@@ -159,8 +159,8 @@ def quchong_3(x, y):
 
 s_znk = "/commit/tb_tmp/solds/znk.itemid.solds"
 s1 = "/commit/itemsold/" + today
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=" + iteminfo_day
-s3 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + yesterday
+s2 = "/hive/warehouse/wl_base.db/t_base_ec_item_dev_new/ds=" + iteminfo_day
+s3 = "/hive/warehouse/wl_base.db/t_base_ec_item_sold_dev/ds=" + yesterday
 
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
