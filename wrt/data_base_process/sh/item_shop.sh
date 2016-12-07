@@ -10,8 +10,8 @@ $pre_path/wrt/data_base_process/t_base_item_info.py -spark
 
 hive<<EOF
 
-use wlbase_dev;
-LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE wlbase_dev.t_base_ec_item_dev_new PARTITION (ds='temp');
+use wl_base;
+LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE wl_base.t_base_ec_item_dev_new PARTITION (ds='temp');
 
 insert OVERWRITE table t_base_ec_item_dev_new PARTITION(ds = $today)
 select
@@ -48,7 +48,7 @@ hfs -rmr /user/wrt/temp/shopinfo_tmp
 spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
 $pre_path/wrt/data_base_process/t_base_shop_info.py
 hive<<EOF
-use wlbase_dev;
+use wl_base;
 LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='temp');
 
 insert OVERWRITE table t_base_ec_shop_dev_new PARTITION(ds = $today)
