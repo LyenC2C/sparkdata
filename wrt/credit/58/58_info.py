@@ -65,10 +65,11 @@ def parse(line):
 
 
 s = "/commit/credit/58/all.iminfo.json.20160926.173"
-sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))\
+sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().mapValues(list).\
+    map(lambda (x,y):"\001".join(valid_jsontxt(i) for i in y[0]))\
     .saveAsTextFile('/user/wrt/temp/58_info')
     # .map(lambda x:'\001'.join([ valid_jsontxt(i) for i in x])).repartition(20).saveAsTextFile('/user/wrt/temp/58_info')
-
+11
 
 # hfs -rmr /user/wrt/temp/58_info
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 58_info.py
