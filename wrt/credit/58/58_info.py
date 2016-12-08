@@ -18,7 +18,7 @@ conf.set("spark.driver.maxResultSize", "8g")
 
 sc = SparkContext(appName="weibo_info", conf=conf)
 
-now_day = sys.argv[1]
+# now_day = sys.argv[1]
 
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
@@ -68,7 +68,8 @@ s = "/commit/credit/58/all.iminfo.json.20160926.173"
 sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
     .map(lambda x:'\001'.join([ str(i) for i in x])).repartition(20).saveAsTextFile('/user/wrt/temp/58_info')
 
-
+# hfs -rmr /user/wrt/temp/58_info
+# spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 58_info.py
 
 # /commit/credit/58/fang.info.json
 
