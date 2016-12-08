@@ -4,8 +4,8 @@ pre_path='/home/wrt/sparkdata'
 zuotian=$(date -d '1 days ago' +%Y%m%d)
 qiantian=$(date -d '2 days ago' +%Y%m%d)
 
-#zuotian='20160919'
-#qiantian='20160918'
+#zuotian='20161204'
+#qiantian='20161203'
 #zuotian=$1
 #qiantian=$2
 

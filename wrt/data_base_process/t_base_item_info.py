@@ -53,18 +53,23 @@ def get_cate_dict(line):
 
 
 def f(line,cate_dict):
-    ss = line.strip().split("\001")
-    item_id = ss[0]
-    is_online = ss[1] #0没有1上架2下架
-    ts = ss[2]
-    data_flag = ss[3] #历史状态，0没有1上架2下架（当天新商品没有的时候，他保持不变）
-    data_ts = ss[4] #历史状态时间
-    if (ss[5]) == "": return None
-    line = decompress(ss[5])
     ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
+    item_id = ss[1]
+    # is_online = ss[1] #0没有1上架2下架
+    is_online = "-"
+    ts = ss[0]
+    # data_flag = ss[3] #历史状态，0没有1上架2下架（当天新商品没有的时候，他保持不变）
+    data_flag = "-"
+    # data_ts = ss[4] #历史状态时间
+    data_ts = "-"
+    # if (ss[5]) == "": return None
+    # line = decompress(ss[5])
+    # ss = line.strip().split("\t",2)
+    # if len(ss) != 3: return None
     # txt = valid_jsontxt(ss[2])
-    ob = json.loads(ss[2])
+    ob = json.loads(valid_jsontxt(ss[2]))
+    if type(ob) != type({}):return None
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location','-'))
@@ -99,9 +104,9 @@ def f(line,cate_dict):
     seller_id = seller.get('userNumId','-')
     shopId = seller.get('shopId','-')
     off_time = "-"
-    if is_online <> '1' and data_flag == '2': off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
+    # if is_online <> '1' and data_flag == '2': off_time = data_ts #如果已下架，显示下架时间，未下架，显示“-”
     sku_info = "-"
-    skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
+    # skuProps = ob.get("apiStack",{}).get("skuModel",{}).get("","-")
     # if skuProps != "-":
     result = []
     result.append(item_id)
@@ -124,8 +129,8 @@ def f(line,cate_dict):
     result.append(item_info)
     result.append(sku_info)
     result.append(ts)
-    # return (item_id,result)
-    return "\001".join([str(valid_jsontxt(i)) for i in result])
+    return (item_id,result)
+    # return "\001".join([str(valid_jsontxt(i)) for i in result])
 
 def quchong(x, y):
     max = 0
@@ -137,7 +142,7 @@ def quchong(x, y):
     result = y
     lv = []
     for ln in result:
-        lv.append(str(valid_jsontxt(ln)))
+        lv.append(valid_jsontxt(ln))
     return "\001".join(lv)
 
 
@@ -151,17 +156,20 @@ if __name__ == "__main__":
         for line in sys.stdin:
             print f(line,cate_dict)
     if sys.argv[1] == "-spark":
+        # s_last = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_dev_new/ds=" + last_day
         from pyspark import SparkContext
         sc = SparkContext(appName="t_base_item_info")
-        s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
-        s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20151023/1073988839"
+        # s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
+        s = "/commit/iteminfo/house_tmp/*/*"
+        s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20161122/000000_0"
         cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-        rdd = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
-        # rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
+        rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
+        rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
+        # rdd_last = sc.textFile(s_last).map()
         rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
 # hfs -rmr /user/wrt/temp/iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_item_info.py -spark
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 100 t_base_item_info.py -spark
 #LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
 # status_flag,data_flag：
 # 0,0（根本就没有此商品，内容都没有，也就没有了入库的必要）

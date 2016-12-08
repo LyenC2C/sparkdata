@@ -3,7 +3,7 @@ select tt2.item_id from
 (select t2.shop_id as shop_id from
 (select brand_id from wlservice.ppzs_brandid_72ge)t1
 JOIN
-(select shop_id,brand_id from wlbase_dev.t_base_ec_item_dev_new
+(select shop_id,brand_id from wl_base.t_base_ec_item_dev_new
 where ds='${hiveconf:iteminfo_day}' and bc_type = 'B')t2
 ON
 t1.brand_id = t2.brand_id

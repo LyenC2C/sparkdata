@@ -30,13 +30,19 @@ def valid_jsontxt(content):
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
 def f(line):
-    ss = line.strip().split("\001")
-    ts = ss[2]
-    if (ss[5]) == "": return None
-    text = decompress(ss[5])
-    ss = text.strip().split("\t",2)
+    # ss = line.strip().split("\001")
+    # ts = ss[2]
+    # if (ss[5]) == "": return None
+    # text = decompress(ss[5])
+    # ss = text.strip().split("\t",2)
+    # if len(ss) != 3: return None
+    # ob = json.loads(ss[2])
+    # itemInfoModel = ob.get('itemInfoModel',"-")
+    ss = line.strip().split("\t",2)
     if len(ss) != 3: return None
-    ob = json.loads(ss[2])
+    ts = ss[0]
+    ob = json.loads(valid_jsontxt(ss[2]))
+    if type(ob) != type({}):return None
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     location = valid_jsontxt(itemInfoModel.get('location', '-').replace("省",""))
@@ -132,7 +138,7 @@ def quchong(x,y):
     result = y[0]
     return "\001".join([str(valid_jsontxt(i)) for i in result])
 
-s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
+s = "/commit/iteminfo/house_tmp/*/*"
 rdd_c = sc.textFile(s).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/shopinfo_tmp')

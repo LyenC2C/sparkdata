@@ -22,7 +22,7 @@ case when t2.sku is null then t1.sku else t2.sku end,
 case when t2.ts is null then t1.ts else t2.ts end
 from
 (
-select * from wlbase_dev.t_base_ec_item_dev_new where ds = 20160825
+select * from wl_base.t_base_ec_item_dev_new where ds = 20160825
 and (cat_id = 121954006 or cat_id = 122326002 or cat_id = 50012481)
 )t1
 FULL JOIN
