@@ -72,7 +72,7 @@ sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().mapV
 
 # hfs -rmr /user/wrt/temp/58_info
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 58_info.py
-
+# load data inpath '/user/wrt/temp/58_info' overwrite into table wlcredit.t_base_credit_58_info partition(ds = '20161208');
 # /commit/credit/58/fang.info.json
 
 
