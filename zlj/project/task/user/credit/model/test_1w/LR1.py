@@ -49,7 +49,17 @@ file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_lab
 '''
 data clean
 '''
-
+def test_rflasso():
+    train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=1)
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.feature_selection import SelectFromModel
+    from sklearn.svm import SVC
+    from sklearn.cross_validation import StratifiedKFold
+    from sklearn.linear_model import RandomizedLogisticRegression
+    randomized_logistic = RandomizedLogisticRegression(C=0.1,n_jobs=2)
+    randomized_logistic.fit(train_X,train_Y)
+    XX = randomized_logistic.transform(train_X)
+    print XX.shape
 file.drop(['avg_price','avg_cnt'],axis=1,inplace=False)
 
 # drop_cols=[]
