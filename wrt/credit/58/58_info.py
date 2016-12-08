@@ -69,6 +69,7 @@ sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(
     .map(lambda x:'\001'.join([ str(i) for i in x])).repartition(20).saveAsTextFile('/user/wrt/temp/58_info')
 
 
+
 # /commit/credit/58/fang.info.json
 
 
