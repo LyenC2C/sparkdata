@@ -64,7 +64,7 @@ def parse(line):
     return (infoid,rs)
 
 
-s = "/commit/credit/58/all.iminfo.json.20160926.173"
+s = "/commit/credit/58/58.iminfo.all.data.20161207"
 sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().mapValues(list).\
     map(lambda (x,y):"\001".join(valid_jsontxt(i) for i in y[0]))\
     .saveAsTextFile('/user/wrt/temp/58_info')
