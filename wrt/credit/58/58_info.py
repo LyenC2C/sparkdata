@@ -61,12 +61,14 @@ def parse(line):
             uid,
             uname]
     # return (infoid[0],[ i[0] for i in rs])
-    return (infoid,[i for i in rs])
+    return (infoid,rs)
 
 
 s = "/commit/credit/58/all.iminfo.json.20160926.173"
-sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
-    .map(lambda x:'\001'.join([ str(i) for i in x])).repartition(20).saveAsTextFile('/user/wrt/temp/58_info')
+sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().mapValues(list).map(lambda (x,y):(x,y[0]))\
+    .saveAsTextFile('/user/wrt/temp/58_info')
+    # .map(lambda x:'\001'.join([ valid_jsontxt(i) for i in x])).repartition(20).saveAsTextFile('/user/wrt/temp/58_info')
+
 
 # hfs -rmr /user/wrt/temp/58_info
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 58_info.py
