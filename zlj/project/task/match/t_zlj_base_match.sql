@@ -47,10 +47,37 @@ from wlfinance.t_zlj_base_match where ds='rong360_browse_group1'
 LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/browse_history_train.txt' OVERWRITE
   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history_train') ;
 
-
 LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/bill_detail_train.txt' OVERWRITE
   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='bill_detail_train') ;
 
   LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/bank_detail_train.txt' OVERWRITE
   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='bank_detail_train') ;
 
+
+
+LOAD DATA  local   INPATH '/home/zlj/data/360/credit/browse_history' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history') ;
+
+  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bill_detail' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bill_detail') ;
+
+  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bank_detail' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bank_detail') ;
+
+    LOAD DATA  local   INPATH '/home/zlj/data/360/credit/loan_time' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_loan_time') ;
+
+
+    LOAD DATA  local   INPATH '/home/zlj/data/360/credit/user_overdue_label' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_user_overdue_label') ;
+
+
+
+  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/browse_history_dropdup' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history_dropdup') ;
+
+  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bill_detail_dropdup' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bill_detail_dropdup') ;
+
+  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bank_detail_dropdup' OVERWRITE
+  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bank_detail_dropdup') ;

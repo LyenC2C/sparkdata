@@ -6,10 +6,10 @@
     <file url="file://$PROJECT_DIR$/zlj/project/busyness_check/weibo_link/zhaohang_link.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/service/task/ewrq.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/financial_api/t_zlj_credit_valid_api1.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/model/rong360_cap/match_feature.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/perfer/hive/1_t_zlj_ec_userbuy.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/perfer/hive/2_1_perfer_dim_tag.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/perfer/hive/4_perfer_shop.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/zlj/project/task/user/credit/rong360_data/match_feature.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/user/user_profile/data.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/user/user_profile/t_base_user_info_s_tbuserinfo_t_step6.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/user/user_profile/t_base_user_profile.sql" dialect="PostgreSQL" />

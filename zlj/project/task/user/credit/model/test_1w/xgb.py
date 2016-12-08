@@ -81,13 +81,15 @@ alpha=10
 llambda=550
 gamma=0.2
 round=200
+import xgboost as xgb
+def xgb_origin(train_X,train_Y):
+    params = {'booster':'gblinear','nthread':4,
+    "objective": "binary:logistic",  "eta": eta,"max_depth": max_depth,
+                 "min_child_weight": min_child_weight, "silent": 0, "subsample": subsample,
+                               "colsample_bytree":colsample_bytree,  "seed": 1,"alpha":alpha,"lambda":llambda}
+    xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=round).predict(xgb.DMatrix(test_X))
 
-# def xgb_origin(train_X,train_Y):
-#     params = {'booster':'gblinear','nthread':4,
-#     "objective": "binary:logistic",  "eta": eta,"max_depth": max_depth,
-#                  "min_child_weight": min_child_weight, "silent": 0, "subsample": subsample,
-#                                "colsample_bytree":colsample_bytree,  "seed": 1,"alpha":alpha,"lambda":llambda}
-#     xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=round).predict(xgb.DMatrix(test_X))
+
 
 def xgb_sk(train_X,train_Y,eval):
     xgbsk=XGBClassifier(max_depth=max_depth, learning_rate=eta,
