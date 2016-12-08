@@ -32,21 +32,21 @@ def valid_jsontxt(content):
 def parse(line):
     ob=json.loads(valid_jsontxt(line))
     if type(ob)!=type({}):return None
-    t_action = ob.get('action','-'),
-    cateid = ob.get('cateid','-'),
-    catename = ob.get('catename','-'),
-    decrypted_tel = ob.get('decrypted_tel','-'),
-    infoid = ob.get('infoid','-'),
+    t_action = ob.get('action','-')
+    cateid = ob.get('cateid','-')
+    catename = ob.get('catename','-')
+    decrypted_tel = ob.get('decrypted_tel','-')
+    infoid = ob.get('infoid','-')
     # infoimg = ob.get('infoimg','-'),
     # invitation = ob.get('invitation','-'),
-    isbiz = ob.get('isbiz','-'),
-    nickname = ob.get('nickname','-'),
-    online = ob.get('online','-'),
-    rootcateid = ob.get('rootcateid','-'),
-    title = ob.get('title','-'),
-    tradeline = ob.get('tradeline','-'),
-    uid = ob.get('uid','-'),
-    uname = ob.get('uname' ,'-'),
+    isbiz = ob.get('isbiz','-')
+    nickname = ob.get('nickname','-')
+    online = ob.get('online','-')
+    rootcateid = ob.get('rootcateid','-')
+    title = ob.get('title','-')
+    tradeline = ob.get('tradeline','-')
+    uid = ob.get('uid','-')
+    uname = ob.get('uname' ,'-')
     rs=[t_action ,
             cateid   ,
             catename ,
@@ -69,7 +69,6 @@ sc.textFile(s).map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().mapV
     map(lambda (x,y):"\001".join(valid_jsontxt(i) for i in y[0]))\
     .saveAsTextFile('/user/wrt/temp/58_info')
     # .map(lambda x:'\001'.join([ valid_jsontxt(i) for i in x])).repartition(20).saveAsTextFile('/user/wrt/temp/58_info')
-11
 
 # hfs -rmr /user/wrt/temp/58_info
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 58_info.py
