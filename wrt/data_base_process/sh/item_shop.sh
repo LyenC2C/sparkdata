@@ -85,4 +85,4 @@ t1.shop_id = t2.shop_id;
 
 EOF
 
-hfs -mv /commit/iteminfo/20* /commit/iteminfo/house_tmp/
+hfs -mv /commit/iteminfo/20* /commit/iteminfo/archive/
