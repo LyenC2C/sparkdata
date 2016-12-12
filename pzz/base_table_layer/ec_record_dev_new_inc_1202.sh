@@ -2,6 +2,7 @@
 
 
 ds=$1
+iteminfods=$2
 
 /home/yarn/hive/bin/hive<<EOF
 
@@ -53,7 +54,7 @@ FROM (SELECT
         shop_id,
         location
       FROM t_base_ec_item_dev_new
-      WHERE ds = 20161202
+      WHERE ds = $iteminfods
      ) t1
  RIGHT JOIN
   (
