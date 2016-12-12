@@ -88,7 +88,7 @@ def try_parse(line):
 
 
 
-sc.textFile('/commit/weibo/userinfo/*/*').map(lambda x:parse(x)).filter(lambda x:x!=None).\
+sc.textFile('/commit/weibo/userinfo/20161206').map(lambda x:parse(x)).filter(lambda x:x!=None).\
     groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/wrt/temp/userinfo_all')
 
 
