@@ -44,10 +44,10 @@ data clean
 '''
 for i in file.columns[3:]:
     file[i]=file[i].map(lambda x:data_abnormal(x))
-    if 'cnt_ratio' in i or 'price_ratio' in i :
-        col=file[i]
-        min, max=col.min(),math.log(col.max()+1,2)
-        file[i]=(col - min) / (min - max)
+    # if 'cnt_ratio' in i or 'price_ratio' in i :
+    #     col=file[i]
+    #     min, max=col.min(),math.log(col.max()+1,2)
+    #     file[i]=(col - min) / (min - max)
 
 import  math
 
@@ -60,11 +60,15 @@ file['total_price_mean_month']=file['total_price']/(file['buy_month']+1)
 print 'len(data):',len(file)
 
 
+file.to_csv('E:\\file.csv')
 '''
  清理特征占比小于0.03 的特征
 '''
-t=(file<=0).sum(axis=0)/len(file)
-drop_f_list=filter_feature(t,0.97)
+# filter_feature_df(file.iloc[:,3:],0.96)
+t=(file.iloc[:,3:]<=0).sum(axis=0)*1.0/len(file)
+print t
+drop_f_list=filter_feature(t,0.1)
+print len(drop_f_list), len(file.columns) ,len(drop_f_list)*1.0/len(file.columns)
 print 'drop f ',drop_f_list
 file.drop(drop_f_list,axis=1,inplace=True)
 
@@ -74,11 +78,11 @@ print file.columns
 新增特征
 '''
 rank_size=10
-for  col in file.columns[5:]:
+for  col in file.columns[3:]:
     v=file[col].map(lambda x:data_abnormal(x))
     size=int(len(file)/10)
-    file['rn_'+col]=v.rank(method='max')/int(len(file)/rank_size)
-    file['rn_'+col].astype(int)
+    rn_df=v.rank(method='max')/int(len(file)/rank_size)
+    file['rn_'+col]=rn_df
 
 # rank 10等分 计数特征
 for i in xrange(rank_size):
@@ -88,7 +92,7 @@ for i in xrange(rank_size):
 
 data= file[file['class'] == '8000_c' ]
 
-
+data.to_csv('E:\\data.csv')
 
 # data=      file
 valid=file[file['class']=='2000_c']
@@ -99,16 +103,15 @@ valid_data=valid.iloc[:,3:]
 
 # 特征索引
 index_data=data.iloc[:,3:]
-
 index_lable= data.loc[:,  ['label']]
-print index_data.columns,len(index_data.columns)
 
-features=index_data.columns
+
+
 '''
 降维
 '''
-index_data=Imputer().fit_transform(index_data)
-valid_data=Imputer().fit_transform(valid_data)
+# index_data=Imputer().fit_transform(index_data)
+# valid_data=Imputer().fit_transform(valid_data)
 
 
 
@@ -124,28 +127,27 @@ print valid_data.shape
 # test_featrue=feature_cross(test_featrue)
 
 # 划分训练测试集
+print index_lable
 
+print "feature list:",len(index_data.columns) ,index_data.columns
+features=index_data.columns
+'''
+data check
+'''
+for  col in index_data.columns:
+    index_data[col]=index_data[col].map(lambda x:data_abnormal(x))
+for  col in valid_data.columns:
+    valid_data[col]=valid_data[col].map(lambda x:data_abnormal(x))
 
-def test_rflasso():
-    train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=1)
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.feature_selection import SelectFromModel
-    from sklearn.svm import SVC
-    from sklearn.cross_validation import StratifiedKFold
-    from sklearn.linear_model import RandomizedLogisticRegression
-    randomized_logistic = RandomizedLogisticRegression(C=0.1,n_jobs=2)
-    randomized_logistic.fit(train_X,train_Y)
-    XX = randomized_logistic.transform(train_X)
-    print XX.shape
+index_data.to_csv('E:\\index_data.csv')
 
 
 ls=[]
 feature_kv=coll.defaultdict(int)
 kflod=[]
-# for step  in [6]:
 result_preb=pd.DataFrame({'tel':valid['tel']})
 text_preb  =pd.DataFrame()
-for step  in  [7]:
+for step  in  xrange(10):
     print '---------------------',step
     train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=step)
     from imblearn.combine import SMOTEENN,SMOTETomek
@@ -169,13 +171,14 @@ for step  in  [7]:
     lr =logisReg.fit(train_X,train_Y)
     print len(lr.coef_[0])
 
-    f_value= np.sum(np.abs(lr.coef_), axis=0)
+    # f_value= np.sum(np.abs(lr.coef_), axis=0)
+    f_value= np.sum( lr.coef_, axis=0)
     # print f_value
     top_features=feature_anay(features,f_value,50)
 
     for k,v  in top_features:
         feature_kv[k]=feature_kv[k]+v
-    # print top_features
+    print top_features
     # print sklearn.feature_selection()._get_feature_importances(lr)
     lr_pred_p= lr.predict_proba(test_X)
     print type(lr_pred_p[:,1])

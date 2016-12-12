@@ -20,7 +20,7 @@ conf.set("spark.driver.maxResultSize","8g")
 sc = SparkContext(appName="t_xianyu_userinfo",conf=conf)
 
 
-
+sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_item_tmp').repartition(6).saveAsTextFile('/user/zlj/tmp/item_title_20161205')
 
 
 def valid_jsontxt(content):
