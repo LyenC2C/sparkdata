@@ -3,8 +3,8 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-
-sc = SparkContext(appName="shixin_person")
+now_day = sys.argv[1]
+sc = SparkContext(appName="shixin_person" + now_day)
 
 def valid_jsontxt(content):
     res = content
@@ -64,12 +64,17 @@ def f1(line):
 
 # rdd_c = sc.textFile("/commit/shixin.info.20161029.json").map(lambda x:f(x))
 # last_day = "20161029"
-now_day = "20161205"
+# now_day = "20161205"
 
-rdd_c = sc.textFile("/commit/credit/shixin/shixin.info.person." + now_day).map(lambda x:f1(x)).filter(lambda x:x!=None)
+rdd = sc.textFile("/commit/credit/shixin/shixin.info.person." + now_day)
+rdd_c = rdd.map(lambda x:f1(x)).filter(lambda x:x!=None)
 rdd_now = rdd_c.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid_jsontxt(i) for i in y[0]]))
 # rdd_last = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_shixin_person/" + last_day).map(lambda x:f2(x))
 rdd_now.saveAsTextFile("/user/wrt/temp/shixin_personinfo")
+f_w = open("shixin_person_count_"+now_day)
+total = rdd.count()
+now = rdd_now.count()
+f_w.write(total + "\n" + now)
 
 # hfs -rmr /user/wrt/temp/shixin_personinfo
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 shixin_person.py
