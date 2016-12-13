@@ -59,7 +59,23 @@ def f1(line):
     result.append(performedpart)
     result.append(unperformpart)
     return (id,result)
-#
+# #
+# publishDate	string	发布日期
+# disruptTypeName	string	生效法律文书确定的义务
+# performance	string	被执行人的履行情况
+# duty	string	失信被执行人行为具体情形
+# gistUnit	string	做出执行依据单位
+# regDate	string	立案时间
+# gistId	string	执行依据文号
+# partyTypeName	string	类型号
+# iname	string	失信人名称
+# caseCode	string	案号
+# age	string	失信人年龄（个人)
+# sexy	string	失信人性别（个人）
+# cardNum	string	身份证号码
+# courtName	string	执行法院
+# areaName
+
 # def f2(line):
 #
 
