@@ -66,7 +66,7 @@ def f1(line):
 # last_day = "20161029"
 # now_day = "20161205"
 
-rdd = sc.textFile("/commit/credit/shixin/shixin.info.person." + now_day)
+rdd = sc.textFile("/commit/credit/shixin/shixin.info.person*")
 rdd_c = rdd.map(lambda x:f1(x)).filter(lambda x:x!=None)
 rdd_now = rdd_c.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid_jsontxt(i) for i in y[0]]))
 # rdd_last = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_shixin_person/" + last_day).map(lambda x:f2(x))
