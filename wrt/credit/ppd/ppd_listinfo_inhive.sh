@@ -6,7 +6,7 @@ now_day=$1
 
 hfs -rmr /user/wrt/temp/ppd_info_tmp
 spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 \
-$dev_path/ppd/t_base_ppd_info.py $now_day
+$dev_path/ppd/t_base_ppd_listinfo.py $now_day
 
 hive<<EOF
 
