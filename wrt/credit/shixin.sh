@@ -7,3 +7,9 @@ now_day=$(date -d '0 days ago' +%Y%m%d)
 
 sh $pre_path/shixin/shixin_person_inhive.sh $now_day &> $pre_path/log/shixin_person_$now_day
 sh $pre_path/shixin/shixin_qiye_inhive.sh $now_day &> $pre_path/log/shixin_qiye_$now_day
+
+hfs -mv /commit/credit/shixin/shixin* /commit/credit/shixin/past_day
+
+sh $pre_path/ppd/ppd_listinfo_inhive.sh $now_day &> $pre_path/log/ppd_$now_day
+
+
