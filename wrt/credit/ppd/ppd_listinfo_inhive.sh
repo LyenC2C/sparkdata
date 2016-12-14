@@ -12,6 +12,6 @@ hive<<EOF
 
 use wlcredit;
 
-LOAD DATA INPATH '/user/wrt/temp/ppd_info_tmp' OVERWRITE INTO TABLE t_wrt_shixin_qiye PARTITION (ds=$now_day);
+LOAD DATA INPATH '/user/wrt/temp/ppd_info_tmp' OVERWRITE INTO TABLE t_base_ppd_listinfo PARTITION (ds=$now_day);
 
 EOF
