@@ -19,7 +19,7 @@ def valid_jsontxt(content):
 
 
 def f1(line):
-    if line == '': return None
+    if valid_jsontxt(line.strip()) == '' or valid_jsontxt(line.strip()) == '})();': return None
     ob = json.loads(valid_jsontxt(line.strip()))
     if type(ob) != type({}): return None
     id = str(ob.get("id","-"))
