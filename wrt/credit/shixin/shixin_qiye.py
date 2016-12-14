@@ -90,7 +90,7 @@ rdd_now = rdd_c.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid
 # rdd_last = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_shixin_person/" + last_day).map(lambda x:f2(x))
 rdd_now.saveAsTextFile("/user/wrt/temp/shixin_qiyeinfo")
 
-f_w = open("shixin_person_count_"+now_day)
+f_w = open("./shixin_count/shixin_person_count_"+now_day)
 total = rdd.count()
 now = rdd_now.count()
 f_w.write(str(total) + "\n" + str(now))
