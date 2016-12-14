@@ -42,6 +42,6 @@ left join
 on
 t1.id = t2.id
 where
-t2.id is null
+t2.id is null;
 
 EOF
