@@ -77,6 +77,9 @@ total = rdd.count()
 now = rdd_now.count()
 f_w.write(str(total) + "\n" + str(now))
 
+print "shixin_person_count_raw:" + str(total)
+print "shixin_person_count_now:" + str(now)
+
 # hfs -rmr /user/wrt/temp/shixin_personinfo
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 shixin_person.py
 # LOAD DATA  INPATH '/user/wrt/temp/shixin_info_20161029' OVERWRITE INTO TABLE t_wrt_shixin_person PARTITION (ds='20161029');
