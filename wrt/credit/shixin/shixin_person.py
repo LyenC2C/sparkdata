@@ -75,7 +75,7 @@ rdd_now.saveAsTextFile("/user/wrt/temp/shixin_personinfo")
 f_w = open("shixin_person_count_"+now_day)
 total = rdd.count()
 now = rdd_now.count()
-f_w.write(total + "\n" + now)
+f_w.write(str(total) + "\n" + str(now))
 
 # hfs -rmr /user/wrt/temp/shixin_personinfo
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 shixin_person.py
