@@ -91,7 +91,7 @@ rdd_now = rdd_c.groupByKey().mapValues(list).map(lambda (x,y):"\001".join([valid
 rdd_now.saveAsTextFile("/user/wrt/temp/shixin_qiyeinfo")
 
 sc.parallelize(str(rdd.count()) + "\t" +  str(rdd_now.count()))\
-    .saveAsTextFile("/user/wrt/credit/shixin_qiye_count_" + now_day)
+    .saveAsTextFile("file:///home/wrt/sparkdata/wrt/credit/shixin/shixin_count/shixin_person_count_" + now_day)
 
 # f_w = open("shixin_count/shixin_person_count_"+now_day,'w')
 # total = rdd.count()
