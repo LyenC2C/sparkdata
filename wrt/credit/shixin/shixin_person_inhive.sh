@@ -38,10 +38,33 @@ t1.unperformpart
 from
 (select * from t_wrt_shixin_person where ds = 'temp')t1
 left join
-(select * from t_wrt_shixin_person where ds = $last_day)t2
+(select * from t_wrt_shixin_person where ds = 'past' )t2
 on
 t1.id = t2.id
 where
 t2.id is null;
+
+insert into table table t_wrt_shixin_person partitioin(ds = 'past')
+select
+id,
+iname,
+casecode,
+cardnum,
+age,
+sexy,
+businessentity,
+courtname,
+areaname,
+partytypename,
+gistid,
+regdate,
+gistunit,
+duty,
+performance,
+disrupttypename,
+publishdate,
+performedpart,
+unperformpart
+from t_wrt_shixin_person where ds = $now_day;
 
 EOF
