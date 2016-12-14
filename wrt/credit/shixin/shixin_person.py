@@ -3,6 +3,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
+
 now_day = sys.argv[1]
 sc = SparkContext(appName="shixin_person" + now_day)
 
