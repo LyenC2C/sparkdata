@@ -44,7 +44,7 @@ t1.id = t2.id
 where
 t2.id is null;
 
-insert into table table t_wrt_shixin_person partitioin(ds = 'past')
+insert into table table t_wrt_shixin_person partition(ds = 'past')
 select
 id,
 iname,
