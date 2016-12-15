@@ -98,7 +98,7 @@ def join(y):
     return rs
 def index_weight(y):
     rs=[]
-    lv=y.split('\003')
+    lv=y.split()
     for i in lv:
         kv=i.split()
         s=len(kv)
@@ -190,10 +190,15 @@ if __name__ == "__main__":
         rst.map(lambda x:'\001'.join(x)).saveAsTextFile('/user/zlj/temp/termweight1228')
         # df=hiveContext.createDataFrame(rst,schema)
         # hiveContext.registerDataFrameAsTable(df, 'tmptable')
+
+        '''
         hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
         hiveContext.sql("create table %s like t_zlj_userbuy_item_tfidf_tagbrand_weight15be0701ali_v6"%output_talbe)
 
         hiveContext.sql("LOAD DATA  INPATH '/user/zlj/temp/termweight1228' OVERWRITE INTO TABLE %s "%output_talbe)
+        '''
+
+
         # hiveContext.sql('create table %s as select * from tmptable'%output_talbe)
 
         # df=hiveContext.createDataFrame(corpus,schema)

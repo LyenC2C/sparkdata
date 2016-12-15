@@ -159,4 +159,7 @@ wlfinance.t_zlj_tmp_csv where ds='bank_detail_train'
 )t group by userid ,trade_type,salary_label ;
 
 --
-
+select
+  count(1)
+from
+wlfinance.t_zlj_tmp_csv where ds='360_bank_detail_dropdup' and  id1<0.5
