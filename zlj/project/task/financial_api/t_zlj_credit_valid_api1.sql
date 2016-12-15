@@ -54,7 +54,7 @@ FROM
            CASE WHEN city IS NULL
              THEN 0
            ELSE 1 END +
-           CASE WHEN alipay IS NULL
+           CASE WHEN alipay IS NULLz
              THEN 0
            ELSE 1 END +
            CASE WHEN year IS NULL

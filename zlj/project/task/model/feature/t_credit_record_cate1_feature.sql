@@ -14,14 +14,14 @@ from
 (
 SELECT
 tel_index,root_cat_id as cate_level1,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string),'sum_price' ) ,cast(  round(sum(price),2) as string) )  price_sum,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'count'     ) ,cast( round(count(1) ,2)  as string) ) buy_count,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'avg_price' ) ,cast( round(avg(price),2) as string) ) price_avg,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'max_price' ) ,cast( round(max(price),2) as string) ) price_max,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'min_price' ) ,cast( round(min(price),2) as string) ) price_min,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_std' ) ,cast( round(std(price),2) as string) ) price_std
+concat_ws(':', concat_ws('_',cast( root_cat_id as string),'sum_price_level1' ) ,cast(  round(sum(price),2) as string) )  price_sum,
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'count_level1'     ) ,cast( round(count(1) ,2)  as string) ) buy_count,
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'avg_price_level1' ) ,cast( round(avg(price),2) as string) ) price_avg,
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'max_price_level1' ) ,cast( round(max(price),2) as string) ) price_max,
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'min_price_level1' ) ,cast( round(min(price),2) as string) ) price_min,
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'std_price_level1' ) ,cast( round(std(price),2) as string) ) price_std
 from wlbase_dev.t_base_record_cate where tel_index is not null and tel_user_rn<4 and price<160000
-and ds='true1'
+and  root_cat_id is not null
 group by tel_index,root_cat_id
 )t group by tel_index
 ;

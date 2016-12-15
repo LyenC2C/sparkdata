@@ -39,6 +39,9 @@
 Drop table  t_base_user_profile;
 create table t_base_user_profile as
 SELECT
+*
+from
+  (SELECT
 case when tb_id                 is null or  length(tb_id                )<1  then NULl   else  tb_id                  end as tb_id                  ,
 case when alipay                is null or  length(alipay               )<=1  then NULl   else  alipay                 end as alipay                 ,
 case when buycnt                is null or  length(buycnt               )<=1  then NULl   else  buycnt                 end as buycnt                 ,
@@ -73,8 +76,28 @@ case when weibo_company  	    is null or  length(weibo_company       )<=1  then 
 case when   58_tel  	    is null or  length(58_tel       )<=1  then NULl   else  58_tel         end as 58_tel ,
 case when 58_nickname  	    is null or  length(58_nickname       )<=1  then NULl   else  58_nickname         end as 58_nickname
 from
-t_base_user_info_s_tbuserinfo_t_step9 ;
+t_base_user_info_s_tbuserinfo_t_step9
+)t
+  group by
+    tb_id                 ,alipay                ,buycnt
+    ,verify                ,regtime               ,tb_nick
+    ,tb_location           ,qq_gender             ,qq_age
+    ,qq_name               ,qq_loc                ,qq_find_schools
+    ,tel_loc               ,xianyu_gender         ,xianyu_birthday
+    ,xianyu_constellation  ,xianyu_province       ,xianyu_city           ,xianyu_detail_loc
+    ,model_predict_gender  ,weibo_id              ,weibo_screen_name     ,weibo_gender
+    ,weibo_followers_count ,weibo_friends_count   ,weibo_statuses_count  ,weibo_created_at
+    ,weibo_location        ,weibo_verified        ,weibo_colleges        ,weibo_company
+    ,58_tel                ,58_nickname
+;
 
+
+
+
+-- test
+
+SELECT *
+where tb_id = '1055265006' or tb_id = '1622665460' ;
 
 
 
