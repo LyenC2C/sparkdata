@@ -36,17 +36,17 @@ print 'len(data):',len(record)
 rank_size=10
 # rank feature
 record.fillna(-1)
-for  col in record.columns[5:]:
-    # v=record[col].map(lambda x:data_abnormal(x))
-    v=record[col]
-    record_size=len(record)
-    record['rn_'+col]=v.rank(method='max')/int(record_size/rank_size)
-    record['rn_'+col].astype(int)
-
-# rank 10等分 计数特征
-for i in xrange(rank_size):
-    j=i+1
-    record['n_'+str(j)]=(record.iloc[:,3:]==j).sum(axis=1)
+# for  col in record.columns[5:]:
+#     # v=record[col].map(lambda x:data_abnormal(x))
+#     v=record[col]
+#     record_size=len(record)
+#     record['rn_'+col]=v.rank(method='max')/int(record_size/rank_size)
+#     record['rn_'+col].astype(int)
+#
+# # rank 10等分 计数特征
+# for i in xrange(rank_size):
+#     j=i+1
+#     record['n_'+str(j)]=(record.iloc[:,3:]==j).sum(axis=1)
 
 record['null']=(record.iloc[:,3:]<=-0.5).sum(axis=1)
 data=      record[record['class']=='8000_c']
@@ -140,6 +140,18 @@ model_v6 = xgb.train(params,dtrain,num_boost_round=5000,early_stopping_rounds=50
 	evals=watchlist
              )
 
+import matplotlib.pyplot as plt
+import pandas as pd
+import  seaborn as sns
+import matplotlib
+matplotlib.style.use('ggplot')
+def plot_feature(model_v6,topN=50):
+    # %matplotlib inline
+    s=pd.DataFrame.from_dict(model_v6.get_fscore(),orient='index')
+    s.columns=['weight']
+    s.sort_values(by='weight').tail(topN).plot(kind='barh')
+    plt.show()
+plot_feature(model_v6)
 # for step  in xrange(10):
 #     print '---------------------',step
 #
