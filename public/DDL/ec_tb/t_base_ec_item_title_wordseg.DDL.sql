@@ -18,6 +18,15 @@ SELECT
 t1.user_id ,t2.title_seg_clean
 FROM
 (
-  SELECT user_id ,item_id from t_base_ec_item_feed_dev_new group by
+  SELECT user_id ,item_id from t_base_ec_item_feed_dev_new
+  group by
    user_id ,item_id
-)t1 join t_base_ec_item_title_wordseg t2 on t1.item_id=t2.item_id
+)t1 join t_base_ec_item_title_wordseg t2 on t1.item_id=t2.item_id ;
+
+
+create table t_base_ec_item_title_wordseg_user_1212_group as
+
+select user_id ,concat_ws('\003', collect_set(title_seg_clean)) AS brandtags
+
+ from t_base_ec_item_title_wordseg_user_1212
+group by user_id;

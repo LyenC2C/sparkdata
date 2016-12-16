@@ -342,6 +342,36 @@ def  pool_feature_gen(feature_df,cols,iv_limit,verbose=False):
 
 # gen_f_df=pool_feature_gen(feature_data.iloc[:,:6],feature_data.columns[3:6],0.1,verbose=True)
 
+def calc_funs_iv(org_data,cols,iv_limit,group_cols,prefix='',otest=False):
+	'''
+	:param data: 需要统计的数据
+	:param cols: 需要计算iv值的统计字段 比如['time','money']
+	:param iv_limit: iv 过滤值
+	:param group_cols: 要统计groupby的 字段list ['userid','label']
+	:return:
+	'''
+	groupdata=org_data.groupby(by=group_cols)
+	feature_data=groupdata.agg({cols[0]:'count'})[cols[0]].reset_index()
+	funs=['sum','mean','std','min','max','median','count']
+	for col in cols:
+		if len(prefix)>0:col_common=prefix+'_'+col+'_'
+		else:col_common=col+'_'
+		print col,'----------------------------------'
+
+		data=groupdata.agg({col:funs}).add_prefix(col_common)
+		data=data[col_common+col].reset_index()
+		funs_cols=[col_common+fun for fun in  funs]
+		data[col_common+'cross']=data[col_common+'max']-data[col_common+'min']
+		data[col_common+'diff']=data[col_common+'count']/(data[col_common+'cross']+1)
+		funs_cols=[col_common+fun for fun in  funs]+[col_common+'cross',col_common+'diff']
+		for fun_col in funs_cols:
+			if otest==False :
+				iv=calc_feature_woe_iv(data=data,tgt_col_name=fun_col,bin_size=20).iv.sum()
+				if iv>iv_limit:
+					print fun_col,iv
+				feature_data[fun_col]=data[fun_col]
+			else:feature_data[fun_col]=data[fun_col]
+	return feature_data
 
 
 

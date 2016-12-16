@@ -38,7 +38,8 @@ def update_w(word,tfidf):
     tfidf=tfidf*math.log(len(word)/2.0+2,2)
     return tfidf
 def tf(x, lv):
-    y=[i.split() for i in lv]
+    # y=[i.split() for i in lv]
+    y=lv
     num = len(y)
     lv = [(k, len(list(g)) * 1.0 / num) for k, g in groupby(sorted(y))]
     return [(i[0].split('_')[0], (x, update_w(i[0],i[1]))) for i in lv] #word ,id tf
@@ -98,7 +99,7 @@ def join(y):
     return rs
 def index_weight(y):
     rs=[]
-    lv=y.split()
+    lv=y.split('\003')
     for i in lv:
         kv=i.split()
         s=len(kv)
@@ -129,7 +130,8 @@ def tfidf(corpus,limit):
         # jrdd.map(lambda (x,y):[i for i in y][0])
         rd=jrdd.map(lambda (x, y):(x,groupvalue(y)))
         rst=rd.map(lambda (x,y):[x, "|".join(
-            [i[0].replace('_',"").replace('|',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
+            [i[0].replace('_',"").replace('|',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True))
+             if index < limit])])
         # rst.saveAsTextFil
         return rst
 
@@ -182,7 +184,7 @@ if __name__ == "__main__":
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
         # path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/000000_0"
-        path="/hive/warehouse/wlbase_dev.db/t_zlj_userbuy_item_tfidf_tagbrand_weight_2015_v1_user_group/*"
+        path="/hive/warehouse/wlbase_dev.db/t_base_ec_item_title_wordseg_user_1212_group/000000_0"
         # path="/user/zlj/temp/data1"
         # corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1]))).coalesce(50)
         corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
