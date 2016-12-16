@@ -29,4 +29,4 @@ create table t_base_ec_item_title_wordseg_user_1212_group as
 select user_id ,concat_ws('\003', collect_set(title_seg_clean)) AS brandtags
 
  from t_base_ec_item_title_wordseg_user_1212
-group by user_id,
+group by user_id;
