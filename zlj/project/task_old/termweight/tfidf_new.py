@@ -38,7 +38,8 @@ def update_w(word,tfidf):
     tfidf=tfidf*math.log(len(word)/2.0+2,2)
     return tfidf
 def tf(x, lv):
-    y=[i.split() for i in lv]
+    # y=[i.split() for i in lv]
+    y=lv
     num = len(y)
     lv = [(k, len(list(g)) * 1.0 / num) for k, g in groupby(sorted(y))]
     return [(i[0].split('_')[0], (x, update_w(i[0],i[1]))) for i in lv] #word ,id tf
