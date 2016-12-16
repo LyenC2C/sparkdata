@@ -98,7 +98,7 @@ def join(y):
     return rs
 def index_weight(y):
     rs=[]
-    lv=y.split()
+    lv=y.split('\003')
     for i in lv:
         kv=i.split()
         s=len(kv)
