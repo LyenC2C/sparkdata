@@ -15,5 +15,7 @@ if __name__ == '__main__':
     sc = SparkContext(appName="parallese test",conf=conf)
     rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/qun_member_info/ds=info")
     rdd.count()
-    rdd.map(lambda x:[x.split("\001")[0],1]).groupByKey().count()
+    rdd1 = rdd.map(lambda x:x.split("\001")).map(lambda x:[x[0],x[5]]).groupByKey()
+    rdd2 = rdd1.mapValues(list).map(lambda (x,y):y[0]).filter(lambda x:x!=None).map(lambda x:[x,1]).groupByKey()
+    rdd2.count()
     sc.stop()
