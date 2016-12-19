@@ -117,6 +117,6 @@ def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
 
-sc = SparkContext("local[*]", AppName="xianyu ")
+sc = SparkContext("local[*]", AppName="xianyu")
 data = sc.textFile("/commit/2taobao/iteminfo/179_2taobao_iteminfo_20161218")
 data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey(list).map(lambda a: distinct(a[1]))
