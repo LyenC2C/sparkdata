@@ -345,7 +345,7 @@ if __name__ == "__main__":
                                         .map(lambda (x,y):[x,list(set(y))])
         #保存新匹配uid mark
         rdd_cmt_uid_mark.map(lambda (x,y):x+'\001'+'\002'.join(list(set(y))))\
-                        .saveAsTextFile("")
+                        .saveAsTextFile(output_uid_mark)
 
         #构造uid mark #[uid,[2,list(mark)]]
         rdd_new_cmt_uid_mark = rdd_cmt_uid_mark.map(lambda (x,y):[x,[2,y]])
