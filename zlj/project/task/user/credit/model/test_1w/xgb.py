@@ -17,39 +17,41 @@ from model_utils import *
 
 
 
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\chi_merge.csv')
-file = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\融360_v3back.csv')
+
+record = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
+
 
 '''
 data clean
 '''
 # print file.columns[3:]
-for i in file.columns[3:]:
-    file[i]=file[i].map(lambda x:data_abnormal(x))
+for i in record.columns[3:]:
+    record[i]=record[i].map(lambda x:data_abnormal(x))
 
 import  math
 for i  in ['total_price','avg_price','std_price']:
-    file[i]=file[i].map(lambda x:math.log(x+0.1,2))
-print 'len(data):',len(file)
+    record[i]=record[i].map(lambda x:math.log(x+0.1,2))
+print 'len(data):',len(record)
 
-rank_size=5
+rank_size=10
 # rank feature
-for  col in file.columns[5:]:
-    v=file[col].map(lambda x:data_abnormal(x))
-    size=int(len(file)/10)
-    file['rn_'+col]=v.rank(method='max')/int(len(file)/rank_size)
-    file['rn_'+col].astype(int)
+record.fillna(-1)
+# for  col in record.columns[5:]:
+#     # v=record[col].map(lambda x:data_abnormal(x))
+#     v=record[col]
+#     record_size=len(record)
+#     record['rn_'+col]=v.rank(method='max')/int(record_size/rank_size)
+#     record['rn_'+col].astype(int)
+#
+# # rank 10等分 计数特征
+# for i in xrange(rank_size):
+#     j=i+1
+#     record['n_'+str(j)]=(record.iloc[:,3:]==j).sum(axis=1)
 
-# rank 10等分 计数特征
-for i in xrange(rank_size):
-    j=i+1
-    file['n_'+str(j)]=(file==j).sum(axis=1)
-
-
-data=      file[file['class']=='8000_c']
+record['null']=(record.iloc[:,3:]<=-0.5).sum(axis=1)
+data=      record[record['class']=='8000_c']
 # data=      file
-valid_data=file[file['class']=='2000_c']
+valid_data=record[record['class']=='2000_c']
 
 
 
@@ -109,26 +111,66 @@ def feature_anay(features,feature_importances_):
     data=sorted(pair,key=lambda t:t[-1],reverse=True)
     return data[:50]
 
-ls=[]
-for step  in xrange(10):
-    print '---------------------',step
+random_seed = 1225
+train_X,val_X,train_Y,val_Y=train_test_split(data.iloc[:,3:],data.label ,  test_size=0.25, random_state=1)
+dval = xgb.DMatrix(val_X,label=val_Y)
+dtrain = xgb.DMatrix(train_X, label=train_Y)
+params={
+	'booster':'gbtree',
+	'objective': 'binary:logistic',
+	'early_stopping_rounds':100,
+	'scale_pos_weight': 41697.0/5326.0,
+        'eval_metric': 'auc',
+	'gamma':0.1,#0.2 is ok
+    'silent':1 ,
+	'max_depth':4,
+	'lambda':550,
+        'subsample':0.7,
+        'colsample_bytree':0.3,
+        'min_child_weight':2.5,
+        'eta': 0.007,
+	'seed':random_seed,
+	'nthread':4
+    }
 
-    # print list(index_data.columns)
-    train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25 , random_state=step)
-    print len(train_X),len(test_X)
-    print sum(train_Y['label']),sum(test_Y['label'])
+watchlist  = [(dtrain,'train'),(dval,'val')]#The early stopping is based on last set in the evallist
 
-    # print xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=round).predict(xgb.DMatrix(test_X))
-    # xgb_pred=xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=200).predict(xgb.DMatrix(test_X))
-    model=xgb_sk(train_X,train_Y,[(test_X,test_Y)])
-    print  'best best_ntree_limit' ,model.best_ntree_limit
-    xgb_pred=model.predict_proba(test_X,ntree_limit=model.best_ntree_limit)[:,1]
-    print feature_anay(index_data.columns,model.feature_importances_)
-    xgb_rs=model_rs_dataframe(test_Y,xgb_pred)
-    xgb_auc=metrics.roc_auc_score(test_Y['label'], xgb_rs['rs'])
-    xgb_ks=np.array([ i for  i in ks_calc(xgb_rs)['ks']]).max()
-    print  'xgb', xgb_auc,xgb_ks
-    ls.append([xgb_auc,xgb_ks])
+model_v6 = xgb.train(params,dtrain,num_boost_round=5000,early_stopping_rounds=500  ,
+	# feval=feval_ks_calc,
+	evals=watchlist
+             )
 
-df= pd.DataFrame(ls)
-print df.mean(axis=0)
+import matplotlib.pyplot as plt
+import pandas as pd
+import  seaborn as sns
+import matplotlib
+matplotlib.style.use('ggplot')
+def plot_feature(model_v6,topN=50):
+    # %matplotlib inline
+    s=pd.DataFrame.from_dict(model_v6.get_fscore(),orient='index')
+    s.columns=['weight']
+    s.sort_values(by='weight').tail(topN).plot(kind='barh')
+    plt.show()
+plot_feature(model_v6)
+# for step  in xrange(10):
+#     print '---------------------',step
+#
+#     # print list(index_data.columns)
+#     train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25 , random_state=step)
+#     print len(train_X),len(test_X)
+#     print sum(train_Y['label']),sum(test_Y['label'])
+#
+#     # print xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=round).predict(xgb.DMatrix(test_X))
+#     # xgb_pred=xgb.train(params,xgb.DMatrix(train_X,label=train_Y) ,num_boost_round=200).predict(xgb.DMatrix(test_X))
+#     model=xgb_sk(train_X,train_Y,[(test_X,test_Y)])
+#     print  'best best_ntree_limit' ,model.best_ntree_limit
+#     xgb_pred=model.predict_proba(test_X,ntree_limit=model.best_ntree_limit)[:,1]
+#     print feature_anay(index_data.columns,model.feature_importances_)
+#     xgb_rs=model_rs_dataframe(test_Y,xgb_pred)
+#     xgb_auc=metrics.roc_auc_score(test_Y['label'], xgb_rs['rs'])
+#     xgb_ks=np.array([ i for  i in ks_calc(xgb_rs)['ks']]).max()
+#     print  'xgb', xgb_auc,xgb_ks
+#     ls.append([xgb_auc,xgb_ks])
+
+# df= pd.DataFrame(ls)
+# print df.mean(axis=0)

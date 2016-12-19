@@ -45,9 +45,9 @@ FROM (
         price,
         shop_id,
         location
-      FROM t_base_ec_item_dev_new t1
+      FROM wl_base.t_base_ec_item_dev_new t1
       join t_base_ec_dim t2
-      on t1.ds = 20161104  and  t1.cat_id =t2.cate_id
+      on t1.ds = 20161202  and  t1.cat_id =t2.cate_id
      ) t1
  RIGHT JOIN
   (

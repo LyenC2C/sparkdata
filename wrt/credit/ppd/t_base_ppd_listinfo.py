@@ -4,7 +4,9 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
-sc = SparkContext(appName="t_base_shopitem")
+now_day = sys.argv[1]
+sc = SparkContext(appName="t_base_ppd_listinfo_" + now_day)
+
 
 def valid_jsontxt(content):
     # res = content
@@ -51,10 +53,10 @@ def f(line):
         result.append((list_number,lv))
     return result
 
-rdd_c = sc.textFile("/commit/credit/ppd/ppdai.userinfo.20161115.sq").flatMap(lambda x:f(x)).filter(lambda x:x!=None)
+rdd_c = sc.textFile("/commit/credit/ppd/ppdai.blacklist.user." + now_day).flatMap(lambda x:f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): "\001".join([valid_jsontxt(i) for i in y[0]]))
 rdd.saveAsTextFile('/user/wrt/temp/ppd_info_tmp')
 
-# hfs -rmr /user/wrt/temp/ppd_in fo_tmp
+# hfs -rmr /user/wrt/temp/ppd_info_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_ppd_info.py
-# LOAD DATA  INPATH '/user/wrt/temp/ppd_info_tmp' OVERWRITE INTO TABLE t_base_ppd_info PARTITION (ds='20160929');
+# LOAD DATA  INPATH '/user/wrt/temp/ppd_info_tmp' OVERWRITE INTO TABLE t_base_ppd_listinfo PARTITION (ds='20161115');

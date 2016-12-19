@@ -9,129 +9,77 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
-
-from sklearn import linear_model, preprocessing
-from sklearn.ensemble import RandomForestClassifier
-from   sklearn import  metrics
-from sklearn.metrics import roc_curve, roc_auc_score
-from sklearn.cross_validation import train_test_split
 import pandas as pd
-from pandas import Series, DataFrame
-import warnings
-warnings.filterwarnings("ignore")
-import sklearn
-import collections as coll
-from sklearn.preprocessing import Imputer, StandardScaler
+import numpy as np
 
-# file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\test1w\\融360_v3back.csv')
-file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
-file = pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\chi_merge.csv')
+def calc_val_woe_iv(data, tgt_col_name, col_type='continuous' ,bin_size=10,verbose=False):
+    """
+    根据用户自定义分组来统计good/bad个数，已经对应的WOE，IV值,版本2
+    :param dataset: 进行分组计算的数据集名称
+    :param grp_var_name: 分组变量名
+    :param tgt_var_name: 目标变量名
+    :param verbose: 输出中间过程
+    :return:
+        group_name: 变量分组
+        count: 组内样本数量
+        total_dist: 组内样本数量/数据集样本数量
+        good: 组内tgt=0的样本数量
+        good_dist: 组内tgt=0的样本数量/tgt=0的样本数量
+        bad: 组内tgt=1的样本数量
+        bad_dist: 组内tgt=1的样本数量/tgt=1的样本数量
+        bad_rate: bad/count
+        woe: ln(good_dist/bad_dist)
+        iv: (good_dist - bad_dist)*woe
+        total_iv: sum(iv)
+    continuous 类型分箱处理
+    discrete  按照类型处理
+    """
+    #check
+    if 'label' not in data.columns :
+        print 'not label in'
+        return ''
+    # 计算总体样本量，good/bad总数
+    dataset=data.loc[:,['label',tgt_col_name]].copy()
+    dataset.dropna(inplace=True)
+    total_good  = len(dataset[dataset.label==0])
+    total_bad   = len(dataset[dataset.label== 1])
+    total_count = len(dataset)
+    rank_col='rn_'+tgt_col_name
+    if col_type=='continuous':
+        dataset[rank_col]=dataset[tgt_col_name].rank(method='max')/(total_count/bin_size)
+        dataset[rank_col]=dataset[rank_col].astype(int)
+    if col_type=='discrete':
+        size=dataset.tgt_col_name.unique().size
+        if size>100:
+            print 'discrete is too much. size is {}'.format(size)
+        dataset[rank_col]=dataset[tgt_col_name]
+    # 记录每一个分组的统计结果
+    grouping_data = []
+    for grp_var, grp_data in dataset.groupby(rank_col):
+        d = dict()
+        d['group_name'] = grp_var
+        d['count'] = len(grp_data)
+        d['total_dist'] = 1.0 * d['count'] / total_count
+        d['good'] = len(grp_data[grp_data.label == 0])
+        d['good_dist'] = 1.0 * d['good'] / total_good
+        d['bad'] = len(grp_data[grp_data.label == 1])
+        d['bad_dist'] = 1.0 * d['bad'] / total_bad
+        d['bad_rate'] = 1.0 * d['bad'] / d['count']
+        if d['bad'] > 0 and d['good'] > 0:
+            d['woe'] = np.math.log(1.0 * d['good_dist'] / d['bad_dist'])
+        elif d["good"] == 0:
+            d['woe'] = -1
+        else:
+            d["woe"] = 1
+        d['iv'] = 1.0 * (d['good_dist'] - d['bad_dist']) * d['woe']
+        grouping_data.append(d)
 
-#
-# mulddata= pd.read_csv(u'E:\\项目\\征信&金融\\模型\\rong360\\fix\\multload.csv')
-# kv=coll.defaultdict(int)
-# for k,v in zip(mulddata['tel'],mulddata['hit']):
-#     kv[k]=v if kv[k]<v else kv[k]
-
-
-# file['mult_load']= [kv[i] if kv[i]>0 else 0 for i in file['tel']  ]
-
-'''
-data clean
-'''
-
-
-import math
-# for i in file.columns[3:]:
-#     # file[i]=file[i].map(lambda x:data_abnormal(x))
-#     if 'cnt_ratio' in i or 'price_ratio' in i :
-#         col=file[i]
-#         min, max=col.min(),math.log(col.max()+1,2)
-#         file[i]=(col - min) / (min - max)
-
-import  math
-
-
-
-# import  math
-# for i  in ['total_price','avg_price','std_price']:
-#     file[i]=file[i].map(lambda x:math.log(x+0.1,2))
-#
-# file['total_price_mean']=file['total_price']/(file['age']+1)
-# file['total_price_mean_month']=file['total_price']/(file['buy_month']+1)
-
-print 'len(data):',len(file)
-
-# data=      file[file['class'] != '2000_c' ['8000_c','data_2k']]
-data=      file[file['class'] == '8000_c' ]
-# data=      file
-valid_data=file[file['class']=='2000_c']
-
-
-
-print len(valid_data),len(data)
-
-f=['cnt_ratio_50002766', 'price_ratio_50019095', 'cnt_ratio_50002768', 'price_ratio_50025110', 'cnt_ratio_40', 'cnt_ratio_124044001', 'cnt_ratio_50010404', 'cnt_ratio_50007218', 'cnt_ratio_50023878', 'cnt_ratio_50025705', 'car_flag', 'cnt_ratio_50010728', 'cnt_ratio_50012100', 'cnt_ratio_2813', 'price_ratio_50023722', 'price_ratio_120950002', 'cnt_ratio_50023575', 'cnt_ratio_50011397', 'house_flag', 'cnt_ratio_50026316', 'cnt_ratio_124242008', 'b_bc_type_num_ratio', 'price_ratio_124024001', 'brand_id_num', 'gender', 'cnt_ratio_50023804', 'cnt_ratio_50014927', 'cnt_ratio_1101', 'cnt_ratio_50011949', 'annoy_ratio', 'price_ratio_50014812', 'cnt_ratio_50006843', 'cnt_ratio_50006842', 'cnt_ratio_50012082', 'annoy_num', 'std_price_ratio', 'pet_flag', 'cnt_ratio_50010788', 'cnt_ratio_122650005', 'cnt_ratio_50024451', 'cnt_ratio_50020485', 'cnt_ratio_50013864', 'cnt_ratio_124050001', 'cnt_ratio_50026523', 'cnt_ratio_50008164', 'cnt_ratio_50008165', 'cnt_ratio_50025110', 'cnt_ratio_50025111', 'cnt_ratio_50012164', 'cnt_ratio_50022703', 'price_ratio_50018222', 'price_ratio_50025004', 'cnt_ratio_50026800', 'cnt_ratio_50050471', 'cnt_ratio_1801', 'child_flag', 'price_ratio_122950001', 'cnt_ratio_50016348', 'price_ratio_50023878', 'price_ratio_50023804', 'cnt_ratio_50008075', 'cnt_ratio_50018222', 'cnt_ratio_50020275', 'cnt_ratio_50019780', 'cnt_ratio_50014812', 'avg_price_ratio', 'cnt_ratio_50011972', 'cnt_ratio_124024001', 'cnt_ratio_50011699', 'cnt_ratio_50454031', 'cnt_ratio_122684003', 'cnt_ratio_122928002', 'cnt_ratio_50020808', 'price_ratio_40', 'cnt_ratio_50013886', 'price_ratio_50016891', 'cnt_ratio_50008141', 'cnt_ratio_50011665', 'cnt_ratio_50011740', 'cnt_ratio_50012029', 'price_ratio_124242008', 'cnt_ratio_50020579', 'cnt_ratio_50008090', 'price_ratio_50020611', 'price_ratio_50024612', 'cnt_ratio_50008907', 'b_bc_type_num', 'cnt_ratio_16', 'cnt_ratio_11', 'avg_cnt', 'cnt_ratio_50025004', 'cnt_ratio_50019095', 'cnt_ratio_50018004', 'price_ratio_50025705', 'b_bc_price_ratio', 'cnt_ratio_50004958', 'cnt_ratio_29', 'cnt_ratio_21', 'cnt_ratio_26', 'cnt_ratio_27', 'cat_id_num', 'cnt_ratio_122718004', 'cnt_ratio_50020857', 'price_ratio_25', 'cnt_ratio_50023282', 'local_buycount', 'cnt_ratio_25', 'cnt_ratio_50022517', 'root_cat_id_num', 'cnt_ratio_35', 'cnt_ratio_34', 'cnt_ratio_33', 'cnt_ratio_50016422', 'cnt_ratio_50018264', 'cnt_ratio_1512', 'cnt_ratio_121536007', 'price_ratio_50020808', 'cnt_ratio_122852001', 'cnt_ratio_50023904', 'cnt_ratio_122950001', 'cnt_ratio_50020332', 'cnt_ratio_50016891', 'cnt_ratio_124468001']
-# 特征索引
-index_data=data.iloc[:,3:]
-# index_data=data.loc[:,f]
-index_lable= data.loc[:,  ['label']]
-print index_data.columns,len(index_data.columns)
-
-test_featrue=valid_data.loc[:,index_data.columns]
-
-print test_featrue.columns
-print set(index_data.columns)-set(test_featrue.columns)
-
-feature_name=index_data.columns
-'''
-降维
-'''
-index_data=Imputer().fit_transform(index_data)
-# pca=PCA(50)
-# # pca=IncrementalPCA(200)
-# pca.fit(index_data)
-# index_data=pca.transform(index_data)
-
-# 特征交叉
-# index_data=feature_cross(index_data)
-# test_featrue=feature_cross(test_featrue)
-
-# 划分训练测试集
-
-
-def test_rflasso():
-    train_X,test_X,train_Y,test_Y=train_test_split(index_data,index_lable ,  test_size=0.25, random_state=1)
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.feature_selection import SelectFromModel
-    from sklearn.svm import SVC
-    from sklearn.cross_validation import StratifiedKFold
-    from sklearn.linear_model import RandomizedLogisticRegression
-    randomized_logistic = RandomizedLogisticRegression(C=1,
-                                                       scaling=0.8,
-                                                       n_resampling=100,
-                                                       selection_threshold=0.00001,
-                                                       n_jobs=1)
-    randomized_logistic.fit(train_X,train_Y)
-    print len(train_X)
-    print randomized_logistic.get_support()
-    print randomized_logistic.all_scores_
-    ls=[(k,v)for k,v in zip(feature_name,randomized_logistic.all_scores_ )if v>0]
-    print ls
-    XX = randomized_logistic.transform(train_X)
-    print XX.shape
-
-
-
-if __name__ == '__main__':
-    test_rflasso()
-
-# import os
-# os._exit(0)
-#
-# # step=2     blag 0.747359870024
-# ls=[]
-# feature_kv=coll.defaultdict(int)
-# kflod=[]
-# for step  in [6]:
+    # 保存到数据集
+    grouping_cols = ['group_name', 'count', 'total_dist',
+                     'good', 'good_dist', 'bad', 'bad_dist',
+                     'bad_rate', 'woe', 'iv']
+    grouping_df = pd.DataFrame(grouping_data, columns=grouping_cols)
+    total_iv = grouping_df.iv.sum()
+    if verbose:
+        print 'total_iv', total_iv
+    return grouping_df

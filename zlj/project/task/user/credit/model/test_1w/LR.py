@@ -28,28 +28,22 @@ import sklearn
 import collections as coll
 from xgboost.sklearn import XGBClassifier
 from sklearn.preprocessing import Imputer, StandardScaler
+import  math
+
 
 # file = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\test1w\\融360_v3back.csv')
 file = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\record_label_v_cat.csv')
-# file = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\record_label_v_cat_flow.csv')
-# file = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_2014.csv')
-# file = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_2015.csv')
-# file = pd.read_csv(u'E:\\项目\\1-征信&金融\\模型\\rong360\\fix\\record_label_v_cat_2k_std.csv')
 
-
-# file['mult_load']= [kv[i] if kv[i]>0 else 0 for i in file['tel']  ]
 
 '''
 data clean
 '''
 for i in file.columns[3:]:
     file[i]=file[i].map(lambda x:data_abnormal(x))
-    # if 'cnt_ratio' in i or 'price_ratio' in i :
-    #     col=file[i]
-    #     min, max=col.min(),math.log(col.max()+1,2)
-    #     file[i]=(col - min) / (min - max)
-
-import  math
+    if 'cnt_ratio' in i or 'price_ratio' in i :
+        col=file[i]
+        min, max=col.min(),math.log(col.max()+1,2)
+        file[i]=(col - min) / (min - max)
 
 for i  in ['total_price','avg_price','std_price']:
     file[i]=file[i].map(lambda x:math.log(x+0.1,2))
@@ -60,7 +54,7 @@ file['total_price_mean_month']=file['total_price']/(file['buy_month']+1)
 print 'len(data):',len(file)
 
 
-file.to_csv('E:\\file.csv')
+# file.to_csv('E:\\file.csv')
 '''
  清理特征占比小于0.03 的特征
 '''
@@ -82,12 +76,13 @@ for  col in file.columns[3:]:
     v=file[col].map(lambda x:data_abnormal(x))
     size=int(len(file)/10)
     rn_df=v.rank(method='max')/int(len(file)/rank_size)
-    file['rn_'+col]=rn_df
+    file['rn_'+col]=rn_df.astype(int)
 
 # rank 10等分 计数特征
 for i in xrange(rank_size):
     j=i+1
-    file['n_'+str(j)]=(file==j).sum(axis=1)
+    # file['n_'+str(j)]=(file==j).sum(axis=1)
+    file['n_'+str(j)]=(file.iloc[:,3:]==j).sum(axis=1)
 
 
 data= file[file['class'] == '8000_c' ]

@@ -2,8 +2,8 @@
 source ~/.bashrc
 dev_path='/home/wrt/sparkdata/wrt/credit/shixin/'
 now_day=$1
-last_day=$2
-hfs -rmr /user/wrt/temp/shixin_personinfo
+#last_day=$2
+hfs -rmr /user/wrt/temp/shixin_qiyeinfo
 spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 $dev_path/shixin_qiye.py $now_day
 
 hive<<EOF
@@ -35,10 +35,32 @@ t1.unperformpart
 from
 (select * from t_wrt_shixin_qiye where ds = 'temp')t1
 left join
-(select * from t_wrt_shixin_qiye where ds = $last_day)t2
+(select * from t_wrt_shixin_qiye where ds = 'past')t2
 on
 t1.id = t2.id
 where
 t2.id is null;
+
+insert into table wlcredit.t_wrt_shixin_qiye partition(ds = 'past')
+select
+id,
+iname,
+casecode,
+cardnum,
+businessentity,
+courtname,
+areaname,
+partytypename,
+gistid,
+regdate,
+gistunit,
+duty,
+performance,
+disrupttypename,
+publishdate,
+performedpart,
+unperformpart
+from t_wrt_shixin_qiye where ds = $now_day;
+
 
 EOF
