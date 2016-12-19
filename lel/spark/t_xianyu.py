@@ -111,7 +111,6 @@ def parseJson(ob):
     result.append(ts)  # timestamp
     return (id, [valid_jsontxt(i) for i in result])
 
-
 def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
