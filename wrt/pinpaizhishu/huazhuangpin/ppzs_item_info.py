@@ -76,7 +76,8 @@ def f(line,brand_dict,cate_dict):
     return (item_id,result)
 
 
-def f_old(line,brand_dict,cate_dict):
+#新格式的iteminfo，暂时用不到
+def f_new(line,brand_dict,cate_dict):
     ss = line.strip().split("\t")
     if len(ss) != 3: return None
     item_id = ss[1]
@@ -124,7 +125,7 @@ s = "/commit/tb_tmp/iteminfo/" + yes_day
 c_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20161122/000000_0"
 brand_dict = sc.broadcast(sc.textFile(b_dim).map(lambda x: get_brand(x)).filter(lambda x:x!=None).collectAsMap()).value
 cate_dict = sc.broadcast(sc.textFile(c_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
-rdd = sc.textFile(s).map(lambda x:f_old(x,brand_dict,cate_dict)).filter(lambda x:x!=None)
+rdd = sc.textFile(s).map(lambda x:f(x,brand_dict,cate_dict)).filter(lambda x:x!=None)
 rdd.groupByKey().mapValues(list).map(lambda (x,y): "\001".join([str(valid_jsontxt(i)) for i in y[0]]))\
     .saveAsTextFile("/user/wrt/temp/ppzs_itemid_info")
 

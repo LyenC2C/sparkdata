@@ -14,6 +14,7 @@ hive<<EOF
 -- and
 -- t1.rn = 1
 -- ;
+--20161216版本，计算20160700的特征
 
 drop table wlservice.t_wrt_model_rong360_avgprice_tmp1; --算平均价格
 create table wlservice.t_wrt_model_rong360_avgprice_tmp1 as
@@ -28,7 +29,7 @@ round(sum(a.price)/count(*),2) as avg_price,
 round(sum(a.price)/count(*),2)/c.price as price_ratio
 from wlservice.t_zlj_tmp_rong360_1w_record  a
 left join wlbase_dev.t_root_cat_avg_price c on a.root_cat_id=c.root_cat_id
-where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20141231'
+where c.price is not null and a.rn<4 and a.price<59999 and a.dsn >'20160700'
 group by a.tel,a.root_cat_id,a.root_cat_name,c.price;
 
 
@@ -314,7 +315,7 @@ create table wlservice.t_wrt_model_rong360_month_tmp1 as
 select
 tel,substr(dsn,1,6) as month,count(*) as cnt,sum(price) as price
 from wlservice.t_zlj_tmp_rong360_1w_record 
-where rn<4 and price<59999 and dsn>'20141231'
+where rn<4 and price<59999 and dsn>'20160700'
 group by tel,substr(dsn,1,6) ;
 
 
@@ -630,8 +631,8 @@ from wlservice.t_zlj_tmp_rong360_1w_record  where rn<4 and price<59999
 group by tel
 ;
 
-drop table wlservice.t_rong360_model_features_new; --去掉偏好
-create table wlservice.t_rong360_model_features_new as
+drop table wlservice.t_rong360_model_features_20161216; --去掉偏好
+create table wlservice.t_rong360_model_features_20161216 as
 SELECT
 t1.tel,
 t1.buy_month,
@@ -921,3 +922,4 @@ ON
 t1.tel = t2.tel;
 
 EOF
+
