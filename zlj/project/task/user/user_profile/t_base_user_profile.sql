@@ -39,7 +39,16 @@
 Drop table  t_base_user_profile;
 create table t_base_user_profile as
 SELECT
-*
+   tb_id                 ,alipay                ,buycnt
+    ,verify                ,regtime               ,tb_nick
+    ,tb_location           ,qq_gender             ,qq_age
+    ,qq_name               ,qq_loc                ,qq_find_schools
+    ,tel_loc               ,xianyu_gender         ,xianyu_birthday
+    ,xianyu_constellation  ,xianyu_province       ,xianyu_city           ,xianyu_detail_loc
+    ,model_predict_gender  ,weibo_id              ,weibo_screen_name     ,weibo_gender
+    ,weibo_followers_count ,weibo_friends_count   ,weibo_statuses_count  ,weibo_created_at
+    ,weibo_location        ,weibo_verified        ,weibo_colleges        ,weibo_company
+    ,58_tel                ,58_nickname
 from
   (SELECT
 case when tb_id                 is null or  length(tb_id                )<1  then NULl   else  tb_id                  end as tb_id                  ,
