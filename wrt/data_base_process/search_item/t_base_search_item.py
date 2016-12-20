@@ -24,6 +24,11 @@ def f(line):
     return (nid,comment_count)
 
 rdd = sc.textFile("/commit/itemsearch/taobao.item.20161121")
-rdd.map(lambda x:f(x)).filter(lambda x:x != None).groupByKey()\
+rdd.map(lambda x:f(x)).filter(lambda x:x != None).groupByKey().mapValues(list)\
     .map(lambda (x,y): valid_jsontxt(x) + "\001" + valid_jsontxt(y[0]))\
     .saveAsTextFile("/user/wrt/temp/search_item")
+
+
+# hfs -rmr /user/wrt/temp/search_item
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 120  t_base_search_item.py
+# LOAD DATA  INPATH '/user/wrt/temp/search_item' OVERWRITE INTO TABLE t_base_ec_search_item PARTITION (ds='20161220');
