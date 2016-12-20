@@ -310,7 +310,7 @@ if __name__ == "__main__":
         conf.set("spark.akka.timeout","1000s")
         conf.set("spark.akka.frameSize","1000")
         conf.set("spark.default.parallelism","450")
-        sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
+        sc = SparkContext(appName="gen_uid_mark "+cmt_input_data,conf=conf)
 
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],其中feed_ls=[[itemid,feedid,uid,usermark,usernick],...]
         rdd_new = sc.textFile(cmt_input_data)\
@@ -397,7 +397,7 @@ if __name__ == "__main__":
         conf.set("spark.network.timeout","50000s")
         conf.set("spark.akka.timeout","50000s")
         conf.set("spark.akka.frameSize","1000")
-        conf.set("spark.default.parallelism","5000")
+        #conf.set("spark.default.parallelism","5000")
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
 
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
