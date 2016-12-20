@@ -394,8 +394,8 @@ if __name__ == "__main__":
         '''
 
         conf = SparkConf()
-        conf.set("spark.network.timeout","50000s")
-        conf.set("spark.akka.timeout","50000s")
+        conf.set("spark.network.timeout","5000s")
+        conf.set("spark.akka.timeout","5000s")
         conf.set("spark.akka.frameSize","1000")
         #conf.set("spark.default.parallelism","5000")
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
