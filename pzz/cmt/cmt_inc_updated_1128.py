@@ -394,10 +394,10 @@ if __name__ == "__main__":
         '''
 
         conf = SparkConf()
-        conf.set("spark.network.timeout","2000s")
-        conf.set("spark.akka.timeout","1000s")
+        conf.set("spark.network.timeout","50000s")
+        conf.set("spark.akka.timeout","50000s")
         conf.set("spark.akka.frameSize","1000")
-        conf.set("spark.default.parallelism","500")
+        conf.set("spark.default.parallelism","5000")
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
 
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
