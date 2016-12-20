@@ -38,6 +38,7 @@ def parseJson(ob):
     detailFrom = item.get("detailFrom", "-")
     favorNum = item.get("favorNum", "-")
     firstModified = item.get("firstModified", "-")
+    firstModifiedDiff = item.get("firstModifiedDiff", "-")
     t_from = item.get("from", "-")
     gps = item.get("gps", "-")
     commentNum = item.get('commentNum', '0')
@@ -94,6 +95,7 @@ def parseJson(ob):
     result.append(favorNum)
     result.append(commentNum)
     result.append(firstModified)
+    result.append(firstModifiedDiff)
     result.append(t_from)
     result.append(gps)
     result.append(offline)
@@ -111,6 +113,7 @@ def parseJson(ob):
     result.append(ts)  # timestamp
     return (id, [valid_jsontxt(i) for i in result])
 
+
 def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
@@ -118,4 +121,4 @@ def distinct(list):
 sc = SparkContext(appName="xianyu_iteminfo")
 data = sc.textFile("/commit/2taobao/iteminfo/179_2taobao_iteminfo_20161218/*")
 data.map(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey().mapValues(list).map(
-    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu")
+    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_20161209")
