@@ -1,5 +1,4 @@
 # coding=utf-8
-
 import json
 from urlparse import urlparse
 from operator import itemgetter
@@ -24,10 +23,12 @@ def getJson(s):
 
 def parseJson(ob):
     result = []
-    id = ob[0]
-    ts = ob[1]
-    if type(ob[2]) != type({}): return [None]
+    ts = ob[0]
+    id = ob[1]
+    if type(ob[2]) != type({}): return None
     item = ob[2].get("data", {}).get("item", {})
+    if item.get("id") == '':
+        return None
     area = item.get("area", "-")
     auctionType = item.get("auctionType", "-")
     categoryId = item.get("categoryId", "-")
@@ -37,6 +38,7 @@ def parseJson(ob):
     detailFrom = item.get("detailFrom", "-")
     favorNum = item.get("favorNum", "-")
     firstModified = item.get("firstModified", "-")
+    firstModifiedDiff = item.get("firstModifiedDiff", "-")
     t_from = item.get("from", "-")
     gps = item.get("gps", "-")
     commentNum = item.get('commentNum', '0')
@@ -48,14 +50,12 @@ def parseJson(ob):
     categoryName = item.get("categoryName", "-")
     fishPoolId = item.get("fishPoolId", "-")
     fishpoolName = item.get("fishpoolName", "-")
-
     barDO = item.get("barDO", {})
     bar = barDO.get("bar", "-")
     if '.' in barDO.get("barInfo", "-"):
         barInfo = barDO.get("barInfo", "-").split('.', 2)[1]
     else:
         barInfo = barDO.get("barInfo", "-")
-
     xyAbbr = item.get("xianyuAbbr", {})
     abbr = xyAbbr.get("abbr", "-")
     officialTagList = xyAbbr.get("officialTagList", [])
@@ -95,6 +95,7 @@ def parseJson(ob):
     result.append(favorNum)
     result.append(commentNum)
     result.append(firstModified)
+    result.append(firstModifiedDiff)
     result.append(t_from)
     result.append(gps)
     result.append(offline)
@@ -105,18 +106,19 @@ def parseJson(ob):
     result.append(fishPoolId)
     result.append(fishpoolName)
     result.append(bar)
-    result.append(valid_jsontxt(barInfo))
+    result.append(barInfo)
     result.append(abbr)
     result.append(validate.get("实人认证", "-"))
     result.append(validate.get("芝麻信用", "-"))
     result.append(ts)  # timestamp
-    return (id, result)
+    return (id, [valid_jsontxt(i) for i in result])
 
 
 def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
 
-sc = SparkContext("local[*]", AppName="xianyu ")
-data = sc.textFile("/commit/2taobao/iteminfo/179_2taobao_iteminfo_20161218")
-data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey(list).map(lambda a: distinct(a[1]))
+sc = SparkContext(appName="xianyu_iteminfo")
+data = sc.textFile("/commit/2taobao/iteminfo/179_2taobao_iteminfo_20161218/*")
+data.map(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey().mapValues(list).map(
+    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_20161209")
