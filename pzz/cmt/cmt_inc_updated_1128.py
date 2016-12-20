@@ -309,6 +309,7 @@ if __name__ == "__main__":
         conf.set("spark.network.timeout","2000s")
         conf.set("spark.akka.timeout","1000s")
         conf.set("spark.akka.frameSize","1000")
+        conf.set("spark.default.parallelism","450")
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
 
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],其中feed_ls=[[itemid,feedid,uid,usermark,usernick],...]
@@ -344,7 +345,7 @@ if __name__ == "__main__":
                                         .map(lambda (x,y):[x,list(set(y))])
         #保存新匹配uid mark
         rdd_cmt_uid_mark.map(lambda (x,y):x+'\001'+'\002'.join(list(set(y))))\
-                        .saveAsTextFile("")
+                        .saveAsTextFile(output_uid_mark)
 
         #构造uid mark #[uid,[2,list(mark)]]
         rdd_new_cmt_uid_mark = rdd_cmt_uid_mark.map(lambda (x,y):[x,[2,y]])
@@ -393,9 +394,10 @@ if __name__ == "__main__":
         '''
 
         conf = SparkConf()
-        conf.set("spark.network.timeout","2000s")
-        conf.set("spark.akka.timeout","1000s")
+        conf.set("spark.network.timeout","50000s")
+        conf.set("spark.akka.timeout","50000s")
         conf.set("spark.akka.frameSize","1000")
+        conf.set("spark.default.parallelism","5000")
         sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
 
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
