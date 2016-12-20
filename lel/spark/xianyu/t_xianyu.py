@@ -85,7 +85,6 @@ def parseJson(ob):
     result.append(id)
     result.append(userId)
     result.append(title)
-    result.append(categoryId)
     result.append(province)
     result.append(city)
     result.append(area)
@@ -102,6 +101,7 @@ def parseJson(ob):
     result.append(originalPrice)
     result.append(price)
     result.append(userNick)
+    result.append(categoryId)
     result.append(categoryName)
     result.append(fishPoolId)
     result.append(fishpoolName)
@@ -114,11 +114,12 @@ def parseJson(ob):
     return (id, [valid_jsontxt(i) for i in result])
 
 
+
 def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
 
 sc = SparkContext(appName="xianyu_iteminfo")
-data = sc.textFile("/commit/2taobao/iteminfo/179_2taobao_iteminfo_20161218/*")
+data = sc.textFile("/commit/2taobao/iteminfo/*1209/*")
 data.map(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey().mapValues(list).map(
     lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_20161209")
