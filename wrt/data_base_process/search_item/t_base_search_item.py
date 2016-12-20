@@ -19,6 +19,7 @@ def f(line):
     ob = json.loads(text)
     if type(ob) != type({}): return None
     nid = ob.get("nid","-")
+    if nid == "-": return None
     comment_count = ob.get("comment_count","-")
     return (nid,comment_count)
 
