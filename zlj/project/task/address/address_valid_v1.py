@@ -5,11 +5,6 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-import re
-
-
-import json
-
 prov_dic={}
 city_dic={}
 xian_dic={}

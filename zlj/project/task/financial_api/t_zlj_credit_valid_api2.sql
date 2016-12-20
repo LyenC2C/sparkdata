@@ -27,7 +27,8 @@ decrypted_tel  rlike   '^1(3[0-9]|4[57]|5[0-35-9]|7[01678]|8[0-9])\\d{8}' AND
 
 
 -- 数据关联
-create table t_zlj_credit_valid_api2_step3  as
+drop table wlbase_dev.t_zlj_credit_valid_api2_step3;
+create table wlbase_dev.t_zlj_credit_valid_api2_step3  as
 SELECT
 t1.* ,
 t2.shop_num ,

@@ -1,6 +1,7 @@
 -- 加入闲鱼地址信息
 
 -- select from_unixtime(unix_timestamp(weibo_created_at ,'EEE MMM dd HH:mm:ss zzz yyyy'),'yyyyMMdd') from t_credit_user_tb_weibo_register  limit 10;
+use wlbase_dev;
 DROP TABLE t_base_user_info_s_tbuserinfo_t_step6;
 
 CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
@@ -29,7 +30,7 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
         verified,
         tb_id
       FROM
-        t_base_weibo_user t1 RIGHT JOIN
+        t_base_weibo_user_new t1 RIGHT JOIN
         (
           SELECT
             t1.id1 AS weiboid,
@@ -37,7 +38,7 @@ CREATE TABLE t_base_user_info_s_tbuserinfo_t_step6 AS
           from
           t_base_uid_tmp t1 JOIN t_base_uid_tmp t2 ON t1.ds='wid' AND t2.ds='ttinfo' AND t1.uid=t2.uid
           group by t1.id1,t2.id1
-        ) t2 ON t1.idstr = t2.weiboid
+        ) t2 ON t1.idstr = t2.weiboid and t1.ds='20161212'
     ) t3
     RIGHT
     JOIN
@@ -47,7 +48,7 @@ ON t3.tb_id=t4.tb_id
 ;
 
 
-
+select * from t_base_user_info_s_tbuserinfo_t_step6 where weibo_id=5453026086
 
 
 
