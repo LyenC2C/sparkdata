@@ -8,7 +8,7 @@ sys.setdefaultencoding('utf8')
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.style.use('ggplot')
+# matplotlib.style.use('ggplot')
 import seaborn as sns
 sns.set(context='notebook',style="ticks",palette="GnBu_d",font_scale=1.5,font='ETBembo',rc={"figure.figsize": (10, 6)})
 #plt.rcParams['figure.figsize']=(15,10)
@@ -151,25 +151,31 @@ def calc_feature_woe_iv(data, tgt_col_name, col_type='continuous' ,bin_size=10,v
 		return ''
 	# 计算总体样本量，good/bad总数
 	dataset=data.loc[:,['label',tgt_col_name]].copy()
-	dataset.dropna(inplace=True)
+
+	# dataset.dropna(inplace=True)
 	total_good  = len(dataset[dataset.label==0])
 	total_bad   = len(dataset[dataset.label==1])
 	total_count = len(dataset)
 	rank_col='rn_'+tgt_col_name
 	if col_type=='continuous':
-		dataset[rank_col]=dataset[tgt_col_name].rank(method='max')/(total_count/bin_size)
+		dataset=dataset.fillna(-999)
+		dataset[rank_col]=dataset[tgt_col_name].rank(method='max')/(total_count/(bin_size-1))
 		dataset[rank_col]=dataset[rank_col].apply(lambda  x:int(x))
 	if col_type=='discrete':
-		size=dataset.tgt_col_name.unique().size
+		size=dataset[tgt_col_name].unique().size
+		dataset=dataset.fillna(-999)
 		if size>100:
 			print 'discrete is too much. size is {}'.format(size)
 		dataset[rank_col]=dataset[tgt_col_name]
 	# 记录每一个分组的统计结果
 	grouping_data = []
+	# print dataset[rank_col].unique()
 	for grp_var, grp_data in dataset.groupby(rank_col):
+		# print grp_var
 		d = dict()
 		d['group_name'] = grp_var
 		d['count'] = len(grp_data)
+		d['cross'] ='-'.join( [str(min(grp_data[tgt_col_name])),str(max(grp_data[tgt_col_name]))])
 		d['total_dist'] = 1.0 * d['count'] / total_count
 		d['good'] = len(grp_data[grp_data.label == 0])
 		d['good_dist'] = 1.0 * d['good'] / total_good
@@ -192,25 +198,26 @@ def calc_feature_woe_iv(data, tgt_col_name, col_type='continuous' ,bin_size=10,v
 	grouping_df = pd.DataFrame(grouping_data, columns=grouping_cols)
 	total_iv = grouping_df.iv.sum()
 	if verbose:
-		print 'total_iv', total_iv
+		print tgt_col_name, '  total_iv:', total_iv
 	return grouping_df
 
 #IV calc
-def calc_iv_col(bill_anay):
-	'''
-	计算连续性特征的统计特征，并计算相应的iv值
-	:param bill_anay:
-	:return:
-	'''
-	funs=['sum','mean','std','min','count']
-	for col in bill_anay.columns[4:]:
-		print col,'----------------------------------'
-		data=bill_g.agg({col:['sum','mean',np.std,'min']}).add_prefix(col+'_')
-		data=data[col+'_'+col].reset_index()
-		for fun_col in funs:
-			print fun_col ,calc_feature_woe_iv(data=data,tgt_col_name=col+'_'+fun_col).iv.sum()
+# def calc_iv_col_funs(data):
+# 	'''
+# 	计算连续性特征的统计特征，并计算相应的iv值
+# 	:param bill_anay:
+# 	:return:
+# 	'''
+# 	funs=['sum','mean','std','min','count']
+# 	for col in data.columns[4:]:
+# 		print col,'----------------------------------'
+# 		data=data.agg({col:['sum','mean',np.std,'min']}).add_prefix(col+'_')
+# 		data=data[col+'_'+col].reset_index()
+# 		for fun_col in funs:
+# 			print fun_col ,calc_feature_woe_iv(data=data,tgt_col_name=col+'_'+fun_col).iv.sum()
 
 def evel_ks_calc(y_pred,y_true):
+	import math
 	data=pd.DataFrame({'label':y_true, 'rs':y_pred})
 	data=data.sort_index(by=['rs'])
 	data['sortindex'] =[i for i in xrange(len(data))]
@@ -220,6 +227,7 @@ def evel_ks_calc(y_pred,y_true):
 	data['good']=data['label'].map(lambda x: 1 if x==1 else 0)
 	cumsum=group.sum().cumsum()
 	kv=group.sum()
+	print kv
 	cumsum['bad_cumsum_p']=cumsum['bad']*1.0/kv.sum()['bad']
 	cumsum['good_cumsum_p']=cumsum['good']*1.0/kv.sum()['good']
 	cumsum['ks']= cumsum['bad_cumsum_p']-cumsum['good_cumsum_p']
@@ -342,7 +350,7 @@ def  pool_feature_gen(feature_df,cols,iv_limit,verbose=False):
 
 # gen_f_df=pool_feature_gen(feature_data.iloc[:,:6],feature_data.columns[3:6],0.1,verbose=True)
 
-def calc_funs_iv(org_data,cols,iv_limit,group_cols,prefix='',otest=False):
+def calc_cols_funsiv(org_data,cols,iv_limit,group_cols,prefix='',otest=False):
 	'''
 	:param data: 需要统计的数据
 	:param cols: 需要计算iv值的统计字段 比如['time','money']

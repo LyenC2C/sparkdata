@@ -70,26 +70,3 @@ test[u'姓名匹配'],test[u'家庭省份匹配'] ,test[u'家庭城市匹配'] ,
 
 # test.to_csv(path+'test.csv',encoding='gb2312' )
 test.to_csv(path+'test.csv' )
-# for index in origin_ad.index:
-#     MOBILE_NO,name,CORP_PROVINCE,CORP_CITY,CORP_AREA,CORP_DETAIL,FAMILY_PROVINCE,FAMILY_CITY,FAMILY_AREA,FAMILY_DETAIL=origin_ad.ix[index]
-#     if not dic.has_key(MOBILE_NO):continue
-#     user_data=dic[MOBILE_NO]
-#     corp_adress=CORP_PROVINCE+CORP_CITY+CORP_AREA+CORP_DETAIL
-#     family_adress=FAMILY_PROVINCE+FAMILY_CITY+FAMILY_AREA+FAMILY_DETAIL
-#     for index in user_data.index:
-#         tb_tel,tb_name,tb_add_detail,tb_prov,tb_city=user_data.ix[index]
-#         match_prov,match_city,district,match_address_detail=address_format(CORP_PROVINCE+CORP_CITY+CORP_AREA+CORP_DETAIL)[1]
-#         taobao_gps=address_gps(tb_prov+tb_city+tb_add_detail)
-#         match_gps=address_gps(corp_adress)
-#         distance=haversine(match_gps[0],match_gps[1],taobao_gps[0],taobao_gps[1])
-#         confidence=(100-distance*2)
-#         confidence= confidence if confidence>0 else 0
-#         # print match_prov ,match_city,match_address_detail ,':' ,tb_prov,tb_city,tb_add_detail
-#         rs=[ name,MOBILE_NO,  'name:',fun(tb_name in name),
-#              'province:', fun(tb_prov in match_prov),
-#              'city:', fun(match_city in tb_city),
-#              'distance:',round(distance,3) ,confidence]
-#         print '\t'.join([ str(i) for i in rs ])
-    # print MOBILE_NO
-
-# tb_tel,tb_name,tb_add_detail,tb_prov,tb_city=line.split()[:6]

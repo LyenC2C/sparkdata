@@ -22,9 +22,7 @@ concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'max_price_level2'
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'min_price_level2' ) ,cast( round(min(price),2) as string) ) price_min,
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'std_price_level2' ) ,cast( round(std(price),2) as string) ) price_std
 
-from wlbase_dev.t_base_record_cate where tel_index is not null and tel_user_rn<4 and cate_level2_id is not null
- and price<160000
- and root_cat_id is not null
+from wlbase_dev.t_base_record_cate_simple
  group by tel_index,cate_level2_id
 
 )t group by tel_index
