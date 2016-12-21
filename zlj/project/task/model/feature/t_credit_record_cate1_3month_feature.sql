@@ -1,5 +1,3 @@
-
-
 --3个月用户购买记录分析
 
 drop table wlcredit.t_credit_record_cate1_3month_feature ;
@@ -30,11 +28,9 @@ concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'median_price_level1'
 as string) ) price_median,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'cross_price_level1' ) ,cast( round(max(price)-min(price),2) as string) ) price_cross
 from wlbase_dev.t_base_record_cate
- where tel_index is not null and tel_user_rn<4 and price<160000
-and  root_cat_id is not null
+ where
+ regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )>dsn
 
-and regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )>dsn
-and ds='true'
 group by tel_index,root_cat_id
 )t group by tel_index
 ;
