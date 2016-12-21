@@ -84,5 +84,5 @@ ON
 t1.shop_id = t2.shop_id;
 
 EOF
-
-hfs -mv /commit/iteminfo/20* /commit/iteminfo/archive/
+hfs -mkdir /commit/iteminfo/archive/$today_arc
+hfs -mv /commit/iteminfo/20*/* /commit/iteminfo/archive/$today_arc/
