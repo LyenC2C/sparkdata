@@ -20,6 +20,6 @@ hive<<EOF
 use wlbase_dev;
 LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='$now_day');
 EOF
-hfs -mkdir /commit/shopitem_c/archive/$now_day_inhive
-hfs -mv /commit/shopitem_c/20*/* /commit/shopitem_c/archive/$now_day_inhive/
+hfs -mkdir /commit/shopitem_c/archive/$now_day_arc
+hfs -mv /commit/shopitem_c/20*/* /commit/shopitem_c/archive/$now_day_arc/
 
