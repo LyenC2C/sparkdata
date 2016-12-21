@@ -69,6 +69,13 @@ t_base_ec_record_dev_new_telindex_fix t4 on t3.tel_index=t4.tel_index
 )t2 on t1.cate_id=t2.cat_id ;
 
 
+SELECT  t1.user_id,t1.tel
+from
+(SELECT tel , user_id from wlservice.t_zlj_tmp_rong360_1w_record group by user_id ,tel
+)t1
+join t_base_ec_tb_xianyu_userinfo t2 on t1.user_id=t2.userid ;
+
+
 
 
 
