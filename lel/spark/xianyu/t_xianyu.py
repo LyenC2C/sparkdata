@@ -1,8 +1,11 @@
 # coding=utf-8
 import json
+import sys
 from urlparse import urlparse
 from operator import itemgetter
 from pyspark import SparkContext
+
+today = sys.argv[1]
 
 
 def valid_jsontxt(content):
@@ -19,6 +22,7 @@ def getJson(s):
         start = content[2].find("({") + 1
         js = content[2][start:-1]
         return (content[0], content[1], json.loads(valid_jsontxt(js)))
+
 
 
 def parseJson(ob):
@@ -114,12 +118,11 @@ def parseJson(ob):
     return (id, [valid_jsontxt(i) for i in result])
 
 
-
 def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
 
-sc = SparkContext(appName="xianyu_iteminfo")
-data = sc.textFile("/commit/2taobao/iteminfo/*1209/*")
+sc = SparkContext(appName="xianyu_iteminfo" + today)
+data = sc.textFile("/commit/2taobao/iteminfo/*" + today + "/*")
 data.map(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey().mapValues(list).map(
-    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_20161209")
+    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_2016")
