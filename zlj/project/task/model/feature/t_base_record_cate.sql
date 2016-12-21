@@ -69,3 +69,37 @@ FROM (
   ) t2 ON t1.item_id = t2.item_id
   left join t_zlj_phone_rank_index t3 on t2.user_id=t3.tb_id
 ;
+
+
+create table wlbase_dev.t_base_record_cate_simple as
+select
+item_id        ,
+feed_id        ,
+user_id        ,
+content_length ,
+annoy          ,
+dsn            ,
+datediff       ,
+date_predict   ,
+sku            ,
+cat_id         ,
+root_cat_id    ,
+root_cat_name  ,
+cate_level1_id ,
+cate_level2_id ,
+cate_level3_id ,
+cate_level4_id ,
+cate_level5_id ,
+brand_id       ,
+brand_name     ,
+bc_type        ,
+price          ,
+shop_id        ,
+location       ,
+tel_index      ,
+tel_user_rn    ,
+ds
+from wlbase_dev.t_base_record_cate
+ where tel_index is not null and tel_user_rn<4 and price<160000
+and  root_cat_id is not null
+and ds='true' ;
