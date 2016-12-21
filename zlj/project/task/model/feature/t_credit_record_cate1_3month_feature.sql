@@ -27,7 +27,7 @@ concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'std_price_level1' ) 
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'median_price_level1') ,cast( round(percentile(cast(price as int),0.5),2)
 as string) ) price_median,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'cross_price_level1' ) ,cast( round(max(price)-min(price),2) as string) ) price_cross
-from wlbase_dev.t_base_record_cate
+from wlbase_dev.t_base_record_cate_simple
  where
  regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )>dsn
 
