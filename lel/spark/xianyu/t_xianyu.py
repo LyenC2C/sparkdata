@@ -24,50 +24,53 @@ def getJson(s):
         return (content[0], content[1], json.loads(valid_jsontxt(js)))
 
 
-
 def parseJson(ob):
     result = []
     ts = ob[0]
-    id = ob[1]
+    itemid = ob[1]
     if type(ob[2]) != type({}): return None
     item = ob[2].get("data", {}).get("item", {})
     if item.get("id") == '':
         return None
-    area = item.get("area", "-")
-    auctionType = item.get("auctionType", "-")
-    categoryId = item.get("categoryId", "-")
-    province = item.get("province", "-")
-    city = item.get("city", "-")
-    description = item.get("description", "-")
-    detailFrom = item.get("detailFrom", "-")
-    favorNum = item.get("favorNum", "-")
-    firstModified = item.get("firstModified", "-")
-    firstModifiedDiff = item.get("firstModifiedDiff", "-")
-    t_from = item.get("from", "-")
-    gps = item.get("gps", "-")
-    commentNum = item.get('commentNum', '0')
-    offline = item.get("offline", "-")
-    originalPrice = item.get("originalPrice", "-")
-    price = item.get("price", "-")
-    title = item.get("title", "-")
-    userNick = item.get("userNick", "-")
-    categoryName = item.get("categoryName", "-")
-    fishPoolId = item.get("fishPoolId", "-")
-    fishpoolName = item.get("fishpoolName", "-")
+    area = item.get("area", "\\N")
+    userid = item.get("id", '-')
+    phone = item.get("phone", "\\N")
+    contacts = item.get("contacts", "\\N")
+    postPrice = item.get("postPrice", 0.0)
+    auctionType = item.get("auctionType", "\\N")
+    categoryId = item.get("categoryId", "\\N")
+    province = item.get("province", "\\N")
+    city = item.get("city", "\\N")
+    description = item.get("description", "\\N")
+    detailFrom = item.get("detailFrom", "\\N")
+    favorNum = item.get("favorNum", 0)
+    firstModified = item.get("firstModified", "\\N")
+    firstModifiedDiff = item.get("firstModifiedDiff", "\\N")
+    t_from = item.get("from", "\\N")
+    gps = item.get("gps", "\\N")
+    commentNum = item.get('commentNum', 0)
+    offline = item.get("offline", "\\N")
+    originalPrice = item.get("originalPrice", 0.0)
+    price = item.get("price", 0.0)
+    title = item.get("title", "\\N")
+    userNick = item.get("userNick", "\\N")
+    categoryName = item.get("categoryName", "\\N")
+    fishPoolId = item.get("fishPoolId", "\\N")
+    fishpoolName = item.get("fishpoolName", "\\N")
     barDO = item.get("barDO", {})
-    bar = barDO.get("bar", "-")
-    if '.' in barDO.get("barInfo", "-"):
-        barInfo = barDO.get("barInfo", "-").split('.', 2)[1]
+    bar = barDO.get("bar", "\\N")
+    if '.' in barDO.get("barInfo", "\\N"):
+        barInfo = barDO.get("barInfo", "\\N").split('.', 2)[1]
     else:
-        barInfo = barDO.get("barInfo", "-")
+        barInfo = barDO.get("barInfo", "\\N")
     xyAbbr = item.get("xianyuAbbr", {})
-    abbr = xyAbbr.get("abbr", "-")
+    abbr = xyAbbr.get("abbr", "\\N")
     officialTagList = xyAbbr.get("officialTagList", [])
     kv = {}
     validate = {}
     flag = '未'
     for officialTag in officialTagList:
-        comment = valid_jsontxt(officialTag.get("comment", "-"))
+        comment = valid_jsontxt(officialTag.get("comment", "\\N"))
         if '实人认证' in comment:
             if flag in comment:
                 validate.setdefault("实人认证", "0")
@@ -78,16 +81,22 @@ def parseJson(ob):
                 validate.setdefault("芝麻信用", "0")
             else:
                 validate.setdefault("芝麻信用", "1")
-        url = officialTag.get("link", "-")
-        if '?' in url:
-            params = urlparse(url).query
-            for key_value in params.split('&'):
-                key = key_value.split('=')[0]
-                value = key_value.split('=')[1]
-                kv.setdefault(key, value)
-    userId = kv.get("userId", "-")
-    result.append(id)
+        if userid == '-':
+            url = officialTag.get("link", "\\N")
+            if '?' in url:
+                params = urlparse(url).query
+                for key_value in params.split('&'):
+                    key = key_value.split('=')[0]
+                    value = key_value.split('=')[1]
+                    kv.setdefault(key, value)
+    if (userid == '-'):
+        userId = kv.get("userId", "\\N")
+    else:
+        userId = userid
+    result.append(itemid)
     result.append(userId)
+    result.append(phone)
+    result.append(contacts)
     result.append(title)
     result.append(province)
     result.append(city)
@@ -104,6 +113,7 @@ def parseJson(ob):
     result.append(offline)
     result.append(originalPrice)
     result.append(price)
+    result.append(postPrice)
     result.append(userNick)
     result.append(categoryId)
     result.append(categoryName)
@@ -112,10 +122,10 @@ def parseJson(ob):
     result.append(bar)
     result.append(barInfo)
     result.append(abbr)
-    result.append(validate.get("实人认证", "-"))
-    result.append(validate.get("芝麻信用", "-"))
+    result.append(validate.get("实人认证", "\\N"))
+    result.append(validate.get("芝麻信用", "\\N"))
     result.append(ts)  # timestamp
-    return (id, [valid_jsontxt(i) for i in result])
+    return (itemid, [valid_jsontxt(i) for i in result])
 
 
 def distinct(list):
