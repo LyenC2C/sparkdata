@@ -5,7 +5,7 @@ from urlparse import urlparse
 from operator import itemgetter
 from pyspark import SparkContext
 
-today = sys.argv[1]
+lastday = sys.argv[1]
 
 
 def valid_jsontxt(content):
@@ -132,7 +132,7 @@ def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
 
-sc = SparkContext(appName="xianyu_iteminfo" + today)
-data = sc.textFile("/commit/2taobao/iteminfo/*" + today + "/*")
+sc = SparkContext(appName="xianyu_iteminfo" + lastday)
+data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*")
 data.map(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey().mapValues(list).map(
     lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_2016")
