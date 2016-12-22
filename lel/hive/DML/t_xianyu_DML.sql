@@ -38,10 +38,10 @@ case when userNick ='-' then '\\N' else userNick end,
 case when categoryId ='-' then '\\N'  else categoryId end,
 case when categoryname ='-' then '\\N' else categoryname end,
 fishpoolid,
-fishpoolname,
-bar,
+fishpoolname,bar,
 case when barinfo ='-' then '\\N'  else categoryname end,
 case when abbr ='-' then '\\N' else categoryname end,
 zhima,shiren,ts
 from wlbase_dev.t_base_ec_xianyu_iteminfo_old where ds = '20160721_old'
+
 
