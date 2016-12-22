@@ -1,8 +1,10 @@
 
-
+echo "[args] 1:cmt_inc_date \t 2:iteminfo_ds"
 
 ds=$1
 iteminfods=$2
+
+echo "[Step-1] join inc_cmt_data and iteminfo table"
 
 /home/yarn/hive/bin/hive<<EOF
 
@@ -82,6 +84,7 @@ tmp_true_path='/hive/warehouse/wl_base.db/t_base_ec_record_dev_new_tmp/ds=true1'
 
 tmp_false_path='/hive/warehouse/wl_base.db/t_base_ec_record_dev_new_tmp/ds=false1'
 
+echo "[Step-2] fetch true data to local and  put it wl_base.db."
 
 hadoop fs -cat $tmp_true_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
  
@@ -91,6 +94,7 @@ hadoop fs -put  /mnt/raid2/zlj/cmt_inc_data_$ds  /hive/warehouse/wl_base.db/t_ba
 
 rm  /mnt/raid2/zlj/cmt_inc_data_$ds
 
+echo "[Step-3] fetch false data to local and  put it wl_base.db."
 
 hadoop fs -cat $tmp_false_path/* >/mnt/raid2/zlj/cmt_inc_data_$ds
 
