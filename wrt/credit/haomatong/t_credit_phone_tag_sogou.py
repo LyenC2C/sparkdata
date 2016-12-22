@@ -16,6 +16,7 @@ def valid_jsontxt(content):
 
 def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
+    if type(ob) != type({}): return None
     phone = ob.get("phone","-")
     platform = ob.get("platform","-")
     data = ob.get("data",{})
