@@ -29,3 +29,7 @@ and regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12
 group by tel_index,root_cat_id
 )t group by tel_index
 ;
+
+
+
+SELECT int(price),COUNT(1) num from wlbase_dev.t_base_record_cate_simple group by int(price)
