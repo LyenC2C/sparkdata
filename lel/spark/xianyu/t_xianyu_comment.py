@@ -1,6 +1,9 @@
 # coding=utf-8
 import rapidjson as json
 from pyspark import SparkContext
+import sys
+
+lastday = sys.argv[1]
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -17,6 +20,7 @@ def getJson(s):
         start = content[3].find("({") + 1
         js = content[3][start:-1]
         return(ts,itemid,json.loads(valid_jsontxt(js)))
+
 def parseJson(ob):
     ts = ob[0]
     itemid = ob[1]
@@ -41,7 +45,7 @@ def parseJson(ob):
             result.append('\001'.join([valid_jsontxt(i) for i in lv]))
     return result
 
-sc = SparkContext(appName="xianyu_iteminfo_comment")
+sc = SparkContext(appName="xianyu_iteminfo_comment" + lastday)
 
-data = sc.textFile("/commit/2taobao/leave_comment/*20161222")
+data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")
 re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).saveAsTextFile("/user/lel/temp/xianyu_comment_2016")
