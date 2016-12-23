@@ -8,7 +8,7 @@ tt2.buycnt,
 tt2.verify_level,
 tt2.regtime_month,
 tt2.buy_freq,
-tt2.tel_loc,
+tt2.prov,
 tt2.model_predict_gender
 from
 (
