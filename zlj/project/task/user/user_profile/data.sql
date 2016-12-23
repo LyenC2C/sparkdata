@@ -1,18 +1,4 @@
-CREATE TABLE IF NOT EXISTS t_ec_zlj_userbuy_history (
-  user_id STRING COMMENT 'id',
-  item_id STRING,
-  content_len INT,
-  f_date STRING,
-  annoy STRING,
-  root_cat_id STRING,
-  cate_level2_id STRING,
-  cat_id STRING,
-  brand_id STRING
-)
-  COMMENT '�����¼��'
-  PARTITIONED BY  (ds STRING )
-  ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001' LINES TERMINATED BY '\n'
-  stored AS RCFile;
+
 
 
 INSERT OVERWRITE TABLE t_ec_zlj_userbuy_history PARTITION(ds='20160328')
