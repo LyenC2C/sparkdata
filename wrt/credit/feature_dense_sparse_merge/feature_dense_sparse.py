@@ -26,9 +26,11 @@ def feature_main(line):
     for ln in ss[1:]:
         i += 1
         # if not ln.replace(".","").isdigit(): continue
-        if valid_jsontxt(ln) == '\\N': continue
+        #由于此次执行中有一个省份的特征，省份特征非数字，因此做以下调整：
+        if valid_jsontxt(ln) == '\\N': continue #null数据当成0，直接continue
         if ln.replace(".","").isdigit():
             if float(ln) == 0.0: continue
+            else: ln == round(float(ln),2)
         result.append(valid_jsontxt(i) + ":" + valid_jsontxt(ln))
     return (tel,result)
 
@@ -49,7 +51,7 @@ def feature_cat(line,fea_cat_dict,len_main):
         v_value = ff[1]
         if float(v_value) == 0.0: continue
         f_index = fea_cat_dict[f_value] + len_main
-        sort_dict[f_index] = v_value
+        sort_dict[f_index] = round(float(v_value),2)
         # result.append(f_index + ":" + valid_jsontxt(v_value))
     temp = sorted(sort_dict.iteritems(), key=lambda d:d[0], reverse = False)
     for ln in temp:
