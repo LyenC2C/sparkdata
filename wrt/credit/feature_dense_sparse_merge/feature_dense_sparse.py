@@ -82,10 +82,10 @@ fea_cat = rdd_fea_cat.collect()
 fea_cat_dict = tran_dict(fea_cat)
 #每个电话按照新的稀疏特征顺序，将每个稀疏特征值依次输出，之前没有的特征用0代替
 rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main))
-#每个电话按照紧密特征顺序，将每个一级特征值依次输出,0的过滤
 # rdd_m = hiveContext.sql('select tel_index,buycnt,weibo_followers_count from wlbase_dev.t_base_user_profile_telindex')
 # rdd_main = rdd_m.map(lambda x:valid_jsontxt(x.tel_index) + "\001" + valid_jsontxt(x.buycnt) + "\001" \
 #                                             + valid_jsontxt(x.weibo_followers_count)).map(lambda x:feature_main(x))
+#每个电话按照紧密特征顺序，将每个一级特征值依次输出,0的过滤
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
