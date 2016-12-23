@@ -25,8 +25,10 @@ def feature_main(line):
     i = -1
     for ln in ss[1:]:
         i += 1
-        if not ln.replace(".","").isdigit(): continue
-        if float(ln) == 0.0: continue
+        # if not ln.replace(".","").isdigit(): continue
+        if valid_jsontxt(ln) == '\\N': continue
+        if ln.replace(".","").isdigit():
+            if float(ln) == 0.0: continue
         result.append(valid_jsontxt(i) + ":" + valid_jsontxt(ln))
     return (tel,result)
 
@@ -40,13 +42,18 @@ def feature_cat(line,fea_cat_dict,len_main):
     tel = ss[0]
     features = ss[1].split(" ")
     result = []
+    sort_dict = {} #用来排序
     for feature in features:
         ff = feature.split(":")
         f_value = ff[0]
         v_value = ff[1]
         if float(v_value) == 0.0: continue
-        f_index = valid_jsontxt(fea_cat_dict[f_value] + len_main)
-        result.append(f_index + ":" + valid_jsontxt(v_value))
+        f_index = fea_cat_dict[f_value] + len_main
+        sort_dict[f_index] = v_value
+        # result.append(f_index + ":" + valid_jsontxt(v_value))
+    temp = sorted(sort_dict.iteritems(), key=lambda d:d[0], reverse = False)
+    for ln in temp:
+        result.append(valid_jsontxt(ln[0]) + ":" + valid_jsontxt(ln[1]))
     return (tel,result)
 
 def tran_dict(fea_cat):
@@ -67,8 +74,6 @@ def hebing(x,y):
 
 def inhive(line):
     ss = line.strip().split(" ",1)
-    key = ss[0]
-    features = ss[1]
     return "\001".join(ss)
 
 
@@ -111,3 +116,6 @@ hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite i
 # hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
 #此程序产出一份
+
+ # LOAD DATA     INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE
+  # INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '20161223');
