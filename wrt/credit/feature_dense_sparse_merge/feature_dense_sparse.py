@@ -26,7 +26,10 @@ def feature_main(line):
     for ln in ss[1:]:
         i += 1
         if not ln.replace(".","").isdigit(): continue
+        # if valid_jsontxt(ln) == '\\N': continue #null数据当成0，直接continue
+        # if ln.replace(".","").isdigit():
         if float(ln) == 0.0: continue
+        ln == round(float(ln),2)
         result.append(valid_jsontxt(i) + ":" + valid_jsontxt(ln))
     return (tel,result)
 
@@ -40,13 +43,18 @@ def feature_cat(line,fea_cat_dict,len_main):
     tel = ss[0]
     features = ss[1].split(" ")
     result = []
+    sort_dict = {} #用来排序
     for feature in features:
         ff = feature.split(":")
         f_value = ff[0]
         v_value = ff[1]
         if float(v_value) == 0.0: continue
-        f_index = valid_jsontxt(fea_cat_dict[f_value] + len_main)
-        result.append(f_index + ":" + valid_jsontxt(v_value))
+        f_index = fea_cat_dict[f_value] + len_main
+        sort_dict[f_index] = round(float(v_value),2)
+        # result.append(f_index + ":" + valid_jsontxt(v_value))
+    temp = sorted(sort_dict.iteritems(), key=lambda d:d[0], reverse = False)
+    for ln in temp:
+        result.append(valid_jsontxt(ln[0]) + ":" + valid_jsontxt(ln[1]))
     return (tel,result)
 
 def tran_dict(fea_cat):
@@ -64,6 +72,10 @@ def fea_index(fea_all):
 def hebing(x,y):
     result =[x] + y[0] + y[1]
     return " ".join([valid_jsontxt(ln) for ln in result])
+
+def inhive(line):
+    ss = line.strip().split(" ",1)
+    return "\001".join(ss)
 
 
 s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature/*" #稀疏
@@ -90,6 +102,8 @@ rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
+rdd_table = rdd.map(lambda x:inhive(x))
+rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive')
 #全部特征字段输出.
 fea_all = fea_main + fea_cat
 fea_all_index = fea_index(fea_all)
@@ -100,5 +114,9 @@ hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite i
 # ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'
 # stored as textfile
 
-# hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name
+# hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
+#此程序产出一份
+
+ # LOAD DATA     INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE
+  # INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '20161223');
