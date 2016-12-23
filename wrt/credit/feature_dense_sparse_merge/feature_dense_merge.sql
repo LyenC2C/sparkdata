@@ -1,11 +1,5 @@
 --密集表合并
-wlcredit.t_credit_record_feature    zhubiao
-
-wlcredit.t_credit_record_feature_6month
-
-wlcredit.t_credit_user_profile_feature
-
-drop table wlcredit.t_credit_dense_features
+drop table wlcredit.t_credit_dense_features;
 create table wlcredit.t_credit_dense_features as
 SELECT
 tt1.*,
