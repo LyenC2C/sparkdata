@@ -1,5 +1,5 @@
 # coding=utf-8
-import json
+import rapidjson as json
 import sys
 from urlparse import urlparse
 from operator import itemgetter
@@ -33,7 +33,6 @@ def parseJson(ob):
     if item.get("id") == '':
         return None
     area = item.get("area", "\\N")
-    userid = item.get("id", '-')
     phone = item.get("phone", "\\N")
     contacts = item.get("contacts", "\\N")
     postPrice = item.get("postPrice", 0.0)
@@ -81,20 +80,17 @@ def parseJson(ob):
                 validate.setdefault("芝麻信用", "0")
             else:
                 validate.setdefault("芝麻信用", "1")
-        if userid == '-':
-            url = officialTag.get("link", "\\N")
-            if '?' in url:
-                params = urlparse(url).query
-                for key_value in params.split('&'):
-                    key = key_value.split('=')[0]
-                    value = key_value.split('=')[1]
-                    kv.setdefault(key, value)
-    if (userid == '-'):
-        userId = kv.get("userId", "\\N")
-    else:
-        userId = userid
+
+        url = officialTag.get("link", "\\N")
+        if '?' in url:
+            params = urlparse(url).query
+            for key_value in params.split('&'):
+                key = key_value.split('=')[0]
+                value = key_value.split('=')[1]
+                kv.setdefault(key, value)
+    userid = kv.get("userId", "\\N")
     result.append(itemid)
-    result.append(userId)
+    result.append(userid)
     result.append(phone)
     result.append(contacts)
     result.append(title)
