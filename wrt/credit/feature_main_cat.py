@@ -25,8 +25,8 @@ def feature_main(line):
     i = -1
     for ln in ss[1:]:
         i += 1
-        if not ln.replace(".","").isdigit():continue
-        if float(ln) == 0.0:continue
+        if not ln.replace(".","").isdigit(): continue
+        if float(ln) == 0.0: continue
         result.append(valid_jsontxt(i) + ":" + valid_jsontxt(ln))
     return (tel,result)
 
@@ -70,9 +70,9 @@ s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature/*"
 s_main = "/hive/warehouse/wlbase_dev.db/t_base_user_profile_telindex/*"
 
 #主要特征字段提取并自动排列好
-# rdd_fea_main = hiveContext.sql('desc wlservice.t_rong360_model_features_new')
-# fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()[1:]]
-fea_main = ['buycnt','weibo_followers_count']
+rdd_fea_main = hiveContext.sql('desc wlservice.t_rong360_model_features_new')
+fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()[1:]]
+# fea_main = ['buycnt','weibo_followers_count']
 #记录主要特征长度，后面的在分配feature_cat的index时候用到
 len_main = len(fea_main)
 #三级特征字段去重并按照一定顺序排列好
@@ -82,11 +82,11 @@ fea_cat = rdd_fea_cat.collect()
 fea_cat_dict = tran_dict(fea_cat)
 #每个电话按照新的三级特征顺序，将每个三级特征值依次输出，之前没有的特征用0代替
 rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main))
-#每个电话按照主要顺序，将每个一级特征值依次输出,0的过滤
+#每个电话按照主要特征顺序，将每个一级特征值依次输出,0的过滤
 rdd_m = hiveContext.sql('select tel_index,buycnt,weibo_followers_count from wlbase_dev.t_base_user_profile_telindex')
-rdd_main = rdd_m.map(lambda x:valid_jsontxt(x.tel_index) + "\001" + valid_jsontxt(x.buycnt) + "\001" \
-                                            + valid_jsontxt(x.weibo_followers_count)).map(lambda x:feature_main(x))
-# rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
+# rdd_main = rdd_m.map(lambda x:valid_jsontxt(x.tel_index) + "\001" + valid_jsontxt(x.buycnt) + "\001" \
+#                                             + valid_jsontxt(x.weibo_followers_count)).map(lambda x:feature_main(x))
+rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先主要特征，后三级特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
@@ -94,7 +94,11 @@ rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
 fea_all = fea_main + fea_cat
 fea_all_index = fea_index(fea_all)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name')
+# hiveContext.sql('drop table wlcredit.t_wrt_credit_all_features_name')
+hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table wlcredit.t_wrt_credit_all_features_name')
+# create table wlcredit.t_wrt_credit_all_features_name (feature string,index string)
+# ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'
+# stored as textfile
 
-#
 # hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name
-# spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 features_main_cat.py
+# spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_main_cat.py
