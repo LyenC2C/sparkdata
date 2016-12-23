@@ -25,12 +25,11 @@ def feature_main(line):
     i = -1
     for ln in ss[1:]:
         i += 1
-        # if not ln.replace(".","").isdigit(): continue
-        #由于此次执行中有一个省份的特征，省份特征非数字，因此做以下调整：
-        if valid_jsontxt(ln) == '\\N': continue #null数据当成0，直接continue
-        if ln.replace(".","").isdigit():
-            if float(ln) == 0.0: continue
-            else: ln == round(float(ln),2)
+        if not ln.replace(".","").isdigit(): continue
+        # if valid_jsontxt(ln) == '\\N': continue #null数据当成0，直接continue
+        # if ln.replace(".","").isdigit():
+        if float(ln) == 0.0: continue
+        ln == round(float(ln),2)
         result.append(valid_jsontxt(i) + ":" + valid_jsontxt(ln))
     return (tel,result)
 
@@ -115,7 +114,7 @@ hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite i
 # ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'
 # stored as textfile
 
-# hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name
+# hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
 #此程序产出一份
 
