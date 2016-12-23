@@ -65,6 +65,12 @@ def hebing(x,y):
     result =[x] + y[0] + y[1]
     return " ".join([valid_jsontxt(ln) for ln in result])
 
+def inhive(line):
+    ss = line.strip().split(" ",1)
+    key = ss[0]
+    features = ss[1]
+    return "\001".join(ss)
+
 
 s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature/*" #稀疏
 s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features/*" #紧密
@@ -90,6 +96,8 @@ rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
 rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
+rdd_table = rdd.map(lambda x:inhive(x))
+rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive')
 #全部特征字段输出.
 fea_all = fea_main + fea_cat
 fea_all_index = fea_index(fea_all)
@@ -102,3 +110,4 @@ hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite i
 
 # hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
+#此程序产出一份
