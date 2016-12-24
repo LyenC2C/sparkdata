@@ -48,6 +48,7 @@ def parseJson(ob):
         return None
     return result
 
+
 sc = SparkContext(appName="xianyu_iteminfo_comment" + lastday)
 
 data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")
