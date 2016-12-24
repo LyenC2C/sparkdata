@@ -11,7 +11,6 @@ def valid_jsontxt(content):
     else:
         res = str(content)
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
-
 def getJson(s):
     content = [valid_jsontxt(i) for i in (s.strip().split('\t'))]
     if len(content) == 4:
@@ -20,14 +19,13 @@ def getJson(s):
         start = content[3].find("({") + 1
         js = content[3][start:-1]
         return(ts,itemid,json.loads(valid_jsontxt(js)))
-
 def parseJson(ob):
     ts = ob[0]
     itemid = ob[1]
     if type(ob[2]) != type({}): return None
     items = ob[2].get("data", {}).get("items", [])
     result = []
-    if len(items) > 0 and type(items) != None:
+    if len(items) > 0 and type(items) != type(None):
         for item in items:
             lv = []
             if item.get("itemId") != "":
@@ -44,8 +42,6 @@ def parseJson(ob):
                 lv.append(reporterNick)
                 lv.append(ts)
                 result.append('\001'.join([valid_jsontxt(i) for i in lv]))
-    else:
-        return None
     return result
 
 
