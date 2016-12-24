@@ -27,7 +27,7 @@ def parseJson(ob):
     if type(ob[2]) != type({}): return None
     items = ob[2].get("data", {}).get("items", [])
     result = []
-    if len(items) > 0:
+    if len(items) > 0 and type(items) != None:
         for item in items:
             lv = []
             if item.get("itemId") != "":
