@@ -5,12 +5,15 @@ import sys
 
 lastday = sys.argv[1]
 
+
 def valid_jsontxt(content):
     if type(content) == type(u""):
         res = content.encode("utf-8")
     else:
         res = str(content)
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
+
+
 def getJson(s):
     content = [valid_jsontxt(i) for i in (s.strip().split('\t'))]
     if len(content) == 4:
@@ -18,7 +21,9 @@ def getJson(s):
         itemid = content[1]
         start = content[3].find("({") + 1
         js = content[3][start:-1]
-        return(ts,itemid,json.loads(valid_jsontxt(js)))
+        return (ts, itemid, json.loads(valid_jsontxt(js)))
+
+
 def parseJson(ob):
     ts = ob[0]
     itemid = ob[1]
@@ -28,7 +33,7 @@ def parseJson(ob):
     if len(items) > 0 and type(items) == type([]):
         for item in items:
             lv = []
-            if item.get("itemId","") != "":
+            if item.get("itemId", "") != "":
                 commentId = item.get("commentId", "\\N")
                 content = item.get("content", "\\N")
                 reportTime = item.get("reportTime", "\\N")
@@ -48,4 +53,5 @@ def parseJson(ob):
 sc = SparkContext(appName="xianyu_iteminfo_comment" + lastday)
 
 data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")
-re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).saveAsTextFile("/user/lel/temp/xianyu_comment_2016")
+re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda x: len(x) != 0).saveAsTextFile(
+    "/user/lel/temp/xianyu_comment_2016")
