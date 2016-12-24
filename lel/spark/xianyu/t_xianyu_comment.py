@@ -22,9 +22,12 @@ def getJson(s):
         start = content[3].find("({") + 1
         js = content[3][start:-1]
         return (ts, itemid, json.loads(valid_jsontxt(js)))
+    else:
+        return ()
 
 
 def parseJson(ob):
+    if len(ob) != 3:return []
     ts = ob[0]
     itemid = ob[1]
     if type(ob[2]) != type({}): return []
