@@ -1,3 +1,8 @@
+#!/bin/bash
+source ~/.bashrc
+date
+date  +%Y%m%d
+
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
 thedaybeforelastday=$(date -d '2 days ago' +%Y%m%d)
@@ -5,11 +10,12 @@ hadoop fs -test -e /user/lel/temp/xianyu_2016
 if [ $? -eq 0 ] ;then
     hadoop fs  -rmr /user/lel/temp/xianyu_2016
 else
-    echo 'Directory is not exist Or Zero bytes in size'
+    echo 'Directory is not exist'
 fi
 
-spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 80 \
-~/wolong/sparkdata/lel/spark/xianyu/t_xianyu.py $lastday
+spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 80 ~/wolong/sparkdata/lel/spark/xianyu/t_xianyu.py $lastday >> ~/logs/xianyu_spark.log
+
+
 
 hive<<EOF
 
