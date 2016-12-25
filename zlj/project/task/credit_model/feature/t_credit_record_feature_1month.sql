@@ -7,7 +7,6 @@ drop table wlcredit.t_credit_record_feature_1month ;
 create table wlcredit.t_credit_record_feature_1month as
     SELECT
     tel_index,
-    max(user_id) user_id ,
     round(sum(price),2)   month1_price_sum,
     round(count(1) ,2)    month1_buy_count,
     round(avg(price),2)   month1_price_avg,

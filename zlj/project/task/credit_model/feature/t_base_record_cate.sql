@@ -71,6 +71,7 @@ FROM (
 ;
 
 
+Drop table wlbase_dev.t_base_record_cate_simple ;
 create table wlbase_dev.t_base_record_cate_simple as
 select
 item_id        ,
@@ -99,7 +100,7 @@ location       ,
 tel_index      ,
 tel_user_rn    ,
 ds
-from wlbase_dev.t_base_record_cate
+from wl_base.t_base_record_cate
  where tel_index is not null and tel_user_rn<4 and price<160000
 and  root_cat_id is not null
 and ds='true' ;
@@ -108,10 +109,11 @@ and ds='true' ;
 -- 过滤出闲鱼数据
 drop table  wlbase_dev.t_base_record_cate_simple_xianyu  ;
 create table wlbase_dev.t_base_record_cate_simple_xianyu as
-
 SELECT t2.*  from
 wlcredit.t_credit_xianyu_zhima_userinfo t1 join
 wlbase_dev.t_base_record_cate_simple t2 on t1.userid=t2.user_id ;
+
+
 
 
 alter table wlbase_dev.t_base_record_cate_simple_xianyu  change price price float;
