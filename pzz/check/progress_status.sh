@@ -25,9 +25,9 @@ fi
 hadoop fs -test -e /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions
 if [ $? -eq 0 ] ;then
     s=`hadoop fs -du -s /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions | awk -v date=$d '{print $1/1000/1000/1000" GB /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid."date".partitions"}'`
-	msg=$msg"[1] cmt_inc_partition "$s
+	msg=$msg"\n[1] cmt_inc_partition "$s
 else
-	msg=$msg"[0] cmt_inc_partition /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions"
+	msg=$msg"\n[0] cmt_inc_partition /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions"
 fi
 
 
@@ -35,9 +35,9 @@ fi
 hadoop fs -test -e /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d
 if [ $? -eq 0 ] ;then
     s=`hadoop fs -du -s /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d | awk -v date=$d '{print $1/1000/1000/1000" GB /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_"date}'`
-	msg=$msg"[1] record_db "$s
+	msg=$msg"\n[1] record_db "$s
 else
-	msg=$msg"[0] record_db /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d"
+	msg=$msg"\n[0] record_db /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d"
 fi
 
 
