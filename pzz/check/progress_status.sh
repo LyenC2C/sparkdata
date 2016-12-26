@@ -42,4 +42,4 @@ fi
 
 
 
-echo $msg
+echo -e $msg
