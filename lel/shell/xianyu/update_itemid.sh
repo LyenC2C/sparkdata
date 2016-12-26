@@ -20,5 +20,5 @@ left join
 	 where ds=$thedaybeforelastday
 	  and commentnum > 0 ) t2
 on t1.itemid = t2.itemid
-where t1.commentnum > t2.commentnum
+where t1.commentnum > t2.commentnum or t2.itemid is null
 EOF
