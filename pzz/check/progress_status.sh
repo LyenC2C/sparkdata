@@ -19,3 +19,5 @@ if [ $? -eq 0 ] ;then
 else
 	msg=$msg"[0] cmt_inc /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions"
 fi
+
+echo $msg
