@@ -518,3 +518,12 @@ def gridsearch():
 	auc = roc_auc_score(val_Y, clf.predict(val_X))
 	print("auc score: %.5f" % auc)
 	print(clf.best_score_)
+
+
+# 稀疏特征
+
+train_test_Y,train_test_X= load_svmlight_file(path+'train_test.csv')
+feature_densedf=pd.DataFrame(train_test_Y.toarray())
+feature_densedf.columns=feature_index.feature
+
+# NaN

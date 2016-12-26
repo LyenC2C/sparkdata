@@ -35,13 +35,13 @@ def feature_main(line):
 
 def f_cat_reindex(line):
     ss = line.strip().split("\001")
-    features = ss[1].split(" ")
+    features = ss[1].split()
     return [(valid_jsontxt(i.split(':')[0]),"") for i in features]
 
 def feature_cat(line,fea_cat_dict,len_main):
     ss = line.strip().split("\001")
     tel = ss[0]
-    features = ss[1].split(" ")
+    features = ss[1].split()
     result = []
     sort_dict = {} #用来排序
     for feature in features:

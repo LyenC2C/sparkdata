@@ -30,9 +30,9 @@ concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'std_price_level1' ) 
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'median_price_level1') ,cast( round(percentile(cast(price as int),0.5),2) as string) ) price_median,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'cross_price_level1' ) ,cast(round(max(price)-min(price),2) as string) ) price_cross ,
 
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'median_price_level1') ,cast( round(percentile(cast(price as int),0.25),2) as string) ) price_025,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'median_price_level1') ,cast( round(percentile(cast(price as int),0.10),2) as string) ) price_010,
-concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'median_price_level1') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_025_level1') ,cast( round(percentile(cast(price as int),0.25),2) as string) ) price_025,
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_010_level1') ,cast( round(percentile(cast(price as int),0.10),2) as string) ) price_010,
+concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_075_level1') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
 from wlbase_dev.t_base_record_cate_simple_xianyu
 
 group by tel_index,root_cat_id

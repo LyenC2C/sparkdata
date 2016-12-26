@@ -4,6 +4,9 @@ pre_path='/home/wrt/sparkdata'
 today=$1
 lastday=$2
 
+#today=$1
+#lastday=$2
+
 hfs -rmr /user/wrt/temp/iteminfo_tmp
 spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
 $pre_path/wrt/data_base_process/t_base_item_info.py -spark
@@ -84,5 +87,5 @@ ON
 t1.shop_id = t2.shop_id;
 
 EOF
-hfs -mkdir /commit/iteminfo/archive/$today_arc
-hfs -mv /commit/iteminfo/20*/* /commit/iteminfo/archive/$today_arc/
+hfs -mkdir /commit/iteminfo/archive/$today'_arc'
+hfs -mv /commit/iteminfo/20*/* /commit/iteminfo/archive/$today'_arc'/
