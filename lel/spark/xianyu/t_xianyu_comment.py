@@ -60,6 +60,6 @@ def distinct(arr):
 sc = SparkContext(appName="xianyu_iteminfo_comment" + lastday)
 
 data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")
-re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda a: a != None).groupByKey().map(
-    lambda (a, b): distinct(list(b))).saveAsTextFile(
+re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda a: a != None).groupByKey().mapValues(list).map(
+    lambda a: distinct(a[1])).saveAsTextFile(
     "/user/lel/temp/xianyu_comment_2016")
