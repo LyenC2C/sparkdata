@@ -12,12 +12,34 @@ d=$1
 
 msg=""
 #[2] cmt新增数据 大小 path
-hadoop fs -test -e /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions
+hadoop fs -test -e /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d
 if [ $? -eq 0 ] ;then
-    s=`hadoop fs -du -s /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions | awk '{print $1/1000/1000/1000" GB /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.${d}.partitions"}'`
+    s=`hadoop fs -du -s /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d | awk -v date=$d '{print $1/1000/1000/1000" GB /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid."date""}'`
 	msg=$msg"[1] cmt_inc "$s
 else
-	msg=$msg"[0] cmt_inc /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions"
+	msg=$msg"[0] cmt_inc /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid."$d".partitions"
 fi
+
+
+#[3] cmt partition 大小 path
+hadoop fs -test -e /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions
+if [ $? -eq 0 ] ;then
+    s=`hadoop fs -du -s /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions | awk -v date=$d '{print $1/1000/1000/1000" GB /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid."date".partitions"}'`
+	msg=$msg"[1] cmt_inc_partition "$s
+else
+	msg=$msg"[0] cmt_inc_partition /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions"
+fi
+
+
+#[5] record db
+hadoop fs -test -e /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d
+if [ $? -eq 0 ] ;then
+    s=`hadoop fs -du -s /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d | awk -v date=$d '{print $1/1000/1000/1000" GB /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_"date}'`
+	msg=$msg"[1] record_db "$s
+else
+	msg=$msg"[0] record_db /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d"
+fi
+
+
 
 echo $msg
