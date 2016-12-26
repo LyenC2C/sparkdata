@@ -14,8 +14,8 @@ msg=""
 #[2] cmt新增数据 大小 path
 hadoop fs -test -e /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions
 if [ $? -eq 0 ] ;then
-    s=`hadoop fs -du -s /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions | awk '{print $1/1000/1000/1000" GB /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions"}'`
-	msg=$msg"[1] cmt_inc"$s
+    s=`hadoop fs -du -s /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions | awk '{print $1/1000/1000/1000" GB /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.${d}.partitions"}'`
+	msg=$msg"[1] cmt_inc "$s
 else
 	msg=$msg"[0] cmt_inc /data/develop/ec/tb/cmt/tmpdata/cmt_inc_data.uid.$d.partitions"
 fi
