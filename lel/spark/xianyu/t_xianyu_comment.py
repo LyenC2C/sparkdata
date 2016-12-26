@@ -53,7 +53,6 @@ def parseJson(ob):
                 result.append((commentId, lv))
     return result
 
-
 def distinct(arr):
     return '\001'.join([valid_jsontxt(i) for i in max(list, key=itemgetter(-1))])
 
