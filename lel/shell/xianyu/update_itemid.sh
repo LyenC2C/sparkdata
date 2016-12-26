@@ -9,7 +9,7 @@ thedaybeforelastday=$(date -d '2 days ago' +%Y%m%d)
 hive <<EOF
 use wlbase_dev;
 insert OVERWRITE table wlbase_dev.t_base_ec_xianyu_itemid_update PARTITION(ds = $lastday)
-select t1.itemid from
+select t1.itemid as itemid from
 (select itemid,commentnum
 	from wlbase_dev.t_base_ec_xianyu_iteminfo
 	 where ds= $lastday
