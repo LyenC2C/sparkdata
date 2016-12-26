@@ -40,6 +40,14 @@ else
 	msg=$msg"\n[0] record_db /hive/warehouse/wl_base.db/t_base_ec_record_dev_new/ds=true/cmt_inc_data_$d"
 fi
 
-
+#[6] record_online tsv
+s=`hadoop fs -du -s  /data/develop/ecportrait/record_csv_hbase.*-$d`
+if [ -n "$s" ]; then
+    ss=`echo $s | awk -v data=$d '{print $1/1000/1000/1000" GB "$3}'`
+    msg=$msg"\n[1] record_online_tsv "$ss
+fi
+if [ -z "$s" ]; then
+    msg=$msg"\n[0] record_online_tsv /data/develop/ecportrait/record_csv_hbase.*-$d"
+fi
 
 echo -e $msg
