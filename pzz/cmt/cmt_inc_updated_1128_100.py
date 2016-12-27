@@ -399,7 +399,7 @@ if __name__ == "__main__":
         #conf.set("spark.akka.timeout","3000s")
         #conf.set("spark.akka.frameSize","1000")
         #conf.set("spark.default.parallelism","2000")
-        sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
+        sc = SparkContext(appName="gen_cmt_inc [1:gen data inc] "+cmt_input_data,conf=conf)
 
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
         #其中feed_ls=一条cmt
@@ -460,16 +460,23 @@ if __name__ == "__main__":
                     .coalesce(200)\
                     .saveAsTextFile(output_cmt_inc_data_nouid)
 
+        #sc.stop()
+
+        #sc = SparkContext(appName="gen_cmt_inc [2:merge new item feedls] "+cmt_input_data,conf=conf)
         #新item feed-uid
         #[itemid,title,feedid,userid,feedback,date,annoy,ts,sku,rate_type,crawler_type,usermark,user_nick]
-        rdd_cmt_inc_uid.map(lambda x:[x[0],[2,[x[2],x[3]]]])\
-                    .union(rdd_itemid_feediduid_ls.map(lambda (x,y):[x,[1,y]]))\
+        rdd_cmt_inc_hasuid = sc.textFile(output_cmt_inc_data)\
+                                .map(lambda x:x.split("\001"))\
+                                .map(lambda x:[x[0],[2,[x[2],x[3]]]])
+        rdd_itemid_feediduid_old = sc.textFile(output_itemid_feediduid_ls)\
+                                    .map(lambda (x,y):[x,[1,y]])
+
+        rdd_cmt_inc_hasuid.union(rdd_itemid_feediduid_old)\
                     .groupByKey()\
                     .map(lambda (x,y):merge_item_feedid(x,y))\
+                    .coalesce(500)\
                     .saveAsTextFile(output_itemid_feediduid_ls)
-
-                    #.coalesce(500)\
-                    #.saveAsTextFile(output_itemid_feediduid_ls)
+        sc.stop()
 
 
     elif sys.argv[1] == '-gen_data_add_nouid':
