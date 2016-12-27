@@ -1,6 +1,7 @@
 # coding=utf-8
 import rapidjson as json
 from pyspark import SparkContext
+from operator import itemgetter
 import sys
 
 lastday = sys.argv[1]
@@ -27,10 +28,10 @@ def getJson(s):
 
 
 def parseJson(ob):
-    if len(ob) == 0:return []
+    if len(ob) == 0: return [None]
     ts = ob[0]
     itemid = ob[1]
-    if type(ob[2]) != type({}): return []
+    if type(ob[2]) != type({}): return [None]
     items = ob[2].get("data", {}).get("items", [])
     result = []
     if len(items) > 0 and type(items) == type([]):
@@ -49,12 +50,15 @@ def parseJson(ob):
                 lv.append(reporterName)
                 lv.append(reporterNick)
                 lv.append(ts)
-                result.append('\001'.join([valid_jsontxt(i) for i in lv]))
+                result.append((commentId, lv))
     return result
+
+def distinct(arr):
+    return '\001'.join([valid_jsontxt(i) for i in max(arr, key=itemgetter(-1))])
 
 
 sc = SparkContext(appName="xianyu_iteminfo_comment" + lastday)
 
 data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")
-re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda x: len(x) != 0).saveAsTextFile(
-    "/user/lel/temp/xianyu_comment_2016")
+re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda a: a != None).groupByKey().mapValues(list).map(
+    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_comment_2016")
