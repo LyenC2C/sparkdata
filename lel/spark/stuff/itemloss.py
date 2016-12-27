@@ -47,4 +47,3 @@ iteminfo = sc.textFile("/hive/warehouse/wl_base.db/t_base_ec_item_dev_new/ds=201
 iteminfo.map(lambda (a, b): re(a, b,itemids)).filter(
     lambda a: a != '').saveAsTextFile("/user/lel/loss")
 
-iteminfo.join(data)
