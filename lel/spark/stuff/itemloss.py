@@ -11,12 +11,6 @@ def valid_jsontxt(content):
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
 
-data = sc.textFile("/user/lel/datas/lossitemid.csv").filter(lambda a: "enc_mobile" not in a).map(
-    lambda a: (a.split(',')[1], ""))
-
-itemid_dict = sc.broadcast(data.collectAsMap())
-
-
 def getItemAndCate(s):
     data = s.split('\001')
     itemid = data[0]
@@ -31,18 +25,21 @@ def getItemAndCate(s):
     return (itemid, top_cate)
 
 
-itemids = itemid_dict.value
-
-
-def re(a, b, itemids):
+def join(a, b, itemids):
     if itemids.has_key(a):
         return valid_jsontxt(a) + '\001' + valid_jsontxt(b)
     else:
         return ''
 
 
+data = sc.textFile("/user/lel/datas/lossitemid.csv").filter(lambda a: "enc_mobile" not in a).map(
+    lambda a: (a.split(',')[1], ""))
+
+itemid_dict = sc.broadcast(data.collectAsMap())
+itemids = itemid_dict.value
+
 iteminfo = sc.textFile("/hive/warehouse/wl_base.db/t_base_ec_item_dev_new/ds=20161224").map(
     lambda a: getItemAndCate(a)).filter(lambda a: a != None)
 
-iteminfo.map(lambda (a, b): re(a, b, itemids)).filter(
+iteminfo.map(lambda (a, b): join(a, b, itemids)).filter(
     lambda a: a != '').saveAsTextFile("/user/lel/itemcateloss")
