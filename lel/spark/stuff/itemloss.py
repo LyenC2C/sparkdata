@@ -16,10 +16,7 @@ def getItemAndCate(s):
     itemid = data[0]
     root_cate = data[5]
     if '-' not in root_cate:
-        if '/' in root_cate:
-            top_cate = root_cate.split('/')[0]
-        else:
-            top_cate = root_cate
+        top_cate = root_cate
     else:
         return None
     return (itemid, top_cate)
@@ -27,7 +24,7 @@ def getItemAndCate(s):
 
 def join(a, b, itemids):
     if itemids.has_key(a):
-        return valid_jsontxt(a) + '\001' + valid_jsontxt(b)
+        return valid_jsontxt(a) + '\t' + valid_jsontxt(b)
     else:
         return ''
 
