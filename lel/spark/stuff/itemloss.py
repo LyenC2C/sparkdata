@@ -15,11 +15,7 @@ def getItemAndCate(s):
     data = s.split('\001')
     itemid = data[0]
     root_cate = data[5]
-    if '-' not in root_cate:
-        top_cate = root_cate
-    else:
-        return None
-    return (itemid, top_cate)
+    return (itemid, root_cate)
 
 
 def join(a, b, itemids):
@@ -33,6 +29,7 @@ data = sc.textFile("/user/lel/datas/lossitemid.csv").filter(lambda a: "enc_mobil
     lambda a: (a.split(',')[1], ""))
 
 itemid_dict = sc.broadcast(data.collectAsMap())
+
 itemids = itemid_dict.value
 
 iteminfo = sc.textFile("/hive/warehouse/wl_base.db/t_base_ec_item_dev_new/ds=20161224").map(
