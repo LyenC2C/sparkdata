@@ -14,7 +14,7 @@ def valid_jsontxt(content):
 data = sc.textFile("/user/lel/datas/lossitemid.csv").filter(lambda a: "enc_mobile" not in a).map(
     lambda a: a.split(',')[1])
 
-itemid = sc.broadcast(data)
+itemid = sc.broadcast(data.collect())
 
 
 def getItemAndCate(s):
