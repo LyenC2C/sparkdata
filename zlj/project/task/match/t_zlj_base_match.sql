@@ -22,7 +22,8 @@ LOAD DATA   INPATH '/user/zlj/match/data.csv' OVERWRITE INTO TABLE t_zlj_base_ma
 LOAD DATA   INPATH '/user/zlj/match/rong360.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='ygz_part') ;
 LOAD DATA   INPATH '/user/zlj/match/data_2k.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='data_2k') ;
 LOAD DATA   INPATH '/user/zlj/match/7w.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='7wid') ;
-
+LOAD DATA   INPATH '/user/zlj/match/20161223.zhima.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima_1223') ;
+-- index,userid,tel,zhima_score
 
 SELECT
  uid,tel_index

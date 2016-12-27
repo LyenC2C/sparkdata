@@ -34,6 +34,7 @@ concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'price_010_level2'
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'price_075_level2') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
 
 from wlbase_dev.t_base_record_cate_simple_xianyu
+where cate_level2_id is not null
  group by tel_index,cate_level2_id
 )t group by tel_index
 ;
