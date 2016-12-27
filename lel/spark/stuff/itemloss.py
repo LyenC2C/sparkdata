@@ -11,18 +11,18 @@ def valid_jsontxt(content):
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
 
-data = sc.textFile("/user/lel/datas/lossitemid.csv").filter(lambda a: "enc_mobile" not in a).map(
-    lambda a: a.split(',')[1])
-itemid_dict = sc.broadcast(data.collect())
-
-
-
-
-
 # data = sc.textFile("/user/lel/datas/lossitemid.csv").filter(lambda a: "enc_mobile" not in a).map(
-#     lambda a: (a.split(',')[1], ""))
-#
-# itemid_dict = sc.broadcast(data.collectAsMap())
+#     lambda a: a.split(',')[1])
+# itemid_dict = sc.broadcast(data.collect())
+
+
+
+
+
+data = sc.textFile("/user/lel/datas/lossitemid.csv").filter(lambda a: "enc_mobile" not in a).map(
+    lambda a: (a.split(',')[1], ""))
+
+itemid_dict = sc.broadcast(data.collectAsMap())
 
 
 def getItemAndCate(s):
