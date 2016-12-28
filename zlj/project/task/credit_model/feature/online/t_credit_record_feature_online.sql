@@ -3,8 +3,8 @@
 
 
 -- 价格的加减乘除
-drop table wlcredit.t_credit_record_feature ;
-create table wlcredit.t_credit_record_feature as
+drop table wlcredit.t_credit_record_feature_online ;
+create table wlcredit.t_credit_record_feature_online as
 
 SELECT
 tel_index,
@@ -63,7 +63,9 @@ round(sum(case when price <=50 and CAST(price/5 as int )==2  then price else 0 e
 round(sum(case when price <=50 and CAST(price/5 as int )==1  then price else 0 end)/sum(price),2) as monthall_b50_1_ratio,
 round(sum(case when price <=50 and CAST(price/5 as int )==0  then price else 0 end)/sum(price),2) as monthall_b50_0_ratio,
 round((sum(pow(2.8, datediff* (-0.005)))+20)/75,2)  as monthall_active_score
-from wlbase_dev.t_base_record_cate_simple_xianyu
+from
+
+wl_analysis.t_base_record_cate_simple
 group by tel_index
 ;
 
