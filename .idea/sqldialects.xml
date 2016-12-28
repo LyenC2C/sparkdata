@@ -6,7 +6,7 @@
     <file url="file://$PROJECT_DIR$/public/DDL/ec_tb/t_base_ec_tb_xianyu_item.DDL.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/busyness_check/weibo_link/zhaohang_link.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/service/task/ewrq.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/zlj/project/task/credit_model/feature/t_credit_record_feature_6month.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/zlj/project/task/credit_model/feature/dev/t_credit_record_feature_6month.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/credit_model/rong360_cap/match_feature.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/financial_api/t_zlj_credit_valid_api1.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/zlj/project/task/financial_api/t_zlj_credit_valid_api10.sql" dialect="PostgreSQL" />
