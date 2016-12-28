@@ -5,6 +5,9 @@ import rapidjson as json
 from pyspark import SparkContext
 from pyspark.sql import *
 
+today = sys.argv[1]
+
+
 sc = SparkContext(appName="rong360_features_hebing")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
@@ -109,14 +112,18 @@ fea_all = fea_main + fea_cat
 fea_all_index = fea_index(fea_all)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name')
 # hiveContext.sql('drop table wlcredit.t_wrt_credit_all_features_name')
-hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table wlcredit.t_wrt_credit_all_features_name_20161223')
-# create table wlcredit.t_wrt_credit_all_features_name_20161223 (feature string,index string)
+hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
+hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive" OVERWRITE \
+ INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
+# create table wlcredit.t_wrt_credit_all_features_name (feature string,index string)
+# PARTITIONED BY  (ds STRING )
 # ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'
 # stored as textfile
 
 # hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
 #此程序产出一份
-
+ #
  # LOAD DATA     INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE
-  # INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '20161223');
+ # INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '20161226');
