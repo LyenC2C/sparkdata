@@ -66,11 +66,11 @@ and ds='true' ;
 
 
 -- 过滤出闲鱼数据
-drop table  wlbase_dev.t_base_record_cate_simple_xianyu  ;
-create table wlbase_dev.t_base_record_cate_simple_xianyu as
+drop table  wl_analysis.t_base_record_cate_simple_xianyu  ;
+create table wl_analysis.t_base_record_cate_simple_xianyu as
 SELECT t2.*  from
 wlcredit.t_credit_xianyu_zhima_userinfo t1 join
-wlbase_dev.t_base_record_cate_simple t2 on t1.userid=t2.user_id ;
+wl_analysis.t_base_record_cate_simple t2 on t1.userid=t2.user_id ;
 
 
 
