@@ -1,13 +1,13 @@
 CREATE  TABLE  if not exists qq_group_info (
-qun_id  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-qun_class  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-mast_qq  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-title  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-create_date  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
-qun_text  String     COMMENT 'Ò»¼¶ÀàÄ¿id ',
+qun_id  String     COMMENT 'ç¾¤id',
+qun_class  String     COMMENT 'æœªçŸ¥',
+mast_qq  String     COMMENT 'æœªçŸ¥',
+title  String     COMMENT 'ç¾¤åç§°',
+create_date  String     COMMENT 'åˆ›å»ºæ—¶é—´',
+qun_text  String     COMMENT 'ç¾¤ç®€ä»‹',
 find_schools String
 )
-COMMENT 'qq ÈºÊı¾İ'
+COMMENT 'qqç¾¤ä¿¡æ¯'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
 stored as textfile ;
