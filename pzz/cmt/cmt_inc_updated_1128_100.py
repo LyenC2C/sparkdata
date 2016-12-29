@@ -3,6 +3,7 @@ import sys, rapidjson, time
 import rapidjson as json
 from pyspark import SparkContext
 from pyspark import SparkConf
+import commands
 
 def cut_need(path,start,end):
     cmd = 'hadoop fs -ls '+path +' | awk  \'{print $8}\' | grep 201'
