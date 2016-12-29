@@ -491,7 +491,7 @@ if __name__ == "__main__":
         rdd_cmt_inc_hasuid = sc.textFile(output_cmt_inc_data)\
                                 .map(lambda x:x.split("\001"))\
                                 .map(lambda x:[x[0],[2,[x[2],x[3]]]])
-        rdd_itemid_feediduid_old = sc.textFile(output_itemid_feediduid_ls)\
+        rdd_itemid_feediduid_old = sc.textFile(itemid_feediduid_ls)\
                                     .map(lambda x:x.split("\001"))\
                                     .map(lambda (x,y):[x,[1,y]])
 
