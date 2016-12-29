@@ -413,7 +413,7 @@ if __name__ == "__main__":
         #conf.set("spark.akka.timeout","3000s")
         #conf.set("spark.akka.frameSize","1000")
         #conf.set("spark.default.parallelism","2000")
-        sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
+        sc = SparkContext(appName="gen_cmt_inc "+data_start_date+'-'+data_end_date,conf=conf)
 
         #加载新数据
         ls = cut_need(data_path,data_start_date,data_end_date)
@@ -425,7 +425,6 @@ if __name__ == "__main__":
         else:
             quit()
 
-        '''
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
         #其中feed_ls=一条cmt
         rdd_new = rdd_data.filter(lambda x: 'SUCCESS' in x) \
@@ -501,7 +500,6 @@ if __name__ == "__main__":
                     .map(lambda (x,y):merge_item_feedid(x,y))\
                     .coalesce(500)\
                     .saveAsTextFile(output_itemid_feediduid_ls)
-        '''
         sc.stop()
 
 
