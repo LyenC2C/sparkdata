@@ -417,14 +417,14 @@ if __name__ == "__main__":
 
         #加载新数据
         ls = cut_need(data_path,data_start_date,data_end_date)
+
         if len(ls) > 0:
             rdd_data = sc.textFile(ls[0])
             for each in ls[1:]:
                 rdd_data = rdd_data.union(sc.textFile(each))
         else:
             quit()
-        print data_start_date+'\t'+data_end_date
-        print '\t'.join(ls)
+
         '''
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
         #其中feed_ls=一条cmt

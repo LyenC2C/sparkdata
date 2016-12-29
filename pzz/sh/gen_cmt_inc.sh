@@ -15,7 +15,7 @@ spark-submit --master spark://cs100:7077 \
 --executor-memory 25g \
 --driver-memory 10g \
 --total-executor-cores 100 \
-/home/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_updated_1128.py \
+/home/pzz/workspace/sparkdata/pzz/cmt/cmt_inc_updated_1128_100.py \
 -gen_cmt_inc \
 /data/develop/ec/tb/cmt/itemid_feedid/itemid_feediduidls.${last_item_feedidls_date} \
 /data/develop/ec/tb/cmt/uid_mark/uid_mark_freq.json.${last_uid_mark_date} \
