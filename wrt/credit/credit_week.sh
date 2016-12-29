@@ -14,3 +14,5 @@ hfs -mv /commit/credit/shixin/shixin* /commit/credit/shixin/archive/$now_day'_ar
 sh $pre_path/ppd/ppd_listinfo_inhive.sh $now_day &> $pre_path/log/ppd_$now_day
 
 
+
+
