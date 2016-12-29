@@ -29,11 +29,11 @@ t2.* ,
 Drop table  wlbase_dev.t_base_record_cate ;
 alter table wlbase_dev.t_base_record_cate_t rename to t_base_record_cate;
 
+alter table t_base_record_cate to wl_analysis.t_base_record_cate_t  ;
 
 
-
-Drop table wlbase_dev.t_base_record_cate_simple ;
-create table wlbase_dev.t_base_record_cate_simple as
+Drop table wl_analysis.t_base_record_cate_simple ;
+create table wl_analysis.t_base_record_cate_simple as
 select
 item_id        ,
 feed_id        ,
@@ -42,8 +42,6 @@ content_length ,
 annoy          ,
 dsn            ,
 datediff       ,
-date_predict   ,
-sku            ,
 cat_id         ,
 root_cat_id    ,
 root_cat_name  ,
@@ -61,18 +59,18 @@ location       ,
 tel_index      ,
 tel_user_rn    ,
 ds
-from wl_base.t_base_record_cate
+from t_base_record_cate
  where tel_index is not null and tel_user_rn<4 and price<160000
 and  root_cat_id is not null
 and ds='true' ;
 
 
 -- 过滤出闲鱼数据
-drop table  wlbase_dev.t_base_record_cate_simple_xianyu  ;
-create table wlbase_dev.t_base_record_cate_simple_xianyu as
+drop table  wl_analysis.t_base_record_cate_simple_xianyu  ;
+create table wl_analysis.t_base_record_cate_simple_xianyu as
 SELECT t2.*  from
 wlcredit.t_credit_xianyu_zhima_userinfo t1 join
-wlbase_dev.t_base_record_cate_simple t2 on t1.userid=t2.user_id ;
+wl_analysis.t_base_record_cate_simple t2 on t1.userid=t2.user_id ;
 
 
 
