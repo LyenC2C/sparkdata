@@ -420,9 +420,12 @@ if __name__ == "__main__":
         if len(ls) > 0:
             rdd_data = sc.textFile(ls[0])
             for each in ls[1:]:
-                rdd_data.union(sc.textFile(each))
+                rdd_data = rdd_data.union(sc.textFile(each))
         else:
             quit()
+        print data_start_date+'\t'+data_end_date
+        print '\t'.join(ls)
+        '''
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
         #其中feed_ls=一条cmt
         rdd_new = rdd_data.filter(lambda x: 'SUCCESS' in x) \
@@ -498,6 +501,7 @@ if __name__ == "__main__":
                     .map(lambda (x,y):merge_item_feedid(x,y))\
                     .coalesce(500)\
                     .saveAsTextFile(output_itemid_feediduid_ls)
+        '''
         sc.stop()
 
 
