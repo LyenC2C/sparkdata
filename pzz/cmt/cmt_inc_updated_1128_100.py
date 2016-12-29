@@ -3,7 +3,18 @@ import sys, rapidjson, time
 import rapidjson as json
 from pyspark import SparkContext
 from pyspark import SparkConf
+import commands
 
+def cut_need(path,start,end):
+    cmd = 'hadoop fs -ls '+path +' | awk  \'{print $8}\' | grep 201'
+    out = commands.getoutput(cmd)
+    ls = out.strip().split("\n")
+    res = []
+    for each in ls:
+        day = each.split('/')[-1]
+        if int(day) >= int(start) and int(day) <= int(end):
+            res.append(each)
+    return res
 
 def valid_jsontxt(content):
     res = content
@@ -371,12 +382,15 @@ if __name__ == "__main__":
 
         itemid_feediduid_ls = sys.argv[2]
         uid_mark = sys.argv[3]
-        cmt_input_data = sys.argv[4]
+        #cmt_input_data = sys.argv[4]
+        data_path = "/commit/comments"
+        data_start_date = sys.argv[4]
+        data_end_date = sys.argv[5]
 
-        output_itemid_feediduid_ls = sys.argv[5]
-        output_cmt_inc_data = sys.argv[6]
-        output_cmt_inc_data_nouid = sys.argv[7]
-        output_user = sys.argv[8]
+        output_itemid_feediduid_ls = sys.argv[6]
+        output_cmt_inc_data = sys.argv[7]
+        output_cmt_inc_data_nouid = sys.argv[8]
+        output_user = sys.argv[9]
 
         #output_item_inc_num = sys.argv[9]
 
@@ -399,12 +413,21 @@ if __name__ == "__main__":
         #conf.set("spark.akka.timeout","3000s")
         #conf.set("spark.akka.frameSize","1000")
         #conf.set("spark.default.parallelism","2000")
-        sc = SparkContext(appName="gen_cmt_inc "+cmt_input_data,conf=conf)
+        sc = SparkContext(appName="gen_cmt_inc "+data_start_date+'-'+data_end_date,conf=conf)
+
+        #加载新数据
+        ls = cut_need(data_path,data_start_date,data_end_date)
+
+        if len(ls) > 0:
+            rdd_data = sc.textFile(ls[0])
+            for each in ls[1:]:
+                rdd_data = rdd_data.union(sc.textFile(each))
+        else:
+            quit()
 
         #新采数据并去重,只用于处理mark uid: 返回[itemid,feedls],
         #其中feed_ls=一条cmt
-        rdd_new = sc.textFile(cmt_input_data)\
-                    .filter(lambda x: 'SUCCESS' in x) \
+        rdd_new = rdd_data.filter(lambda x: 'SUCCESS' in x) \
                     .map(lambda x: parse_cmt_v5(x)) \
                     .filter(lambda x: x != None)\
                     .flatMap(lambda (x,y):y) \
