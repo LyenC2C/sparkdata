@@ -7,7 +7,9 @@ end_date=$4
 
 echo "last item feedid uid ls: "$last_item_feedidls_date
 echo -e "\nlast uid mark: "$last_uid_mark_date
-echo -e "\nmissiondata: "$mission_data
+echo -e "\nmissiondata: "$start_date" - "$end_date
+echo -e "\n create :" $end_date
+sleep 10
 
 spark-submit --master spark://cs100:7077 \
 --executor-memory 25g \
