@@ -7,7 +7,6 @@ drop table wlcredit.t_credit_record_feature_3month ;
 create table wlcredit.t_credit_record_feature_3month as
     SELECT
     tel_index,
-    max(user_id) user_id ,
     round(sum(price),2)   month3_price_sum,
     round(count(1) ,2)    month3_buy_count,
     round(avg(price),2)   month3_price_avg,
@@ -62,7 +61,7 @@ round(sum(case when price <=50 and CAST(price/5 as int )==2  then price else 0 e
 round(sum(case when price <=50 and CAST(price/5 as int )==1  then price else 0 end)/sum(price),2) as month3_b50_1_ratio,
 round(sum(case when price <=50 and CAST(price/5 as int )==0  then price else 0 end)/sum(price),2) as month3_b50_0_ratio,
 round((sum(pow(2.8, datediff* (-0.005)))+20)/75,2)  as month3_active_score
-    from wlbase_dev.t_base_record_cate_simple_xianyu
+    from wl_analysis.t_base_record_cate_simple_xianyu
     where  regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )>dsn
     group by tel_index
     ;

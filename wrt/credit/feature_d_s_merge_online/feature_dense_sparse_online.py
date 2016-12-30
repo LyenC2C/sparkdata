@@ -81,8 +81,8 @@ def inhive(line):
     return "\001".join(ss)
 
 
-s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature/*" #稀疏
-s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features/*" #紧密
+s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature_online/*" #稀疏
+s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features_online/*" #紧密
 
 #紧密特征字段提取并自动排列好
 rdd_fea_main = hiveContext.sql('desc wlcredit.t_credit_dense_features')
@@ -115,7 +115,7 @@ sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name')
 hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
 wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
 hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive" OVERWRITE \
- INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
+INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
 # create table wlcredit.t_wrt_credit_all_features_name (feature string,index string)
 # PARTITIONED BY  (ds STRING )
 # ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'
@@ -124,6 +124,6 @@ hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhiv
 # hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
 #此程序产出一份
- #
- # LOAD DATA     INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE
- # INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '20161226');
+#
+# LOAD DATA     INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE
+# INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '20161226');
