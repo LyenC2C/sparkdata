@@ -76,11 +76,11 @@ def hebing(x,y,feature_5k):
     lv = y[0] + y[1]
     result = []
     for ln in lv:
-        feature = ln.strip(':')[0]
+        feature = ln.split(':')[0]
         if feature_5k.has_key(feature):
-            result.append(ln)
+            result.append(valid_jsontxt(ln))
     result = [x] + result
-    return " ".join([valid_jsontxt(ln) for ln in result])
+    return " ".join(result)
 
 def inhive(line):
     ss = line.strip().split(" ",1)
