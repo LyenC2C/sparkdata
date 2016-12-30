@@ -20,7 +20,7 @@ price_075
 from
 (
 SELECT
-tel_index,cate_level2_id as cate_level1,
+tel_index,root_cat_id as cate_level1,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string),'sum_price_level1' ) ,cast(  round(sum(price),2) as string) ) price_sum,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'count_level1'     ) ,cast( round(count(1) ,2)  as string) ) buy_count,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'avg_price_level1' ) ,cast( round(avg(price),2) as string) ) price_avg,
@@ -35,7 +35,7 @@ concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_010_level1') ,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'price_075_level1') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
 wl_analysis.t_base_record_cate_simple
 
-group by tel_index,cate_level2_id
+group by tel_index,root_cat_id
 )t group by tel_index
 ;
 
