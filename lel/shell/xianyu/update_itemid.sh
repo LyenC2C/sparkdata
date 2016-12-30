@@ -16,3 +16,4 @@ left join
 on t1.itemid = t2.itemid
 where t1.commentnum <> t2.commentnum or t2.itemid is null
 EOF
+
