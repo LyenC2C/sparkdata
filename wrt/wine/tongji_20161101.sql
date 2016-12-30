@@ -1,4 +1,4 @@
---1.1
+覆盖品牌数量 --1.1 除洋酒以外的酒
 
 select wine_type,count(1)as brand_num
 from
@@ -17,7 +17,7 @@ brand_id
 from
 t_base_ec_item_dev_new
 where
-ds = 20161013
+ds = 20161224
 and
 root_cat_id = 50008141
 group by 
@@ -29,13 +29,12 @@ when cat_id = 50008147 then "黄酒"
 when cat_id in (123256003,123502002,123214002,123224006) then "保健酒"
 when cat_id = 50632001 then "预调酒"
 when cat_id = 50008145 then "配制酒"
-else "else" END
-as wine_type,
+else "else" END,
 brand_id)t
 group by
 wine_type
 
---1.2
+--1.2 洋酒
 
 select count(1) as num from
 (select
@@ -43,7 +42,7 @@ brand_id
 from
 t_base_ec_item_dev_new
 where
-ds = 20161013
+ds = 20161224
 and
 root_cat_id = 50008141
 and
@@ -52,7 +51,7 @@ group by
 brand_id
 )t
 
---1.3
+--1.3 总
 
 select count(1) as num from
 (select
@@ -60,7 +59,7 @@ brand_id
 from
 t_base_ec_item_dev_new
 where
-ds = 20161013
+ds = 20161224
 and
 root_cat_id = 50008141
 group by
@@ -68,7 +67,7 @@ brand_id
 )t
 
 
---2.1
+商品数据数量 --2.1
 
 select
 case
@@ -85,7 +84,7 @@ count(1) as num
 from
 t_base_ec_item_dev_new
 where
-ds = 20161013
+ds = 20161224
 and
 root_cat_id = 50008141
 and
@@ -108,7 +107,7 @@ count(1) as num
 from
 t_base_ec_item_dev_new
 where
-ds = 20161013
+ds = 20161224
 and
 root_cat_id = 50008141
 AND
@@ -123,13 +122,13 @@ count(1) as num
 from
 t_base_ec_item_dev_new
 where
-ds = 20161013
+ds = 20161224
 and
 root_cat_id = 50008141
 and
 is_online = '1'
 
---3.1 评论
+评论信息数量 --3.1 评论
 
 select
 case
@@ -144,7 +143,7 @@ else "else" END
 as wine_type,
 count(1) as num
 from
-t_base_ec_record_dev_new_simple
+wl_analysis.t_base_record_cate_simple
 where
 ds = 'true'
 and
@@ -166,7 +165,7 @@ else "else" END
 select
 count(1) as num
 from
-t_base_ec_record_dev_new_simple
+wl_analysis.t_base_record_cate_simple
 where
 ds = 'true'
 and
@@ -179,14 +178,14 @@ cat_id not in ("50008143","50013004","50013006","123224006","50013006","12321400
 select
 count(1) as num
 from
-t_base_ec_record_dev_new_simple
+wl_analysis.t_base_record_cate_simple
 where
 ds = 'true'
 and
 root_cat_id = 50008141
 
 
---4.1 消费人数
+消费者人群数量 --4.1
 select wine_type,count(1) as num
 from
 (
@@ -203,7 +202,7 @@ else "else" END
 as wine_type,
 user_id
 from
-t_base_ec_record_dev_new_simple
+wl_analysis.t_base_record_cate_simple
 where
 ds = 'true'
 and
@@ -227,7 +226,7 @@ select count(1) as num from
 (select
 user_id
 from
-t_base_ec_record_dev_new_simple
+wl_analysis.t_base_record_cate_simple
 where
 ds = 'true'
 and
@@ -245,7 +244,7 @@ select count(1) as num from
 (select
 user_id
 from
-t_base_ec_record_dev_new_simple
+wl_analysis.t_base_record_cate_simple
 where
 ds = 'true'
 and

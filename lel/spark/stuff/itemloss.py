@@ -18,6 +18,7 @@ def getItemAndCate(s):
     return (itemid, root_cate)
 
 
+
 def join(a, b, itemids):
     if itemids.has_key(a):
         return valid_jsontxt(a) + '\t' + valid_jsontxt(b)
