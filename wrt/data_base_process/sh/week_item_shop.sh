@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pre_path='/home/wrt/sparkdata'
+pre_path='/home/wrt/sparkdata/wrt'
 
 today=$(date -d '0 days ago' +%Y%m%d)
 lastday=$(date -d '7 days ago' +%Y%m%d)
