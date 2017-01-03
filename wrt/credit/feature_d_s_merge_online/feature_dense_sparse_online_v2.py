@@ -69,16 +69,14 @@ def feature_cat(line,feature5k_dict):
 def tran_dict(f_list):
     f_list_dict = {}
     for i in range(len(f_list)):
-        f_list_dict[f_list[i]] = i
+        f_list_dict[valid_jsontxt(f_list[i])] = i
     return f_list_dict
 
-def fea_name(fea_all):
+def fea_index(fea_all):
     fea_all_index = []
-    fea_all_dict = {}
     for i in range(len(fea_all)):
         fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i))
-        fea_all_dict[valid_jsontxt(fea_all[i])] = str(i)
-    return (fea_all_dict,fea_all_index)
+    return fea_all_index
 
 
 # def hebing(x,y,feature_5k):
@@ -146,9 +144,12 @@ rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,feature5k_dict))
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x,feature5k_dict,fea_main))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
-rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
+rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat_v2')
 rdd_table = rdd.map(lambda x:inhive(x))
-rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive')
+rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive_v2')
+
+fea_all_index = fea_index(feature5k)
+sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name_v2')
 
 # hiveContextk.sql('drop table wlcredit.t_wrt_credit_all_features_name')
 # hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
