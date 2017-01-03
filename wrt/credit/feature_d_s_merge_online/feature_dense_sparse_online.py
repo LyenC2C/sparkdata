@@ -71,7 +71,7 @@ def tran_dict(fea_cat):
     return fea_cat_dict
 
 def fea_name(fea_all):
-    # fea_all_index = []
+    fea_all_index = []
     fea_all_dict = {}
     for i in range(len(fea_all)):
         fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i))
@@ -144,7 +144,7 @@ rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
 rdd_table = rdd.map(lambda x:inhive(x))
 rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive')
 
-# hiveContext.sql('drop table wlcredit.t_wrt_credit_all_features_name')
+# hiveContextk.sql('drop table wlcredit.t_wrt_credit_all_features_name')
 hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
 wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
 hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive" OVERWRITE \
@@ -156,7 +156,7 @@ INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
 
 # hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
-#此程序产出一份
+# 此程序产出一份
 #
 # LOAD DATA     INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE
 # INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '20161226');
