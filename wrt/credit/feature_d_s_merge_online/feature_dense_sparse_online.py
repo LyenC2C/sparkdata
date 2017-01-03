@@ -76,7 +76,7 @@ def hebing(x,y,feature_5k):
     lv = y[0] + y[1]
     result = []
     for ln in lv:
-        feature = ln.split(':')[0]
+        feature = valid_jsontxt(ln.split(':')[0])
         if feature_5k.has_key(feature):
             result.append(valid_jsontxt(ln))
     result = [x] + result
@@ -109,7 +109,7 @@ rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main))
 #每个电话按照紧密特征顺序，将每个一级特征值依次输出,0的过滤
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
-rdd_feature5k = sc.broadcast(sc.textFile("/user/wrt/feature_5k")\
+feature5k = sc.broadcast(sc.textFile("/user/wrt/feature_5k")\
     .map(lambda x:(valid_jsontxt(x.strip()),"")).collectAsMap()).value
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y,feature_5k))
 
