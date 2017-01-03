@@ -102,10 +102,10 @@ def index_5k(x,fea_all):
     return (str(i),"")
 
 
-# s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature_online/*" #稀疏
-s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature_online/000000_0"
-# s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features_online/*" #紧密
-s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features_online/000000_0"
+s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature_online/*" #稀疏
+# s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature_online/000000_0"
+s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features_online/*" #紧密
+# s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features_online/000000_0"
 
 
 
