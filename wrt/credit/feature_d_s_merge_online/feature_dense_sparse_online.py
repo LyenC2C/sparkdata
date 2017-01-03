@@ -50,9 +50,10 @@ def feature_cat(line,fea_all_dict,feature5k):
     sort_dict = {} #用来排序
     for feature in features:
         ff = feature.split(":")
-        f_value = ff[0]
-        v_value = ff[1]
+        f_value = valid_jsontxt(ff[0])
+        v_value = valid_jsontxt(ff[1])
         if float(v_value) == 0.0: continue
+        # f_index = fea_cat_dict[f_value] + len_main
         # if not feature5k.has_key(f_value): continue
         f_index = fea_all_dict[f_value]
         if not feature5k.has_key(f_index): continue
@@ -98,7 +99,7 @@ def inhive(line):
 
 def index_5k(x,fea_all):
     i = fea_all.index(valid_jsontxt(x.strip()))
-    return (i,"")
+    return (str(i),"")
 
 
 # s_cat = "/hive/warehouse/wlcredit.db/t_wrt_credit_record_cate_feature_online/*" #稀疏
@@ -114,7 +115,7 @@ rdd_fea_main = hiveContext.sql('desc wlcredit.t_credit_dense_features_online')
 fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()[1:]]
 # fea_main = ['buycnt','weibo_followers_count']
 #记录紧密特征长度，后面的在分配feature_cat的index时候用到
-len_main = len(fea_main)
+# len_main = len(fea_main)
 #稀疏特征字段去重并按照一定顺序排列好
 rdd_fea_cat = sc.textFile(s_cat).flatMap(lambda x:f_cat_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
 fea_cat = rdd_fea_cat.collect()
