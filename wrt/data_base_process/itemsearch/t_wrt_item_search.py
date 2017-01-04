@@ -32,5 +32,5 @@ rdd2 = sc.textFile("*2016123*")
 rdd = rdd1.union(rdd2)
 rdd.map(lambda x:f(x)).filter(lambda x:f(x)).saveAsTextFile("/user/wrt/temp/itemsearch_20_30")
 
-#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120
+#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_wrt_item_search.py
 
