@@ -15,7 +15,7 @@ def valid_jsontxt(content):
 
 def f(line):
     text = line.strip().split("\t")[-1]
-    ob = json.loads(text)
+    ob = json.loads(valid_jsontxt(text))
     nid = ob.get("nid","\\N")
     if nid == "-": return None
     comment_count = ob.get("comment_count","\\N")
