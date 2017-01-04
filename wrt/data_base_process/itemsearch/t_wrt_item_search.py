@@ -38,7 +38,7 @@ def f(line):
 rdd = sc.textFile("/commit/itemsearch/*")
 rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile("/user/wrt/temp/itemsearch_else")
 # hfs -rmr /user/wrt/temp/itemsearch_20_30
-#spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_wrt_item_search.py
+# spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_wrt_item_search.py
 # load data inpath "/user/wrt/temp/itemsearch_20_30" overwrite into table wlservice.t_wrt_item_search
 # partition (ds = '20170104_20_30')
 
