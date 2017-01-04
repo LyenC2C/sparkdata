@@ -134,6 +134,10 @@ fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()[1:]]
     # .map(lambda x:index_5k(x,fea_all)).collectAsMap()).value
 feature5k = sc.textFile("/user/wrt/feature_5k").collect()
 feature5k_dict = tran_dict(feature5k)
+
+fea_all_index = fea_index(feature5k)
+sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name_v2')
+
 #每个电话按照新的稀疏特征顺序，将每个稀疏特征值依次输出，之前没有的特征用0代替
 # rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main,feature5k))
 rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,feature5k_dict))
@@ -148,12 +152,10 @@ rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat_v2')
 rdd_table = rdd.map(lambda x:inhive(x))
 rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive_v2')
 
-fea_all_index = fea_index(feature5k)
-sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name_v2')
 
-# hiveContextk.sql('drop table wlcredit.t_wrt_credit_all_features_name')
-# hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
-# wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
+hiveContextk.sql('drop table wlcredit.t_wrt_credit_all_features_name_v2')
+hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
 hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive" OVERWRITE \
 INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
 # create table wlcredit.t_wrt_credit_all_features_name (feature string,index string)
