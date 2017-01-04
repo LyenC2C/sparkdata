@@ -24,6 +24,7 @@ def f(line):
     encryptedUserId = ob.get("shopcard",{}).get("encryptedUserId","\\N")
     nick = ob.get("nick","\\N")
     result = []
+    result.append(nid)
     result.append(user_id)
     result.append(comment_count)
     result.append(encryptedUserId)
