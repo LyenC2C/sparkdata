@@ -2,6 +2,7 @@
 __author__ = 'wrt'
 import sys
 import rapidjson as json
+from pyspark import SparkContext
 
 sc = SparkContext(appName="t_base_item_search")
 
