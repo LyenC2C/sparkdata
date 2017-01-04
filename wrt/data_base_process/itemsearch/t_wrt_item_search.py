@@ -31,10 +31,14 @@ def f(line):
     result.append(nick)
     return "\001".join([valid_jsontxt(ln) for ln in result])
 
-rdd1 = sc.textFile("/commit/itemsearch/*2016122*")
-rdd2 = sc.textFile("/commit/itemsearch/*2016123*")
-rdd = rdd1.union(rdd2)
-rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile("/user/wrt/temp/itemsearch_20_30")
+# rdd1 = sc.textFile("/commit/itemsearch/*2016122*")
+# rdd2 = sc.textFile("/commit/itemsearch/*2016123*")
+
+# rdd = rdd1.union(rdd2)
+rdd = sc.textFile("/commit/itemsearch/*")
+rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile("/user/wrt/temp/itemsearch_else")
 # hfs -rmr /user/wrt/temp/itemsearch_20_30
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_wrt_item_search.py
+# load data inpath "/user/wrt/temp/itemsearch_20_30" overwrite into table wlservice.t_wrt_item_search
+# partition (ds = '20170104_20_30')
 
