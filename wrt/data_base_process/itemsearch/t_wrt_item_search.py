@@ -3,6 +3,7 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 
+sc = SparkContext(appName="t_base_item_search")
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
