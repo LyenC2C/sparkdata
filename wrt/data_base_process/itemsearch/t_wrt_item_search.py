@@ -16,6 +16,7 @@ def valid_jsontxt(content):
 def f(line):
     text = line.strip().split("\t")[-1]
     ob = json.loads(valid_jsontxt(text))
+    if type(ob) != type({}): return None
     nid = ob.get("nid","\\N")
     if nid == "-": return None
     comment_count = ob.get("comment_count","\\N")
@@ -32,7 +33,7 @@ def f(line):
 rdd1 = sc.textFile("/commit/itemsearch/*2016122*")
 rdd2 = sc.textFile("/commit/itemsearch/*2016123*")
 rdd = rdd1.union(rdd2)
-rdd.map(lambda x:f(x)).filter(lambda x:f(x)).saveAsTextFile("/user/wrt/temp/itemsearch_20_30")
-
+rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile("/user/wrt/temp/itemsearch_20_30")
+# hfs -rmr /user/wrt/temp/itemsearch_20_30
 #spark-submit  --executor-memory 8G  --driver-memory 8G  --total-executor-cores 120 t_wrt_item_search.py
 
