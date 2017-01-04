@@ -11,6 +11,7 @@ hadoop_env=/home/lel/hadoop/bin
 spark_env=/home/lel/spark/bin
 work_place=/home/lel/wolong/sparkdata/lel
 
+
 $hadoop_env/hadoop fs -test -e /user/lel/temp/xianyu_comment_2016
 if [ $? -eq 0 ] ;then
 $hadoop_env/hadoop fs  -rmr /user/lel/temp/xianyu_comment_2016
