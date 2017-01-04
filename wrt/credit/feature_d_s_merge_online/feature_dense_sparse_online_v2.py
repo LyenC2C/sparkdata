@@ -79,24 +79,14 @@ def fea_index(fea_all):
     return fea_all_index
 
 
-# def hebing(x,y,feature_5k):
-#     lv = y[0] + y[1]
-#     result = []
-#     for ln in lv:
-#         feature = valid_jsontxt(ln.split(':')[0])
-#         if feature_5k.has_key(feature):
-#             result.append(valid_jsontxt(ln))
-#     result = [x] + result
-#     return " ".join(result)
-
 def hebing(x,y):
     # result =[x] + y[0] + y[1]
     f_dict = dict(y[0], **y[1])
     temp = sorted(f_dict.iteritems(), key=lambda d:d[0], reverse = False)
-    result = [x]
+    result = []
     for ln in temp:
         result.append(valid_jsontxt(ln[0]) + ":" + valid_jsontxt(ln[1]))
-    return " ".join(result)
+    return valid_jsontxt(x) + '\001' +" ".join(result)
 
 def inhive(line):
     ss = line.strip().split(" ",1)
@@ -134,7 +124,6 @@ fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()[1:]]
     # .map(lambda x:index_5k(x,fea_all)).collectAsMap()).value
 feature5k = sc.textFile("/user/wrt/feature_5k").collect()
 feature5k_dict = tran_dict(feature5k)
-
 fea_all_index = fea_index(feature5k)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name_v2')
 
@@ -147,16 +136,15 @@ rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,feature5k_dict))
 #每个电话按照紧密特征顺序，将每个一级特征值依次输出,0的过滤
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x,feature5k_dict,fea_main))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
-rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
-rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat_v2')
-rdd_table = rdd.map(lambda x:inhive(x))
+rdd_table = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
+# rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat_v2') #存libsvm格式
+# rdd_table = rdd.map(lambda x:inhive(x))
 rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive_v2')
 
-
-hiveContextk.sql('drop table wlcredit.t_wrt_credit_all_features_name_v2')
-hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
+# hiveContextk.sql('drop table wlcredit.t_wrt_credit_all_features_name')
+hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name_v2" overwrite into table \
 wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
-hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive" OVERWRITE \
+hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive_v2" OVERWRITE \
 INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
 # create table wlcredit.t_wrt_credit_all_features_name (feature string,index string)
 # PARTITIONED BY  (ds STRING )
@@ -164,7 +152,7 @@ INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
 # stored as textfile
 
 # hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
-# spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
+# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse_onlin_v2.py
 # 此程序产出一份
 #
 # LOAD DATA     INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE
