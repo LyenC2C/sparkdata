@@ -7,13 +7,13 @@ date  +%Y%m%d
 lastday=$(date -d '1 days ago' +%Y%m%d)
 thedaybeforelastday=$(date -d '2 days ago' +%Y%m%d)
 
-hive_env=/home/lel/hive/bin
+
 table=wlbase_dev.t_base_ec_xianyu_iteminfo
 
-$hive_env/hive<<EOF
+hive<<EOF
 use wlbase_dev;
 LOAD DATA  INPATH '/user/lel/temp/xianyu_2016' OVERWRITE INTO TABLE $table PARTITION (ds='tmp');
-insert OVERWRITE table wlbase_dev.t_base_ec_xianyu_iteminfo PARTITION(ds = $lastday)
+insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
 case when t1.itemid is null then t2.itemid else t1.itemid end,
 case when t1.itemid is null then t2.userid else t1.userid end,

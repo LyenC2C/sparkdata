@@ -11,7 +11,7 @@ table=wlbase_dev.t_base_ec_xianyu_item_comment
 
 hive<<EOF
 use wlbase_dev;
-LOAD DATA  INPATH '/user/lel/temp/xianyu_comment_2016' OVERWRITE INTO TABLE wlbase_dev.t_base_ec_xianyu_item_comment PARTITION (ds='tmp');
+LOAD DATA  INPATH '/user/lel/temp/xianyu_comment_2016' OVERWRITE INTO TABLE $table PARTITION (ds='tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
 case when t1.itemid is null then t2.itemid else t1.itemid end,
