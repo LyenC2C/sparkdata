@@ -92,7 +92,7 @@ INTO TABLE wlcredit.t_credit_feature_merge_online PARTITION (ds = '+ today +')')
 
 
 # hfs -rmr /user/wrt/temp/add_new_feature_name && hfs -rmr /user/wrt/temp/add_newfeature_inhive
-# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120
+# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat_online.py 20170106
 
 
 
