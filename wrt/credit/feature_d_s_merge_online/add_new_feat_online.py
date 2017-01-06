@@ -8,7 +8,7 @@ from pyspark import SparkContext
 from pyspark.sql import *
 
 today = sys.argv[1]
-today_name = sys.argv[2]
+# today_name = sys.argv[2]
 
 sc = SparkContext(appName="add_new_feat")
 sqlContext = SQLContext(sc)
