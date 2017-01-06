@@ -85,10 +85,10 @@ sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/add_new_feature_nam
 rdd.map(lambda x:f(x,numerator_price,numerator_count)).saveAsTextFile('/user/wrt/temp/add_newfeature_inhive')
 
 hiveContext.sql('load data inpath "/user/wrt/temp/add_new_feature_name" overwrite into table \
-wlcredit.t_wrt_credit_all_features_name_online PARTITION (ds ='+ today +')')
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = "5kfeature_addnewfeature" )')
 
 hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/add_newfeature_inhive" OVERWRITE \
-INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today_name +')')
+INTO TABLE wlcredit.t_credit_feature_merge_online PARTITION (ds = '+ today +')')
 
 
 # hfs -rmr /user/wrt/temp/add_new_feature_name && hfs -rmr /user/wrt/temp/add_newfeature_inhive
