@@ -65,7 +65,7 @@ round((sum(pow(2.8, datediff* (-0.005)))+20)/75,2)  as month12_active_score
     from
 
           wlbase_dev.t_base_record_cate_simple
-    where  regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )>dsn
+    where  regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )<dsn
     group by tel_index
     ;
 
