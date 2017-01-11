@@ -1,11 +1,12 @@
 #!/usr/bin
 
+#闲鱼iteminfo——日更——当天处理的是昨天的数据
 source ~/.bashrc
 date
 date  +%Y%m%d
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
-thedaybeforelastday=$(date -d '2 days ago' +%Y%m%d)
+last_2_days=$(date -d '2 days ago' +%Y%m%d)
 
 
 table=wlbase_dev.t_base_ec_xianyu_iteminfo
@@ -50,7 +51,7 @@ case when t1.itemid is null then t2.ts else t1.ts end
 from
 (select * from  $table where ds = 'tmp')t1
 full outer JOIN
-(select * from $table where ds = $thedaybeforelastday)t2
+(select * from $table where ds = $last_2_days)t2
 ON
 t1.itemid = t2.itemid;
 EOF
