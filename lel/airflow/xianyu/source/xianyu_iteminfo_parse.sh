@@ -5,7 +5,6 @@ date
 date  +%Y%m%d
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
-thedaybeforelastday=$(date -d '2 days ago' +%Y%m%d)
 
 hadoop fs -test -e /user/lel/temp/xianyu_2016
 if [ $? -eq 0 ] ;then
