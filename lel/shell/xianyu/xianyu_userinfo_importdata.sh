@@ -5,7 +5,7 @@ date  +%Y%m%d
 
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
-last_7_day=$(date -d '7 days ago' +%Y%m%d)
+last_7_days=$(date -d '7 days ago' +%Y%m%d)
 hadoop fs -test -e /user/lel/temp/xianyu_userinfo
 if [ $? -eq 0 ] ;then
     hadoop fs  -rmr /user/lel/temp/xianyu_userinfo
@@ -61,7 +61,7 @@ case when t1.userid is null then t2.ts else t1.ts end
 from
 (select * from  wlbase_dev.t_base_ec_xianyu_userinfo where ds = $lastday+'userid_makeup') t1
 full outer JOIN
-(select * from wlbase_dev.t_base_ec_xianyu_userinfo where ds = $last_7_day) t2
+(select * from wlbase_dev.t_base_ec_xianyu_userinfo where ds = $last_7_days) t2
 ON
 t1.userid = t2.userid;
 EOF

@@ -4,7 +4,7 @@ date
 date  +%Y%m%d
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
-thedaybeforelastday=$(date -d '2 days ago' +%Y%m%d)
+last_2_days=$(date -d '2 days ago' +%Y%m%d)
 
 hadoop fs -test -e /user/lel/temp/xianyu_comment_2016
 if [ $? -eq 0 ] ;then
@@ -32,7 +32,7 @@ case when t1.itemid is null then t2.ts else t1.ts end
 from
 (select * from  wlbase_dev.t_base_ec_xianyu_item_comment where ds = 'tmp')t1
 full outer JOIN
-(select * from wlbase_dev.t_base_ec_xianyu_item_comment where ds = $thedaybeforelastday)t2
+(select * from wlbase_dev.t_base_ec_xianyu_item_comment where ds = $last_2_days)t2
 ON
 t1.itemid = t2.itemid;
 EOF

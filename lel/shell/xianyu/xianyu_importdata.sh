@@ -5,7 +5,7 @@ date  +%Y%m%d
 
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
-thedaybeforelastday=$(date -d '2 days ago' +%Y%m%d)
+last_2_days=$(date -d '2 days ago' +%Y%m%d)
 hadoop fs -test -e /user/lel/temp/xianyu_2016
 if [ $? -eq 0 ] ;then
     hadoop fs  -rmr /user/lel/temp/xianyu_2016
@@ -13,7 +13,7 @@ else
     echo 'Directory is not exist'
 fi
 
-spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 80 ~/wolong/sparkdata/lel/spark/xianyu/t_xianyu.py $lastday >> ~/logs/xianyu_spark.log
+spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 80 ~/wolong/sparkdata/lel/spark/xianyu/t_xianyu.py $lastday
 
 
 
@@ -59,7 +59,7 @@ case when t1.itemid is null then t2.ts else t1.ts end
 from
 (select * from  wlbase_dev.t_base_ec_xianyu_iteminfo where ds = 'tmp')t1
 full outer JOIN
-(select * from wlbase_dev.t_base_ec_xianyu_iteminfo where ds = $thedaybeforelastday)t2
+(select * from wlbase_dev.t_base_ec_xianyu_iteminfo where ds = $last_2_days)t2
 ON
 t1.itemid = t2.itemid;
 EOF
