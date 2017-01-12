@@ -62,7 +62,7 @@ round(sum(case when price <=50 and CAST(price/5 as int )==1  then price else 0 e
 round(sum(case when price <=50 and CAST(price/5 as int )==0  then price else 0 end)/sum(price),2) as month1_b50_0_ratio,
 round((sum(pow(2.8, datediff* (-0.005)))+20)/75,2)  as month1_active_score
     from wl_analysis.t_base_record_cate_simple_xianyu
-    where  regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )>dsn
+    where  regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn
     group by tel_index
     ;
 

@@ -32,7 +32,7 @@ def feature_main(line):
         # if valid_jsontxt(ln) == '\\N': continue #null数据当成0，直接continue
         # if ln.replace(".","").isdigit():
         if float(ln) == 0.0: continue
-        ln == round(float(ln),2)
+        ln = round(float(ln),2)
         result.append(valid_jsontxt(i) + ":" + valid_jsontxt(ln))
     return (tel,result)
 
