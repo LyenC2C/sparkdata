@@ -8,7 +8,7 @@ date  +%Y%m%d
 lastday=$(date -d '1 days ago' +%Y%m%d)
 last_2_days=$(date -d '2 days ago' +%Y%m%d)
 
-table=wlbase_dev.t_base_ec_xianyu_item_comment
+table=wlbase_dev.t_base_ec_xianyu_itemcomment
 
 hive<<EOF
 use wlbase_dev;
