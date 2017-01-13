@@ -1,6 +1,6 @@
 
 
--- 价格的加减乘除
+--
 drop table wlcredit.t_credit_record_cate1_feature_months ;
 create table wlcredit.t_credit_record_cate1_feature_months as
 SELECT
@@ -32,20 +32,34 @@ concat_ws(':', concat_ws('_',cast( root_cat_id as string), month,'cross_price_le
 concat_ws(':', concat_ws('_',cast( root_cat_id as string), month,'price_025_level1') ,cast( round(percentile(cast(price as int),0.25),2) as string) ) price_025,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string), month,'price_010_level1') ,cast( round(percentile(cast(price as int),0.10),2) as string) ) price_010,
 concat_ws(':', concat_ws('_',cast( root_cat_id as string), month,'price_075_level1') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
-from 
+from
 (
-select  tel_index,root_cat_id,price,case 
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn then "1month"
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' ) <= dsn then "3month"
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' ) <= dsn then "6month"
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' ) <= dsn then "12month"
-else "allmonth" 
-end as month
+select  tel_index,root_cat_id,price, "1month" as month
 from
 wl_analysis.t_base_record_cate_simple_xianyu
-)tt
-group by tel_index,root_cat_id,month
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn
+UNION  ALL
+select  tel_index,root_cat_id,price, "3month" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )<dsn
+UNION  ALL
+select  tel_index,root_cat_id,price, "6month" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' )<dsn
+UNION  ALL
+select  tel_index,root_cat_id,price, "12month" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )<dsn
+UNION  ALL
+select  tel_index,root_cat_id,price, "allmonth" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
 )t
+group by tel_index,root_cat_id,month
+)tt
 group by tel_index
 ;
 

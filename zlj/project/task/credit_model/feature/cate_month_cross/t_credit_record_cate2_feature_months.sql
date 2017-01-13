@@ -20,7 +20,6 @@ from
 SELECT
 tel_index,
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'sum_price_level2' ) ,cast(  round(sum(price),2) as string) ) price_sum,
-concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'sum_price_level2' ) ,cast(  round(sum(price),2) as string) ) price_sum,
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'count_level2'     ) ,cast( round(count(1) ,2)  as string) ) buy_count,
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'avg_price_level2' ) ,cast( round(avg(price),2) as string) ) price_avg,
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'max_price_level2' ) ,cast( round(max(price),2) as string) ) price_max,
@@ -33,8 +32,8 @@ concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'price_010_l
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'price_075_level2') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
 from 
 (
-select  tel_index,cate_level2_id,price,case 
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn then "1month"
+select  tel_index,cate_level2_id,price,
+case when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn then "1month"
 when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' ) <= dsn then "3month"
 when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' ) <= dsn then "6month"
 when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' ) <= dsn then "12month"
