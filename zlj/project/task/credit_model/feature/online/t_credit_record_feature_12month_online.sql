@@ -64,8 +64,12 @@ round(sum(case when price <=50 and CAST(price/5 as int )==0  then price else 0 e
 round((sum(pow(2.8, datediff* (-0.005)))+20)/75,2)  as month12_active_score
     from
 
-          wlbase_dev.t_base_record_cate_simple
-    where  regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )<dsn
+          wl_analysis.t_base_record_cate_simple_ds
+
+    where
+    substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' ),1,6) <= ds
+    and
+    regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )<dsn
     group by tel_index
     ;
 
