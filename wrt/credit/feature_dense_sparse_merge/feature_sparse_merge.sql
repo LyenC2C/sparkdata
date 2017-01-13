@@ -5,9 +5,9 @@ select t1.tel_index,
 concat_ws(' ',t1.feature,coalesce(t2.feature,''),coalesce(t3.feature,''),coalesce(t4.feature,''))
 as feature
 from
-wlcredit.t_credit_record_cate1_feature t1
+wlcredit.t_credit_record_cate1_feature_months t1
 left JOIN
-wlcredit.t_credit_record_cate2_feature t2
+wlcredit.t_credit_record_cate2_feature_months t2
 ON
 t1.tel_index = t2.tel_index
 left JOIN
