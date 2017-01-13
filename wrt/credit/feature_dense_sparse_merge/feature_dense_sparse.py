@@ -104,7 +104,7 @@ rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main))
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
-rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
+# rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
 rdd_table = rdd.map(lambda x:inhive(x))
 rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive')
 #全部特征字段输出.
@@ -121,7 +121,7 @@ hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhiv
 # ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'
 # stored as textfile
 
-# hfs -rmr /user/wrt/temp/all_feature_main_cat && hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
+#hfs -rmr /user/wrt/temp/all_features_name && hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 # spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 feature_dense_sparse.py
 #此程序产出一份
  #
