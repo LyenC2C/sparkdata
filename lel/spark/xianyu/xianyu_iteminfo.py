@@ -7,7 +7,6 @@ from pyspark import SparkContext
 
 lastday = sys.argv[1]
 
-
 def valid_jsontxt(content):
     if type(content) == type(u""):
         res = content.encode("utf-8")
@@ -15,14 +14,12 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
-
 def getJson(s):
     content = s.strip().split('\t')
     if len(content) == 3:
         start = content[2].find("({") + 1
         js = content[2][start:-1]
         return (content[0], content[1], json.loads(valid_jsontxt(js)))
-
 
 def parseJson(ob):
     result = []
@@ -123,12 +120,16 @@ def parseJson(ob):
     result.append(ts)  # timestamp
     return (itemid, [valid_jsontxt(i) for i in result])
 
-
 def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
 
-
 sc = SparkContext(appName="xianyu_iteminfo" + lastday)
-data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*")
-data.map(lambda a: parseJson(getJson(a))).filter(lambda x: x != None).groupByKey().mapValues(list).map(
-    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_2016")
+
+data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*")\
+            .map(lambda a: parseJson(getJson(a)))\
+                .filter(lambda x: x != None)\
+                    .groupByKey().mapValues(list)\
+                        .map(lambda a: distinct(a[1]))\
+                            .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
+#从userinfo_by_nick中提取iteminfo
+# data_1 = sc .textFile("/commit/2taobao/userinfo_by_nick/*/*")

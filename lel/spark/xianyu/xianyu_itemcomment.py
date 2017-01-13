@@ -14,7 +14,6 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
-
 def getJson(s):
     content = [valid_jsontxt(i) for i in (s.strip().split('\t'))]
     if len(content) == 4:
@@ -25,7 +24,6 @@ def getJson(s):
         return (ts, itemid, json.loads(valid_jsontxt(js)))
     else:
         return ()
-
 
 def parseJson(ob):
     if len(ob) == 0: return [None]
@@ -54,11 +52,15 @@ def parseJson(ob):
     return result
 
 def distinct(arr):
-    return '\001'.join([valid_jsontxt(i) for i in max(arr, key=itemgetter(-1))])
+    re = max(arr, key=itemgetter(-1))
+    return '\001'.join([valid_jsontxt(i) for i in re])
 
 
 sc = SparkContext(appName="xianyu_iteminfo_comment" + lastday)
 
-data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")
-re = data.flatMap(lambda a: parseJson(getJson(a))).filter(lambda a: a != None).groupByKey().mapValues(list).map(
-    lambda a: distinct(a[1])).saveAsTextFile("/user/lel/temp/xianyu_comment_2016")
+data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")\
+            .flatMap(lambda a: parseJson(getJson(a)))\
+                .filter(lambda a: a != None)\
+                    .groupByKey().mapValues(list)\
+                        .map(lambda a: distinct(a[1]))\
+                            .saveAsTextFile("/user/lel/temp/xianyu_itemcomment")
