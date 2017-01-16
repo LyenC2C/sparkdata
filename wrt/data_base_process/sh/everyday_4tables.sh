@@ -6,7 +6,17 @@ source ~/.bashrc
 
 
 sh ./shopitem_b.sh 20170107 20170106
-sh ./item_sold.sh 20170107 20170106 20170110
+sh ./shopitem_b.sh 20170108 20170107
+sh ./shopitem_b.sh 20170109 20170108
+sh ./shopitem_b.sh 20170110 20170109
+sh ./shopitem_b.sh 20170111 20170110
+sh ./shopitem_b.sh 20170112 20170111
+sh ./shopitem_b.sh 20170113 20170112
+sh ./shopitem_b.sh 20170114 20170113
+sh ./shopitem_b.sh 20170115 20170114
+
+
+#sh ./item_sold.sh 20170107 20170106 20170110
 
 #sh ./item_sold.sh 20161204 20161202 20161202
 
