@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
-#zuotian=$(date -d '1 days ago' +%Y%m%d)
-#qiantian=$(date -d '2 days ago' +%Y%m%d)
+zuotian=$(date -d '1 days ago' +%Y%m%d)
+qiantian=$(date -d '2 days ago' +%Y%m%d)
 
 #zuotian='20161204'
 #qiantian='20161203'
-zuotian=$1
-qiantian=$2
+#zuotian=$1
+#qiantian=$2
 
 hfs -rmr /user/wrt/shopitem_tmp >> $pre_path/wrt/data_base_process/sh/log_shopitem/log_$zuotian 2>&1
 
