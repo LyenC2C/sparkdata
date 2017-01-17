@@ -20,15 +20,17 @@ def getJson(s):
         start = content[2].find("({") + 1
         js = content[2][start:-1]
         return (content[0], content[1], json.loads(valid_jsontxt(js)))
+    else:
+        return None
 
 def parseJson(ob):
+    if ob is None:return None
     result = []
     ts = ob[0]
     itemid = ob[1]
-    if type(ob[2]) != type({}): return None
+    if not isinstance(ob[2],dict): return None
     item = ob[2].get("data", {}).get("item", {})
-    if item.get("id") == '':
-        return None
+    if item.get("id") == '':return None
     area = item.get("area", "\\N")
     phone = item.get("phone", "\\N")
     contacts = item.get("contacts", "\\N")
@@ -127,9 +129,7 @@ sc = SparkContext(appName="xianyu_iteminfo" + lastday)
 
 data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*")\
             .map(lambda a: parseJson(getJson(a)))\
-                .filter(lambda x: x != None)\
+                .filter(lambda x: x is not None)\
                     .groupByKey().mapValues(list)\
                         .map(lambda a: distinct(a[1]))\
                             .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
-#从userinfo_by_nick中提取iteminfo
-# data_1 = sc .textFile("/commit/2taobao/userinfo_by_nick/*/*")

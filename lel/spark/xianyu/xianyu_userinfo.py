@@ -29,15 +29,15 @@ def getJson(s):
 
 
 def parseJson(data):
-    if data == None: return None
+    if data is None: return None
     result = []
     ts = data[0]
     ob = data[1]
-    if type(ob) != type({}): return None
+    if not isinstance(ob,dict): return None
     idleItemSearch = ob.get("idleItemSearch@2", {}).get("data", {})
     totalCount = idleItemSearch.get("totalCount", "\\N")
     userPersonalInfo = ob.get("userPersonalInfo@1", {}).get("data", {})
-    if len(userPersonalInfo) == 0: return None
+    if not userPersonalInfo: return None
     userId = userPersonalInfo.get("userId", "\\N")
     if userId == "\\N": return None
     gender = userPersonalInfo.get("gender", "\\N")
@@ -78,7 +78,7 @@ def distinct(list):
 path = "/commit/2taobao/userinfo_by_nick/*/*"
 
 rdd = sc.textFile(path).map(lambda x: parseJson(getJson(x))) \
-    .filter(lambda x: x != None) \
+    .filter(lambda x: x is not None) \
     .groupByKey().mapValues(lambda a: distinct(list(a))) \
     .repartition(100) \
     .saveAsTextFile('/user/lel/temp/xianyu_userinfo')

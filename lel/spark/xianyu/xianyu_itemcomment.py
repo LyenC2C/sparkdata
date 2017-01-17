@@ -23,16 +23,16 @@ def getJson(s):
         js = content[3][start:-1]
         return (ts, itemid, json.loads(valid_jsontxt(js)))
     else:
-        return ()
+        return None
 
 def parseJson(ob):
-    if len(ob) == 0: return [None]
+    if ob is None: return [None]
     ts = ob[0]
     itemid = ob[1]
-    if type(ob[2]) != type({}): return [None]
+    if not isinstance(ob[2],dict): return [None]
     items = ob[2].get("data", {}).get("items", [])
     result = []
-    if len(items) > 0 and type(items) == type([]):
+    if items:
         for item in items:
             lv = []
             if item.get("itemId", "") != "":
@@ -60,7 +60,7 @@ sc = SparkContext(appName="xianyu_iteminfo_comment" + lastday)
 
 data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")\
             .flatMap(lambda a: parseJson(getJson(a)))\
-                .filter(lambda a: a != None)\
+                .filter(lambda a: a is not None)\
                     .groupByKey().mapValues(list)\
                         .map(lambda a: distinct(a[1]))\
                             .saveAsTextFile("/user/lel/temp/xianyu_itemcomment")
