@@ -8,7 +8,7 @@ table=wlbase_dev.t_base_ec_shop_dev_new
 
 hive<<EOF
 use wlbase_dev;
-LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE $table PARTITION (ds='temp');
+LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE $table PARTITION (ds='0temp');
 
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
@@ -36,10 +36,9 @@ case when t1.shop_id is null then t2.is_online else t1.is_online end,
 case when t1.shop_id is null then t2.shop_type else t1.shop_type end,
 case when t1.shop_id is null then t2.shop_certifi else t1.shop_certifi end
 from
-(select * from $table where ds = 'temp')t1
+(select * from $table where ds = '0temp')t1
 full outer JOIN
 (select * from $table where ds = $lastday)t2
 ON
 t1.shop_id = t2.shop_id;
-
 EOF
