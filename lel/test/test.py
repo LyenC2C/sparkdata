@@ -1,20 +1,140 @@
+#coding:utf-8
+'''
+闲鱼数据url中提取userid
+'''
+from urlparse import urlparse
+url = "https://h5.m.taobao.com/2shou/pd/rearesulterifyUrl.html?userId=296519963&isVerify=0"
+params = urlparse(url).query
 
+kv = {}
+for key_value in params.split('&'):
+    key = key_value.split('=')[0]
+    value = key_value.split('=')[1]
+    kv.setdefault(key, value)
 
-# line = '1481990401	542875914150	mtopjsonp1({"api":"com.taobao.idle.item.detail","data":{"item":{"area":"320382:邳州","attributes":"ends:1482239824;yt:105;imageCount:2;pic:640X1136;promotedtype:12583680;textCount:0;","auctionType":"b","barDO":{"actionUrl":"fleamarket://fishpond?id=105","bar":"浙江大学城市学院","barInfo":"result.7","leftIcon":{"height":"15","tagUrl":"https://gw.alicdn.com/tps/TB1R.2aMVXXXXXWXVXXXXXXXXXX-28-28.png","width":"15"}},"bidStatus":"0","browseCount":"25","canBuy":"true","canEditDescription":"true","canPolish":"true","categoryId":"50025445","categoryName":"运动器材","city":"徐州","collectNum":"0","commentNum":"0","commonShareContent":"跟市场价比起来简直八哥价啊！戳进捡漏！#真皮拳击手套#","containsImage":"false","deleteByXiaoer":"false","desc":"感兴趣的话给我留言吧！","descUrl":"http://dsc.taobaocdn.com/i6/540/870/542875914150/TB1L89COFXXXXcsXXXX8qtpFXlX.desc%7Cvar%5Edesc%3Bsign%5Ed12a39ba7f3bd4ad0ea7810a4fd66036%3Blang%5Egb18030%3Bt%5E0","description":"感兴趣的话给我留言吧！","descriptionInfo":"感兴趣的话给我留言吧！","detailFrom":"来自iPhone客户端","divisionId":"320382","favorNum":"0","favored":"false","favoredUserIds":[],"firstModified":"2016-12-16 18:24:29","firstModifiedDiff":"1天前","fishPoolId":"105","fishpoolId":"105","fishpoolName":"浙江大学城市学院","fpSelected":"0","from":"iphone","gps":"34.545819,117.885362","id":"542875914150","imageUrls":["http://img.alicdn.com/bao/uploaded/i3/TB1.Bt1OFXXXXc4aXXXenP6FpXX","http://img.alicdn.com/bao/uploaded/i2/296519963/TB2R8cmXxdkpuFjy0FbXXaNnpXa_!!0-fleamarket.jpg"],"instockByXiaoer":"false","itemCC":"false","itemDeleted":"false","itemStatus":"0","lastAuthorVisitTime":"1481983407431","lastAuthorVisitTimeDiff":"1小时前来过","leftSecond":"0","locationAware":"false","needRecommand":"true","offline":"0","online":"true","originalPrice":"0.00","outStockTime":"2017-03-16 18:24:29","picUrl":"http://img.alicdn.com/bao/uploaded/i4/TB1Zh46OFXXXXXwaXXXenP6FpXX","postPrice":"6.00","price":"280","province":"江苏","resell":"false","secuGuide":{"secuTitle":"什么是闲鱼支付宝担保交易？","secuBody":"https://gw.alicdn.com/tps/TB1mIh4LpXXXXXCaXXXXXXXXXXX-510-394.png","secuBtmUrl":"https://ihelp.taobao.com/pocket/index.htm?psc=28","secuIcon":"https://gw.alicdn.com/tps/TB1xwS9MVXXXXbGXVXXXXXXXXXX-24-24.png","secuBtm":"*闲置商品不支持7天无理由退货服务。请保证在闲鱼平台进行支付，否则闲鱼将无法保证您交易的安全。","secuBtmContext":"点击查看更多知识","secuContent":"担保交易"},"serviceStatus":"0","shortUrl":"http://2.taobao.com/item.htm?id=542875914150","structuredHouse":"false","stuffStatus":"9","subTags":[{"name":"徐州","search":{"province":"江苏","city":"徐州"},"type":"1"},{"name":"浙江大学城市学院","search":{"fishpoolId":"105","pondId":"105"},"type":"3"}],"subscribed":"false","templateId":"2134001330","title":"真皮拳击手套","tradeType":"0","userId":"0","userNick":"cherry谢雨枝","userTagUrlFromServer":"false","videoid":"0","weiboShareContent":"跟市场价比起来简直八哥价啊！戳进捡漏！#真皮拳击手套#","wxurl":"http://www.xianyu.mobi/2shou/appRedirect.html?page=item&id=542875914150","xianyuAbbr":{"abbr":"来闲鱼738天了,卖出过6件宝贝现居徐州邳州，80后摩羯座女生","officialTagList":[{"appearTrackName":"","comment":"实人认证未通过","iconUrl":"https://gw.alicdn.com/tps/TB1TBKcOpXXXXcUapXXXXXXXXXX-32-32.png","link":"https://h5.m.taobao.com/2shou/pd/rearesulterifyUrl.html?userId=296519963&isVerify=0","trackCtrlName":"Button-Shiren","type":"1"},{"appearTrackName":"","comment":"芝麻信用未授权","iconUrl":"https://gw.alicdn.com/tps/TB1resultuGOpXXXXasXFXXXXXXXXXX-32-32.png","link":"ignore=false&userzhima=false&loginuserzhima=false","trackCtrlName":"Button-Zhima","type":"100"}]}},"serverTime":"2016-12-18 00:00:01"},"ret":["SUCCESS::调用成功"],"v":"2.0"})'
-# data = line.strip().split('\t')
-
-# print parseJson(getJson(data))
-# url = "https://h5.m.taobao.com/2shou/pd/rearesulterifyUrl.html?userId=296519963&isVerify=0"
-# params = urlparse(url).query
-# kv = {}
-# for key_value in params.split('&'):
-#     key = key_value.split('=')[0]
-#     value = key_value.split('=')[1]
-#     kv.setdefault(key, value)
-#
 # print kv.get("userId")
-# print url
-# values = url.split('?')[-1]
-# for key_value in values.split('&'):
-#     print key_value.split('=')[1]
-# print values
+
+print
+
+'''
+max [[],[],[]] -> []
+max ((),(),()) -> ()
+'''
+from operator import itemgetter
+li = []
+
+a = ['a', 15]
+c = ['c', 9]
+b = ['b', 12]
+
+li.append(a)
+li.append(b)
+li.append(c)
+# ls = max(li, key=lambda a: a[1])
+ls = max(li, key=itemgetter(-1))
+# print ls[0],ls[1]
+'''
+sorted
+'''
+li_sorted = sorted(li,key=lambda a:a[-1],reverse=True)
+'''
+for each in li_sorted:
+    print each[0],each[1]
+'''
+
+#pythonic
+1.
+dic = {"lyen":"cc","lc":"22"}
+if "lyen" in dic:print "yes"
+2.
+dictionary = {}
+dictionary.setdefault("key", []).append("list_item")
+for k,v in dictionary.iteritems():
+    print k,v
+3.
+3.1
+d = {}
+if 'a' not in d:
+    d['a'] = 100
+d['a'] += 10
+3.2
+from collections import defaultdict
+d = defaultdict(lambda: 100)
+d['a'] += 10
+4
+4.1
+#items() 返回的是一个 list，list 在迭代的时候会预先把所有的元素加载到内存
+ds = {i: i * 2 for i in xrange(10000000)}
+#for key, value in d.items():
+#    print("{0} = {1}".format(key, value))
+4.2
+#而iteritem()返回的一个迭代器(iterators)，迭代器在迭代的时候，迭代元素逐个的生成。
+# for key, value in ds.iteritems():
+#     print("{0} = {1}".format(key, value))
+5
+#合并多个字典
+5.1
+#items()方法在python2.7中返回的是列表对象，两个列表相加得到一个新的列表，这样内存中存在3个列表对象，
+x = {'a': 1, 'b': 2}
+y = {'b': 3, 'c': 4}
+z = dict(x.items() + y.items())
+5.2
+#优化
+x = {'a': 1, 'b': 2}
+y = {'b': 3, 'c': 4}
+z = x.copy()
+z.update(y)
+5.3
+def merge_dicts(*dict_args):
+    '''
+   可以接收1个或多个字典参数
+    '''
+    result = {}
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
+#z = merge_dicts(a, b, c, d)
+'''
+try:
+    value = collection[key]
+except KeyError:
+    return key_not_found(key)
+else:
+    return handle_value(value)
+#No:
+try:
+    # Too broad!
+    return handle_value(collection[key])
+except KeyError:
+    # Will also catch KeyError raised by handle_value()
+    return key_not_found(key)
+'''
+
+'''
+Yes: if foo.startswith('bar'):
+No:  if foo[:3] == 'bar':
+
+Yes: if isinstance(obj, int):
+No:  if type(obj) is type(1):
+
+For sequences, (strings, lists, tuples), use the fact that empty sequences are false.
+Yes: if not seq:
+     if seq:
+No: if len(seq):
+    if not len(seq):
+
+Yes:   if greeting:
+No:    if greeting == True:
+Worse: if greeting is True:
+
+[ item for item in os.listdir(os.path.expanduser('~')) if os.path.isfile(item) ]
+{ item: os.path.realpath(item) for item in os.listdir(os.path.expanduser('~')) if os.path.isdir(item) }
+
+with open(r'C:\misc\data.txt') as myfile:
+    for line in myfile:
+        ...use line here..
+'''
+'''
+b = 2 if a > 2 else 1
+b = False if a > 1 else True #A ? B : C
+'''
