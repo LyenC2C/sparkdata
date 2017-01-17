@@ -8,7 +8,7 @@ table=wlbase_dev.t_base_ec_shop_dev_new
 
 hive<<EOF
 use wlbase_dev;
-LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE $table PARTITION (ds='0temp');
+LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE $table PARTITION(ds='0temp');
 
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
