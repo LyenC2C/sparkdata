@@ -62,5 +62,5 @@ data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")\
             .flatMap(lambda a: parseJson(getJson(a)))\
                 .filter(lambda a: a is not None)\
                     .groupByKey().mapValues(list)\
-                        .map(lambda a: distinct(a[1]))\
+                        .map(lambda (a,b): distinct(b))\
                             .saveAsTextFile("/user/lel/temp/xianyu_itemcomment")

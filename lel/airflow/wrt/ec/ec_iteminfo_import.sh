@@ -9,7 +9,7 @@ table=wl_base.t_base_ec_item_dev_new
 hive<<EOF
 
 use wl_base;
-LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE $table PARTITION (ds='0temp');
+LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE $table PARTITION(ds='0temp');
 
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
