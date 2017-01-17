@@ -1,4 +1,4 @@
-drop table wl_analysis.t_wrt_caiji_record_b_feed;
+drop table wl_analysis.t_wrt_caiji_record_b_feed
 create table wl_analysis.t_wrt_caiji_record_b_feed(
 item_id string comment '商品id',
 new_ds string comment '商品在已在库中的最新时间',
