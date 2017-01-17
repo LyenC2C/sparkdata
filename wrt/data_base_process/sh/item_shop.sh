@@ -14,7 +14,7 @@ $pre_path/wrt/data_base_process/t_base_item_info.py -spark
 hive<<EOF
 
 use wl_base;
-LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE wl_base.t_base_ec_item_dev_new PARTITION (ds='temp');
+LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE wl_base.t_base_ec_item_dev_new PARTITION (ds='0temp');
 
 insert OVERWRITE table t_base_ec_item_dev_new PARTITION(ds = $today)
 select
@@ -39,7 +39,7 @@ case when t1.item_id is null then t2.paramap else t1.paramap end,
 case when t1.item_id is null then t2.sku else t1.sku end,
 case when t1.item_id is null then t2.ts else t1.ts end
 from
-(select * from t_base_ec_item_dev_new where ds = 'temp')t1
+(select * from t_base_ec_item_dev_new where ds = '0temp')t1
 full outer JOIN
 (select * from t_base_ec_item_dev_new where ds = $lastday)t2
 ON
@@ -52,7 +52,7 @@ spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 1
 $pre_path/wrt/data_base_process/t_base_shop_info.py
 hive<<EOF
 use wlbase_dev;
-LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='temp');
+LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE t_base_ec_shop_dev_new PARTITION (ds='0temp');
 
 insert OVERWRITE table t_base_ec_shop_dev_new PARTITION(ds = $today)
 select
@@ -80,7 +80,7 @@ case when t1.shop_id is null then t2.is_online else t1.is_online end,
 case when t1.shop_id is null then t2.shop_type else t1.shop_type end,
 case when t1.shop_id is null then t2.shop_certifi else t1.shop_certifi end
 from
-(select * from t_base_ec_shop_dev_new where ds = 'temp')t1
+(select * from t_base_ec_shop_dev_new where ds = '0temp')t1
 full outer JOIN
 (select * from t_base_ec_shop_dev_new where ds = $lastday)t2
 ON
