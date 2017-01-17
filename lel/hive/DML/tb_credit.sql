@@ -3,7 +3,7 @@ item 评论表
 t_base_ec_item_feed_dev_new -> content,fed_id,f_date,item_id,user_id
 
 
-create table if not exists wlcredit.t_lel_credit_feed
+create table if not exists wlcredit.t_lel_credit_feed as
 select
 transform(item_id,feed_id,f_date,content)
 using 'python lel_udf.py'
@@ -13,4 +13,9 @@ from
 item_id,feed_id,f_date,content
 from
 wlbase_dev.t_base_ec_item_feed_dev_new
-) t
+) t where cast(t.fraud_score as int) >=2
+
+
+
+
+

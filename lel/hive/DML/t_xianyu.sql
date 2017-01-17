@@ -1,11 +1,13 @@
-insert OVERWRITE table wlbase_dev.t_base_ec_xianyu_iteminfo PARTITION(ds='20160721_old')
+
+
+insert OVERWRITE table wlbase_dev.t_base_ec_xianyu_userinfo PARTITION(ds='20160721_old')
 select
 id,userId,null,null,title,province,city,area,auctiontype,description,detailFrom,favorNum,
 commentNum,firstModified,null,t_from,gps,offline,originalPrice,price,null,userNick,categoryId,
 null,null,community_name,community_name,null,null,null,null,null
 from wlbase_dev.t_base_ec_tb_xianyu_item_old
 
-load data inpath "/user/lel/result" into table t_lel_ec_xianyu_item_info;
+load data inpath "/user/lel/result" into table t_lel_ec_xianyu_userinfo;
 
 spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 ~/wolong/sparkdata/spark/t_xianyu.py
 
@@ -43,5 +45,3 @@ case when barinfo ='-' then '\\N'  else categoryname end,
 case when abbr ='-' then '\\N' else categoryname end,
 zhima,shiren,ts
 from wlbase_dev.t_base_ec_xianyu_iteminfo_old where ds = '20160721_old'
-
-
