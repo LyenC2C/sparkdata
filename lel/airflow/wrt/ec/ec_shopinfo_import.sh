@@ -41,5 +41,4 @@ full outer JOIN
 (select * from $table where ds = $lastday)t2
 ON
 t1.shop_id = t2.shop_id;
-
 EOF

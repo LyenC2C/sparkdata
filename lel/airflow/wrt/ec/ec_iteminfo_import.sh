@@ -39,5 +39,4 @@ full outer JOIN
 (select * from $table where ds = $lastday)t2
 ON
 t1.item_id = t2.item_id;
-
 EOF
