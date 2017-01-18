@@ -1,6 +1,6 @@
 # coding=utf-8
-import rapidjson as json
 from pyspark import SparkContext
+import rapidjson as json
 from operator import itemgetter
 import sys
 
@@ -48,7 +48,7 @@ def parseJson(ob):
                 lv.append(reporterName)
                 lv.append(reporterNick)
                 lv.append(ts)
-                result.append((commentId, lv))
+                result.append((commentId, [valid_jsontxt(i) for i in lv]))
     return result
 
 def distinct(arr):
@@ -64,3 +64,16 @@ data = sc.textFile("/commit/2taobao/leave_comment/*" + lastday + "/*")\
                     .groupByKey().mapValues(list)\
                         .map(lambda (a,b): distinct(b))\
                             .saveAsTextFile("/user/lel/temp/xianyu_itemcomment")
+
+'''
+data_20161223 = sc.textFile("/commit/2taobao/leave_comment/*" + "20161223" + "/*")
+data_20170103 = sc.textFile("/commit/2taobao/leave_comment/*" + "20170103" + "/*")
+data_20170111 = sc.textFile("/commit/2taobao/leave_comment/*" + "20170111" + "/*")
+data_20161223.union(data_20170103).union(data_20170111)\
+.flatMap(lambda a: parseJson(getJson(a))) \
+    .filter(lambda a: a is not None) \
+    .groupByKey().mapValues(list) \
+    .map(lambda (a,b): distinct(b)) \
+    .saveAsTextFile("/user/lel/temp/xianyu_itemcomment_all_2")
+'''
+
