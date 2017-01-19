@@ -1,13 +1,11 @@
 #!/usr/bin
 
-#闲鱼itemcomment——日更——当天处理的是昨天的数据
 source ~/.bashrc
 date
 date  +%Y%m%d
 
-lastday=$(date -d '1 days ago' +%Y%m%d)
-last_2_days=$(date -d '2 days ago' +%Y%m%d)
-
+lastday=$1
+last_update_date=$2
 table=wlbase_dev.t_base_ec_xianyu_itemcomment
 
 hive<<EOF
@@ -25,7 +23,7 @@ case when t1.commentId is null then t2.ts else t1.ts end
 from
 (select * from  $table where ds = '0000tmp')t1
 full outer JOIN
-(select * from $table where ds = $last_2_days)t2
+(select * from $table where ds = $last_update_date)t2
 ON
 t1.commentId = t2.commentId;
 EOF
