@@ -1,6 +1,5 @@
 from airflow import DAG
 from airflow.utils.helpers import chain
-from datetime import datetime,timedelta
 from airflow.contrib.operators.ssh_execute_operator import SSHExecuteOperator
 from airflow.contrib.hooks.ssh_hook import SSHHook
 from airflow.operators.email_operator import EmailOperator
@@ -8,6 +7,8 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import BranchPythonOperator
 from airflow.models import Variable
 
+import logging
+from datetime import datetime,timedelta
 import sys
 import os
 reload(sys)
@@ -32,6 +33,7 @@ dag = DAG('xianyu_itemcomment',default_args=default_args,schedule_interval='30 7
 sshHook = SSHHook(conn_id="cs220")
 path = Variable.get('lel_xianyu_itemcomment')
 
+logging.info("airflow workflow is running")
 
 def get_lastday():
     import datetime
@@ -48,15 +50,16 @@ def check_attach():
     except:
         raise Exception("ssh operation failed!")
     else:
-        return  '1' if '1' in result else '0'
+        return  'update' if '1' in result else 'pass'
 
 def get_last_update_date():
     try:
-        result = os.popen(check_partition_cmd).readline()
+        result = os.popen(check_partition_cmd,"r").readline()
     except:
         raise Exception("ssh operation failed!")
     else:
         return  str(eval(result))
+
 
 spark = SSHExecuteOperator(
     task_id="comment_parse",
@@ -81,7 +84,11 @@ email_update_not = EmailOperator(task_id='xianyu_itemcomment_update_not_email',
                              html_content='[ xianyu data updating!!! ]',
                              dag=dag)
 branching = BranchPythonOperator(task_id='check_attach',
-                                              python_callable=lambda: check_attach(),
-                                              dag=dag)
-chain(branching,spark,hive,email_update)
-chain(branching,email_update_not)
+                                 python_callable=lambda: check_attach(),
+                                 dag=dag)
+
+passover = DummyOperator(task_id='pass', dag=dag)
+update = DummyOperator(task_id='update', dag=dag)
+
+chain(branching,passover,email_update_not)
+chain(branching,update,spark,hive,email_update)
