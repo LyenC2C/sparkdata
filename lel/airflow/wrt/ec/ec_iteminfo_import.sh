@@ -16,7 +16,7 @@ select
 case when t1.item_id is null then t2.item_id else t1.item_id end,
 case when t1.item_id is null then t2.title else t1.title end,
 case when t1.item_id is null then t2.cat_id else t1.cat_id end,
-case when t1.item_id is null then t2.cat_ name else t1.cat_name end,
+case when t1.item_id is null then t2.cat_name else t1.cat_name end,
 case when t1.item_id is null then t2.root_cat_id else t1.root_cat_id end,
 case when t1.item_id is null then t2.root_cat_name else t1.root_cat_name end,
 case when t1.item_id is null then t2.brand_id else t1.brand_id end,
