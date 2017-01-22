@@ -36,8 +36,8 @@ def get_date():
     import datetime
     today = datetime.datetime.now()
     lastday = (today + datetime.timedelta(days=-1)).strftime('%Y%m%d')
-    lastday_2_day = (today + datetime.timedelta(days=-2)).strftime('%Y%m%d')
-    return (lastday,lastday_2_day)
+    lastday_2_days = (today + datetime.timedelta(days=-2)).strftime('%Y%m%d')
+    return (lastday,lastday_2_days)
 
 check_partition_cmd ="ssh -p 22 wrt@cs220 bash {path}/get_partition.sh".format(path=path)
 
