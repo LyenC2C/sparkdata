@@ -74,7 +74,7 @@ def parse(line):
     bi_followers_count=ob.get('bi_followers_count','-')
     lang=ob.get('lang','-')
     rs=[id,idstr,screen_name,name,province,city,location,description,url,profile_image_url,profile_url,domain,weihao,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,allow_all_act_msg,geo_enabled,verified,verified_type,remark,allow_all_comment,avatar_large,avatar_hd,verified_reason,follow_me,online_status,bi_followers_count,lang]
-    return (id,'\001'.join([ str(i) for i in rs] ))
+    return (id,'\001'.join([valid_jsontxt(i) for i in rs] ))
 
 
 def try_parse(line):
@@ -85,8 +85,6 @@ def try_parse(line):
 
 # sc.textFile('/data/develop/sinawb/user_info.json.20160401').map(lambda x:parse(x)).filter(lambda x:x!=None).groupByKey().map(lambda (x,y):list(y)[0])\
 #     .map(lambda x:'\001'.join([ str(i) for i in x])).saveAsTextFile('/user/zlj/tmp/sinawb_user_info.json.20160401')
-
-
 
 sc.textFile('/commit/weibo/userinfo/20161206').map(lambda x:parse(x)).filter(lambda x:x!=None).\
     groupByKey().map(lambda (x,y):list(y)[0]).saveAsTextFile('/user/wrt/temp/userinfo_all')

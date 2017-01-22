@@ -127,5 +127,7 @@ rdd_c.saveAsTextFile('/user/wrt/temp/weibo_text')
 #hfs -rmr /user/wrt/temp/weibo_text
 # spark-submit  --executor-memory 20G  --driver-memory 20G  --total-executor-cores 300 t_base_weibo_text.py
 #LOAD DATA  INPATH '/user/wrt/temp/weibo_text' INTO TABLE t_base_weibo_text PARTITION (ds='20161103');
-#20161026的数据是新的1.8亿的微博用户数据
+#commit下的20161026的数据是新的1.8亿的微博用户数据
 #ds='20161103'是将10.26到11.01的1.8亿打通电话的微博用户的微博内容存储分区，这几天有8千万左右数据量，后面全部采集完毕依然入这个分区
+#20161126是所有1.8亿打通电话微博数据，然而只有9千万数据打通。
+

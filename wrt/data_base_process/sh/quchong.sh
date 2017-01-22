@@ -1,5 +1,7 @@
 pre_path='/home/wrt/sparkdata'
 
+sh $pre_path/wrt/data_base_process/sh/shopitem_b.sh 20161203 20161202
+
 #qiantian='20151028'
 #zuotian='20151029'
 #

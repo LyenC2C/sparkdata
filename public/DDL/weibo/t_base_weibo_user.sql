@@ -1,6 +1,6 @@
 
-CREATE  TABLE  if not exists t_base_weibo_user(
-
+-- CREATE  TABLE  if not exists t_base_weibo_user(
+CREATE  TABLE  if not exists t_base_weibo_user_new(
 id bigint COMMENT ' 用户UID ' ,
 idstr string COMMENT ' 字符串型的用户UID ',
 screen_name string COMMENT ' 用户昵称 ',
@@ -26,7 +26,7 @@ geo_enabled string COMMENT ' 是否允许标识用户的地理位置，true：�
 verified string COMMENT ' 是否是微博认证用户，即加V用户，true：是，false：否 ',
 verified_type int COMMENT ' 暂未支持 ',
 remark string COMMENT ' 用户备注信息，只有在查询用户关系时才返回此字段 ',
-status string COMMENT  '',
+-- status string COMMENT  '',
 allow_all_comment boolean COMMENT ' 是否允许所有人对我的微博进行评论，true：是，false：否 ',
 avatar_large string COMMENT ' 用户头像地址（大图），180×180像素 ',
 avatar_hd string COMMENT ' 用户头像地址（高清），高清头像原图 ',

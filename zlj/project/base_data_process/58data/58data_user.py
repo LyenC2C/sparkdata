@@ -58,7 +58,8 @@ def parse(line):
             title,
             tradeline,
             uid,
-            uname,]
+            uname]
+    # return (infoid[0],[ i[0] for i in rs])
     return (infoid[0],[ i[0] for i in rs])
 
 

@@ -41,5 +41,6 @@ rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_user_fri/ds=201611
 v_list = sc.broadcast(sc.textFile(s_v).map(lambda x:f2(x)).collectAsMap()).value
 rdd.map(lambda x:f(x,v_list)).filter(lambda x:x!=None).saveAsTextFile("/user/wrt/temp/weibo_follow_guopiaov")
 
+# hfs -rmr /user/wrt/temp/weibo_follow_guopiaov
 # spark-submit  --executor-memory 16G  --driver-memory 16G  --total-executor-cores 200 weibo_follow.py
-#LOAD DATA INPATH '/user/wrt/temp/weibo_follow_guopiaov' OVERWRITE INTO TABLE wlservice.t_wrt_huaxun_weibo_user_keywords;
+#LOAD DATA INPATH '/user/wrt/temp/weibo_follow_guopiaov' OVERWRITE INTO TABLE wlservice.t_wrt_huaxun_weiboid_keywords;

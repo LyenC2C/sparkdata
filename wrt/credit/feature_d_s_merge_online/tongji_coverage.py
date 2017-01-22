@@ -32,7 +32,7 @@ def dict_list(fcount_dict):
 
 
 
-rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge_online/ds=20170106")
+rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge_online/ds=20170107")
 rdd_fname = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=5kfeature_addnewfeature")
 
 fname_dict = sc.broadcast(rdd_fname.map(lambda x: (valid_jsontxt(x.split("\t")[1]),valid_jsontxt(x.split("\t")[0])))\
@@ -45,3 +45,4 @@ rdd_fcount.saveAsTextFile("/user/wrt/temp/feature_coverage")
 # fcount_list = dict_list(fcount_dict).
 
 
+#create table wlservice.t_wrt_online_feature_coverage(feature_name string,coverage bigint);

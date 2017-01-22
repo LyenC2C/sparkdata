@@ -119,4 +119,4 @@ rdd_c.groupByKey().mapValues(list).map(lambda (x,y): quchong(x,y))\
 
 # hfs -rmr /user/wrt/temp/shuang11_iteminfo
 # spark-submit --executor-memory 6G   --driver-memory 8G  --total-executor-cores 80  shuang11_item_info.py
-# LOAD DATA  INPATH '/user/wrt/temp/shuang11_iteminfo' OVERWRITE INTO TABLE wlservice.t_wrt_tmp_shuang11_iteminfo;
+# LOAD DATA  INPATH '/user/wrt/temp/shuang11_iteminfo' OVERWRITE INTO TABLE wlservice.t_wrt_tmp_shuang11_iteminfo_new;

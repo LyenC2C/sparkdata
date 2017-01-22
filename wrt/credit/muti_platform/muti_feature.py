@@ -27,7 +27,7 @@ def f(line):
     return (phone,[platform,reg])
 
 def f2(x,y,muti):
-    result = [-1] * 21
+    result = ["-1"] * 21
     for ln in y:
         i = muti.index(valid_jsontxt(ln[0]))
         result[i] = valid_jsontxt(ln[1])
@@ -38,3 +38,4 @@ muti = ["和信贷","借了吗","马上金融","好贷宝","缺钱么","拍拍�
 
 rdd = sc.textFile("/hive/warehouse/wl_base.db/t_base_muti_platform/ds=20170116")
 rdd.map(lambda x:f(x)).groupByKey().mapValues(list).map(lambda (x, y): f2(x,y,muti)).saveAsTextFile("/user/wrt/temp/muti_feature")
+#load data inpath '/user/wrt/temp/muti_feature' into table wl_base.t_base_muti_platform partition(ds = 20170116);

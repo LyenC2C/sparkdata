@@ -37,7 +37,6 @@ round(sum(case when price <=10 then 1 else 0 end)/count(*),2)         as month6_
 round(sum(case when price <=10 then price else 0 end)/sum(price ),2)  as month6_b10_ratio,
 round(sum(case when price <=5 then 1 else 0 end)/count(*),2)         as   month6_b5_num_ratio,
 round(sum(case when price <=5 then price else 0 end)/sum(price ),2)  as   month6_b5_ratio,
-
 round(sum(case when price <=50 and CAST(price/5 as int )==10 then 1 else 0 end)/count(*),2) as  month6_b50_10_num_ratio,
 round(sum(case when price <=50 and CAST(price/5 as int )==9  then 1 else 0 end)/count(*),2) as  month6_b50_9_num_ratio,
 round(sum(case when price <=50 and CAST(price/5 as int )==8  then 1 else 0 end)/count(*),2) as  month6_b50_8_num_ratio,
@@ -62,14 +61,14 @@ round(sum(case when price <=50 and CAST(price/5 as int )==2  then price else 0 e
 round(sum(case when price <=50 and CAST(price/5 as int )==1  then price else 0 end)/sum(price),2) as month6_b50_1_ratio,
 round(sum(case when price <=50 and CAST(price/5 as int )==0  then price else 0 end)/sum(price),2) as month6_b50_0_ratio,
 round((sum(pow(2.8, datediff* (-0.005)))+20)/75,2)  as month6_active_score
-    from
-      wl_analysis.t_base_record_cate_simple_ds
-    where
-    substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' ),1,6) <= ds
-    and
-    regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' )<dsn
-    group by tel_index
-    ;
+from
+wl_analysis.t_base_record_cate_simple_ds
+where
+substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' ),1,6) <= ds
+and
+regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' )<dsn
+group by tel_index
+;
 
 -- SELECT
 -- tel_index,root_cat_id as cate_level1,

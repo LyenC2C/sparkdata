@@ -1,6 +1,6 @@
 #coding:utf-8
 __author__ = 'wrt'
-#此脚本目的主要是5000个特征基础上加入一些占比特征
+#此脚本目的主要是全量特征基础上加入一些占比特征,跑芝麻信用的数据
 import sys
 import rapidjson as json
 import copy
@@ -29,8 +29,8 @@ def add_index(feature5k):
     newfeature = copy.copy(feature5k)
     # add_list.append("1") #monthall_buy_count
     # add_list.append("2") #monthall_price_sum
-    add_index = 5000
-    for i in range(3,len(feature5k)):
+    add_index = 233747
+    for i in range(2,len(feature5k)):
         ln = valid_jsontxt(feature5k[i])
         if ("sum_price_level" in ln) or ("price_sum" in ln):
             numerator_price[str(i)] = str(add_index)
@@ -60,8 +60,8 @@ def f(line,numerator_price,numerator_count):
     ss = line.strip().split('\001')
     features = ss[1].split()
     result = copy.copy(features)
+    buy_price = float(features[0].split(":")[1])
     buy_count = float(features[1].split(":")[1])
-    buy_price = float(features[2].split(":")[1])
     for ln in features:
         f_index = ln.split(":")[0]
         f_value = float(ln.split(":")[1])
@@ -76,23 +76,25 @@ def f(line,numerator_price,numerator_count):
     return valid_jsontxt(ss[0]) + "\001" + " ".join(result)
 
 
-rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=20170105_online")
-feature5k = sc.textFile("/user/wrt/feature_5k").collect()
-#提取5k个特征中会用到的特征
-numerator_price,numerator_count,newfeature = add_index(feature5k)
+rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=20170113_cms")
+feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=20170113_cms")\
+    .map(lambda x:valid_jsontxt(x.split("\t")[0])).collect()
+# feature5k = sc.textFile("/user/wrt/feature_5k").collect()
+#提取原始特征中会用到的特征
+numerator_price,numerator_count,newfeature = add_index(feature_raw)
 fea_all_index = fea_index(newfeature)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/add_new_feature_name')
 rdd.map(lambda x:f(x,numerator_price,numerator_count)).saveAsTextFile('/user/wrt/temp/add_newfeature_inhive')
 
 hiveContext.sql('load data inpath "/user/wrt/temp/add_new_feature_name" overwrite into table \
-wlcredit.t_wrt_credit_all_features_name PARTITION (ds = "5kfeature_addnewfeature" )')
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = "20170113_cms_anf" )')
 
 hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/add_newfeature_inhive" OVERWRITE \
-INTO TABLE wlcredit.t_credit_feature_merge_online PARTITION (ds = '+ today +')')
+INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = "20170113_cms_anf")')
 
 
 # hfs -rmr /user/wrt/temp/add_new_feature_name && hfs -rmr /user/wrt/temp/add_newfeature_inhive
-# spark-submit --eecutor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat_online.py 20170106
+# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat_online.py 20170106
 
 
 

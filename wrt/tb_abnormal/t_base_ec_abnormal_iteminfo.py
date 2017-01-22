@@ -170,7 +170,7 @@ if __name__ == "__main__":
 
 # hfs -rmr /user/wrt/temp/iteminfo_tmp
 # spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 100 t_base_item_info.py -spark
-#LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
+# LOAD DATA  INPATH '/user/wrt/temp/abnormal_iteminfo' OVERWRITE INTO TABLE wl_base.t_base_ec_abnormal_iteminfo PARTITION (ds='20170117');
 # status_flag,data_flag：
 # 0,0（根本就没有此商品，内容都没有，也就没有了入库的必要）
 # 0,1（因为有可能是本次采集没采到，所以不能认为是下架，data_ts记录了过去采到时候的时间戳）

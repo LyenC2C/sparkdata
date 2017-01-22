@@ -3,11 +3,11 @@ item_id string comment '商品id',
 new_ds string comment '商品在已在库中的最新时间',
 sold string comment '销量(采集次序需要)'
 )
-COMMENT '采集淘宝评论所需的商品id'
-PARTITIONED BY  (ds STRING );
+COMMENT '采集淘宝评论所需的商品id';
 
 
-insert overwrite table wl_analysis.t_wrt_caiji_record_c_feed partition (ds = '20170104')
+
+insert overwrite table wl_analysis.t_wrt_caiji_record_c_feed
 select item_id,new_ds,sold from
 (
 select

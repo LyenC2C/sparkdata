@@ -10,3 +10,4 @@ location string comment '用户地点'
 COMMENT '电商淘宝用户信息表'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
+

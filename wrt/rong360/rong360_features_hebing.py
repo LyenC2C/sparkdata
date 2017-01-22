@@ -64,24 +64,10 @@ def feature_3j(line,fea_3j_dict,len_main):
     #         result.append("0.0")
     return (tel,result)
 
-# def hebing(x,y):
-#     # lv = []
-#     result = []
-#     if len(y) != 2:
-#         return None
-#     else:
-#         if len(y[0]) < len(y[1]):
-#             lv = y[0] + y[1]
-#         else:
-#             lv = y[1] + y[0]
-#     result.append(x)
-#     for i in range(len(lv)):
-#         result.append(str(i) + ":" + str(lv[i]))
-#     return " ".join([valid_jsontxt(ln) for ln in result])
 def tran_dict(fea_3j):
     fea_3j_dict = {}
     for i in range(len(fea_3j)):
-        fea_3j_dict[fea_3j[i]] = str(i)
+        fea_3j_dict[fea_3j[i]] = i
     return fea_3j_dict
 
 def hebing(x,y):
@@ -99,30 +85,26 @@ s_main = "/hive/warehouse/wlservice.db/t_rong360_model_features_new/000000_0"
 # s_2j = "/hive/warehouse/wlcredit.db/t_credit_record_cate2_feature/*"
 
 
-
-
-
 #主要特征字段提取并自动排列好
 rdd_fea_main = hiveContext.sql('desc wlservice.t_rong360_model_features_new')
-fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()]
+fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()[1:]]
 #记录主要特征长度，后面的在分配feature_3j的index时候用到
 len_main = len(fea_main)
 #三级特征字段去重并按照一定顺序排列好
 rdd_fea_3j = sc.textFile(s_3j).flatMap(lambda x:f_3j_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
-fea_3j = list(rdd_fea_3j.collect())
+fea_3j = rdd_fea_3j.collect()
 #将三级特征字段变成map形式，以提高效率
 fea_3j_dict = tran_dict(fea_3j)
 #每个电话按照新的三级特征顺序，将每个三级特征值依次输出，之前没有的特征用0代替
-rdd_3j = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j_dict,len_main)).value
+rdd_3j = sc.textFile(s_3j).map(lambda x:feature_3j(x,fea_3j_dict,len_main))
 #每个电话按照主要顺序，将每个一级特征值依次输出,0的过滤
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先主要特征，后三级特征的顺序
-rdd = rdd_main.join(rdd_3j).map(lambda x:x)
-    # .map(lambda (x,y):hebing(x,y))
-# rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features_test')
+rdd = rdd_main.join(rdd_3j).map(lambda (x,y):hebing(x,y))
+rdd.saveAsTextFile('/user/wrt/temp/rong360_tel_features_test')
 #全部特征字段输出.
 fea_all = fea_main + fea_3j
-# sc.parallelize(fea_all).saveAsTextFile('/user/wrt/temp/rong360_features_name_test')
+sc.parallelize(fea_all).saveAsTextFile('/user/wrt/temp/rong360_features_name_test')
 
 #
 # hfs -rmr /user/wrt/temp/rong360_tel_features

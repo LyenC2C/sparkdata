@@ -8,7 +8,7 @@ save_day=$3
 
 hfs -rmr /user/wrt/temp/znk_iteminfo_tmp
 spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80  \
-$dev_path/t_wrt_znk_iteminfo.py $yes_day $last_day
+$dev_path/t_wrt_znk_iteminfo.py a  $last_day
 
 hfs -rmr /user/wrt/temp/znk_feedmark_tmp
 spark-submit  --executor-memory 1G  --driver-memory 5G  --total-executor-cores 80 \

@@ -47,4 +47,5 @@ s_dim = "/user/wrt/total_mark.mark"
 l_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 sc.textFile("/hive/warehouse/wlcredit.db/t_credit_phone_tag_sogou").map(lambda x:f(x,l_dict))\
     .saveAsTextFile("/user/wrt/temp/phone_sogou_label")
-
+# spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 t_credit_phone_tag_sogou_label.py
+# LOAD DATA INPATH '/user/wrt/temp/phone_sogou_label' overwrite into table wlcredit.t_credit_phone_tag_sogou_label;

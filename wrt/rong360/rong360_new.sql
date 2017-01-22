@@ -921,7 +921,7 @@ province_num ,
 alipay_flag ,
 buycnt ,
 verify_level ,
-regtime_month
+regtime_month.
 from
 wlservice.t_wrt_model_rong360_finnal t1
 join

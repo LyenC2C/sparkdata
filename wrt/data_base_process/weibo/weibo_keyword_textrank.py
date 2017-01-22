@@ -78,8 +78,9 @@ def weibo_juhe2(x,y):
     return valid_jsontxt(x) + "\001" + user_weibo
 
 # rdd = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_weibo_text/ds=20161126")
-rdd = sc.textFile("/hive/warehouse/wlservice.db/t_wrt_weibo_1yi8_text_concat")
-rdd.map(lambda x:weibo_textrank(x)).saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
+# rdd = sc.textFile("/hive/warehouse/wlservice.db/t_wrt_weibo_1yi8_text_concat")
+rdd = sc.textFile("/user/wrt/t_wrt_weibo_1yi8_text_concat")
+rdd.repartition(8000).map(lambda x:weibo_textrank(x)).saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
 # rdd2 = rdd1.groupByKey().mapValues(list).map(lambda (x, y): weibo_juhe(x, y))
 # rdd2.saveAsTextFile('/user/wrt/temp/weibo_keyword_textrank')
 # rdd2 = rdd1.groupByKey().map(lambda (x, y): weibo_juhe2(x, y))

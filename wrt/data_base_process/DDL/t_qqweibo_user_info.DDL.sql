@@ -1,66 +1,5 @@
 use wlbase_dev;
-CREATE  TABLE  if not exists t_qqweibo_user_info(
-id String,
-certificationInfo String,
-faceUrl String,
-gender String,
-isVIP String,
-isWbStar String,
-auth String,
-nickName String,
-occupation String,
-personal String,
-regTime String,
-h_nation String,
-h_countryName String,
-h_province_ String,
-h_provinceName String,
-h_city String,
-h_cityName String,
-l_nation String,
-l_countryName String,
-l_province_ String,
-l_provinceName String,
-l_city String,
-l_cityName String,
-tags_r String,
-b_year String,
-b_month String,
-b_day String,
-b_star String,
-com_startYear1 String,
-com_endYear1 String,
-com_comName1 String,
-com_depName1 String,
-com_startYear2 String,
-com_endYear2 String,
-com_comName2 String,
-com_depName2 String,
-com_startYear3 String,
-com_endYear3 String,
-com_comName3 String,
-com_depName3 String,
-year1 String,
-background1 String,
-school1 String,
-department1 String,
-year2 String,
-background2 String,
-school2 String,
-department2 String,
-year3 String,
-background3 String,
-school3 String,
-department3 String
-)
-COMMENT '电商品牌标签等级表'
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n'
-stored as textfile ;
-
-
-alter table t_qqweibo_user_info
-replace columns
-(
+CREATE  TABLE  if not exists t_base_qq_weibo_user_info (
 id String COMMENT '微博id',
 certificationInfo String COMMENT '认证信息',
 faceUrl String COMMENT '头像url',
@@ -114,5 +53,4 @@ background3 String COMMENT '学校3性质',
 school3 String COMMENT '学校3名称',
 department3 String COMMENT '学校3入学年份'
 );
-
 alter table t_qqweibo_user_info set TBLPROPERTIES('comment' = '腾讯微博用户信息表');

@@ -64,5 +64,5 @@ rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y))
 rdd1.saveAsTextFile('/user/wrt/shuang11_itemid_title_price')
 
 # hfs -rmr /user/wrt/shopitem_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 t_base_shopitem_tmall_init.py
-#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_b PARTITION (ds='20160904');
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 shuang11_itemid_title_price.py
+#LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE wlservice.t_wrt_shuang11_itemid_title_price PARTITION (ds='20160904');

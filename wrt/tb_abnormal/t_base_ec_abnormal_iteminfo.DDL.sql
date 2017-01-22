@@ -1,0 +1,1 @@
+create table wl_base.t_base_ec_abnormal_iteminfo like wl_base.t_base_ec_item_dev_new;

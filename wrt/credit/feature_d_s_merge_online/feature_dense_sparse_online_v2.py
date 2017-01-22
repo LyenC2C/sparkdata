@@ -107,28 +107,13 @@ s_main = "/hive/warehouse/wlcredit.db/t_credit_dense_features_online/*" #紧密
 #紧密特征字段提取并自动排列好
 rdd_fea_main = hiveContext.sql('desc wlcredit.t_credit_dense_features_online')
 fea_main = [valid_jsontxt(ln.col_name) for ln in rdd_fea_main.collect()[1:]]
-# fea_main = ['buycnt','weibo_followers_count']
-#记录紧密特征长度，后面的在分配feature_cat的index时候用到
-# len_main = len(fea_main)
-#稀疏特征字段去重并按照一定顺序排列好
-# rdd_fea_cat = sc.textFile(s_cat).flatMap(lambda x:f_cat_reindex(x)).groupByKey().mapValues(list).map(lambda (x, y): x)
-# fea_cat = rdd_fea_cat.collect()
-#将稀疏特征字段变成map形式，以提高效率
-# fea_cat_dict = tran_dict(fea_cat)
-#全部特征字段输出.
-# fea_all = fea_main + fea_cat
-# fea_all_dict,fea_all_index = fea_name(fea_all)
-# sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name')
-#将5k特征的index提取出来，用来后面过滤稀疏表与密集表的特征
-# feature5k = sc.broadcast(sc.textFile("/user/wrt/feature_5k")\
-    # .map(lambda x:index_5k(x,fea_all)).collectAsMap()).value
+# 线上指定特征导入并存成数组
 feature5k = sc.textFile("/user/wrt/feature_5k").collect()
+# 将数组变成字典并输出存表
 feature5k_dict = tran_dict(feature5k)
 fea_all_index = fea_index(feature5k)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name_v2')
-
-#每个电话按照新的稀疏特征顺序，将每个稀疏特征值依次输出，之前没有的特征用0代替
-# rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main,feature5k))
+# cat的rdd
 rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,feature5k_dict))
 # rdd_m = hiveContext.sql('select tel_index,buycnt,weibo_followers_count from wlbase_dev.t_base_user_profile_telindex')
 # rdd_main = rdd_m.map(lambda x:valid_jsontxt(x.tel_index) + "\001" + valid_jsontxt(x.buycnt) + "\001" \
@@ -136,7 +121,7 @@ rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,feature5k_dict))
 #每个电话按照紧密特征顺序，将每个一级特征值依次输出,0的过滤
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x,feature5k_dict,fea_main))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
-rdd_table = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
+rdd_table = rdd_main.join(rdd_cat).map  (lambda (x,y):hebing(x,y))
 # rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat_v2') #存libsvm格式
 # rdd_table = rdd.map(lambda x:inhive(x))
 rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive_v2')
