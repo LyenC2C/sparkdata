@@ -41,9 +41,11 @@ def get_date():
 
 check_partition_cmd ="ssh -p 22 wrt@cs220 bash {path}/get_partition.sh".format(path=path)
 
+
 def get_last_update_date():
     try:
         result = os.popen(check_partition_cmd,"r").readline()
+        print result
     except:
         raise Exception("ssh operation failed!")
     else:
