@@ -40,3 +40,4 @@ full outer JOIN
 ON
 t1.item_id = t2.item_id;
 EOF
+
