@@ -51,6 +51,7 @@ def get_last_update_date():
     else:
         return  str(eval(result))
 
+
 spark_sale = SSHExecuteOperator(
     task_id="itemsold_sale_parse",
     bash_command='(bash {path}/ec_itemsold_sale_parse.sh {last_2_days} {lastday} {last_update})'
