@@ -37,7 +37,7 @@ def f(line):
 # rdd2 = sc.textFile("/commit/itemsearch/*2016123*")d
 
 # rdd = rdd1.union(rdd2)
-rdd = sc.textFile("/commit/itemsearch/20*/")
+rdd = sc.textFile("/commit/itemsearch/20*/*")
 rdd.map(lambda x:f(x)).filter(lambda x:x!=None).saveAsTextFile("/user/wrt/temp/itemsearch")
 hiveContext.sql('load data inpath "/user/wrt/temp/itemsearch" overwrite into table \
 wl_base.t_base_item_search PARTITION (ds ="0temp")')
