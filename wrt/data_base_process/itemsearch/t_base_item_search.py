@@ -34,7 +34,7 @@ def f(line):
     return "\001".join([valid_jsontxt(ln) for ln in result])
 
 # rdd1 = sc.textFile("/commit/itemsearch/*2016122*")d
-# rdd2 = sc.textFile("/commit/itemsearch/*2016123*")
+# rdd2 = sc.textFile("/commit/itemsearch/*2016123*")d
 
 # rdd = rdd1.union(rdd2)
 rdd = sc.textFile("/commit/itemsearch/*")
