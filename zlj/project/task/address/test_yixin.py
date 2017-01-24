@@ -35,7 +35,7 @@ data=merge_data.copy()
 def work_match(x):
     MOBILE_NO,name,CORP_PROVINCE,CORP_CITY,CORP_AREA,CORP_DETAIL,FAMILY_PROVINCE,FAMILY_CITY,FAMILY_AREA,FAMILY_DETAIL,tb_name,tb_add_detail,tb_prov,tb_city=x
     corp_adress=CORP_PROVINCE+CORP_CITY+CORP_AREA+CORP_DETAIL
-    family_adress=FAMILY_PROVINCE+FAMILY_CITY+FAMILY_AREA+FAMILY_DETAIL
+    # family_adress=FAMILY_PROVINCE+FAMILY_CITY+FAMILY_AREA+FAMILY_DETAIL
 
     match_prov,match_city,district,match_address_detail=address_format(corp_adress)[1]
     taobao_gps=address_gps(tb_prov+tb_city+tb_add_detail)
@@ -47,12 +47,12 @@ def work_match(x):
     return fun(tb_name in name), fun(tb_prov in match_prov), fun(match_city in tb_city), round(distance,3) ,  confidence
 def family_match(x):
     MOBILE_NO,name,CORP_PROVINCE,CORP_CITY,CORP_AREA,CORP_DETAIL,FAMILY_PROVINCE,FAMILY_CITY,FAMILY_AREA,FAMILY_DETAIL,tb_name,tb_add_detail,tb_prov,tb_city=x
-    corp_adress=CORP_PROVINCE+CORP_CITY+CORP_AREA+CORP_DETAIL
+    # corp_adress=CORP_PROVINCE+CORP_CITY+CORP_AREA+CORP_DETAIL
     family_adress=FAMILY_PROVINCE+FAMILY_CITY+FAMILY_AREA+FAMILY_DETAIL
 
     match_prov,match_city,district,match_address_detail=address_format(family_adress)[1]
     taobao_gps=address_gps(tb_prov+tb_city+tb_add_detail)
-    match_gps=address_gps(corp_adress)
+    match_gps=address_gps(family_adress)
     distance=haversine(match_gps[0],match_gps[1],taobao_gps[0],taobao_gps[1])
     confidence=(100-distance*2)
     confidence= confidence if confidence>0 else 0

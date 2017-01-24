@@ -20,7 +20,8 @@ CREATE TABLE t_zlj_credit_user_haitao AS
              FROM t_base_ec_item_dev_new
              WHERE ds = 20160621) t1
             JOIN
-            (SELECT shop_id
+            (
+              SELECT shop_id
              FROM t_base_shop_type
              WHERE shop_type ['globalgou'] = 'True' OR shop_type ['tmhk'] = 'True') t2
               ON
@@ -30,9 +31,7 @@ CREATE TABLE t_zlj_credit_user_haitao AS
     )
     t1
     JOIN
-
     t_base_ec_record_dev_new_simple t2 ON t1.item_id = t2.item_id
-
   GROUP BY user_id ;
 
 

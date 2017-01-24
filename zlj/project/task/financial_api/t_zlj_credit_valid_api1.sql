@@ -123,6 +123,14 @@ create table t_zlj_credit_valid_api1 as
     ;
 
 
+/check/
+
+select  * from t_zlj_credit_valid_api1 where tb_id =911789360;
+
+125964493
+SELECT count(1)  from t_zlj_credit_valid_api1_step2 where length(weibo_id)>0 and length(weibo_regtime)<1 ;
+13245562
+SELECT count(1)  from t_zlj_credit_valid_api1_step2 where length(weibo_id)>0 and length(weibo_nick_name)<1 ;
 
 
 和信息相关的后两位打星号
