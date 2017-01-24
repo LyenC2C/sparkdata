@@ -8,7 +8,7 @@ sys.setdefaultencoding('utf8')
 import pandas as pd
 import numpy as np
 import matplotlib
-# matplotlib.style.use('ggplot')
+matplotlib.style.use('ggplot')
 import seaborn as sns
 sns.set(context='notebook',style="ticks",palette="GnBu_d",font_scale=1.5,font='ETBembo',rc={"figure.figsize": (10, 6)})
 #plt.rcParams['figure.figsize']=(15,10)
@@ -489,9 +489,18 @@ def plot_feature(model_v6,topN=50):
 	# %matplotlib inline
 	s=pd.DataFrame.from_dict(model_v6.get_fscore(),orient='index')
 	s.columns=['weight']
-	s.sort_values(by='weight').tail(50).plot(kind='bar')
+	s.sort_values(by='weight',ascending=False).head(50).plot(kind='bar')
 
 
+def crs_std(yixin_train_test_X):
+	dict={}
+	pool=Pool(8)
+	pool.map(f_fun ,col_ls)
+	cols=yixin_train_test_X.shape[1]
+	for i in xrange(cols):
+		v=np.std(yixin_train_test_X[:,i].toarray()[:,0])
+		dict[i]=v
+	return dict
 
 def gridsearch():
 	from sklearn.grid_search import GridSearchCV

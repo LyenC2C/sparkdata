@@ -23,6 +23,54 @@ LOAD DATA   INPATH '/user/zlj/match/rong360.csv' OVERWRITE INTO TABLE wlfinance.
 LOAD DATA   INPATH '/user/zlj/match/data_2k.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='data_2k') ;
 LOAD DATA   INPATH '/user/zlj/match/7w.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='7wid') ;
 LOAD DATA   INPATH '/user/zlj/match/20161223.zhima.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima_1223') ;
+LOAD DATA   INPATH '/user/zlj/match/正负样本.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='yixin_rong360_0103') ;
+
+LOAD DATA   INPATH '/user/zlj/match/20170103_20161223_merge_upload.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima_20170103_20161223_merge') ;
+
+-- 锦城  tel  label ds
+LOAD DATA   INPATH '/user/zlj/match/1.txt' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='jingchen_label') ;
+
+LOAD DATA   INPATH '/user/zlj/match/薪时贷.txt' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='jingchen_xinshidai') ;
+LOAD DATA   INPATH '/user/zlj/match/学生贷.txt' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='jingchen_xueshengdai') ;
+LOAD DATA   INPATH '/user/zlj/match/捷信贷款.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='jingchen_jiexin') ;
+LOAD DATA   INPATH '/user/zlj/match/yixin_label.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='yixin_label_ori') ;
+
+LOAD DATA   INPATH '/user/zlj/match/20170110.zhima.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima') ;
+LOAD DATA   INPATH '/user/zlj/match/20170114.zhima.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima') ;
+LOAD DATA   INPATH '/user/zlj/match/中诚信对接测试数据.txt' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhongchengxin') ;
+
+
+drop table wlcredit.t_zlj_zhima_score_loc ;
+create table wlcredit.t_zlj_zhima_score_loc as
+SELECT
+t1.*, tel_loc
+from
+wlfinance.t_zlj_base_match t1
+join
+wlbase_dev.t_base_user_profile t2 on t1.tel=t2.tb_id
+where t1.ds='zhima'
+;
+-- 'test'
+
+--中诚信测试
+
+SELECT
+
+t1.*
+from
+(
+ SELECT
+ tel name ,
+ id1 idcard,
+ id2 tel,
+ id3 yuqi,
+ id4 time_sub ,
+ id5 credit
+ from
+ wlfinance.t_zlj_base_match  where ds='zhongchengxin'
+ )t1 join wlrefer.t_zlj_uid_name t2 on t1.tel =t2.tel
+
+
 -- index,userid,tel,zhima_score
 
 SELECT
@@ -49,40 +97,40 @@ from wlfinance.t_zlj_base_match where ds='rong360_browse_group1'
 
 
 
-LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/browse_history_train.txt' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history_train') ;
-
-LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/bill_detail_train.txt' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='bill_detail_train') ;
-
-  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/bank_detail_train.txt' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='bank_detail_train') ;
-
-
-
-LOAD DATA  local   INPATH '/home/zlj/data/360/credit/browse_history' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history') ;
-
-  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bill_detail' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bill_detail') ;
-
-  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bank_detail' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bank_detail') ;
-
-    LOAD DATA  local   INPATH '/home/zlj/data/360/credit/loan_time' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_loan_time') ;
-
-
-    LOAD DATA  local   INPATH '/home/zlj/data/360/credit/user_overdue_label' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_user_overdue_label') ;
-
-
-
-  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/browse_history_dropdup' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history_dropdup') ;
-
-  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bill_detail_dropdup' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bill_detail_dropdup') ;
-
-  LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bank_detail_dropdup' OVERWRITE
-  INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bank_detail_dropdup') ;
+-- LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/browse_history_train.txt' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history_train') ;
+--
+-- LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/bill_detail_train.txt' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='bill_detail_train') ;
+--
+--   LOAD DATA  local   INPATH '/home/zlj/data/360/credit/train/bank_detail_train.txt' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='bank_detail_train') ;
+--
+--
+--
+-- LOAD DATA  local   INPATH '/home/zlj/data/360/credit/browse_history' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history') ;
+--
+--   LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bill_detail' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bill_detail') ;
+--
+--   LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bank_detail' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bank_detail') ;
+--
+--     LOAD DATA  local   INPATH '/home/zlj/data/360/credit/loan_time' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_loan_time') ;
+--
+--
+--     LOAD DATA  local   INPATH '/home/zlj/data/360/credit/user_overdue_label' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_user_overdue_label') ;
+--
+--
+--
+--   LOAD DATA  local   INPATH '/home/zlj/data/360/credit/browse_history_dropdup' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_browse_history_dropdup') ;
+--
+--   LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bill_detail_dropdup' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bill_detail_dropdup') ;
+--
+--   LOAD DATA  local   INPATH '/home/zlj/data/360/credit/bank_detail_dropdup' OVERWRITE
+--   INTO TABLE wlfinance.t_zlj_tmp_csv PARTITION (ds='360_bank_detail_dropdup') ;
