@@ -44,27 +44,4 @@ t1.id = t2.id
 where
 t2.id is null;
 
--- insert into table t_wrt_shixin_person partition(ds = 'past')
--- select
--- id,
--- iname,
--- casecode,
--- cardnum,
--- age,
--- sexy,
--- businessentity,
--- courtname,
--- areaname,
--- partytypename,
--- gistid,
--- regdate,
--- gistunit,
--- duty,
--- performance,
--- disrupttypename,
--- publishdate,
--- performedpart,
--- unperformpart
--- from t_wrt_shixin_person where ds = $now_day;
-
 EOF
