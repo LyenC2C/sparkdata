@@ -2,7 +2,7 @@
 source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 
-hfs -rmr /user/wrt/sale_tmp
+hadoop fs -rmr /user/wrt/sale_tmp
 
 spark-submit  --executor-memory 7G  --driver-memory 7G  --total-executor-cores 120 \
 $pre_path/wrt/data_base_process/t_base_item_sale.py $2 $1 $3
