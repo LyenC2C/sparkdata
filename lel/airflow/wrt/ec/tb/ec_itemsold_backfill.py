@@ -13,5 +13,5 @@ for i in exec_days:
     last_day = (today + datetime.timedelta(days=-i-1)).strftime('%Y%m%d')
     last_2_days =  (today + datetime.timedelta(days=-i-2)).strftime('%Y%m%d')
     # print exec_day,last_day,last_2_days
-    command = "bash /home/wrt/sparkdata/lel/airflow/wrt/ec/tb/ec_itemsold_backfill.sh {last_2_days} {last_day} {iteminfo_date}".format(last_day=last_day,last_2_days=last_2_days,iteminfo_date=iteminfo_date)
+    command = "bash /home/wrt/sparkdata/lel/airflow/wrt/ec/tb/ec_itemsold_backfill.sh {last_2_days} {last_day} {iteminfo_date}".format(last_2_days=last_2_days,last_day=last_day,iteminfo_date=iteminfo_date)
     os.system(command)
