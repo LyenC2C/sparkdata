@@ -9,7 +9,7 @@ def valid_jsontxt(content):
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
 sc = SparkContext(appName="xianyu_comment_dis")
-data = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_xianyu_itemcomment/ds=20170116")
+data = sc.textFile("/hive/warehouse/wlbase_dev.db/t_base_ec_xianyu_itemcomment/ds=20170117")
 
 def getfields(lines):
     fields = valid_jsontxt(lines.split("\001"))
@@ -26,6 +26,6 @@ data.map(lambda a:getfields(a))\
     .groupByKey()\
     .mapValues(lambda a:max(list(a), key=itemgetter(-1)))\
     .map(lambda (a,b):b)\
-    .saveAsTextFile("/user/lel/temp/xianyu_comment_dis")
+    .saveAsTextFile("/user/lel/temp/xianyu_comment_disticted")
 
 # 0 	26680328648 	772489424

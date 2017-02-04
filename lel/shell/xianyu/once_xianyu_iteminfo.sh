@@ -1,16 +1,16 @@
-hadoop fs -test -e /user/lel/temp/xianyu_2016
+hadoop fs -test -e /user/lel/temp/xianyu_iteminfo
 if [ $? -eq 0 ] ;then
-    hadoop fs  -rmr /user/lel/temp/xianyu_2016
+    hadoop fs  -rmr /user/lel/temp/xianyu_iteminfo
 else
     echo 'Directory is not exist Or Zero bytes in size'
 fi
 
-spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 80 /home/lel/wolong/sparkdata/lel/spark/xianyu/t_xianyu.py $1
+spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 80 /home/lel/wolong/sparkdata/lel/spark/xianyu/xianyu_iteminfo.py $1
 
 hive<<EOF
 
 use wlbase_dev;
-LOAD DATA  INPATH '/user/lel/temp/xianyu_2016' OVERWRITE INTO TABLE wlbase_dev.t_base_ec_xianyu_iteminfo PARTITION (ds='tmp');
+LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE wlbase_dev.t_base_ec_xianyu_iteminfo PARTITION (ds='0000tmp');
 
 insert OVERWRITE table wlbase_dev.t_base_ec_xianyu_iteminfo PARTITION(ds = $1)
 select
@@ -47,7 +47,7 @@ case when t1.itemid is null then t2.zhima else t1.zhima end,
 case when t1.itemid is null then t2.shiren else t1.shiren end,
 case when t1.itemid is null then t2.ts else t1.ts end
 from
-(select * from  wlbase_dev.t_base_ec_xianyu_iteminfo where ds = 'tmp')t1
+(select * from  wlbase_dev.t_base_ec_xianyu_iteminfo where ds = '0000tmp')t1
 full outer JOIN
 (select * from wlbase_dev.t_base_ec_xianyu_iteminfo where ds = $2)t2
 ON
