@@ -5,7 +5,7 @@ import os
 # sys.argv[1]
 exec_days = list(xrange(0,6))
 exec_days.reverse()
-iteminfo_date = 20170121
+iteminfo_date = 20170128
 
 for i in exec_days:
     today = datetime.datetime.now()
