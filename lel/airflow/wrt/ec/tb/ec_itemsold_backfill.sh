@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
-zuotian=$(date -d '1 days ago' +%Y%m%d)
-qiantian=$(date -d '2 days ago' +%Y%m%d)
-iteminfo_day='20170121'
 
 hfs -rmr /user/wrt/sale_tmp
 
