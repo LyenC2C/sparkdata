@@ -10,7 +10,7 @@ hive<<EOF
 
 use wlcredit;
 
-LOAD DATA INPATH '/user/wrt/temp/shixin_qiyeinfo' OVERWRITE INTO TABLE t_wrt_shixin_qiye PARTITION (ds='temp');
+LOAD DATA INPATH '/user/wrt/temp/shixin_qiyeinfo' OVERWRITE INTO TABLE t_wrt_shixin_qiye PARTITION (ds='0temp');
 
 
 insert overwrite table t_wrt_shixin_qiye partition (ds = $now_day)
@@ -33,34 +33,12 @@ t1.publishdate,
 t1.performedpart,
 t1.unperformpart
 from
-(select * from t_wrt_shixin_qiye where ds = 'temp')t1
+(select * from t_wrt_shixin_qiye where ds = '0temp')t1
 left join
-(select * from t_wrt_shixin_qiye where ds = 'past')t2
+(select * from t_wrt_shixin_qiye where ds <> 'past')t2
 on
 t1.id = t2.id
 where
 t2.id is null;
-
-insert into table wlcredit.t_wrt_shixin_qiye partition(ds = 'past')
-select
-id,
-iname,
-casecode,
-cardnum,
-businessentity,
-courtname,
-areaname,
-partytypename,
-gistid,
-regdate,
-gistunit,
-duty,
-performance,
-disrupttypename,
-publishdate,
-performedpart,
-unperformpart
-from t_wrt_shixin_qiye where ds = $now_day;
-
 
 EOF
