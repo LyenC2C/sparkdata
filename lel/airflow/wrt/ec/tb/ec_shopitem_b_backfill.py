@@ -6,7 +6,6 @@ import os
 exec_days = list(xrange(0,13))
 exec_days.reverse()
 
-
 for i in exec_days:
     today = datetime.datetime.now()
     exec_day = (today + datetime.timedelta(days=-i)).strftime('%Y%m%d')
