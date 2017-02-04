@@ -41,25 +41,4 @@ t1.id = t2.id
 where
 t2.id is null;
 
--- insert into table wlcredit.t_wrt_shixin_qiye partition(ds = 'past')
--- select
--- id,
--- iname,
--- casecode,
--- cardnum,
--- businessentity,
--- courtname,
--- areaname,
--- partytypename,
--- gistid,
--- regdate,
--- gistunit,
--- duty,
--- performance,
--- disrupttypename,
--- publishdate,
--- performedpart,
--- unperformpart
--- from t_wrt_shixin_qiye where ds = $now_day;
-
 EOF
