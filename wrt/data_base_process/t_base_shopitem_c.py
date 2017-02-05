@@ -6,7 +6,7 @@ import rapidjson as json
 from pyspark import SparkContext
 
 now_day = sys.argv[1]
-last_day = sys.argv[2]
+# last_day = sys.argv[2]
 # yesterday = sys.argv[2]
 
 sc = SparkContext(appName="t_base_shopitem_c")
