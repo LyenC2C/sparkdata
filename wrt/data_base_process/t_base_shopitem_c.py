@@ -104,7 +104,7 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 # s1 = "/commit/shopitem_c/20*/*"
 s1 = "/commit/shopitem_c/20161221/*"
 s2 = "/commit/shopitem_c/20161222/*"
-s3 = "/commit/shopitem_c/20161222/*"
+s3 = "/commit/shopitem_c/20161223/*"
 s = s1.union(s2).unoin(s3)
 # s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_c/ds=" + last_day
 
