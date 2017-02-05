@@ -38,5 +38,7 @@ t1.item_id = t2.item_id;
 
 EOF
 hfs -mkdir /commit/shopitem_c/archive/$now_day'_arc'
-hfs -mv /commit/shopitem_c/20*/* /commit/shopitem_c/archive/$now_day'_arc'/
+hfs -mv /commit/shopitem_c/20161221/* /commit/shopitem_c/archive/$now_day'_arc'/
+hfs -mv /commit/shopitem_c/20161222/* /commit/shopitem_c/archive/$now_day'_arc'/
+hfs -mv /commit/shopitem_c/20161223/* /commit/shopitem_c/archive/$now_day'_arc'/
 
