@@ -102,18 +102,19 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 # today = sys.argv[1]
 
 # s1 = "/commit/shopitem_c/20*/*"
-s1 = "/commit/shopitem_c/20161221/*"
-s2 = "/commit/shopitem_c/20161222/*"
-s3 = "/commit/shopitem_c/20161223/*"
+s1 = sc.textFile("/commit/shopitem_c/20161221/*")
+s2 = sc.textFile("/commit/shopitem_c/20161222/*")
+s3 = sc.textFile("/commit/shopitem_c/20161223/*")
+
 s = s1.union(s2).unoin(s3)
 # s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_c/ds=" + last_day
 
-rdd1_c = sc.textFile(s).flatMap(lambda x:f1(x)).filter(lambda x:x != None) #解析
-rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y)) #去重
+rdd_c = s.flatMap(lambda x:f1(x)).filter(lambda x:x != None) #解析
+rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y)) #去重
 # rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None) #导入昨天数据
 # rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
 # rdd1.join(rdd2)
-rdd1.saveAsTextFile('/user/wrt/shopitem_c_tmp')
+rdd.saveAsTextFile('/user/wrt/shopitem_c_tmp')
 # rdd.filter(lambda x:len(x.split("\001")) != 7).saveAsTextFile('/user/wrt/shopitem_b_error')
 #hfs -rmr /user/wrt/shopitem_c_tmp
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20161112 20161111
