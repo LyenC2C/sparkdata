@@ -5,7 +5,7 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 
-# now_day = sys.argv[1]
+now_day = sys.argv[1]
 # last_day = sys.argv[2]
 # yesterday = sys.argv[2]
 
