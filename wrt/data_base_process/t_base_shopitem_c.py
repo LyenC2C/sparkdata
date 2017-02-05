@@ -106,7 +106,7 @@ s1 = sc.textFile("/commit/shopitem_c/20161221/*")
 s2 = sc.textFile("/commit/shopitem_c/20161222/*")
 s3 = sc.textFile("/commit/shopitem_c/20161223/*")
 
-s = s1.union(s2).unoin(s3)
+s = s1.union(s2).union(s3)
 # s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_c/ds=" + last_day
 
 rdd_c = s.flatMap(lambda x:f1(x)).filter(lambda x:x != None) #解析
