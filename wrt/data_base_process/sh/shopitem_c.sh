@@ -22,8 +22,8 @@ case when t2.item_id is null then t1.shopid when t1.item_id is null then t2.shop
 case when t2.item_id is null then t1.item_id when t1.item_id is null then t2.item_id else t1.item_id,
 case when t2.item_id is null then t1.sold when t1.item_id is null then t2.sold else t1.sold,
 case when t2.item_id is null then t1.saleprice when t1.item_id is null then t2.saleprice else t1.saleprice ,
-case when t2.item_id is null then t1.update_day when t1.item_id is null then t2.update_day else t2.update_day,
-case when t2.item_id is null then t1.down_day when t1.item_id is null then t2.down_day else t1.down_day,
+case when t2.item_id is null then t1.up_day when t1.item_id is null then t2.up_day else t2.up_day,
+case when t2.item_id is null then t1.update_day when t1.item_id is null then t2.update_day else t1.update_day,
 case when t2.item_id is null then t1.ts when t1.item_id is null then t2.ts else t1.ts
 from
 (select * from t_base_ec_shopitem_c where ds = '0temp')t1
