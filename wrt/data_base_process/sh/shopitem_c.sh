@@ -3,10 +3,6 @@ source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
 #zuotian=$(date -d '1 days ago' +%Y%m%d)
 #qiantian=$(date -d '2 days ago' +%Y%m%d)
-#zuotian='20161204'
-#qiantian='20161203'
-#zuotian=$1
-#qiantian=$2
 now_day=$1
 last_day=$2
 
@@ -35,10 +31,7 @@ full outer join
 (select * from t_base_ec_shopitem_c where ds = $last_day)t2
 on
 t1.item_id = t2.item_id;
-
 EOF
-hfs -mkdir /commit/shopitem_c/archive/$now_day'_arc'
-hfs -mv /commit/shopitem_c/20161221/* /commit/shopitem_c/archive/$now_day'_arc'/
-hfs -mv /commit/shopitem_c/20161222/* /commit/shopitem_c/archive/$now_day'_arc'/
-hfs -mv /commit/shopitem_c/20161223/* /commit/shopitem_c/archive/$now_day'_arc'/
-
+#hfs -mkdir /commit/shopitem_c/archive/$now_day'_arc'
+#hfs -mv /commit/shopitem_c/20*/* /commit/shopitem_c/archive/$now_day'_arc'/
+#日更就不需要archieve这种东西了
