@@ -9,7 +9,7 @@ now_day = sys.argv[1]
 # last_day = sys.argv[2]
 # yesterday = sys.argv[2]
 
-sc = SparkContext(appName="t_base_shopitem_c")
+sc = SparkContext(appName="t_base_shopitem_c_" + now_day)
 
 def valid_jsontxt(content):
     # res = content
