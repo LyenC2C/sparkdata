@@ -6,7 +6,7 @@ pre_path='/home/wrt/sparkdata'
 now_day=$1
 last_day=$2
 
-hfs -rmr /user/wrt/shopitem_c_tmp >> $pre_path/wrt/data_base_process/sh/log_shopitem/log_c_$now_day 2>&1
+hfs -rmr /user/wrt/shopitem_c_tmp
 
 spark-submit  --executor-memory 6G  --driver-memory 5G  --total-executor-cores 80 \
 $pre_path/wrt/data_base_process/t_base_shopitem_c.py $now_day >> \
@@ -14,7 +14,7 @@ $pre_path/wrt/data_base_process/sh/log_shopitem/log_c_$now_day 2>&1
 
 hive<<EOF
 use wlbase_dev;
-LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='0temp');
+LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='0temp');
 
 insert OVERWRITE table t_base_ec_shopitem_c PARTITION(ds = $now_day)
 select
