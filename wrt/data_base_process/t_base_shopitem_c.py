@@ -6,7 +6,7 @@ import rapidjson as json
 from pyspark import SparkContext
 
 now_day = sys.argv[1]
-last_day = sys.argv[2]
+# last_day = sys.argv[2]
 # yesterday = sys.argv[2]
 
 sc = SparkContext(appName="t_base_shopitem_c")
@@ -40,7 +40,7 @@ def f1(line):
         # if reservePrice == "": reservePrice = "-"
         salePrice = item.get("salePrice","-")
         up_day = now_day #默认为今日新上架，后面会进行调整
-        down_day = "0"
+        down_day = now_day #shopitem_C的down_day意义为动态采集时间,即每次采集到这个商品时更新采集到的日期
         lv.append(valid_jsontxt(shop_id))
         lv.append(valid_jsontxt(item_id))
         lv.append(valid_jsontxt(sold))
@@ -55,7 +55,7 @@ def f2(line):
     ss = line.strip().split('\001')
     if len(ss) != 7: return None
     if not ss[1].isdigit(): return None
-    ss.append(last_day) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
+    # ss.append(last_day) #强行增加一个字段，可以理解为ds使得昨日字段列表的长度变成8，好与今日的数据区分开
     return (ss[1],ss)
 
 def quchong(x,y):
@@ -65,7 +65,8 @@ def quchong(x,y):
         if int(ln[-1]) > max:
             max = int(ln[-1])
             y = ln
-    return (x,y)
+    # return (x,y)
+    return "\001".join([valid_jsontxt(ln) for ln in y])
 
 def twodays(x,y):   #同一个item_id下进行groupby后的结果
     item_list = y
@@ -100,14 +101,16 @@ def twodays(x,y):   #同一个item_id下进行groupby后的结果
 
 # today = sys.argv[1]
 
-s1 = "/commit/shopitem_c/20*/*"
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_c/ds=" + last_day
+# s1 = "/commit/shopitem_c/20*/*"
+s1 = "/commit/shopitem_c/20161221/*"
+# s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_c/ds=" + last_day
 
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None) #解析
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y)) #去重
-rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None) #导入昨天数据
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
-rdd.saveAsTextFile('/user/wrt/shopitem_tmp')
+# rdd2 = sc.textFile(s2).map(lambda x:f2(x)).filter(lambda x:x != None) #导入昨天数据
+# rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):twodays(x, y)) #两天数据合并
+# rdd1.join(rdd2)
+rdd1.saveAsTextFile('/user/wrt/shopitem_c_tmp')
 # rdd.filter(lambda x:len(x.split("\001")) != 7).saveAsTextFile('/user/wrt/shopitem_b_error')
 #hfs -rmr /user/wrt/shopitem_tmp
 #spark-submit  --executor-memory 9G  --driver-memory 8G  --total-executor-cores 120 t_base_shopitem_b.py 20161112 20161111
