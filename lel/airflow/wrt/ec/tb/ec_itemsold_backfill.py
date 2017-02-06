@@ -3,7 +3,7 @@ import sys
 import os
 
 # sys.argv[1]
-exec_days = list(xrange(0,4))
+exec_days = list(xrange(1,2))
 exec_days.reverse()
 iteminfo_date = 20170128
 
