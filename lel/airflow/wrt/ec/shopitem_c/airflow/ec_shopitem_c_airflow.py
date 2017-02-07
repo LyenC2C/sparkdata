@@ -28,9 +28,9 @@ default_args = {
     # 'priority_weight': 10,
 }
 
-dag = DAG('shopitem_b',default_args=default_args,schedule_interval='0 5 * * *')
+dag = DAG('shopitem_c',default_args=default_args,schedule_interval='0 5 * * *')
 sshHook = SSHHook(conn_id="cs220_wrt")
-path = Variable.get('cs220_ec_shopitem_b')
+path = Variable.get('cs220_ec_shopitem_c')
 
 def get_lastday():
     import datetime
@@ -60,27 +60,27 @@ def get_last_update_date():
 
 
 spark = SSHExecuteOperator(
-    task_id="shopitem_b_parse",
-    bash_command='(bash {path}/shopitem_b_parse.sh {lastday} {latest_partition})'.format(path=path,lastday=get_lastday(),latest_partition=get_last_update_date()),
+    task_id="shopitem_c_parse",
+    bash_command='(bash {path}/shopitem_c_parse.sh {lastday})'.format(path=path,lastday=get_lastday()),
     ssh_hook=sshHook,
     dag=dag)
 
 hive = SSHExecuteOperator(
-    task_id="shopitem_b_import",
-    bash_command='(bash {path}/shopitem_b_import.sh {lastday})'.format(path=path,lastday=get_lastday()),
+    task_id="shopitem_c_import",
+    bash_command='(bash {path}/shopitem_c_import.sh {lastday} {latest_partition})'.format(path=path,lastday=get_lastday(),latest_partition=get_last_update_date()),
     ssh_hook=sshHook,
     dag=dag)
 
-email_update = EmailOperator(task_id='shopitem_b_updated_email',
+email_update = EmailOperator(task_id='shopitem_c_updated_email',
                              to=['lienlian@wolongdata.com'],
-                             subject='ec shopitem b workflow',
-                             html_content='[ ec shopitem b data updated!!! ]',
+                             subject='ec shopitem c workflow',
+                             html_content='[ ec shopitem c data updated!!! ]',
                              dag=dag)
 
-email_update_not = EmailOperator(task_id='shopitem_b_not_update_email',
+email_update_not = EmailOperator(task_id='shopitem_c_not_update_email',
                                  to=['lienlian@wolongdata.com'],
-                                 subject='ec shopitem b workflow',
-                                 html_content='[ ec shopitem b data updated!!! ]',
+                                 subject='ec shopitem c workflow',
+                                 html_content='[ ec shopitem c data updated!!! ]',
                                  dag=dag)
 
 branching = BranchPythonOperator(task_id='check_attach',
