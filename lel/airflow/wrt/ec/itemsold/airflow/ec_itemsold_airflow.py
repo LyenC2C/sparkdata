@@ -40,7 +40,7 @@ def get_date():
     return (lastday, lastday_2_days)
 
 
-check_partition_cmd = "ssh -p 22 wrt@cs220 bash {path}/get_partition.sh".format(path=path)
+check_partition_cmd = "ssh -p 22 wrt@cs220 bash {path}/get_latest_partition.sh".format(path=path)
 
 
 def get_last_update_date():
