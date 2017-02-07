@@ -14,5 +14,5 @@ exec_days.reverse()
 #     # print exec_day,last_day,last_2_days
 #     command = "bash /home/wrt/sparkdata/lel/airflow/wrt/ec/tb/ec_shopitem_b_backfill.sh {last_day} {last_2_days}".format(last_day='20170204',last_2_days='20170124')
 #     os.system(command)
-command = "bash /home/wrt/sparkdata/lel/airflow/wrt/ec/tb/ec_shopitem_b_backfill.sh {last_day} {last_2_days}".format(last_day='20170204',last_2_days='20170124')
+command = "bash /home/wrt/sparkdata/lel/airflow/wrt/ec/shopitem_b/ec_shopitem_b_backfill.sh {last_day} {last_2_days}".format(last_day='20170204',last_2_days='20170124')
 os.system(command)
