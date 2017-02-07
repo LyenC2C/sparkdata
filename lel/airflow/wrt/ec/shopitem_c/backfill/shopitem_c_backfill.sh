@@ -7,7 +7,7 @@ last_2_days=$2
 hadoop fs  -rmr /user/wrt/shopitem_c_tmp
 
 spark-submit  --executor-memory 6G  --driver-memory 5G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_base_shopitem_c.py $last_day
+$pre_path/wrt/data_base_process/t_base_shopitem_c.py $lastday
 
 
 hive<<EOF
