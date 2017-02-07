@@ -3,7 +3,7 @@ import sys
 import os
 
 # sys.argv[1]
-exec_days = list(xrange(1, 4))
+exec_days = list(xrange(1, 3))
 exec_days.reverse()
 
 for i in exec_days:
