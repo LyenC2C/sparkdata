@@ -7,30 +7,32 @@ from airflow.models import Variable
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import BranchPythonOperator
 
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 import os
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2017,2,7,4,55),
+    'start_date': datetime(2017, 2, 7, 4, 55),
     'email': ['lienlian@wolongdata.com'],
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
-    #'end_date': datetime(2016, 12, 21),
+    # 'end_date': datetime(2016, 12, 21),
     # 'queue': 'bash_queue',
     # 'pool': 'backfill',
     # 'priority_weight': 10,
 }
 
-dag = DAG('shopitem_b',default_args=default_args,schedule_interval='0 5 * * *')
+dag = DAG('shopitem_b', default_args=default_args, schedule_interval='0 5 * * *')
 sshHook = SSHHook(conn_id="cs220_wrt")
 path = Variable.get('cs220_ec_shopitem_b')
+
 
 def get_lastday():
     import datetime
@@ -38,36 +40,40 @@ def get_lastday():
     lastday = (today + datetime.timedelta(days=-1)).strftime('%Y%m%d')
     return lastday
 
-check_dir_cmd = "ssh -p 22 wrt@cs220 bash {path}/check.sh {date}".format(date=get_lastday(),path=path)
-check_partition_cmd ="ssh -p 22 wrt@cs220 bash {path}/get_latest_partition.sh".format(path=path)
+
+check_dir_cmd = "ssh -p 22 wrt@cs220 bash {path}/check.sh {date}".format(date=get_lastday(), path=path)
+check_partition_cmd = "ssh -p 22 wrt@cs220 bash {path}/get_latest_partition.sh".format(path=path)
+
 
 def check_attach():
     try:
-        result = os.popen(check_dir_cmd,"r").readline()
+        result = os.popen(check_dir_cmd, "r").readline()
     except:
         raise Exception("ssh operation failed!")
     else:
-        return  'update' if '1' in result else 'pass'
+        return 'update' if '1' in result else 'pass'
+
 
 def get_last_update_date():
     try:
-        result = os.popen(check_partition_cmd,"r").readline()
+        result = os.popen(check_partition_cmd, "r").readline()
     except:
         raise Exception("ssh operation failed!")
     else:
-        return  str(eval(result))
-
+        return str(eval(result))
 
 
 spark = SSHExecuteOperator(
     task_id="shopitem_b_parse",
-    bash_command='(bash {path}/shopitem_b_parse.sh {lastday} {latest_partition})'.format(path=path,lastday=get_lastday(),latest_partition=get_last_update_date()),
+    bash_command='(bash {path}/shopitem_b_parse.sh {lastday} {latest_partition})'.format(path=path,
+                                                                                         lastday=get_lastday(),
+                                                                                         latest_partition=get_last_update_date()),
     ssh_hook=sshHook,
     dag=dag)
 
 hive = SSHExecuteOperator(
     task_id="shopitem_b_import",
-    bash_command='(bash {path}/shopitem_b_import.sh {lastday})'.format(path=path,lastday=get_lastday()),
+    bash_command='(bash {path}/shopitem_b_import.sh {lastday})'.format(path=path, lastday=get_lastday()),
     ssh_hook=sshHook,
     dag=dag)
 
@@ -90,6 +96,5 @@ branching = BranchPythonOperator(task_id='check_attach',
 passover = DummyOperator(task_id='pass', dag=dag)
 update = DummyOperator(task_id='update', dag=dag)
 
-chain(branching,passover,email_update_not)
-chain(branching,update,spark,hive,email_update)
-
+chain(branching, passover, email_update_not)
+chain(branching, update, spark, hive, email_update)
