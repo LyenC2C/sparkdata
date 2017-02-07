@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 source ~/.bashrc
 pre_path='/home/wrt/sparkdata'
-now_day=$1
-last_day=$2
+lastday=$1
+last_2_days=$2
 
 hadoop fs  -rmr /user/wrt/shopitem_c_tmp
 
 spark-submit  --executor-memory 6G  --driver-memory 5G  --total-executor-cores 80 \
-$pre_path/wrt/data_base_process/t_base_shopitem_c.py $now_day >> \
-$pre_path/wrt/data_base_process/sh/log_shopitem/log_c_$now_day 2>&1
+$pre_path/wrt/data_base_process/t_base_shopitem_c.py $last_day
+
 
 hive<<EOF
 use wlbase_dev;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='0temp');
 
-insert OVERWRITE table t_base_ec_shopitem_c PARTITION(ds = $now_day)
+insert OVERWRITE table t_base_ec_shopitem_c PARTITION(ds = $lastday)
 select
 case when t1.item_id is null then t2.shop_id else t1.shop_id end,
 case when t1.item_id is null then t2.item_id else t1.item_id end,
@@ -26,7 +26,7 @@ case when t1.item_id is null then t2.ts else t1.ts end
 from
 (select * from t_base_ec_shopitem_c where ds = '0temp')t1
 full outer join
-(select * from t_base_ec_shopitem_c where ds = $last_day)t2
+(select * from t_base_ec_shopitem_c where ds = $last_2_days)t2
 on
 t1.item_id = t2.item_id;
 EOF
