@@ -16,7 +16,7 @@ sys.setdefaultencoding('utf-8')
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2017,2,7,4,55),
+    'start_date': datetime(2017,2,7,5,5),
     'email': ['lienlian@wolongdata.com'],
     'email_on_failure': True,
     'email_on_retry': False,
@@ -28,7 +28,7 @@ default_args = {
     # 'priority_weight': 10,
 }
 
-dag = DAG('shopitem_c',default_args=default_args,schedule_interval='0 5 * * *')
+dag = DAG('shopitem_c',default_args=default_args,schedule_interval='10 5 * * *')
 sshHook = SSHHook(conn_id="cs220_wrt")
 path = Variable.get('cs220_ec_shopitem_c')
 

@@ -33,7 +33,7 @@ dag = DAG('xianyu_itemcomment',default_args=default_args,schedule_interval='30 7
 sshHook = SSHHook(conn_id="cs220")
 path = Variable.get('lel_xianyu_itemcomment')
 
-logging.info("airflow workflow is running")
+
 
 def get_lastday():
     import datetime
