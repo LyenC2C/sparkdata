@@ -7,6 +7,8 @@ from pyspark.sql import *
 
 
 sc = SparkContext(appName="t_base_item_search")
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
