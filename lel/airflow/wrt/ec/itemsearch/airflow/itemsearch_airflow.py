@@ -14,7 +14,7 @@ sys.setdefaultencoding('utf-8')
 default_args = {
     'owner': 'wrt',
     'depends_on_past': False,
-    'start_date': datetime(2017, 1, 28, 6, 50),
+    'start_date': datetime(2017, 2, 8),
     'email': ['airflow_airflow@163.com'],
     'email_on_failure': True,
     'email_on_retry': False,
