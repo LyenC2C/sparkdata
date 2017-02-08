@@ -49,14 +49,14 @@ def get_last_update_c_date():
 
 b = SSHExecuteOperator(
     task_id="update_b",
-    bash_command='(bash {path}/record_b_feed/record_b_feed.sh {latest_partition})'.format(path=path,
+    bash_command='(bash {path}/record_bc_feed/record_b_feed.sh {latest_partition})'.format(path=path,
                                                                             latest_partition=get_last_update_b_date()),
     ssh_hook=sshHook,
     dag=dag)
 
 c = SSHExecuteOperator(
     task_id="update_c",
-    bash_command='(bash {path}/record_b_feed/record_b_feed.sh {latest_partition})'.format(path=path,
+    bash_command='(bash {path}/record_bc_feed/record_b_feed.sh {latest_partition})'.format(path=path,
                                                                             lastday=get_last_update_c_date()),
     ssh_hook=sshHook,
     dag=dag)
