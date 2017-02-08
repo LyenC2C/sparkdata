@@ -2,11 +2,7 @@ from airflow import DAG
 from airflow.utils.helpers import chain
 from airflow.contrib.operators.ssh_execute_operator import SSHExecuteOperator
 from airflow.contrib.hooks.ssh_hook import SSHHook
-from airflow.operators.email_operator import EmailOperator
 from airflow.models import Variable
-from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import BranchPythonOperator
-
 from datetime import datetime, timedelta
 import os
 import sys
@@ -29,8 +25,8 @@ dag = DAG('record_bc_feed', default_args=default_args, schedule_interval='None')
 sshHook = SSHHook(conn_id="cs220_wrt")
 path = Variable.get('cs220_update_4_crawler')
 
-check_partition_b_cmd = "ssh -p 22 wrt@cs220 bash {path}/record_b_feed/get_latest_b_partition.sh".format(path=path)
-check_partition_c_cmd = "ssh -p 22 wrt@cs220 bash {path}/record_b_feed/get_latest_c_partition.sh".format(path=path)
+check_partition_b_cmd = "ssh -p 22 wrt@cs220 bash {path}/record_bc_feed/get_latest_b_partition.sh".format(path=path)
+check_partition_c_cmd = "ssh -p 22 wrt@cs220 bash {path}/record_bc_feed/get_latest_c_partition.sh".format(path=path)
 
 
 def get_last_update_b_date():
