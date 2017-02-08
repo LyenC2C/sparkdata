@@ -56,7 +56,7 @@ b = SSHExecuteOperator(
 
 c = SSHExecuteOperator(
     task_id="update_c",
-    bash_command='(bash {path}/record_bc_feed/record_b_feed.sh {latest_partition})'.format(path=path,
+    bash_command='(bash {path}/record_bc_feed/record_c_feed.sh {latest_partition})'.format(path=path,
                                                                             lastday=get_last_update_c_date()),
     ssh_hook=sshHook,
     dag=dag)
