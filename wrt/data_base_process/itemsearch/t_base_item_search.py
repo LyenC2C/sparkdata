@@ -4,9 +4,11 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 from pyspark.sql import *
+import sys
 
+lastday = sys.argv[1]
 
-sc = SparkContext(appName="t_base_item_search")
+sc = SparkContext(appName="t_base_item_search" + lastday)
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
