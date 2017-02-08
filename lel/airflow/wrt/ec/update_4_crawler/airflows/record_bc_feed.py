@@ -29,20 +29,29 @@ default_args = {
     # 'priority_weight': 10,
 }
 
-dag = DAG('shopitem_b', default_args=default_args, schedule_interval='0 5 * * *')
+dag = DAG('record_bc_feed', default_args=default_args, schedule_interval='0 5 * * *')
 sshHook = SSHHook(conn_id="cs220_wrt")
 path = Variable.get('cs220_update_4_crawler')
 
-check_partition_cmd = "ssh -p 22 wrt@cs220 bash {path}/get_latest_partition.sh".format(path=path)
+check_partition_b_cmd = "ssh -p 22 wrt@cs220 bash {path}/get_latest_b_partition.sh".format(path=path)
+check_partition_c_cmd = "ssh -p 22 wrt@cs220 bash {path}/get_latest_c_partition.sh".format(path=path)
 
-
-def get_last_update_date():
+def get_last_update_b_date():
     try:
-        result = os.popen(check_partition_cmd, "r").readline()
+        result = os.popen(check_partition_b_cmd, "r").readline()
     except:
         raise Exception("ssh operation failed!")
     else:
-        return str(eval(result)).split("\t")
+        return str(eval(result))
+
+def get_last_update_b_date():
+    try:
+        result = os.popen(check_partition_c_cmd, "r").readline()
+    except:
+        raise Exception("ssh operation failed!")
+    else:
+        return str(eval(result))
+
 
 
 # b = SSHExecuteOperator(
