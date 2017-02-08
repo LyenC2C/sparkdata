@@ -3,21 +3,20 @@ from airflow.utils.helpers import chain
 from airflow.contrib.operators.ssh_execute_operator import SSHExecuteOperator
 from airflow.contrib.hooks.ssh_hook import SSHHook
 from airflow.operators.email_operator import EmailOperator
+from airflow.models import Variable
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import BranchPythonOperator
-from airflow.models import Variable
 
-import logging
 from datetime import datetime,timedelta
-import sys
 import os
+import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2017,1,20,7,20),
+    'start_date': datetime(2017,2,7,5,5),
     'email': ['lienlian@wolongdata.com'],
     'email_on_failure': True,
     'email_on_retry': False,
@@ -29,11 +28,9 @@ default_args = {
     # 'priority_weight': 10,
 }
 
-dag = DAG('xianyu_itemcomment',default_args=default_args,schedule_interval='30 7 * * *')
-sshHook = SSHHook(conn_id="cs220")
-path = Variable.get('lel_xianyu_itemcomment')
-
-
+dag = DAG('shopitem_c',default_args=default_args,schedule_interval='10 5 * * *')
+sshHook = SSHHook(conn_id="cs220_wrt")
+path = Variable.get('cs220_ec_shopitem_c')
 
 def get_lastday():
     import datetime
@@ -41,8 +38,8 @@ def get_lastday():
     lastday = (today + datetime.timedelta(days=-1)).strftime('%Y%m%d')
     return lastday
 
-check_dir_cmd = "ssh -p 22 lel@cs220 bash {path}/check.sh {date}".format(date=get_lastday(),path=path)
-check_partition_cmd ="ssh -p 22 lel@cs220 bash {path}/get_partition.sh".format(path=path)
+check_dir_cmd = "ssh -p 22 wrt@cs220 bash {path}/check.sh {date}".format(date=get_lastday(),path=path)
+check_partition_cmd ="ssh -p 22 wrt@cs220 bash {path}/get_latest_partition.sh".format(path=path)
 
 def check_attach():
     try:
@@ -61,28 +58,31 @@ def get_last_update_date():
         return  str(eval(result))
 
 
+
 spark = SSHExecuteOperator(
-    task_id="comment_parse",
-    bash_command='(bash {path}/xianyu_itemcomment_parse.sh {lastday})'.format(path=path,lastday=get_lastday()),
+    task_id="shopitem_c_parse",
+    bash_command='(bash {path}/shopitem_c_parse.sh {lastday})'.format(path=path,lastday=get_lastday()),
     ssh_hook=sshHook,
     dag=dag)
 
 hive = SSHExecuteOperator(
-    task_id="comment_import",
-    bash_command='(bash {path}/xianyu_itemcomment_import.sh {lastday} {last_update_date})'.format(path=path,lastday=get_lastday(),last_update_date=get_last_update_date()),
+    task_id="shopitem_c_import",
+    bash_command='(bash {path}/shopitem_c_import.sh {lastday} {latest_partition})'.format(path=path,lastday=get_lastday(),latest_partition=get_last_update_date()),
     ssh_hook=sshHook,
     dag=dag)
 
-email_update = EmailOperator(task_id='xianyu_itemcomment_update_email',
-                      to=['lienlian@wolongdata.com'],
-                      subject='xianyu itemcomment workflow',
-                      html_content='[ xianyu data updated!!! ]',
-                      dag=dag)
-email_update_not = EmailOperator(task_id='xianyu_itemcomment_update_not_email',
+email_update = EmailOperator(task_id='shopitem_c_updated_email',
                              to=['lienlian@wolongdata.com'],
-                             subject='xianyu itemcomment workflow',
-                             html_content='[ xianyu data updating!!! ]',
+                             subject='ec shopitem c workflow',
+                             html_content='[ ec shopitem c data updated!!! ]',
                              dag=dag)
+
+email_update_not = EmailOperator(task_id='shopitem_c_not_update_email',
+                                 to=['lienlian@wolongdata.com'],
+                                 subject='ec shopitem c workflow',
+                                 html_content='[ ec shopitem c data updated!!! ]',
+                                 dag=dag)
+
 branching = BranchPythonOperator(task_id='check_attach',
                                  python_callable=lambda: check_attach(),
                                  dag=dag)
@@ -92,3 +92,4 @@ update = DummyOperator(task_id='update', dag=dag)
 
 chain(branching,passover,email_update_not)
 chain(branching,update,spark,hive,email_update)
+
