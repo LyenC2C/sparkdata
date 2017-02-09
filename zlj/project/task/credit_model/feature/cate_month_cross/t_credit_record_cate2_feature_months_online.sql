@@ -80,7 +80,7 @@ wl_analysis.t_base_record_cate_simple_ds
 WHERE
 cate_level2_id is not null
 )t
-group by tel_index,root_cat_id,month
+group by tel_index,cate_level2_id,month
 )tt
 group by tel_index
 ;
