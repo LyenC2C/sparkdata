@@ -32,16 +32,39 @@ concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'price_010_l
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'price_075_level2') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
 from 
 (
-select  tel_index,cate_level2_id,price,
-case when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn then "1month"
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' ) <= dsn then "3month"
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' ) <= dsn then "6month"
-when regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' ) <= dsn then "12month"
-else "allmonth" 
-end as month
+select  tel_index,cate_level2_id,price, "1month" as month
 from
 wl_analysis.t_base_record_cate_simple_xianyu
-where cate_level2_id is not null
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn
+AND
+cate_level2_id is not null
+UNION  ALL
+select  tel_index,cate_level2_id,price, "3month" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )<dsn
+AND
+cate_level2_id is not null
+UNION  ALL
+select  tel_index,cate_level2_id,price, "6month" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' )<dsn
+AND
+cate_level2_id is not null
+UNION  ALL
+select  tel_index,cate_level2_id,price, "12month" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
+where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )<dsn
+AND
+cate_level2_id is not null
+UNION  ALL
+select  tel_index,cate_level2_id,price, "allmonth" as month
+from
+wl_analysis.t_base_record_cate_simple_xianyu
+WHERE
+cate_level2_id is not null
 )tt
 group by tel_index,cate_level2_id,month
 )t
