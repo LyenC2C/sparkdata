@@ -112,10 +112,12 @@ fea_all = fea_main + fea_cat
 fea_all_index = fea_index(fea_all)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name')
 # hiveContext.sql('drop table wlcredit.t_wrt_credit_all_features_name')
-hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
-wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
-hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive" OVERWRITE \
- INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
+hiveContext.sql("load data inpath '/user/wrt/temp/all_features_name' overwrite into table \
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = {today}").format(today=today)
+hiveContext.sql("load data inpath '/user/wrt/temp/all_features_name' overwrite into table \
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = '"+  today +"')")
+hiveContext.sql("LOAD DATA INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE \
+ INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '"+ today +"')")
 # create table wlcredit.t_wrt_credit_all_features_name (feature string,index string)
 # PARTITIONED BY  (ds STRING )
 # ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'
