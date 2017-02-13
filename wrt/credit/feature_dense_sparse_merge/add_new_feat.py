@@ -29,7 +29,7 @@ def add_index(feature5k):
     newfeature = copy.copy(feature5k)
     # add_list.append("1") #monthall_buy_count
     # add_list.append("2") #monthall_price_sum
-    add_index = 233747
+    add_index = 297283 #特征数量,select count(1) from t_wrt_credit_all_features_name where ds = '' 可得出
     for i in range(2,len(feature5k)):
         ln = valid_jsontxt(feature5k[i])
         if ("sum_price_level" in ln) or ("price_sum" in ln):
@@ -87,10 +87,10 @@ sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/add_new_feature_nam
 rdd.map(lambda x:f(x,numerator_price,numerator_count)).saveAsTextFile('/user/wrt/temp/add_newfeature_inhive')
 
 hiveContext.sql("load data inpath '/user/wrt/temp/add_new_feature_name' overwrite into table \
-wlcredit.t_wrt_credit_all_features_name PARTITION (ds = '"+  today +"')" )
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = '" + today + "')" )
 
 hiveContext.sql("LOAD DATA INPATH '/user/wrt/temp/add_newfeature_inhive' OVERWRITE \
-INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '"+  today +"')" )
+INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '" + today + "')" )
 
 # cms代表cate_month_cross anf代表add_new_feature
 # hfs -rmr /user/wrt/temp/add_new_feature_name && hfs -rmr /user/wrt/temp/add_newfeature_inhive
