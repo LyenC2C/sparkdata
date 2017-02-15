@@ -77,8 +77,8 @@ def f(line,numerator_price,numerator_count):
     return valid_jsontxt(ss[0]) + "\001" + " ".join(result)
 
 
-rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=20170210_cms1234")
-feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=20170210_cms1234")\
+rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=20170214_cms1234")
+feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=20170214_cms1234")\
     .map(lambda x:valid_jsontxt(x.split("\t")[0])).collect()
 # feature5k = sc.textFile("/user/wrt/feature_5k").collect()
 #提取原始特征中会用到的特征
