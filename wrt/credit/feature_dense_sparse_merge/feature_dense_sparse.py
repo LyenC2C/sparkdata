@@ -67,8 +67,8 @@ def tran_dict(fea_cat):
 
 def fea_index(fea_all):
     fea_all_index = []
-    for i in range(1, len(fea_all) + 1):
-        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i))
+    for i in range(len(fea_all)):
+        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i + 1))
     return fea_all_index
 
 def hebing(x,y):
