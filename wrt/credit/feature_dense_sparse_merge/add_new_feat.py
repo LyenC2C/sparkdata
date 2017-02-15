@@ -23,22 +23,23 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-def add_index(feature5k):
+def add_index(feature_raw):
     numerator_price = {}
     numerator_count = {}
-    newfeature = copy.copy(feature5k)
+    newfeature = copy.copy(feature_raw)
     # add_list.append("1") #monthall_buy_count
     # add_list.append("2") #monthall_price_sum
     add_index = 297283 #特征数量,select count(1) from t_wrt_credit_all_features_name where ds = '' 可得出
-    for i in range(2,len(feature5k)):
-        ln = valid_jsontxt(feature5k[i])
+    add_index += 1 #特征index是从1开始,所以add_index是要+1的
+    for i in range(2,len(feature_raw)):
+        ln = valid_jsontxt(feature_raw[i])
         if ("sum_price_level" in ln) or ("price_sum" in ln):
-            numerator_price[str(i)] = str(add_index)
+            numerator_price[str(i + 1)] = str(add_index) #+1依然是因为从1开始的原因,
             ln += "_ratio"
             newfeature.append(ln)
             add_index += 1
         elif ("count_level" in ln) or ("buy_count" in ln):
-            numerator_count[str(i)] = str(add_index)
+            numerator_count[str(i + 1)] = str(add_index)
             ln += "_ratio"
             newfeature.append(ln)
             add_index += 1
@@ -53,7 +54,7 @@ def add_index(feature5k):
 def fea_index(fea_all):
     fea_all_index = []
     for i in range(len(fea_all)):
-        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i))
+        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i + 1))
     return fea_all_index
 
 def f(line,numerator_price,numerator_count):
