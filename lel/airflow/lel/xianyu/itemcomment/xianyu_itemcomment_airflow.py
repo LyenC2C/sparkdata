@@ -7,7 +7,6 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import BranchPythonOperator
 from airflow.models import Variable
 
-import logging
 from datetime import datetime,timedelta
 import sys
 import os
@@ -34,7 +33,6 @@ sshHook = SSHHook(conn_id="cs220")
 path = Variable.get('lel_xianyu_itemcomment')
 
 
-
 def get_lastday():
     import datetime
     today = datetime.datetime.now()
@@ -59,7 +57,6 @@ def get_last_update_date():
         raise Exception("ssh operation failed!")
     else:
         return  str(eval(result))
-
 
 spark = SSHExecuteOperator(
     task_id="comment_parse",

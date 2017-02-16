@@ -138,3 +138,22 @@ with open(r'C:\misc\data.txt') as myfile:
 b = 2 if a > 2 else 1
 b = False if a > 1 else True #A ? B : C
 '''
+
+
+def read_file(fpath):
+    BLOCK_SIZE = 1024
+    with open(fpath, 'rb') as f:
+        while True:
+            block = f.read(BLOCK_SIZE)
+            if block:
+                yield block
+
+#for i in read_file("/home/lyen/airflow useage.md"):
+#   print i
+str = "手机:18781788863,电话:0817-8118029"
+
+import re
+# m=re.findall(r"\(?0\d+[)-]?\d*",str)
+
+
+
