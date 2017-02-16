@@ -95,7 +95,7 @@ INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '" + today + "'_anf)"
 
 # cms代表cate_month_cross anf代表add_new_feature
 # hfs -rmr /user/wrt/temp/add_new_feature_name && hfs -rmr /user/wrt/temp/add_newfeature_inhive
-# park-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat.py 20170214_cms1234_anf
+# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat.py 20170214_cms1234_anf
 
 
 
