@@ -12,7 +12,6 @@ sc = SparkContext(appName="rong360_features_hebing")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-
 def valid_jsontxt(content):
     if type(content) == type(u""):
         res = content.encode("utf-8")
@@ -25,7 +24,7 @@ def feature_main(line):
     ss = line.strip().split("\001")
     tel = ss[0]
     result = []
-    i = -1
+    i = 0
     for ln in ss[1:]:
         i += 1
         if not ln.replace(".","").isdigit(): continue
@@ -52,7 +51,7 @@ def feature_cat(line,fea_cat_dict,len_main):
         f_value = ff[0]
         v_value = ff[1]
         if float(v_value) == 0.0: continue
-        f_index = fea_cat_dict[f_value] + len_main
+        f_index = fea_cat_dict[f_value] + len_main + 1
         sort_dict[f_index] = round(float(v_value),2)
         # result.append(f_index + ":" + valid_jsontxt(v_value))
     temp = sorted(sort_dict.iteritems(), key=lambda d:d[0], reverse = False)
@@ -69,7 +68,7 @@ def tran_dict(fea_cat):
 def fea_index(fea_all):
     fea_all_index = []
     for i in range(len(fea_all)):
-        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i))
+        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i + 1))
     return fea_all_index
 
 def hebing(x,y):
@@ -104,7 +103,7 @@ rdd_cat = sc.textFile(s_cat).map(lambda x:feature_cat(x,fea_cat_dict,len_main))
 rdd_main = sc.textFile(s_main).map(lambda x:feature_main(x))
 #两个特征集合进行join操作，最终输出一个电话对应所有特征，特征按照先紧密特征，后稀疏特征的顺序
 rdd = rdd_main.join(rdd_cat).map(lambda (x,y):hebing(x,y))
-# rdd.saveAsTextFile('/user/wrt/temp/all_feature_main_cat')
+# rdd.saveAsTextFil e('/user/wrt/temp/all_feature_main_cat')
 rdd_table = rdd.map(lambda x:inhive(x))
 rdd_table.saveAsTextFile('/user/wrt/temp/all_feature_dense_sparse_inhive')
 #全部特征字段输出.
@@ -112,10 +111,12 @@ fea_all = fea_main + fea_cat
 fea_all_index = fea_index(fea_all)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/all_features_name')
 # hiveContext.sql('drop table wlcredit.t_wrt_credit_all_features_name')
-hiveContext.sql('load data inpath "/user/wrt/temp/all_features_name" overwrite into table \
-wlcredit.t_wrt_credit_all_features_name PARTITION (ds ='+ today +')')
-hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/all_feature_dense_sparse_inhive" OVERWRITE \
- INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '+ today +')')
+# hiveContext.sql("load data inpath '/user/wrt/temp/all_features_name' overwrite into table \
+# wlcredit.t_wrt_credit_all_features_name PARTITION (ds = {today}").format(today=today)
+hiveContext.sql("load data inpath '/user/wrt/temp/all_features_name' overwrite into table \
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = '"+  today +"')")
+hiveContext.sql("LOAD DATA INPATH '/user/wrt/temp/all_feature_dense_sparse_inhive' OVERWRITE \
+INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '"+ today +"')")
 # create table wlcredit.t_wrt_credit_all_features_name (feature string,index string)
 # PARTITIONED BY  (ds STRING )
 # ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'   LINES TERMINATED BY '\n'

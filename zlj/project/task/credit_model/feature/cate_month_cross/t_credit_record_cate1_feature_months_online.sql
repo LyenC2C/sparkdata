@@ -38,33 +38,33 @@ select  tel_index,root_cat_id,price, "1month" as month
 from
 wl_analysis.t_base_record_cate_simple_ds
 where
-substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' ),1,6) <= ds
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' ),1,6) <= ds
 and
-regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' )<dsn
 UNION  ALL
 select  tel_index,root_cat_id,price, "3month" as month
 from
 wl_analysis.t_base_record_cate_simple_ds
 where
-substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' ),1,6) <= ds
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3)as string),'-','' ),1,6) <= ds
 and
-regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )<dsn
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3)as string),'-','' )<dsn
 UNION  ALL
 select  tel_index,root_cat_id,price, "6month" as month
 from
 wl_analysis.t_base_record_cate_simple_ds
 where
-substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' ),1,6) <= ds
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6)as string),'-','' ),1,6) <= ds
 and
-regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' ) < dsn
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6)as string),'-','' ) < dsn
 UNION  ALL
 select  tel_index,root_cat_id,price, "12month" as month
 from
 wl_analysis.t_base_record_cate_simple_ds
 where
-substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' ),1,6) <= ds
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12)as string),'-','' ),1,6) <= ds
 and
-regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )<dsn
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12)as string),'-','' )<dsn
 UNION  ALL
 select  tel_index,root_cat_id,price, "allmonth" as month
 from

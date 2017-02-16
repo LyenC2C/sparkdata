@@ -23,22 +23,23 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-def add_index(feature5k):
+def add_index(feature_raw):
     numerator_price = {}
     numerator_count = {}
-    newfeature = copy.copy(feature5k)
+    newfeature = copy.copy(feature_raw)
     # add_list.append("1") #monthall_buy_count
     # add_list.append("2") #monthall_price_sum
-    add_index = 233747
-    for i in range(2,len(feature5k)):
-        ln = valid_jsontxt(feature5k[i])
+    add_index = 297283 #特征数量,select count(1) from t_wrt_credit_all_features_name where ds = '' 可得出
+    add_index += 1 #特征index是从1开始,所以add_index是要+1的
+    for i in range(2,len(feature_raw)):
+        ln = valid_jsontxt(feature_raw[i])
         if ("sum_price_level" in ln) or ("price_sum" in ln):
-            numerator_price[str(i)] = str(add_index)
+            numerator_price[str(i + 1)] = str(add_index) #+1依然是因为从1开始的原因,
             ln += "_ratio"
             newfeature.append(ln)
             add_index += 1
         elif ("count_level" in ln) or ("buy_count" in ln):
-            numerator_count[str(i)] = str(add_index)
+            numerator_count[str(i + 1)] = str(add_index)
             ln += "_ratio"
             newfeature.append(ln)
             add_index += 1
@@ -53,7 +54,7 @@ def add_index(feature5k):
 def fea_index(fea_all):
     fea_all_index = []
     for i in range(len(fea_all)):
-        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i))
+        fea_all_index.append(valid_jsontxt(fea_all[i]) + "\t" + str(i + 1))
     return fea_all_index
 
 def f(line,numerator_price,numerator_count):
@@ -76,8 +77,8 @@ def f(line,numerator_price,numerator_count):
     return valid_jsontxt(ss[0]) + "\001" + " ".join(result)
 
 
-rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=20170113_cms")
-feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=20170113_cms")\
+rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=" + today)
+feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=" + today)\
     .map(lambda x:valid_jsontxt(x.split("\t")[0])).collect()
 # feature5k = sc.textFile("/user/wrt/feature_5k").collect()
 #提取原始特征中会用到的特征
@@ -86,15 +87,15 @@ fea_all_index = fea_index(newfeature)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/add_new_feature_name')
 rdd.map(lambda x:f(x,numerator_price,numerator_count)).saveAsTextFile('/user/wrt/temp/add_newfeature_inhive')
 
-hiveContext.sql('load data inpath "/user/wrt/temp/add_new_feature_name" overwrite into table \
-wlcredit.t_wrt_credit_all_features_name PARTITION (ds = "20170113_cms_anf" )')
+hiveContext.sql("load data inpath '/user/wrt/temp/add_new_feature_name' overwrite into table \
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = '" + today + "'_anf)" )
 
-hiveContext.sql('LOAD DATA INPATH "/user/wrt/temp/add_newfeature_inhive" OVERWRITE \
-INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = "20170113_cms_anf")')
+hiveContext.sql("LOAD DATA INPATH '/user/wrt/temp/add_newfeature_inhive' OVERWRITE \
+INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '" + today + "'_anf)" )
 
-
+# cms代表cate_month_cross anf代表add_new_feature
 # hfs -rmr /user/wrt/temp/add_new_feature_name && hfs -rmr /user/wrt/temp/add_newfeature_inhive
-# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat_online.py 20170106
+# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat.py 20170214_cms1234_anf
 
 
 

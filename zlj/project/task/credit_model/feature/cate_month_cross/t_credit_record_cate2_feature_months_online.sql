@@ -1,4 +1,6 @@
--- 价格的加减乘除
+
+
+--
 drop table wlcredit.t_credit_record_cate2_feature_months ;
 create table wlcredit.t_credit_record_cate2_feature_months as
 SELECT
@@ -30,51 +32,64 @@ concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'cross_price
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'price_025_level2') ,cast( round(percentile(cast(price as int),0.25),2) as string) ) price_025,
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'price_010_level2') ,cast( round(percentile(cast(price as int),0.10),2) as string) ) price_010,
 concat_ws(':', concat_ws('_',cast( cate_level2_id as string), month,'price_075_level2') ,cast( round(percentile(cast(price as int),0.75),2) as string) ) price_075
-from 
+from
 (
 select  tel_index,cate_level2_id,price, "1month" as month
 from
-wl_analysis.t_base_record_cate_simple_xianyu
-where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn
+wl_analysis.t_base_record_cate_simple_ds
+where
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' ),1,6) <= ds
+and
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' )<dsn
 AND
 cate_level2_id is not null
 UNION  ALL
 select  tel_index,cate_level2_id,price, "3month" as month
 from
-wl_analysis.t_base_record_cate_simple_xianyu
-where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3),'-','' )<dsn
+wl_analysis.t_base_record_cate_simple_ds
+where
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3)as string),'-','' ),1,6) <= ds
+and
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3)as string),'-','' )<dsn
 AND
 cate_level2_id is not null
 UNION  ALL
 select  tel_index,cate_level2_id,price, "6month" as month
 from
-wl_analysis.t_base_record_cate_simple_xianyu
-where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6),'-','' )<dsn
+wl_analysis.t_base_record_cate_simple_ds
+where
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6)as string),'-','' ),1,6) <= ds
+and
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*6)as string),'-','' ) < dsn
 AND
 cate_level2_id is not null
 UNION  ALL
 select  tel_index,cate_level2_id,price, "12month" as month
 from
-wl_analysis.t_base_record_cate_simple_xianyu
-where regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12),'-','' )<dsn
+wl_analysis.t_base_record_cate_simple_ds
+where
+substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12)as string),'-','' ),1,6) <= ds
+and
+regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*12)as string),'-','' )<dsn
 AND
 cate_level2_id is not null
 UNION  ALL
 select  tel_index,cate_level2_id,price, "allmonth" as month
 from
-wl_analysis.t_base_record_cate_simple_xianyu
+wl_analysis.t_base_record_cate_simple_ds
 WHERE
 cate_level2_id is not null
-)tt
-group by tel_index,cate_level2_id,month
 )t
+group by tel_index,cate_level2_id,month
+)tt
 group by tel_index
 ;
 
 -- SELECT
--- tel_index,cate_level2_id as cate_level2,
--- concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'median_price_level2') ,cast( round(percentile(cast(price as int),0.5),2) as string) ) price_median,
--- concat_ws(':', concat_ws('_',cast( cate_level2_id as string) ,'cross_price_level2' ) ,cast( round(max(price)-min(price),2) as string) ) price_max
+-- tel_index,root_cat_id as cate_level1,
+-- concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'median_price_level1') ,cast( round(percentile(cast(price as int),0.5),2) as string) ) price_median,
+-- concat_ws(':', concat_ws('_',cast( root_cat_id as string) ,'cross_price_level1' ) ,cast( round(max(price)-min(price),2) as string) ) price_max
 -- from wlbase_dev.t_base_record_cate where tel_index is not null and tel_user_rn<4 and price<160000
--- and  cate_level2_id is not null
--- group by tel_index,cate_level2_id
+-- and  root_cat_id is not null
+-- group by tel_index,root_cat_id
+

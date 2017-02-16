@@ -11,11 +11,11 @@ wlcredit.t_credit_record_cate2_feature_months t2
 ON
 t1.tel_index = t2.tel_index
 left JOIN
-wlcredit.t_credit_record_cate3_feature t3
+wlcredit.t_credit_record_cate3_feature_months t3
 ON
 t1.tel_index = t3.tel_index
 left JOIN
-wlcredit.t_credit_record_cate4_feature t4
+wlcredit.t_credit_record_cate4_feature_months t4
 ON
 t1.tel_index = t4.tel_index
 ;

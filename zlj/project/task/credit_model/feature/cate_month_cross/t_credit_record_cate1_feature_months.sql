@@ -1,5 +1,3 @@
-
-
 --
 drop table wlcredit.t_credit_record_cate1_feature_months ;
 create table wlcredit.t_credit_record_cate1_feature_months as
