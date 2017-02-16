@@ -77,8 +77,8 @@ def f(line,numerator_price,numerator_count):
     return valid_jsontxt(ss[0]) + "\001" + " ".join(result)
 
 
-rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=20170214_cms1234")
-feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=20170214_cms1234")\
+rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=" + today)
+feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=" + today)\
     .map(lambda x:valid_jsontxt(x.split("\t")[0])).collect()
 # feature5k = sc.textFile("/user/wrt/feature_5k").collect()
 #提取原始特征中会用到的特征
@@ -88,14 +88,14 @@ sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/add_new_feature_nam
 rdd.map(lambda x:f(x,numerator_price,numerator_count)).saveAsTextFile('/user/wrt/temp/add_newfeature_inhive')
 
 hiveContext.sql("load data inpath '/user/wrt/temp/add_new_feature_name' overwrite into table \
-wlcredit.t_wrt_credit_all_features_name PARTITION (ds = '" + today + "')" )
+wlcredit.t_wrt_credit_all_features_name PARTITION (ds = '" + today + "'_anf)" )
 
 hiveContext.sql("LOAD DATA INPATH '/user/wrt/temp/add_newfeature_inhive' OVERWRITE \
-INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '" + today + "')" )
+INTO TABLE wlcredit.t_credit_feature_merge PARTITION (ds = '" + today + "'_anf)" )
 
 # cms代表cate_month_cross anf代表add_new_feature
 # hfs -rmr /user/wrt/temp/add_new_feature_name && hfs -rmr /user/wrt/temp/add_newfeature_inhive
-# spark-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat_online.py 20170106
+# park-submit --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 add_new_feat.py 20170214_cms1234_anf
 
 
 
