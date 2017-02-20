@@ -13,6 +13,14 @@ fi
 spark-submit  --executor-memory 10G  --driver-memory 10G  --total-executor-cores 120 \
 $pre_path/wrt/data_base_process/itemsearch/t_base_item_search.py 20170217
 
+hive<<EOF
+use wl_base;
+insert overwrite table wl_base.t_base_item_search partition(ds = '0temp')
+SELECT
+nid,max(user_id),max(comment_count),max(encryptedUserId),max(nick)
+FROM
+wl_base.t_base_item_search where ds = '0temp' group by nid;
+EOF
 
 hive<<EOF
 use wlbase_dev;
