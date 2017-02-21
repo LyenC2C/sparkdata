@@ -150,10 +150,34 @@ def read_file(fpath):
 
 #for i in read_file("/home/lyen/airflow useage.md"):
 #   print i
-str = "手机:18781788863,电话:0817-8118029"
+str = "手机:4254,电话:081"
+str_1 ="3、“郑某”开设赌场判处缓刑等等。 执业以来，刑事案件判处缓刑率达到15%左右。手机：13616776886电话：0577-86861956QQ：379619056传真：86862557 邮箱：379619056@qq.com联系地址：温州市龙湾区海滨街道富海路191号 "
 
 import re
-# m=re.findall(r"\(?0\d+[)-]?\d*",str)
+phones = filter(lambda a: len(a) >= 11,re.findall(r"\d+[-]?\d*",str_1))
+print len(phones)
 
+
+'''
+银行电话号码及名字
+'''
+# bankinfo ="(86 20)3680 8800,传真:(86 20)3685 5037 手机：13616776886 电话：0577-86861956,(23) 6366 552".replace(' ','').replace('（','(').replace('）',')')
+# b = "（021）66262773（021）66262001".replace(' ','').replace(' ','').replace('（','(').replace('）',')')
+# c = "对公：0577-57760111（服务时间：周一至周五，假日除外08：30-11：30；13：30-17：00）对私：0577-57760111（服务时间：周一至周日08：30-17：00）大堂：0577-57762735（服务时间：周一至周日08：30-17：00）"
+#
+# numbers = re.findall(r"[(|]?\d+[)|）]?[-]?\d*",c)
+# for phone in numbers:
+#     if phone.startswith('('):
+#         phone_sub= re.findall(r"\d+?\d*",phone)
+#         if phone_sub[0].startswith('86'):
+#             phone = phone_sub[0].replace('86','')+'-'+phone_sub[1]
+#         else:
+#             phone = phone_sub[0]+'-'+phone_sub[1]
+#     if len(phone) >5:
+#         print phone
+
+raw = '{\"code\":\"00\",\"userName\":\"翟波\",\"credentialCode\":\"512929197310280374\",\"userId\":\"AEF37B1930814EED878C4EBF536410AA\",\"msg\":\"验证通过！\"}'
+import json
+print json.loads(raw.replace('\\','')).get("userName")
 
 
