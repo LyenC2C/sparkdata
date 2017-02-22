@@ -29,7 +29,7 @@ hfs -rmr /user/wrt/temp/add_new_feature_name
 hfs -rmr /user/wrt/temp/add_newfeature_inhive
 
 spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
-add_new_feat.py $today
+$wrt_path/add_new_feat.py $today
 
 hfs -rmr /user/wrt/credit/allexample.libsvm
 hfs -rmr /user/wrt/credit/allexample_filter.libsvm
@@ -37,7 +37,7 @@ hfs -rmr /user/wrt/credit/allexample_filter_telindex_features
 hfs -rmr /user/wrt/temp/filter_feature_name
 
 spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
-feature_filter.py $today
+$wrt_path/feature_filter.py $today
 
 
 
