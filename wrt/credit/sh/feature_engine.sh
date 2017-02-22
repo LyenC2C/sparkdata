@@ -22,11 +22,11 @@ hfs -rmr /user/wrt/temp/all_features_name
 hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 
 spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
-feature_dense_sparse.py $today
+$wrt_path/feature_dense_sparse.py $today
 
-hfs -rmr /user/wrt/temp/add_new_feature_name
-hfs -rmr /user/wrt/temp/add_newfeature_inhive
-
-spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
-add_new_feat.py $today
+#hfs -rmr /user/wrt/temp/add_new_feature_name
+#hfs -rmr /user/wrt/temp/add_newfeature_inhive
+#
+#spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
+#add_new_feat.py $today
 
