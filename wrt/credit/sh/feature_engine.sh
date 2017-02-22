@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 source ~/.bashrc
-#zlj_path='/home/wrt/sparkdata/zlj/project/task/credit_model/feature'
-#wrt_path='/home/wrt/sparkdata/wrt/credit/feature_dense_sparse_merge'
-#today=$(date -d '0: days ago' +%Y%m%d)
+zlj_path='/home/wrt/sparkdata/zlj/project/task/credit_model/feature'
+wrt_path='/home/wrt/sparkdata/wrt/credit/feature_dense_sparse_merge'
+today=$(date -d '0: days ago' +%Y%m%d)
 #
 #hive -f $zlj_path/cate_month_cross/t_credit_record_cate1_feature_months.sql
 #hive -f $zlj_path/cate_month_cross/t_credit_record_cate2_feature_months.sql
