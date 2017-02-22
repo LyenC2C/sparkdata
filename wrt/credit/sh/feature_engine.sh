@@ -3,6 +3,7 @@ source ~/.bashrc
 zlj_path='/home/wrt/sparkdata/zlj/project/task/credit_model/feature'
 wrt_path='/home/wrt/sparkdata/wrt/credit/feature_dense_sparse_merge'
 today=$(date -d '0 days ago' +%Y%m%d)
+#today='20170114'
 #
 #hive -f $zlj_path/cate_month_cross/t_credit_record_cate1_feature_months.sql
 #hive -f $zlj_path/cate_month_cross/t_credit_record_cate2_feature_months.sql
@@ -18,15 +19,27 @@ today=$(date -d '0 days ago' +%Y%m%d)
 #hive -f $wrt_path/feature_dense_merge.sql
 #hive -f $wrt_path/feature_sparse_merge.sql
 
-hfs -rmr /user/wrt/temp/all_features_name
-hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
-
-spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
-$wrt_path/feature_dense_sparse.py $today
-
-#hfs -rmr /user/wrt/temp/add_new_feature_name
-#hfs -rmr /user/wrt/temp/add_newfeature_inhive
+#hfs -rmr /user/wrt/temp/all_features_name
+#hfs -rmr /user/wrt/temp/all_feature_dense_sparse_inhive
 #
 #spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
-#add_new_feat.py $today
+#$wrt_path/feature_dense_sparse.py $today
+
+hfs -rmr /user/wrt/temp/add_new_feature_name
+hfs -rmr /user/wrt/temp/add_newfeature_inhive
+
+spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
+add_new_feat.py $today
+
+hfs -rmr /user/wrt/credit/allexample.libsvm
+hfs -rmr /user/wrt/credit/allexample_filter.libsvm
+hfs -rmr /user/wrt/credit/allexample_filter_telindex_features
+hfs -rmr /user/wrt/temp/filter_feature_name
+
+spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
+feature_filter.py $today
+
+
+
+
 
