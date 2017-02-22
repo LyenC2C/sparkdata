@@ -25,11 +25,11 @@ today=$(date -d '0 days ago' +%Y%m%d)
 #spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
 #$wrt_path/feature_dense_sparse.py $today
 
-hfs -rmr /user/wrt/temp/add_new_feature_name
-hfs -rmr /user/wrt/temp/add_newfeature_inhive
-
-spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
-$wrt_path/add_new_feat.py $today
+#hfs -rmr /user/wrt/temp/add_new_feature_name
+#hfs -rmr /user/wrt/temp/add_newfeature_inhive
+#
+#spark-submit  --executor-memory 9G  --driver-memory 9G  --total-executor-cores 120 \
+#$wrt_path/add_new_feat.py $today
 
 hfs -rmr /user/wrt/credit/allexample.libsvm
 hfs -rmr /user/wrt/credit/allexample_filter.libsvm
