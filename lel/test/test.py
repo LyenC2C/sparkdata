@@ -175,9 +175,15 @@ print len(phones)
 #             phone = phone_sub[0]+'-'+phone_sub[1]
 #     if len(phone) >5:
 #         print phone
+#
+# raw = '{\"code\":\"00\",\"userName\":\"翟波\",\"credentialCode\":\"512929197310280374\",\"userId\":\"AEF37B1930814EED878C4EBF536410AA\",\"msg\":\"验证通过！\"}'
+# import json
+# print json.loads(raw.replace('\\','')).get("userName")
 
-raw = '{\"code\":\"00\",\"userName\":\"翟波\",\"credentialCode\":\"512929197310280374\",\"userId\":\"AEF37B1930814EED878C4EBF536410AA\",\"msg\":\"验证通过！\"}'
-import json
-print json.loads(raw.replace('\\','')).get("userName")
-
+# s = '{"phone": "13543493145", "flag": false}'
+# import json
+# print json.loads(s).get("flag")
+arr = [True,False]
+if False in arr:
+    print "ok"
 

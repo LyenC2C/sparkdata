@@ -16,6 +16,9 @@ def valid_jsontxt(content):
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
 
+def replace(s):
+    return s.replace(' ', '').replace('（', '(').replace('）',')').replace('－', '-').replace('--', '').replace('--', '').replace('-', '')
+
 def process(line):
     ob = json.loads(valid_jsontxt(line))
     if not isinstance(ob, dict): return None
@@ -23,23 +26,31 @@ def process(line):
     province_name = ob.get("province", {}).get("province_name", "\\N")
     city_name = ob.get("city", {}).get("city_name", "\\N")
     wd_name = ob.get("blank_list", {}).get("wy_name", "\\N")
-    wd_phone = ob.get("blank_list", {}).get("wd_phone", "\\N").replace(' ', '').replace('（', '(').replace('）',
-                                                                                                          ')').replace(
-        '－', '-')
+    wd_phone = replace(ob.get("blank_list", {}).get("wd_phone", "\\N"))
     if wd_phone not in "\\N":
-        numbers = re.findall(r"[(]?\d+[)]?[-]?\d*", wd_phone)
+        numbers = re.findall(r"[(]?\d+[)]?\d*", wd_phone)
         for phone in numbers:
             if phone.startswith('('):
                 phone_sub = re.findall(r"\d+?\d*", phone)
                 if phone_sub[0].startswith('86') and '：' not in phone_sub[0]:
-                    phone = phone_sub[0].replace('86', '') + '-' + phone_sub[1]
+                    phone = phone_sub[0].replace('86', '') + phone_sub[1]
                 else:
-                    phone = phone_sub[0] + '-' + phone_sub[1]
+                    phone = phone_sub[0] + phone_sub[1]
             if len(phone) > 5:
                 result.append((phone, wd_name))
     blank_name = ob.get("blank_name", "\\N")
-    blank_phone = ob.get("blank_phone", "\\N").replace("电话银行：","")
-    result.append((blank_phone, blank_name))
+    blank_phone = replace(ob.get("blank_phone", "\\N"))
+    if blank_phone not in "\\N":
+        numbers = re.findall(r"[(]?\d+[)]?\d*", blank_phone)
+        for phone in numbers:
+            if phone.startswith('('):
+                phone_sub = re.findall(r"\d+?\d*", phone)
+                if phone_sub[0].startswith('86') and '：' not in phone_sub[0]:
+                    phone = phone_sub[0].replace('86', '') + phone_sub[1]
+                else:
+                    phone = phone_sub[0] + phone_sub[1]
+            if len(phone) > 5:
+                result.append((phone, blank_name))
     return result
 
 

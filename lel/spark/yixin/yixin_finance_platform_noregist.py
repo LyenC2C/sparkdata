@@ -14,6 +14,7 @@ def valid_jsontxt(content):
 def f(line):
     ob = json.loads(valid_jsontxt(line.strip()))
     flag = ob.get("flag", False)
+    if flag in 'None': return None
     platform = valid_jsontxt(ob.get("platform"))
     phone = valid_jsontxt(ob.get("phone"))
     if not phone.isdigit(): return None

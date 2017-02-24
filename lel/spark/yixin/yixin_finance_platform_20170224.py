@@ -51,23 +51,32 @@ previous = sc.textFile("/user/lel/results/yixin/previous/product/*").map(lambda 
 previous_b = sc.broadcast(previous)
 previous_bv = previous_b.value
 
-othersRDD = data.filter(lambda a: '拉卡拉' not in  a[1] ) \
+
+def getridOf_qianhe(a,b):
+    if  '钱盒' in list(b) and len(list(b)) == 1:
+        return None
+    else:
+        return (a,b)
+
+
+othersRDD = data.filter(lambda a:'拉卡拉' not in  a[1]) \
     .combineByKey(lambda a: createCombiner(a), lambda a, b: mergeValue(a, b), lambda a, b: mergeCombiners(a, b)) \
-    .map(lambda a: distinct_pre(a, previous_bv)).filter(lambda a: a is not None)
+    .map(lambda a: distinct_pre(a, previous_bv)).filter(lambda a: a is not None)\
+    .map(lambda (a,b):getridOf_qianhe(a,b)).filter(lambda a:a is not None)
 
 othersRDD.coalesce(1).map(lambda a: a[0] + "\t" + ','.join(list(set(a[1])))).saveAsTextFile(
-    "/user/lel/results/yixin/except_lakala20170224")
+    "/user/lel/results/yixin/except_lakala20170224_2")
 
 others_dis = othersRDD.collectAsMap()
 others_dis_b = sc.broadcast(others_dis)
 others_dis_bv = others_dis_b.value
 
-lakalaRDD = data.filter(lambda a: '拉卡拉' in a[1] ) \
+lakalaRDD = data.filter(lambda a: '拉卡拉' in a[1]) \
     .combineByKey(lambda a: createCombiner(a), lambda a, b: mergeValue(a, b), lambda a, b: mergeCombiners(a, b)) \
     .map(lambda a: distinct_pre(a, previous_bv)).filter(lambda a: a is not None).map(lambda a: distinct_oth(a, others_dis_bv)).filter(
-    lambda a: a is not None)
+    lambda a: a is not None).map(lambda (a,b):getridOf_qianhe(a,b)).filter(lambda a:a is not None)
 lakalaRDD.coalesce(1).map(lambda a: a[0] + "\t" + ','.join(list(set(a[1])))).saveAsTextFile(
-    "/user/lel/results/yixin/lakala20170224")
+    "/user/lel/results/yixin/lakala20170224_3")
 
 # lakalaRDD.union(othersRDD) \
 #     .map(lambda a: a[0] + "\t" + ','.join(list(set(a[1])))) \
