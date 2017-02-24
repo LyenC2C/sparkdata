@@ -23,7 +23,7 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n',"").replace("\r","").replace('\001',"").replace("\u0001","")
 
-def add_index(feature_raw,add_index):
+def add_index(feature_raw,feature_raw_len):
     numerator_price = {}
     numerator_count = {}
     newfeature = copy.copy(feature_raw)
@@ -34,15 +34,15 @@ def add_index(feature_raw,add_index):
     for i in range(2,len(feature_raw)):
         ln = valid_jsontxt(feature_raw[i])
         if ("sum_price_level" in ln) or ("price_sum" in ln):
-            numerator_price[str(i + 1)] = str(add_index) #+1依然是因为从1开始的原因,
+            numerator_price[str(i + 1)] = str(feature_raw_len) #+1依然是因为从1开始的原因,
             ln += "_ratio"
             newfeature.append(ln)
-            add_index += 1
+            feature_raw_len += 1
         elif ("count_level" in ln) or ("buy_count" in ln):
-            numerator_count[str(i + 1)] = str(add_index)
+            numerator_count[str(i + 1)] = str(feature_raw_len)
             ln += "_ratio"
             newfeature.append(ln)
-            add_index += 1
+            feature_raw_len += 1
         # if ("level" in ln) or ("buy_count" in ln) or ("price_sum" in ln):
         #     # numerator_list.append(str(i))
         #     numerator_dict[str(i)] = add_index #numerator_dict用来存储带有关键词的特征index，其值为新增特征的index
@@ -81,10 +81,10 @@ rdd = sc.textFile("/hive/warehouse/wlcredit.db/t_credit_feature_merge/ds=" + tod
 feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=" + today + "_cms1234")\
     .map(lambda x:valid_jsontxt(x.split("\t")[0])).collect()
 #统计原始特征数量
-add_index = feature_raw.count()
-add_index += 1
+feature_raw_len = len(feature_raw)
+feature_raw_len += 1
 #提取原始特征中会用到的特征
-numerator_price,numerator_count,newfeature = add_index(feature_raw,add_index)
+numerator_price,numerator_count,newfeature = add_index(feature_raw,feature_raw_len)
 fea_all_index = fea_index(newfeature)
 sc.parallelize(fea_all_index).saveAsTextFile('/user/wrt/temp/add_new_feature_name')
 rdd.map(lambda x:f(x,numerator_price,numerator_count)).saveAsTextFile('/user/wrt/temp/add_newfeature_inhive')
