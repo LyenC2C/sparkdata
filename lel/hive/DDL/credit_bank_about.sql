@@ -1,6 +1,6 @@
-CREATE TABLE  if not exists wl_base.t_base_phone_name_credit_bank(
+CREATE TABLE  if not exists wl_base.t_base_creditbank_2(
 phone String COMMENT '电话号码',
-company String COMMENT '银行名称',
+bank String COMMENT '银行名称',
 source String COMMENT '信息来源'
 )
 COMMENT '银行信用卡相关'

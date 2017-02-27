@@ -6,7 +6,7 @@ from airflow.contrib.hooks.ssh_hook import SSHHook
 from airflow.operators.email_operator import EmailOperator
 from airflow.models import Variable
 
-import sys
+import sys,os
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -26,10 +26,34 @@ default_args = {
 
 }
 
+
+
 dag = DAG('ec_item_and_shopinfo',default_args=default_args,schedule_interval='0 7 * * 6')
 sshHook = SSHHook(conn_id="cs220_wrt")
 
 path = Variable.get('cs220_ec_item&shopinfo')
+
+check_partition_iteminfo = "ssh -p 22 wrt@cs105 bash {path}/iteminfo_latest_partition.sh".format(path=path)
+check_partition_shopinfo = "ssh -p 22 wrt@cs105 bash {path}/shopinfo_latest_partition.sh".format(path=path)
+
+def iteminfo_last_update():
+    try:
+        result = os.popen(check_partition_iteminfo, "r").readline()
+    except:
+        raise Exception("ssh operation failed!")
+    else:
+        return str(eval(result))
+
+def shopinfo_last_update():
+    try:
+        result = os.popen(check_partition_shopinfo, "r").readline()
+    except:
+        raise Exception("ssh operation failed!")
+    else:
+        return str(eval(result))
+
+
+
 
 spark_item = SSHExecuteOperator(
     task_id="ec_iteminfo_spark",
@@ -39,7 +63,7 @@ spark_item = SSHExecuteOperator(
 
 hive_item = SSHExecuteOperator(
     task_id="ec_iteminfo_hive",
-    bash_command='(bash {path}/ec_iteminfo_import.sh)'.format(path=path),
+    bash_command='(bash {path}/ec_iteminfo_import.sh {last_par})'.format(path=path,last_par=iteminfo_last_update()),
     ssh_hook=sshHook,
     dag=dag)
 
@@ -51,7 +75,7 @@ spark_shop = SSHExecuteOperator(
 
 hive_shop= SSHExecuteOperator(
     task_id="ec_shopinfo_hive",
-    bash_command='(bash {path}/ec_shopinfo_import.sh)'.format(path=path),
+    bash_command='(bash {path}/ec_shopinfo_import.sh {last_par})'.format(path=path,last_par=shopinfo_last_update()),
     ssh_hook=sshHook,
     dag=dag)
 final_ops= SSHExecuteOperator(
