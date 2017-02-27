@@ -2,7 +2,7 @@
 source ~/.bashrc
 
 today=$(date -d '0 days ago' +%Y%m%d)
-lastday=$(date -d '7 days ago' +%Y%m%d)
+last=$1
 
 table=wl_base.t_base_ec_item_dev_new
 
@@ -36,7 +36,7 @@ case when t1.item_id is null then t2.ts else t1.ts end
 from
 (select * from $table where ds = '0temp')t1
 full outer JOIN
-(select * from $table where ds = $lastday)t2
+(select * from $table where ds = $last)t2
 ON
 t1.item_id = t2.item_id;
 EOF

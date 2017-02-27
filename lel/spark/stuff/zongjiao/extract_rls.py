@@ -31,17 +31,15 @@ def extract(ids, id_dict):
         if id in ids:
             res.append(id)
     return ','.join(res)
-#(id,kw) join (id,ids) => (id,(kw,ids))
-re = idRDD.join(fri_idsRDD).mapValues(lambda (kw,ids): (kw, extract(ids, id_dict_bv))).map(lambda (a,(b,c)): '\001'.join(valid_jsontxt(i) for i in [a,b,c])).saveAsTextFile("/user/lel/results/zongjiao20170224_idkwids_v1")
-
-
 '''
-#(id,kw) join (id,ids) => (id,(kw,ids)) join (id,(city,decription,gender,vertified)) => (id,((kw,ids),(city,description,gender,vertified)))
+(id,kw) join (id,ids) => (id,(kw,ids))
+'''
 re = idRDD.join(fri_idsRDD).mapValues(lambda (kw,ids): (kw, extract(ids, id_dict_bv)))\
-                        .join(infoRDD)\
-                        .map(lambda (a, ((b, c), (d, e, f, g))): "\001".join([valid_jsontxt(i) for i in [a, b, c, d, e, f, g]]))\
-                        .saveAsTextFile("/user/lel/results/zongjiao20170224")
-'''
+          .map(lambda (a,(b,c)): '\001'.join(valid_jsontxt(i) for i in [a,b,c]))\
+          .saveAsTextFile("/user/lel/results/zongjiao20170224_idkwids_v1")
+
+
+
 
 
 
