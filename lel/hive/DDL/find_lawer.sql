@@ -11,9 +11,7 @@ lawer_info_url String COMMENT '律师信息网址',
 lawer_e_mail String COMMENT '律师email',
 lawer_qq String COMMENT '律师qq',
 year_of_practice String COMMENT '业龄',
-intro_page String COMMENT '简介页面',
-img_url String COMMENT '头像链接',
-timpstamp String COMMENT '时间戳'
+img_url String COMMENT '头像链接'
 )
 COMMENT '律师信息搜索'
 PARTITIONED BY  (ds STRING )
