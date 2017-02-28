@@ -37,7 +37,7 @@ SET hive.exec.max.dynamic.partitions=2000;
 set hive.exec.reducers.bytes.per.reducer=500000000;
 
 
-
+-- 初次更新
 INSERT INTO TABLE wl_analysis.t_base_record_cate_simple_ds PARTITION (ds)
 SELECT
   item_id            ,
@@ -101,7 +101,6 @@ location       ,
      on t2.user_id=t3.tb_id
  where tel_index is not null and tel_user_rn<4 and price<160000
 and  root_cat_id is not null
-
 ;
 
 
@@ -140,7 +139,6 @@ rn as tel_user_rn         ,
 FROM
  wlrefer.t_zlj_phone_rank_index t3
  join (
-
 SELECT
 item_id        ,
 feed_id        ,
@@ -168,50 +166,20 @@ location       ,
   from
        wlbase_dev.t_base_ec_dim t1
    join
-     wl_base.t_base_ec_record_dev_new_inc t2 on t2.ds='20170107' and t1.ds = 20161122 and t1.cate_id =t2.cat_id
+     wl_base.t_base_ec_record_dev_new_inc t2 on t2.ds=20170220  and t1.ds = 20161122 and t1.cate_id =t2.cat_id
+     where  price<160000  and  root_cat_id is not null
   ) t2
 --   left
      on t2.user_id=t3.tb_id
- where tel_index is not null and rn<4 and price<160000
-and  root_cat_id is not null
-
+ where tel_index is not null and rn<4
 ;
 
-
-
---
--- SET hive.exec.dynamic.partition=true;
--- SET hive.exec.dynamic.partition.mode=nonstrict;
--- SET hive.exec.max.dynamic.partitions.pernode = 1500;
--- SET hive.exec.max.dynamic.partitions=2000;
---
--- set hive.exec.reducers.bytes.per.reducer=500000000;
---
--- INSERT INTO TABLE wl_analysis.t_base_record_cate_simple_ds PARTITION (ds)
---
--- SELECT
---  item_id            ,
--- feed_id            ,
--- user_id            ,
--- content_length     ,
--- annoy              ,
--- dsn                ,
--- datediff      		 ,
--- cat_id               ,
--- root_cat_id          ,
--- root_cat_name        ,
--- cate_level1_id       ,
--- cate_level2_id       ,
--- cate_level3_id       ,
--- cate_level4_id       ,
--- cate_level5_id       ,
--- brand_id           ,
--- brand_name        ,
--- bc_type            ,
--- price           	 ,
--- shop_id            ,
--- location           ,
--- tel_index          ,
--- tel_user_rn         ,
---   substring(dsn,0,6) ds
---   from wl_analysis.t_base_record_cate_simple ;
+-- t_base_ec_record_dev_new_inc update
+-- ds=20170107
+-- ds=20170108
+-- ds=20170114
+-- ds=20170118
+-- ds=20170121
+-- ds=20170203
+-- ds=20170212
+-- ds=20170220

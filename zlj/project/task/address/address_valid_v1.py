@@ -1,10 +1,13 @@
 #coding:utf-8
 __author__ = 'zlj'
-import sys
 
+import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+import Levenshtein
+import requests
+import json
 prov_dic={}
 city_dic={}
 xian_dic={}
@@ -21,9 +24,6 @@ from Levenshtein import *
 
 # 提取地址
 
-import Levenshtein
-
-import json
 
 # 解析淘宝地址
 def taobao_address(address):
@@ -63,7 +63,6 @@ head={
 }
 
 
-import requests
 # 地址格式化
 def address_format(address):
     url='http://restapi.amap.com/v3/geocode/geo?key=510cf51a347e0890c99f40370552acd5&address='+address +'&output=json'
@@ -107,12 +106,26 @@ def haversine(lon1, lat1, lon2, lat2): # 经度1，纬度1，经度2，纬度2 �
     r = 6371 # 地球平均半径，单位为公里
     return c * r
 
+def get_address(item):
+    '''
+    item 地址ob
+    '''
+    receiverState=valid_jsontxt(item.get('receiverState','-'))
+    receiverCity=valid_jsontxt(item.get('receiverCity','-')).replace('市','')
+    receiverAddress=valid_jsontxt(item.get('receiverAddress','-'))
+    return ''.join([receiverState,receiverCity,receiverAddress])
+
 
 def adress_distance(address1, address2):
+    '''
+    address1 ：get_address  解析的地址
+    '''
     match_gps1=address_gps(address1)
     match_gps2=address_gps(address2)
     dis=haversine(match_gps1[0],match_gps1[1],match_gps2[0],match_gps2[1])
     return dis
+
+
 # 测试数据
 # line='3674918	15996928280	{"order_list": [{"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-28 17:25:27", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:11:47", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2015-05-20 12:12:34", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "中阳里办事处锦绣水岸22栋一单元501", "receiverState": "江苏省", "created": "2015-07-10 12:26:23", "buyerNick": "sunzhi716", "receiverCity": "徐州市", "receiverMobile": "15996928280"}, {"receiverName": "孙航", "receiverAddress": "凤城镇锦绣水岸22栋1-501", "receiverState": "江苏省", "created": "2016-04-17 18:28:19", "buyerNick": "sunhang52848", "receiverCity": "徐州市", "receiverMobile": "15996928280"}]}'
 

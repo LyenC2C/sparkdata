@@ -536,3 +536,29 @@ feature_densedf=pd.DataFrame(train_test_Y.toarray())
 feature_densedf.columns=feature_index.feature
 
 # NaN
+
+# 画混淆矩阵
+import seaborn as sns
+corr = data.iloc[:,:20].corr()
+sns.heatmap(corr,
+            xticklabels=corr.columns.values,
+            yticklabels=corr.columns.values)
+
+
+
+def filter_zero(data, pool_size=8,threshold=0.9):
+	'''
+	:param data:
+	:param pool_size: 并发数
+	:param threshold: 空置率阈值
+	:return:
+	'''
+	pool=Pool(pool_size)
+	sample_size,size=data.shape
+	keep_col=[]
+	def f_fun(i):
+		t=train_test_X[:,10000].toarray()==0
+		if (1.0* sum(t[:,0])/sample_size)<0.9:keep_col.append(i)
+	col_ls=[ i for i in xrange(size)]
+	pool.map(f_fun ,col_ls)
+	return keep_col

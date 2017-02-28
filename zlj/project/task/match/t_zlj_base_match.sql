@@ -37,8 +37,38 @@ LOAD DATA   INPATH '/user/zlj/match/yixin_label.csv' OVERWRITE INTO TABLE wlfina
 
 LOAD DATA   INPATH '/user/zlj/match/20170110.zhima.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima') ;
 LOAD DATA   INPATH '/user/zlj/match/20170114.zhima.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima') ;
+LOAD DATA   INPATH '/user/zlj/match/zhima_rs.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhima') ;
 LOAD DATA   INPATH '/user/zlj/match/中诚信对接测试数据.txt' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='zhongchengxin') ;
+LOAD DATA   INPATH '/user/zlj/match/puhui1.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='puhui') ;
+LOAD DATA   INPATH '/user/zlj/match/puhui1.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='puhui') ;
+LOAD DATA   INPATH '/user/zlj/match/huxia_线下小额测试样本.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='offline_loan') ;
+LOAD DATA   INPATH '/user/zlj/match/广发数据.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='guangfa') ;
+LOAD DATA   INPATH '/user/zlj/match/手机号.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='guangfa_all') ;
 
+
+SELECT
+t1.tel,t2.tel_index , t2.*  ,
+FROM
+(
+SELECT  tb,t1.tel ,t2.tel_index
+from wlfinance.t_zlj_base_match t1
+join wlrefer.t_zlj_uid_name t2 on t1.tel =t2.tel
+)join t_base_record_cate_simple_ds t2 on t1.tb= t2.userid  and t1.ds='jingchen_label'
+
+
+-- 广发测试
+drop table  wlservice.t_lt_guangfa_tel_snwb;
+create table wlservice.t_lt_guangfa_tel_snwb as
+SELECT  t1.tel ,t1.id1, snwb,tb
+from wlfinance.t_zlj_base_match t1
+join wlrefer.t_zlj_uid_name t2 on t1.tel =t2.tel and t1.ds='guangfa_all'
+
+
+
+
+select
+COUNT(1)
+from wlfinance.t_zlj_base_match t1 join wlrefer.t_zlj_uid_name t2 on t1.ds='offline_loan' and t1.tel=t2.tel ;
 
 drop table wlcredit.t_zlj_zhima_score_loc ;
 create table wlcredit.t_zlj_zhima_score_loc as

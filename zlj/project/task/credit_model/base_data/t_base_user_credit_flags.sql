@@ -23,10 +23,12 @@ select tel as user_id ,id1 as tel_index ,id2 as zhima_score ,0 as label
    t1 join wlrefer.t_zlj_phone_rank_index t2 on t1.user_id=t2.tb_id;
 
 
-create table wlcredit.t_base_user_credit_flag as
-SELECT t1.user_id,t2.tel_index as tel_index, t1.zhima_score ,label
-from wlcredit.t_base_user_credit_flags t1
-join wlrefer.t_zlj_phone_rank_index t2 on t1.user_id=t2.tb_id;
+create table wlcredit.t_base_user_credit_flags as
+SELECT t1.user_id,t2.tel_index as tel_index, t1.zhima_score ,label,uid as tel
+from wlcredit.t_base_user_credit_flag t1
+join wlrefer.t_zlj_phone_rank_index t2 on t1.user_id=t2.tb_id
+group by t1.user_id,t2.tel_index ,zhima_score ,uid ,label
+;
 
 
 
@@ -69,6 +71,44 @@ zhima_score,snwb
 from wlcredit.t_base_user_credit_flag t1 join
 wlrefer.t_zlj_uid_name t2 on t1.user_id =t2.tb
 )t1 join t_base_weibo_user_new t2 on t1.snwb=t2.id ;
+
+
+
+SELECT
+tel ,zhima_score, t2.*
+from
+(
+SELECT
+zhima_score,snwb,tel
+from wlcredit.t_zlj_zhima20170110_userinfo t1 join
+wlrefer.t_zlj_uid_name t2 on t1.tb_id =t2.tb
+)t1 join t_base_weibo_user_new t2 on t1.snwb=t2.id ;
+
+
+
+-- 模型训练标准集  49647
+create table wlcredit.t_zlj_zhima_model_train as
+select
+t2.tel,t2.snwb, qqwb, prov, city, carrier, qq,  t1.*
+from
+(
+select * from wlcredit.t_base_user_credit_flag where rand()>0.75
+) t1 join wlrefer.t_zlj_uid_name t2 on t1.user_id=t2.tb ;
+
+
+-- t_base_user_credit_flag 197851
+-- 197890
+drop table wlcredit.t_zlj_zhima_model_train_lt ;
+ create table wlcredit.t_zlj_zhima_model_train_lt as
+select
+t2.snwb, qqwb, carrier, qq,email,  t1.*
+from
+(
+select * from wlcredit.t_base_user_credit_flag
+  ) t1 left  join wlrefer.t_zlj_uid_name t2 on t1.user_id=t2.tb ;
+
+
+
 
 -- IV
 -- SELECT
