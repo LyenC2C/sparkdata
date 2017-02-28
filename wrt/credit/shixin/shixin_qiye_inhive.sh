@@ -35,7 +35,7 @@ t1.unperformpart
 from
 (select * from t_wrt_shixin_qiye where ds = '0temp')t1
 left join
-(select * from t_wrt_shixin_qiye where ds <> 'past')t2
+(select * from t_wrt_shixin_qiye where ds <> '0temp')t2
 on
 t1.id = t2.id
 where

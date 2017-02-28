@@ -44,29 +44,30 @@ def mergeCombiners(set0, set1):
 
 
 sc = SparkContext(appName="platform")
-data = sc.textFile("/commit/regist/daichang/yixing.phonecheck.2017-02-08").map(lambda a: f(a)).filter(
+data = sc.textFile("/commit/regist/daichang/yixing.data.2017-02-17").map(lambda a: f(a)).filter(
     lambda a: a is not None).cache()
 
 previous = sc.textFile("/user/lel/results/yixin/previous/product/*").map(lambda a: a.split("\t")).collectAsMap()
 previous_b = sc.broadcast(previous)
 previous_bv = previous_b.value
 
-othersRDD = data.filter(lambda a: a[1] not in '拉卡拉') \
+othersRDD = data.filter(lambda a: '拉卡拉' not in  a[1] ) \
     .combineByKey(lambda a: createCombiner(a), lambda a, b: mergeValue(a, b), lambda a, b: mergeCombiners(a, b)) \
     .map(lambda a: distinct_pre(a, previous_bv)).filter(lambda a: a is not None)
+
 othersRDD.coalesce(1).map(lambda a: a[0] + "\t" + ','.join(list(set(a[1])))).saveAsTextFile(
-    "/user/lel/results/yixin/except_lakala20170215")
+    "/user/lel/results/yixin/except_lakala20170224")
 
 others_dis = othersRDD.collectAsMap()
 others_dis_b = sc.broadcast(others_dis)
 others_dis_bv = others_dis_b.value
 
-lakalaRDD = data.filter(lambda a: a[1] in '拉卡拉') \
+lakalaRDD = data.filter(lambda a: '拉卡拉' in a[1] ) \
     .combineByKey(lambda a: createCombiner(a), lambda a, b: mergeValue(a, b), lambda a, b: mergeCombiners(a, b)) \
     .map(lambda a: distinct_pre(a, previous_bv)).filter(lambda a: a is not None).map(lambda a: distinct_oth(a, others_dis_bv)).filter(
     lambda a: a is not None)
 lakalaRDD.coalesce(1).map(lambda a: a[0] + "\t" + ','.join(list(set(a[1])))).saveAsTextFile(
-    "/user/lel/results/yixin/lakala20170215")
+    "/user/lel/results/yixin/lakala20170224")
 
 # lakalaRDD.union(othersRDD) \
 #     .map(lambda a: a[0] + "\t" + ','.join(list(set(a[1])))) \

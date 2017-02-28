@@ -1,8 +1,8 @@
 
-hive -f t_credit_record_cate1_feature_online.sql
-hive -f t_credit_record_cate2_feature_online.sql
-hive -f t_credit_record_cate3_feature_online.sql
-hive -f t_credit_record_cate4_feature_online.sql
+hive -f t_credit_record_cate1_feature_months_online.sql
+hive -f t_credit_record_cate2_feature_months_online.sql
+hive -f t_credit_record_cate3_feature_months_online.sql
+hive -f t_credit_record_cate4_feature_months_online.sql
 
 hive -f t_credit_record_feature_online.sql
 hive -f t_credit_record_feature_1month_online.sql
