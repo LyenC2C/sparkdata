@@ -7,12 +7,11 @@ date  +%Y%m%d
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
 last_2_days=$(date -d '2 days ago' +%Y%m%d)
-
-
 table=wl_base.t_base_ec_xianyu_iteminfo
 
 hive<<EOF
 set hive.merge.mapfiles= true;
+set hive.merge.mapredfiles= true;
 set hive.merge.size.per.task=240000000;
 set hive.merge.smallfiles.avgsize=192000000;
 LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE $table PARTITION (ds='0000tmp');
