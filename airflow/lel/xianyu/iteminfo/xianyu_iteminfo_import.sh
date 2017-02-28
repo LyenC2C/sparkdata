@@ -9,10 +9,9 @@ lastday=$(date -d '1 days ago' +%Y%m%d)
 last_2_days=$(date -d '2 days ago' +%Y%m%d)
 
 
-table=wlbase_dev.t_base_ec_xianyu_iteminfo
+table=wl_base.t_base_ec_xianyu_iteminfo
 
 hive<<EOF
-use wlbase_dev;
 LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE $table PARTITION (ds='0000tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
