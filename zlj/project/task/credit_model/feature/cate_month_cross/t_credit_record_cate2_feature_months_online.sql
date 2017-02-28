@@ -38,9 +38,9 @@ select  tel_index,cate_level2_id,price, "1month" as month
 from
 wl_analysis.t_base_record_cate_simple_ds
 where
-substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' ),1,6) <= ds
+substr(regexp_replace(cast(date_sub(from_unixtime(unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' ),1,6) <= ds
 and
-regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' )<dsn
+regexp_replace(cast(date_sub(from_unixtime(unix_timestamp() ,'yyyy-MM-dd'),30*1)as string),'-','' )<dsn
 AND
 cate_level2_id is not null
 UNION  ALL
@@ -48,7 +48,7 @@ select  tel_index,cate_level2_id,price, "3month" as month
 from
 wl_analysis.t_base_record_cate_simple_ds
 where
-substr(regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3)as string),'-','' ),1,6) <= ds
+substr(regexp_replace(cast(date_sub(from_unixtime(unix_timestamp() ,'yyyy-MM-dd'),30*3)as string),'-','' ),1,6) <= ds
 and
 regexp_replace(cast(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*3)as string),'-','' )<dsn
 AND
