@@ -55,7 +55,7 @@ data_svm_filtered = output_df.select("label","featuresFiltered")
 data_svm_labelpoint = data_svm_filtered.map(lambda row:LabeledPoint(int(row.label),row.featuresFiltered))
 MLUtils.saveAsLibSVMFile(data_svm_labelpoint,"/user/wrt/credit/allexample_filter.libsvm")
 rdd_r = sc.textFile("/user/wrt/credit/allexample_filter.libsvm")\
-    .map(lambda x :x.split()[0].split('.')[0] + ' ' + ' '.join(x.split()[1:]))
+    .map(lambda x :x.split()[0].split('.')[0] + '\001' + ' '.join(x.split()[1:]))
 rdd_r.saveAsTextFile("/user/wrt/credit/allexample_filter_telindex_features")
 feature_raw = sc.textFile("/hive/warehouse/wlcredit.db/t_wrt_credit_all_features_name/ds=" + today + "_cms1234_anf")\
     .map(lambda x:valid_jsontxt(x.split("\t")[0])).collect()
