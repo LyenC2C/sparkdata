@@ -26,3 +26,4 @@ use wl_base;
 LOAD DATA  INPATH '/user/wrt/daysale_tmp' OVERWRITE INTO TABLE t_base_ec_item_daysale_dev_new PARTITION (ds='$2');
 EOF
 
+
