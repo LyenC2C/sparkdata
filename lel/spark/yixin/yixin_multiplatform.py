@@ -13,34 +13,25 @@ def valid_jsontxt(content):
 
 
 def process(line):
-    jsonStr = valid_jsontxt(line.strip().split("\t")[-1])
+    jsonStr = valid_jsontxt(line.strip())
     ob = json.loads(jsonStr)
     flag = valid_jsontxt(ob.get("flag", "False"))
     if flag in 'None': return None
     platform = valid_jsontxt(ob.get("platform"))
     phone = valid_jsontxt(ob.get("phone"))
     if not phone.isdigit(): return None
-    if platform is None or platform in 'None': return None
+    if platform is None or platform == 'None': return None
     return ((phone,platform),flag)
 
 
-sc = SparkContext(appName="credit_bank")
-data = sc.textFile("/commit/credit/bank/*") \
+
+sc = SparkContext(appName="daichang")
+
+data = sc.textFile("/commit/regist/multplatform/*") \
     .map(lambda a: process(a)) \
-    .filter(lambda a: a is not None) \
+    .filter(lambda a: a is not None ) \
     .groupByKey().mapValues(lambda a:"True" if "True" in list(a) else "False") \
     .map(lambda ((a,b),c): a + "\001" +b + "\001" + c) \
-    .saveAsTextFile("/user/lel/temp/credit_bank")
-
-
-'''
-data = sc.textFile("/commit/credit/bank/*")\
-         .map(lambda a: process(a))\
-         .filter(lambda a: a is not None)\
-         .distinct()\
-         .map(lambda a: a[0] + "\001" +a[1] + "\001" + a[2]) \
-         .saveAsTextFile("/user/lel/temp/credit_bank")
-'''
-
+    .saveAsTextFile("/user/lel/temp/multiplatform_jiedai")
 
 

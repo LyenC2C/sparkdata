@@ -13,9 +13,9 @@ def valid_jsontxt(content):
 
 
 def process(line):
-    jsonStr = valid_jsontxt(line.strip().split("\t")[-1])
+    jsonStr = valid_jsontxt(line.strip())
     ob = json.loads(jsonStr)
-    flag = valid_jsontxt(ob.get("flag", "False"))
+    flag = valid_jsontxt(ob.get("flag", 'False'))
     if flag in 'None': return None
     platform = valid_jsontxt(ob.get("platform"))
     phone = valid_jsontxt(ob.get("phone"))
@@ -24,23 +24,14 @@ def process(line):
     return ((phone,platform),flag)
 
 
-sc = SparkContext(appName="credit_bank")
-data = sc.textFile("/commit/credit/bank/*") \
+
+sc = SparkContext(appName="yimei")
+#or a[0] is not None
+data = sc.textFile("/commit/regist/yimei/yimei.data.2017-02-23") \
     .map(lambda a: process(a)) \
     .filter(lambda a: a is not None) \
-    .groupByKey().mapValues(lambda a:"True" if "True" in list(a) else "False") \
+    .groupByKey().mapValues(lambda a:'True' if 'True' in list(a) else 'False') \
     .map(lambda ((a,b),c): a + "\001" +b + "\001" + c) \
-    .saveAsTextFile("/user/lel/temp/credit_bank")
-
-
-'''
-data = sc.textFile("/commit/credit/bank/*")\
-         .map(lambda a: process(a))\
-         .filter(lambda a: a is not None)\
-         .distinct()\
-         .map(lambda a: a[0] + "\001" +a[1] + "\001" + a[2]) \
-         .saveAsTextFile("/user/lel/temp/credit_bank")
-'''
-
+    .saveAsTextFile("/user/lel/temp/yimei")
 
 

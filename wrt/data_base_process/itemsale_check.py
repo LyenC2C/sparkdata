@@ -2,7 +2,7 @@ __author__ = 'wrt'
 import sys
 from pyspark import SparkContext
 today = sys.argv[1]
-sc = SparkContext(appName="check itemsale" + today)
+sc = SparkContext(     + today)
 s1 = "/commit/itemsale/ds=" + today
 rdd = sc.textFile(s1)
 rdd2 = rdd.filter(lambda x:len(x.split('\001')) == 11)

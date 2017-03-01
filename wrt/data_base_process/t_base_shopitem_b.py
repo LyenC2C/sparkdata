@@ -11,7 +11,7 @@ yesterday = sys.argv[2]
 sc = SparkContext(appName="t_base_shopitem_b_"+today)
 
 def valid_jsontxt(content):
-    # res = content
+
     if type(content) == type(u""):
         res = content.encode("utf-8")
     else:
