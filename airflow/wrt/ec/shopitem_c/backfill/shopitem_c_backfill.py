@@ -25,6 +25,7 @@ def backfill_individually(last_day, last_update_day):
         last_day=last_day, last_update_day=last_update_day)
     os.system(command)
 
+
 '''
 :param 0~4
 first param plus 1 day like 1~4 for airflow to execute
