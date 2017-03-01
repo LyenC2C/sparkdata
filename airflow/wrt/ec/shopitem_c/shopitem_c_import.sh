@@ -5,7 +5,7 @@ lastday=$1
 last_update_day=$2
 
 hive<<EOF
-use wlbase_dev;
+use wl_base;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='0temp');
 insert OVERWRITE table t_base_ec_shopitem_c PARTITION(ds = $lastday)
 select

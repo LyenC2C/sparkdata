@@ -6,7 +6,7 @@ date  +%Y%m%d
 
 lastday=$1
 last_update_date=$2
-table=wlbase_dev.t_base_ec_xianyu_itemcomment
+table=wl_base.t_base_ec_xianyu_itemcomment
 
 hive<<EOF
 use wlbase_dev;

@@ -11,5 +11,5 @@ else
 echo 'Directory is not exist,you can run you spark job as you want!!!'
 fi
 
-spark-submit  --executor-memory 10G  --driver-memory 10G  --total-executor-cores 120 \
+spark-submit  --driver-memory 8G --num-executors 20 --executor-memory 20G --executor-cores 5 \
 $pre_path/wrt/data_base_process/itemsearch/t_base_item_search.py $lastday

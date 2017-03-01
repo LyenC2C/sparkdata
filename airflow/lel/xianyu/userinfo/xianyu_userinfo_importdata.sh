@@ -17,8 +17,8 @@ spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 6
 
 hive<<EOF
 
-use wlbase_dev;
-LOAD DATA  INPATH '/user/lel/temp/xianyu_userinfo' OVERWRITE INTO TABLE wlbase_dev.t_base_ec_xianyu_userinfo PARTITION (ds='tmp');
+use wl_base;
+LOAD DATA  INPATH '/user/lel/temp/xianyu_userinfo' OVERWRITE INTO TABLE wl_base.t_base_ec_xianyu_userinfo PARTITION (ds='tmp');
 
 insert into table t_base_ec_xianyu_userinfo partition(ds = $lastday+'userid_makeup')
 select
@@ -42,7 +42,7 @@ left join
 (select tb_id,tb_nick from t_base_user_profile) t2
 on t1.usernick = t2.tb_nick;
 
-insert OVERWRITE table wlbase_dev.t_base_ec_xianyu_userinfo PARTITION(ds = $lastday)
+insert OVERWRITE table wl_base.t_base_ec_xianyu_userinfo PARTITION(ds = $lastday)
 select
 case when t1.userid is null then t2.userid else t1.userid end,
 case when t1.userid is null then t2.totalcount else t1.totalcount end,
@@ -59,9 +59,9 @@ case when t1.userid is null then t2.infopercent else t1.infopercent end,
 case when t1.userid is null then t2.signature else t1.signature end,
 case when t1.userid is null then t2.ts else t1.ts end
 from
-(select * from  wlbase_dev.t_base_ec_xianyu_userinfo where ds = $lastday+'userid_makeup') t1
+(select * from  wl_base.t_base_ec_xianyu_userinfo where ds = $lastday+'userid_makeup') t1
 full outer JOIN
-(select * from wlbase_dev.t_base_ec_xianyu_userinfo where ds = $last_7_days) t2
+(select * from wl_base.t_base_ec_xianyu_userinfo where ds = $last_7_days) t2
 ON
 t1.userid = t2.userid;
 EOF
