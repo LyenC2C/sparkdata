@@ -29,3 +29,4 @@ full outer join
 on
 t1.item_id = t2.item_id;
 EOF
+
