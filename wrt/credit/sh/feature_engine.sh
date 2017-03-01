@@ -15,7 +15,7 @@ hive -f $zlj_path/dev/t_credit_record_feature_3month.sql
 hive -f $zlj_path/dev/t_credit_record_feature_6month.sql
 hive -f $zlj_path/dev/t_credit_record_feature_12month.sql
 
-hive -f $wrt_path/feature_dense_merge.sql
+hive -f $wrt_path/fe    ature_dense_merge.sql
 hive -f $wrt_path/feature_sparse_merge.sql
 
 hfs -rmr /user/wrt/temp/all_features_name
