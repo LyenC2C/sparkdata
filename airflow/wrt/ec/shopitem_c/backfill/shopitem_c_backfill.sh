@@ -12,10 +12,6 @@ $pre_path/wrt/data_base_process/t_base_shopitem_c.py $lastday
 table=wl_base.t_base_ec_shopitem_c
 
 hive<<EOF
-set hive.merge.mapredfiles = true;
-set hive.merge.mapfiles = true;
-set hive.merge.size.per.task = 240000000;
-set hive.merge.smallfiles.avgsize= 180000000;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE $table PARTITION (ds='0temp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
