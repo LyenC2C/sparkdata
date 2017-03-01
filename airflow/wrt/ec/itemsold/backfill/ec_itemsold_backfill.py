@@ -23,6 +23,7 @@ def backfill_individually(last_day, last_update_day,iteminfo_date):
     command = "bash /home/wrt/sparkdata/airflow/wrt/ec/itemsold/backfill/ec_itemsold_backfill.sh  {last_day} {last_update_day} {iteminfo_date}".format(last_day=last_day,last_update_day=last_update_day,iteminfo_date=iteminfo_date)
     os.system(command)
 
+
 '''
 :param 0~4
 first param plus 1 day like 1~4 for airflow to execute
