@@ -20,7 +20,6 @@ def backfill_continuously(latest_day, days):
             last_day=last_day, last_2_days=last_2_days)
         os.system(command)
 
-
 def backfill_individually(last_day, last_update_day):
     command = "bash /home/wrt/sparkdata/airflow/wrt/ec/shopitem_b/backfill/ec_shopitem_b_backfill.sh {last_day} {last_update_day}".format(
         last_day=last_day, last_update_day=last_update_day)
