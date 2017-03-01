@@ -20,7 +20,7 @@ def backfill_continuously(latest_day, days,iteminfo_date):
         os.system(command)
 
 def backfill_individually(last_day, last_update_day,iteminfo_date):
-    command = "bash /home/wrt/sparkdata/lel/airflow/wrt/ec/itemsold/backfill/ec_itemsold_backfill.sh  {last_day} {last_update_day} {iteminfo_date}".format(last_day=last_day,last_update_day=last_update_day,iteminfo_date=iteminfo_date)
+    command = "bash /home/wrt/sparkdata/airflow/wrt/ec/itemsold/backfill/ec_itemsold_backfill.sh  {last_day} {last_update_day} {iteminfo_date}".format(last_day=last_day,last_update_day=last_update_day,iteminfo_date=iteminfo_date)
     os.system(command)
 
 '''
@@ -32,4 +32,6 @@ def backfill_allkindsof(last_day, last_update_day, latest_day, days,iteminfo_dat
     backfill_individually(last_day, last_update_day,iteminfo_date)
     backfill_continuously(latest_day, days-1,iteminfo_date)
 
-backfill_continuously(1,4,20170217)
+backfill_continuously(4,6,20170217)
+# print "\n"
+# backfill_continuously(1,4,20170225)
