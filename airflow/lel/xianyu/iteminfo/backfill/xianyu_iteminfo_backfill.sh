@@ -1,20 +1,29 @@
-#!/usr/bin
+#!/bin/bash
 
-#闲鱼iteminfo——日更——当天处理的是昨天的数据
 source ~/.bashrc
-date
-date  +%Y%m%d
-
 lastday=$(date -d '1 days ago' +%Y%m%d)
 last_2_days=$(date -d '2 days ago' +%Y%m%d)
 table=wl_base.t_base_ec_xianyu_iteminfo
 
+hadoop fs -test -e /user/lel/temp/xianyu_iteminfo
+if [ $? -eq 0 ] ;then
+    hadoop fs  -rmr /user/lel/temp/xianyu_iteminfo
+else
+    echo 'Directory is not exist,you can run your spark as you want!!!'
+fi
+
+spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 60 $work/spark/xianyu/xianyu_iteminfo.py
+
+
+#闲鱼iteminfo——日更——当天处理的是昨天的数据
+
+
+
 hive<<EOF
+LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE $table PARTITION (ds='0000tmp');
 set hive.merge.mapfiles= true;
-set hive.merge.mapredfiles= true;
 set hive.merge.size.per.task=240000000;
 set hive.merge.smallfiles.avgsize=192000000;
-LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE $table PARTITION (ds='0000tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
 case when t1.itemid is null then t2.itemid else t1.itemid end,
