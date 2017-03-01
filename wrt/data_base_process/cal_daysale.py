@@ -5,8 +5,8 @@ yesterday = sys.argv[1]
 today = sys.argv[2]
 
 sc = SparkContext(appName="cal_daysale " + yesterday)
-s1 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + yesterday
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_sold_dev/ds=" + today
+s1 = "/hive/warehouse/wl_base.db/t_base_ec_item_sold_dev/ds=" + yesterday
+s2 = "/hive/warehouse/wl_base.db/t_base_ec_item_sold_dev/ds=" + today
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -61,4 +61,4 @@ def cal(x,y):
 rdd1 = sc.textFile(s1).map(lambda x:yes_sale(x))
 rdd2 = sc.textFile(s2).map(lambda x:tod_sale(x))
 rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x,y):cal(x,y)).filter(lambda x:x!=None)
-rdd.coalesce(200).saveAsTextFile('/user/wrt/daysale_tmp')
+rdd.coalesce(2).saveAsTextFile('/user/wrt/daysale_tmp')
