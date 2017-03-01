@@ -8,3 +8,4 @@ LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_
 EOF
 
 
+
