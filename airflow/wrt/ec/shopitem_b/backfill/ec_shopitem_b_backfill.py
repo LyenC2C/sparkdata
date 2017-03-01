@@ -16,7 +16,7 @@ def backfill_continuously(latest_day, days):
         last_day = (today + datetime.timedelta(days=-i - 1)).strftime('%Y%m%d')
         last_2_days = (today + datetime.timedelta(days=-i - 2)).strftime('%Y%m%d')
         # print exec_day, last_day, last_2_days
-        command = "bash /home/wrt/sparkdata/airflow/wrt/ec/tb/ec_shopitem_b_backfill.sh {last_day} {last_2_days}".format(
+        command = "bash /home/wrt/sparkdata/airflow/wrt/ec/shopitem_b/backfill/ec_shopitem_b_backfill.sh {last_day} {last_2_days}".format(
             last_day=last_day, last_2_days=last_2_days)
         os.system(command)
 
