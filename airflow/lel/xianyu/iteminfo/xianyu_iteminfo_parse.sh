@@ -5,7 +5,6 @@ date
 date  +%Y%m%d
 
 lastday=$(date -d '1 days ago' +%Y%m%d)
-spark=
 
 hadoop fs -test -e /user/lel/temp/xianyu_iteminfo
 if [ $? -eq 0 ] ;then
