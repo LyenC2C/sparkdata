@@ -3,7 +3,7 @@
 hive<<EOF
 insert overwrite table wl_analysis.t_wrt_caiji_shopitem_b_newid
 select t1.item_id,t1.sold from
-(select item_id,cast(sold as int) as sold from wlbase_dev.t_base_ec_shopitem_b where ds = '20170220')t1
+(select item_id,cast(sold as int) as sold from wl_base.t_base_ec_shopitem_b where ds = '20170220')t1
 left join
 (select item_id from wl_base.t_base_ec_item_dev_new where ds = '20170217')t2
 on

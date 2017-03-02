@@ -8,7 +8,6 @@ table=wl_base.t_base_ec_shop_dev_new
 
 hive<<EOF
 LOAD DATA  INPATH '/user/wrt/temp/shopinfo_tmp' OVERWRITE INTO TABLE $table PARTITION(ds='0temp');
-
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
 case when t1.shop_id is null then t2.shop_id else t1.shop_id end,
