@@ -10,6 +10,10 @@ spark-submit --driver-memory 4G --num-executors 20 --executor-memory 20G --execu
 $pre_path/wrt/data_base_process/t_base_shopitem_c.py $lastday
 
 hive<<EOF
+set hive.merge.mapfiles= true;
+set hive.merge.mapredfiles= true;
+set hive.merge.size.per.task=256000000;
+set hive.merge.smallfiles.avgsize=192000000;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE $table PARTITION (ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
@@ -27,6 +31,7 @@ full outer join
 on
 t1.item_id = t2.item_id;
 EOF
+
 
 
 
