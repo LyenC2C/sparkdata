@@ -12,7 +12,7 @@ else
     echo 'Directory is not exist,you can run your spark as you want!!!'
 fi
 
-spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 60 $work/spark/xianyu/xianyu_iteminfo.py
+spark-submit  --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 $work/spark/xianyu/xianyu_iteminfo.py
 
 
 #闲鱼iteminfo——日更——当天处理的是昨天的数据
