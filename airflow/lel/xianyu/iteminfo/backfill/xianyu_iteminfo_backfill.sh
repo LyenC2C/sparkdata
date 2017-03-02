@@ -22,8 +22,9 @@ spark-submit  --driver-memory 4G --num-executors 20 --executor-memory 20G --exec
 hive<<EOF
 LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE $table PARTITION (ds='00tmp');
 set hive.merge.mapfiles= true;
-set hive.merge.size.per.task=240000000;
-set hive.merge.smallfiles.avgsize=192000000;
+set hive.merge.mapredfiles= true;
+set hive.merge.size.per.task=268435456;
+set hive.merge.smallfiles.avgsize=16777216;
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
 case when t1.itemid is null then t2.itemid else t1.itemid end,
