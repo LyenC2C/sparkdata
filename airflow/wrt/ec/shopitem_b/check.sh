@@ -1,4 +1,5 @@
 #!/bin/bash
+source ~/.bashrc
 date=$1
 hadoop fs -test -e /commit/shopitem_b/*$date*
 if [ $? -eq 0 ] ;then
