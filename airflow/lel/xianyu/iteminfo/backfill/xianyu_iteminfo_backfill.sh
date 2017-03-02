@@ -20,7 +20,7 @@ spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 6
 
 
 hive<<EOF
-LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE $table PARTITION (ds='0000tmp');
+LOAD DATA  INPATH '/user/lel/temp/xianyu_iteminfo' OVERWRITE INTO TABLE $table PARTITION (ds='00tmp');
 set hive.merge.mapfiles= true;
 set hive.merge.size.per.task=240000000;
 set hive.merge.smallfiles.avgsize=192000000;
@@ -59,7 +59,7 @@ case when t1.itemid is null then t2.zhima else t1.zhima end,
 case when t1.itemid is null then t2.shiren else t1.shiren end,
 case when t1.itemid is null then t2.ts else t1.ts end
 from
-(select * from  $table where ds = '0000tmp')t1
+(select * from  $table where ds = '00tmp')t1
 full outer JOIN
 (select * from $table where ds = $last_2_days)t2
 ON
