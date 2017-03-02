@@ -7,7 +7,6 @@ last_update_date=$2
 table=wl_base.t_base_item_search
 
 hive<<EOF
-use wlbase_dev;
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
 case when t1.nid is null then t2.nid else t1.nid end,

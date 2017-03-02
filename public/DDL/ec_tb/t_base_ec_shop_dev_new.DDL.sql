@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE  if not exists t_base_ec_shop_dev_new (
+CREATE TABLE  if not exists t_base_ec_shop_dev_new (
 shop_id STRING  COMMENT '店铺id' ,
 seller_id STRING  COMMENT '卖家id' ,
 shop_name STRING  COMMENT '店铺名称' ,

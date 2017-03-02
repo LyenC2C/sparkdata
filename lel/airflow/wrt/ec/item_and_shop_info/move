@@ -1,17 +1,24 @@
 wlbase_dev.t_base_ec_xianyu_itemcomment      ->  wl_base.t_base_ec_xianyu_itemcomment
 wlbase_dev.t_base_ec_xianyu_iteminfo         ->  wl_base.t_base_ec_xianyu_iteminfo
 wlbase_dev.t_base_ec_xianyu_userinfo         ->  wl_base.t_base_ec_xianyu_userinfo
-
 wl_base.t_base_ec_item_dev_new               ->  wl_base.t_base_ec_item_dev_new
 wlbase_dev.t_base_ec_shop_dev_new            ->  wl_base.t_base_ec_shop_dev_new
 wlbase_dev.t_base_ec_item_sold_dev           ->  wl_base.t_base_ec_item_sold_dev
 wlbase_dev.t_base_ec_shopitem_b              ->  wl_base.t_base_ec_shopitem_b
 wlbase_dev.t_base_ec_shopitem_c              ->  wl_base.t_base_ec_shopitem_c
 wl_base.t_base_item_search                   ->  wl_base.t_base_item_search
-wlbase_dev.t_base_ec_item_daysale_dev_new    ->
-wl_base.t_base_ec_record_dev_new             ->
+wlbase_dev.t_base_ec_item_daysale_dev_new    ->  wl_base.t_base_ec_item_daysale_dev_new
+wl_base.t_base_ec_record_dev_new             ->  wl_base.t_base_ec_record_dev_new
+wlbase_dev.t_base_ec_dim                     ->  wl_base.t_base_ec_dim
 
 wl_analysis.t_wrt_caiji_record_b_feed
 wl_analysis.t_wrt_caiji_record_c_feed
 wl_analysis.t_wrt_caiji_serach_newid
 wlbase_dev.t_base_ec_xianyu_itemid_update
+
+
+
+50008141
+
+50013052
+50008144

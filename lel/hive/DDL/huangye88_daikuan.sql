@@ -1,4 +1,4 @@
-CREATE TABLE  if not exists wl_base.t_base_phone_huanye88_daikuan(
+CREATE TABLE  if not exists wl_base.t_base_phone_huangye88_daikuan(
 phone String COMMENT '电话号码',
 name String COMMENT '贷款名称',
 area String COMMENT '地点',

@@ -443,11 +443,10 @@ if __name__ == "__main__":
 
         #评论数据处理后的旧数据,用于筛选新的cmt
         ##清洗后新增评论数据: [cmt,....]
-        rdd_cmt_new = rdd_new.union(rdd_itemid_feediduid_ls)\
+        rdd_cmt_new = rdd_new.union(rdd_itemid_feediduid_ls) \
                 .groupByKey()\
                 .map(lambda (x,y):match_new_cmt_from_feed_in_item(x,y))\
                 .flatMap(lambda x:x)
-
         #保存uid-mark-nick
         rdd_cmt_new.map(lambda x:[x[3]+'\001'+x[11]+'\001'+x[12],1])\
                     .groupByKey()\

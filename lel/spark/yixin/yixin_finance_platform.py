@@ -31,13 +31,9 @@ def distinct_pre(thistime, previous):
 
 def createCombiner(kw):
     return set([kw])
-
-
 def mergeValue(set, kw):
     set.update([kw])
     return set
-
-
 def mergeCombiners(set0, set1):
     set0.update(set1)
     return set0

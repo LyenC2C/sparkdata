@@ -13,4 +13,4 @@ else
 echo 'Directory is not exist,you can run you spark job as you want!!!'
 fi
 
-spark-submit  --executor-memory 6G  --driver-memory 6G  --total-executor-cores 60 $work/spark/xianyu/xianyu_itemcomment.py $lastday
+spark-submit  --driver-memory 4G --num-executors 10 --executor-memory 10G --executor-cores 4 $work/spark/xianyu/xianyu_itemcomment.py $lastday
