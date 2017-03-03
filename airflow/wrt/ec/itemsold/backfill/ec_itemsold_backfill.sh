@@ -7,7 +7,7 @@ iteminfoday=$3
 
 hadoop fs -rmr /user/wrt/sale_tmp
 
-spark-submit  --driver-memory 6G --num-executors 15 --executor-memory 15G --executor-cores 5 \
+spark-submit  --driver-memory 8G --num-executors 20 --executor-memory 20G --executor-cores 5 \
 $pre_path/wrt/data_base_process/t_base_item_sale.py $last_2_days $lastday $iteminfoday
 
 echo $1
@@ -19,7 +19,7 @@ EOF
 
 hadoop fs -rm -r /user/wrt/daysale_tmp
 
-spark-submit  --driver-memory 6G --num-executors 15 --executor-memory 15G --executor-cores 5 \
+spark-submit  --driver-memory 8G --num-executors 20 --executor-memory 20G --executor-cores 5 \
 $pre_path/wrt/data_base_process/cal_daysale.py $2 $1
 
 hive<<EOF
