@@ -11,7 +11,7 @@ echo $1
 echo $2
 
 hive<<EOF
-LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE wl_base.t_base_ec_item_sold_dev PARTITION (ds=$1);
+LOAD DATA  INPATH '/user/wrt/sale_tmp' INTO TABLE wl_base.t_base_ec_item_sold_dev PARTITION (ds=$1);
 EOF
 
 hadoop fs -rm -r /user/wrt/daysale_tmp
