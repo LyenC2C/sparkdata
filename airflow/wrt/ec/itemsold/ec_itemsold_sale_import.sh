@@ -3,8 +3,8 @@ source ~/.bashrc
 lastday=$1
 
 hive<<EOF
-use wl_base;
-LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE t_base_ec_item_sold_dev PARTITION (ds=$lastday);
+set hive.merge.mapfiles=true;
+LOAD DATA  INPATH '/user/wrt/sale_tmp' OVERWRITE INTO TABLE wl_base.t_base_ec_item_sold_dev PARTITION (ds=$lastday);
 EOF
 
 
