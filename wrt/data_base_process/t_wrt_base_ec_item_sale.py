@@ -126,7 +126,7 @@ bctype_dict = sc.broadcast(sc.textFile(s).map(lambda x: get_bctype_dict(x)).filt
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(bctype_dict.value, x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong_1(x, y))
 rdd2 = sc.textFile(s2).map(lambda x: f2(x)).filter(lambda x:x!=None).map(lambda x:(x[0],x[1:]))
-rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y)).coalesce(200)
+rdd = rdd1.union(rdd2).groupByKey().mapValues(list).map(lambda (x, y):quchong_2(x, y))
 rdd.saveAsTextFile('/user/wrt/sale_tmp')
 #st = s.find('2015')
 #ds2 = s[st:st+4] + s[st+5:st+7] + s[st+8:st+10]
