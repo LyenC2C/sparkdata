@@ -46,6 +46,10 @@ LOAD DATA   INPATH '/user/zlj/match/广发数据.csv' OVERWRITE INTO TABLE wlfin
 LOAD DATA   INPATH '/user/zlj/match/手机号.csv' OVERWRITE INTO TABLE wlfinance.t_zlj_base_match PARTITION (ds='guangfa_all') ;
 
 
+
+create table wlservice.t_zlj_zhima_tel_xincheng as
+select t2.tel,t1.id1 as userid  from wlfinance.t_zlj_base_match t1 join wlrefer.t_zlj_uid_name t2 on t1.id1=t2.tb and t1.ds='zhima'
+
 SELECT
 t1.tel,t2.tel_index , t2.*  ,
 FROM
