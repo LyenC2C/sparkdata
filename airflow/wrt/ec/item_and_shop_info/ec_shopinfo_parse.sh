@@ -1,9 +1,6 @@
 #!/bin/bash
 source ~/.bashrc
 
-today=$(date -d '0 days ago' +%Y%m%d)
-lastday=$(date -d '7 days ago' +%Y%m%d)
-
 pre_path='/home/wrt/sparkdata'
 
 hadoop fs -test -e /user/wrt/temp/shopinfo_tmp

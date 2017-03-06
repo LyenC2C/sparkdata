@@ -9,7 +9,7 @@ table=wl_base.t_base_ec_item_dev_new
 hive<<EOF
 
 use wl_base;
-LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE $table PARTITION(ds='0temp');
+LOAD DATA  INPATH "/user/wrt/temp/iteminfo_tmp" OVERWRITE INTO TABLE $table PARTITION(ds='00tmp');
 
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
@@ -34,7 +34,7 @@ case when t1.item_id is null then t2.paramap else t1.paramap end,
 case when t1.item_id is null then t2.sku else t1.sku end,
 case when t1.item_id is null then t2.ts else t1.ts end
 from
-(select * from $table where ds = '0temp')t1
+(select * from $table where ds = "00tmp")t1
 full outer JOIN
 (select * from $table where ds = $last)t2
 ON
