@@ -4,7 +4,7 @@ dev_path='/home/wrt/sparkdata/wrt/credit/ppd/'
 now_day=$1
 #last_day=$2
 
-hfs -rmr /user/wrt/temp/ppd_info_tmp
+hadoop fs -rmr /user/wrt/temp/ppd_info_tmp
 spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 \
 $dev_path/t_base_ppd_listinfo.py $now_day
 

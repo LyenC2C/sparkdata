@@ -1,5 +1,5 @@
 
-CREATE EXTERNAL TABLE  if not exists t_base_ec_item_dev_new (
+CREATE TABLE  if not exists t_base_ec_item_dev_new (
 item_id STRING  COMMENT  '商品id',
 title  STRING   COMMENT '商品title',
 cat_id STRING  COMMENT '商品所属类目id',

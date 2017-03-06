@@ -11,7 +11,7 @@ conf.set("spark.kryoserializer.buffer.mb","1024")
 conf.set("spark.akka.frameSize","100")
 conf.set("spark.network.timeout","1000s")
 conf.set("spark.driver.maxResultSize","8g")
-sc = SparkContext(appName="t_xianyu_userinfo",conf=conf)
+sc = SparkContext(appName="t_xianyu_userinfo.sql",conf=conf)
 
 def valid_jsontxt(content):
     res = str(content)
@@ -91,7 +91,7 @@ def f(line):
         lv.append(valid_jsontxt(userNick))
         lv.append(valid_jsontxt(community_name))
         result.append(lv)
-    return result
+    return
 
 
 def f_try(line):

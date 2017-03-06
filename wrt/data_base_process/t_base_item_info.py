@@ -54,7 +54,7 @@ def get_cate_dict(line):
 
 def f(line,cate_dict):
     ss = line.strip().split("\t",2)
-    if len(ss) != 3: return None
+    if len(ss) !=   3: return None
     item_id = ss[1]
     # is_online = ss[1] #0没有1上架2下架
     is_online = "-"
@@ -80,6 +80,7 @@ def f(line,cate_dict):
     root_cat_id = cate_dict.get(categoryId,["-","-","-"])[1]
     cat_name = cate_dict.get(categoryId,["-","-","-"])[0]
     root_cat_name = cate_dict.get(categoryId,["-","-","-"])[2]
+
     trackParams = ob.get('trackParams',{})
     BC_type = trackParams.get('BC_type','-')
     if BC_type != 'B' and BC_type != 'C': BC_type = "-"
@@ -87,6 +88,7 @@ def f(line,cate_dict):
     # brand_name = brand_dict.get(brandId,"-")
     brand_name = "-"
     # item_info = "-"
+
     props = ob.get('props',[])
     item_info_list = []
     for v in props:
@@ -95,6 +97,7 @@ def f(line,cate_dict):
         if valid_jsontxt('品牌') == valid_jsontxt(v.get('name',"-")) and brand_name == "-" :
             brand_name = v.get('value',"-")
     item_info = ",".join(item_info_list)
+
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     if int(price) > 160000:

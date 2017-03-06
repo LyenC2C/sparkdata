@@ -11,7 +11,7 @@ yesterday = sys.argv[2]
 sc = SparkContext(appName="t_base_shopitem_b_"+today)
 
 def valid_jsontxt(content):
-    # res = content
+
     if type(content) == type(u""):
         res = content.encode("utf-8")
     else:
@@ -102,7 +102,7 @@ yesterday = sys.argv[2]
 
 
 s1 = "/commit/shopitem_b/" + today
-s2 = "/hive/warehouse/wlbase_dev.db/t_base_ec_shopitem_b/ds=" + yesterday
+s2 = "/hive/warehouse/wl_base.db/t_base_ec_shopitem_b/ds=" + yesterday
 
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x)).filter(lambda x:x != None) #解析
 rdd1 = rdd1_c.groupByKey().mapValues(list).map(lambda (x, y):quchong(x, y)) #去重

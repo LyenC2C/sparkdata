@@ -183,7 +183,4 @@ print len(phones)
 # s = '{"phone": "13543493145", "flag": false}'
 # import json
 # print json.loads(s).get("flag")
-arr = [True,False]
-if False in arr:
-    print "ok"
 

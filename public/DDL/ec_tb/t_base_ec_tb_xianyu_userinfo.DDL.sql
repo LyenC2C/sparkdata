@@ -1,6 +1,6 @@
 
 
-CREATE EXTERNAL TABLE  if not exists t_base_ec_tb_xianyu_userinfo (
+CREATE EXTERNAL TABLE  if not exists t_base_ec_tb_xianyu_userinfo(
 userId  string comment '' ,
 totalCount  string comment '',
 gender  string comment '性别',
@@ -16,4 +16,4 @@ city  string comment '城市'
 )
 COMMENT '电商淘宝闲鱼用户信息表'
 PARTITIONED BY  (ds STRING )
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n' ;
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'   LINES TERMINATED BY '\n';

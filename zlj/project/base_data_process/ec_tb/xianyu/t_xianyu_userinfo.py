@@ -17,7 +17,7 @@ conf.set("spark.network.timeout","1000s")
 conf.set("spark.driver.maxResultSize","8g")
 
 
-sc = SparkContext(appName="t_xianyu_userinfo",conf=conf)
+sc = SparkContext(appName="t_xianyu_userinfo.sql",conf=conf)
 
 
 sc.textFile('/hive/warehouse/wlbase_dev.db/t_zlj_item_tmp').repartition(6).saveAsTextFile('/user/zlj/tmp/item_title_20161205')
