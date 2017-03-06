@@ -3,6 +3,7 @@ from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 
 import os
+import re
 
 default_args = {
     'owner': 'lyen',
@@ -14,26 +15,31 @@ default_args = {
 
 dag = DAG('stat', default_args=default_args, schedule_interval="@once")
 
-xianyu_iteminfo_cmd = "(bash xianyu_iteminfo_stat.sh)"
+xianyu_iteminfo_cmd = "(bash /home/lel/sparkdata/airflow/stat/xianyu_iteminfo_stat.sh)"
+xianyu_itemcomment_cmd = "(bash /home/lel/sparkdata/airflow/stat/xianyu_itemcomment.sh)"
+def valid_jsontxt(content):
+    if type(content) == type(u""):
+        res = content.encode("utf-8")
+    else:
+        res = str(content)
+    return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
-def get_xianyu_iteminfo():
+def get_from_shell(cmd):
     try:
-        result = os.popen(xianyu_iteminfo_cmd, "r").readline()
+        result = os.popen(cmd, "r").readline()
     except:
         raise Exception("operation failed!")
     else:
         return result
+def parse_str(content):
+    arr_v = re.findall("(\d+)",content)[8:-1]
+    arr_key = ["update_day","total_files","total_rows","total_size"]
+    return dict(zip(arr_key,arr_v))
 
 
-task_bash = BashOperator(task_id='xianyu_iteminfo_stat',
-                         bash_command=xianyu_iteminfo_cmd,
-                         dag=dag)
+
+# for k,v in stat.iteritems():
+#     print k,v
 
 
-import re
-arr_v = re.findall("(\d+)",s)[8:-1]
-arr_key = ["update_day","total_files","total_rows","total_size"]
-stat = dict(zip(arr_key,arr_v))
-print stat
-for k,v in stat.iteritems():
-    print k,v
+
