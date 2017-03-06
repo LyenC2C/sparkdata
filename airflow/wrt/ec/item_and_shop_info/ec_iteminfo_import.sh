@@ -7,10 +7,10 @@ last=$1
 table=wl_base.t_base_ec_item_dev_new
 
 hive<<EOF
-
+set hive.merge.mapfiles= true;
+set hive.merge.mapredfiles= true;
 use wl_base;
 LOAD DATA  INPATH "/user/wrt/temp/iteminfo_tmp" OVERWRITE INTO TABLE $table PARTITION(ds='00tmp');
-
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
 case when t1.item_id is null then t2.item_id else t1.item_id end,

@@ -9,6 +9,8 @@ last_update_date=$2
 table=wl_base.t_base_ec_xianyu_itemcomment
 
 hive<<EOF
+set hive.merge.mapfiles= true;
+set hive.merge.mapredfiles= true;
 LOAD DATA  INPATH '/user/lel/temp/xianyu_itemcomment' OVERWRITE INTO TABLE $table PARTITION (ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
