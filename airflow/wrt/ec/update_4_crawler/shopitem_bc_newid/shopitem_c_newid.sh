@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 hive<<EOF
+set hive.merge.mapfiles= true;
+set hive.merge.mapredfiles= true;
 insert overwrite table wl_analysis.t_wrt_caiji_shopitem_c_newid
 select t1.item_id,t1.sold from
 (select item_id,cast(sold as int) as sold from wl_base.t_base_ec_shopitem_c where ds = '20170220')t1

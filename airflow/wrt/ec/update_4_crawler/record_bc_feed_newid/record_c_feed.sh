@@ -4,8 +4,8 @@ source ~/.bashrc
 last_update_date=$1
 
 hive<<EOF
-set hive.merge.mapfiles=true;
-set hive.merge.mapredfiles=true;
+set hive.merge.mapfiles= true;
+set hive.merge.mapredfiles= true;
 insert overwrite table wl_analysis.t_wrt_caiji_record_c_feed partition(ds='20170302')
 select item_id,new_ds,sold from
 (
