@@ -3,7 +3,7 @@
 
 create table wlservice.t_zlj_record_recycle_check as
 select
- user_id, item_id,cate_level1_id, cate_level2_id, cate_level3_id, cate_level4_id, cate_level5_id,shop_id ,count(1)
+ user_id, item_id,cate_level1_id, cate_level2_id, cate_level3_id, cate_level4_id, cate_level5_id,shop_id ,count(1) as times
 from
 
 t_base_record_cate_simple_ds
