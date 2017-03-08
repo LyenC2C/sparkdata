@@ -8,7 +8,7 @@ spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 8
 
 hive<<EOF
 
-use wlcredit;
+use wl_base;
 
 LOAD DATA INPATH '/user/wrt/temp/shixin_qiyeinfo' OVERWRITE INTO TABLE t_wrt_shixin_qiye PARTITION (ds='0temp');
 
