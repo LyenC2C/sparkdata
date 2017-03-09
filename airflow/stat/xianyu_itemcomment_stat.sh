@@ -19,3 +19,4 @@ last_2_days_rows=`impala-shell -k -i cs104 -q "SELECT count(*) FROM $database.$t
 
 echo \{\"table\":\"$table\",\"update_day\":\{\"update_day\":\"$lastday\",\"total_files\":\"$lastday_files\",\"total_rows\":\"$lastday_rows\",\"total_size\":\"$last_2_days_size\"\},\"last_update_day\":\{\"last_update_day\":\"$last_2_days\",\"total_files\":\"$last_2_days_files\",\"total_rows\":\"$last_2_days_rows\",\"total_size\":\"$last_2_days_files\"\}\}
 
+
