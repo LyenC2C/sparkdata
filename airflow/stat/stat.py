@@ -64,7 +64,7 @@ def processMulti(arr):
 def formatOutput(arr):
     return "\n------------------------------------------------------\n".join(arr)
 
-print formatOutput(processMulti(process(get_from_shell())))
+print formatOutput(processMulti(process(get_from_shell(xianyu_itemcomment_cmd))))
 
 
 
