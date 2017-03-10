@@ -1,5 +1,5 @@
 # coding=utf-8
-from airflow import DAG
+from airflow.stat.airflow import DAG
 from datetime import datetime, timedelta
 from airflow.operators.email_operator import EmailOperator
 
