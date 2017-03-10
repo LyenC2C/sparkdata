@@ -1,22 +1,22 @@
 # coding=utf-8
-# from airflow import DAG
-# from airflow.operators.bash_operator import BashOperator
-# from datetime import datetime, timedelta
+from airflow import DAG
+from datetime import datetime, timedelta
+from airflow.operators.email_operator import EmailOperator
 
 import os
 import json
 import re
 
-# default_args = {
-#     'owner': 'lyen',
-#     'depends_on_past': False,
-#     'start_date': datetime(2016, 12, 19,10,30),
-#     'email': ['airflow_airflow@163.com'],
-#     'email_on_failure': True,
-# }
-#
-# dag = DAG('stat', default_args=default_args, schedule_interval="@once")
-#
+default_args = {
+    'owner': 'lyen',
+    'depends_on_past': False,
+    'start_date': datetime(2017, 3, 10,8,10),
+    'email': ['airflow_airflow@163.com'],
+    'email_on_failure': True,
+}
+
+dag = DAG('stat', default_args=default_args, schedule_interval="15 8 * * *")
+
 
 def valid_jsontxt(content):
     if type(content) == type(u""):
@@ -71,7 +71,12 @@ def formatOutput(arr):
 
 jsonStrs = map(get_from_shell,cmds)
 parsed_data = map(process,jsonStrs)
-print formatOutput(parsed_data)
+
+email = EmailOperator(task_id='show',
+                             to=['airflow_airflow@163.com'],
+                             subject='<!--数据更新概览!-->',
+                             html_content='<!--数据更新概览!-->\n{data}'.format(data=formatOutput(parsed_data)),
+                             dag=dag)
 
 
 '''
