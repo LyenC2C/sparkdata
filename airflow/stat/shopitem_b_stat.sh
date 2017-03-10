@@ -2,7 +2,7 @@
 
 source ~/.bashrc
 
-table=t_base_ec_xianyu_iteminfo
+table=t_base_ec_shopitem_b
 database=wl_base
 db_path=$database.db
 #lastday
@@ -27,13 +27,5 @@ echo \{\"table\":\"$table\",\"update_day\":\{\"update_day\":\"$lastday\",\"total
 
 
 
-\"$lastday_rows\",\"total_size\":\"$last_2_days_size\"\},\"last_update_day\":\{\"last_update_day\":\"$last_2_days\",\"total_files\":\"$last_2_days_files\",\"total_rows\":\"$last_2_days_rows\",\"total_size\":\"$last_2_days_files\"\}\}
-
-#logs_location="/home/lel/airflow/logs"
-#lastday_res=`ls $logs_location/xianyu_iteminfo/iteminfo_import | sort -r | awk 'NR==1{print $1}'`
-#last_2_day_res=`ls $logs_location/xianyu_iteminfo/iteminfo_import | sort -r | awk 'NR==2{print $1}'`
-#lastday_str=`tail -10 $logs_location/xianyu_iteminfo/iteminfo_import/$lastday_res | grep Partition`
-#last_2_day_str=`tail -10 $logs_location/xianyu_iteminfo/iteminfo_import/$last_2_day_res | grep Partition`
-#echo t_base_ec_xianyu_iteminfo    $lastday_str    $last_2_days_str
 
 
