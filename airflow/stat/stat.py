@@ -25,10 +25,16 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
+xianyu_iteminfo = "(bash /home/lel/sparkdata/airflow/stat/xianyu_iteminfo_stat.sh)"
+xianyu_itemcomment = "(bash /home/lel/sparkdata/airflow/stat/xianyu_itemcomment_stat.sh)"
+shopitem_c = "(bash /home/lel/sparkdata/airflow/stat/shopitem_c_stat.sh)"
+shopitem_b = "(bash /home/lel/sparkdata/airflow/stat/shopitem_b_stat.sh)"
+shopinfo = "(bash /home/lel/sparkdata/airflow/stat/shopinfo_stat.sh)"
+item_daysale = "(bash /home/lel/sparkdata/airflow/stat/item_daysale_stat.sh)"
+itemsold = "(bash /home/lel/sparkdata/airflow/stat/itemsold_stat.sh)"
+iteminfo = "(bash /home/lel/sparkdata/airflow/stat/iteminfo_stat.sh)"
 
-# xianyu_iteminfo_cmd = "(bash /home/lel/sparkdata/airflow/stat/xianyu_iteminfo_stat.sh)"
-xianyu_itemcomment_cmd = "(bash /home/lel/sparkdata/airflow/stat/xianyu_itemcomment_stat.sh)"
-bs_cmds = [xianyu_itemcomment_cmd]
+cmds = [xianyu_itemcomment,xianyu_iteminfo,shopitem_b,shopitem_c,shopinfo,iteminfo,item_daysale,itemsold]
 
 
 def get_from_shell(cmd):
@@ -38,13 +44,6 @@ def get_from_shell(cmd):
         raise Exception("operation failed!")
     else:
         return result
-'''
-def parse_str(content):
-    arr_v = re.findall("(\d+)",content)[8:-1]
-    arr_key = ["update_day","total_files","total_rows","total_size"]
-    return dict(zip(arr_key,arr_v))
-'{"table":"wl_base.t_base_ec_xianyu_itemcomment","update_day":{"update_day":"20170222","total_files":"250","total_rows":"+-----------+ | count(*) | +-----------+ | 142749086 | +-----------+","total_size":"15891.8 MB"},"last_update_day":{"last_update_day":"20170217","total_files":"70","total_rows":"+-----------+ | count(*) | +-----------+ | 142749086 | +-----------+","total_size":"70"}}'
-'''
 
 def process(jsonStr):
     ob = json.loads(valid_jsontxt(jsonStr))
@@ -60,23 +59,27 @@ def process(jsonStr):
     last_2_days = ob.get("last_update_day")
     last_update_day = "last_update_time:  "+last_2_days.get("last_update_day")
     last_total_files = "files:"+last_2_days.get("total_files")
-    last_total_size = "size:"+last_day.get("total_size")
+    last_total_size = "size:"+last_2_days.get("total_size")
     last_total_rows = last_2_days.get("total_rows")
     last_rows = "rows:"+re.findall("\\d+",last_total_rows)[0]
-    res = "table:"+"\t" +table+"\n"+"\t".join([last_update_day,last_rows,last_total_files,total_size])+"\n"+"\t".join([update_day,rows,total_files,last_total_size])
+    res = "table:"+"\t" +table+"\n"+"\t".join([last_update_day,last_rows,last_total_files,last_total_size])+"\n"+"\t".join([update_day,rows,total_files,total_size])
     return res
-
-def processMulti(arr):
-    result = []
-    [result.append(process(table)) for table in arr]
-    return result
 
 def formatOutput(arr):
     return "\n------------------------------------------------------\n".join(arr)
 
-jsonStrs = map(get_from_shell,bs_cmds)
+jsonStrs = map(get_from_shell,cmds)
 parsed_data = map(process,jsonStrs)
 print formatOutput(parsed_data)
+
+
+'''
+def parse_str(content):
+    arr_v = re.findall("(\d+)",content)[8:-1]
+    arr_key = ["update_day","total_files","total_rows","total_size"]
+    return dict(zip(arr_key,arr_v))
+'{"table":"wl_base.t_base_ec_xianyu_itemcomment","update_day":{"update_day":"20170222","total_files":"250","total_rows":"+-----------+ | count(*) | +-----------+ | 142749086 | +-----------+","total_size":"15891.8 MB"},"last_update_day":{"last_update_day":"20170217","total_files":"70","total_rows":"+-----------+ | count(*) | +-----------+ | 142749086 | +-----------+","total_size":"70"}}'
+'''
 
 
 
