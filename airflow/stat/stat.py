@@ -65,6 +65,7 @@ def process(jsonStr):
     res = "table:"+"\t" +table+"\n"+"\t".join([last_update_day,last_rows,last_total_files,last_total_size])+"\n"+"\t".join([update_day,rows,total_files,total_size])
     return res
 
+
 def formatOutput(arr):
     return "\n------------------------------------------------------\n".join(arr)
 
