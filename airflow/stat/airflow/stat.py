@@ -25,16 +25,16 @@ def valid_jsontxt(content):
         res = str(content)
     return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
-xianyu_iteminfo = "(bash /home/lel/sparkdata/airflow/stat/xianyu_iteminfo_stat.sh)"
-xianyu_itemcomment = "(bash /home/lel/sparkdata/airflow/stat/xianyu_itemcomment_stat.sh)"
-shopitem_c = "(bash /home/lel/sparkdata/airflow/stat/shopitem_c_stat.sh)"
-shopitem_b = "(bash /home/lel/sparkdata/airflow/stat/shopitem_b_stat.sh)"
-shopinfo = "(bash /home/lel/sparkdata/airflow/stat/shopinfo_stat.sh)"
-item_daysale = "(bash /home/lel/sparkdata/airflow/stat/item_daysale_stat.sh)"
-itemsold = "(bash /home/lel/sparkdata/airflow/stat/itemsold_stat.sh)"
-iteminfo = "(bash /home/lel/sparkdata/airflow/stat/iteminfo_stat.sh)"
+xianyu_iteminfo = "bash /home/lel/sparkdata/airflow/stat/xianyu_iteminfo_stat.sh"
+xianyu_itemcomment = "bash /home/lel/sparkdata/airflow/stat/xianyu_itemcomment_stat.sh"
+shopitem_c = "bash /home/lel/sparkdata/airflow/stat/shopitem_c_stat.sh"
+shopitem_b = "bash /home/lel/sparkdata/airflow/stat/shopitem_b_stat.sh"
+shopinfo = "bash /home/lel/sparkdata/airflow/stat/shopinfo_stat.sh)"
+item_daysale = "(bash /home/lel/sparkdata/airflow/stat/item_daysale_stat.sh"
+itemsold = "bash /home/lel/sparkdata/airflow/stat/itemsold_stat.sh"
+iteminfo = "bash /home/lel/sparkdata/airflow/stat/iteminfo_stat.sh"
 
-cmds = [xianyu_itemcomment,xianyu_iteminfo,shopitem_b,shopitem_c,shopinfo,iteminfo,item_daysale,itemsold]
+cmds = [xianyu_iteminfo,shopitem_b,shopitem_c,item_daysale,itemsold,shopinfo,iteminfo,xianyu_itemcomment]
 
 
 def get_from_shell(cmd):
