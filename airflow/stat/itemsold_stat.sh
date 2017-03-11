@@ -1,8 +1,8 @@
 #!/bin/bash
-
 source ~/.bashrc
 
-table=t_base_ec_xianyu_iteminfo
+
+table=t_base_ec_item_sold_dev
 database=wl_base
 db_path=$database.db
 
@@ -19,16 +19,14 @@ last_2_days_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$last_2_d
 last_2_days_files=`hadoop fs -ls /hive/warehouse/$db_path/$table/ds=$last_2_days | wc -l`
 last_2_days_rows=`impala-shell -k -i  cs104 -q "SELECT count(*) FROM $database.$table where ds='$last_2_days'"`
 
-
 echo \{\"table\":\"$table\",\"update_day\":\{\"update_day\":\"$lastday\",\"total_files\":\"$lastday_files\",\"total_rows\":\"$lastday_rows\",\"total_size\":\"$lastday_size\"\},\"last_update_day\":\{\"last_update_day\":\"$last_2_days\",\"total_files\":\"$last_2_days_files\",\"total_rows\":\"$last_2_days_rows\",\"total_size\":\"$last_2_days_size\"\}\}
 
 
 
-#logs_location="/home/lel/airflow/logs"
-#lastday_res=`ls $logs_location/xianyu_iteminfo/iteminfo_import | sort -r | awk 'NR==1{print $1}'`
-#last_2_day_res=`ls $logs_location/xianyu_iteminfo/iteminfo_import | sort -r | awk 'NR==2{print $1}'`
-#lastday_str=`tail -10 $logs_location/xianyu_iteminfo/iteminfo_import/$lastday_res | grep Partition`
-#last_2_day_str=`tail -10 $logs_location/xianyu_iteminfo/iteminfo_import/$last_2_day_res | grep Partition`
-#echo t_base_ec_xianyu_iteminfo    $lastday_str    $last_2_days_str
+
+
+
+
+
 
 
