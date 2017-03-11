@@ -2,6 +2,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from airflow.operators.email_operator import EmailOperator
+from airflow.utils.helpers import chain
 
 import sys,json, re
 
@@ -74,3 +75,5 @@ email = EmailOperator(task_id='show',
                       subject='<!--数据更新概览!-->',
                       html_content='<!--数据更新概览!-->\n{data}'.format(data=formatOutput(data)),
                       dag=dag)
+
+chain(stat,email)
