@@ -9,6 +9,8 @@ table=wl_base.t_base_ec_item_dev_new
 hive<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
+set hive.merge.size.per.task=268435456;
+set hive.merge.smallfiles.avgsize=16777216;
 use wl_base;
 LOAD DATA  INPATH "/user/wrt/temp/iteminfo_tmp" OVERWRITE INTO TABLE $table PARTITION(ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $today)

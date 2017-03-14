@@ -3,6 +3,8 @@
 hive<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
+set hive.merge.size.per.task=268435456;
+set hive.merge.smallfiles.avgsize=16777216;
 insert overwrite table wl_analysis.t_wrt_caiji_serach_newid
 select t1.nid,t1.ct from
 (select nid,cast(comment_count as int) as ct from wl_base.t_base_item_search where ds = '20170217' having ct is not null and ct > 0  )t1
