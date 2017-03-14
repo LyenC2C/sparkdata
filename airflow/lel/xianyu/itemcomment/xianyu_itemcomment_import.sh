@@ -8,6 +8,7 @@ lastday=$1
 last_update_date=$2
 table=wl_base.t_base_ec_xianyu_itemcomment
 
+
 hive<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
