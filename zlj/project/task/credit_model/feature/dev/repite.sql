@@ -5,11 +5,12 @@ create table wlservice.t_zlj_record_recycle_check as
 select
  user_id, item_id,cate_level1_id, cate_level2_id, cate_level3_id, cate_level4_id, cate_level5_id,shop_id ,count(1) as times
 from
-
 t_base_record_cate_simple_ds
-
 group by user_id, item_id,cate_level1_id, cate_level2_id, cate_level3_id, cate_level4_id, cate_level5_id,shop_id;
 
+
+SELECT times ,count(1) sum1
+from wlservice.t_zlj_record_recycle_check group by times;
 
 create table wlservice.t_zlj_record_recycle_check_item_score as
 select
@@ -19,6 +20,7 @@ where `_c8`>1
 group by user_id  ;
 
 
+--  商品重复购买率
 --0.20205
 --1477879 count()
 select
@@ -29,6 +31,7 @@ wlservice.t_zlj_record_recycle_check_item_score  t1  join
 wlfinance.t_zlj_base_match  t2 on t1.user_id =t2.id1 and t2.ds='zhima'
 
 
+-- 店铺重复购买率
 create table wlservice.t_zlj_record_recycle_check_shop_score as
 select
 user_id ,sum(log(shop_sum)) as recycle_score
@@ -37,8 +40,7 @@ from
 select user_id ,shop_id ,sum(`_c8`) as shop_sum
 from   wlservice.t_zlj_record_recycle_check
 group by user_id ,shop_id
-  )t group by user_id;
-
+) t group by user_id;
 
   ---0.2922
   ---1561510  count()
@@ -49,6 +51,28 @@ from
 wlservice.t_zlj_record_recycle_check_shop_score  t1  join
 wlfinance.t_zlj_base_match  t2 on t1.user_id =t2.id1 and t2.ds='zhima'
 
+-- 店铺评分偏好
+
+SELECT  user_id ,
+log(sum(service_score)) ,
+log(sum(wuliu_score)) ,
+log(sum(desc_score)) ,
+log(sum(star))
+from
+(
+SELECT user_id ,
+log(shop_sum)*service_score   as  service_score,
+log(shop_sum)*wuliu_score  as wuliu_score ,
+log(shop_sum)*desc_score  as desc_score  ,
+log(shop_sum)*star  as star,
+
+(
+select user_id ,shop_id ,sum(`_c8`) as shop_sum
+from   wlservice.t_zlj_record_recycle_check
+group by user_id ,shop_id
+)t1 join t_base_ec_shop_dev_new t2 on t1.shop_id=t2.shop_id  and t2.ds=''
+
+)t group by user_id ;
 
 
  create table wlservice.t_zlj_record_recycle_check_cate_level1_id_score as
