@@ -12,8 +12,8 @@ table=wl_base.t_base_ec_xianyu_itemcomment
 hive<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
-set hive.merge.size.per.task=268435456;
-set hive.merge.smallfiles.avgsize=16777216;
+set hive.merge.size.per.task=256000000;
+set hive.merge.smallfiles.avgsize=160000000;
 LOAD DATA  INPATH '/user/lel/temp/xianyu_itemcomment' OVERWRITE INTO TABLE $table PARTITION (ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select

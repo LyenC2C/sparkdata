@@ -9,8 +9,8 @@ table=wl_base.t_base_item_search
 hive<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
-set hive.merge.size.per.task=268435456;
-set hive.merge.smallfiles.avgsize=16777216;
+set hive.merge.size.per.task=256000000;
+set hive.merge.smallfiles.avgsize=192000000;
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
 case when t1.nid is null then t2.nid else t1.nid end,

@@ -7,10 +7,10 @@ last=$1
 table=wl_base.t_base_ec_shop_dev_new
 
 hive<<EOF
-set hive.merge.mapfiles= true;
-set hive.merge.mapredfiles= true;
-set hive.merge.size.per.task=268435456;
-set hive.merge.smallfiles.avgsize=16777216;
+set hive.merge.mapfiles=true;
+set hive.merge.mapredfiles=true;
+set hive.merge.size.per.task=256000000;
+set hive.merge.smallfiles.avgsize=192000000;
 LOAD DATA  INPATH "/user/wrt/temp/shopinfo_tmp" OVERWRITE INTO TABLE $table PARTITION(ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
