@@ -8,7 +8,7 @@ hive<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
 set hive.merge.size.per.task=268435456;
-set hive.merge.smallfiles.avgsize=16777216;
+set hive.merge.smallfiles.avgsize=201326592;
 use wl_base;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='00tmp');
 insert OVERWRITE table t_base_ec_shopitem_c PARTITION(ds = $lastday)
