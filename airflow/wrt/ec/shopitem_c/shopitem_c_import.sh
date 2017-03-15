@@ -4,9 +4,10 @@ source ~/.bashrc
 lastday=$1
 last_update_day=$2
 
+#set hive.execution.engine=spark;
+
 hive<<EOF
 use wl_base;
-set hive.execution.engine=spark;
 set hive.merge.mapfiles=true;
 set hive.merge.mapredfiles=true;
 set hive.merge.size.per.task=256000000;
