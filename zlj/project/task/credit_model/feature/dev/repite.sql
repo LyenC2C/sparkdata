@@ -52,7 +52,7 @@ wlservice.t_zlj_record_recycle_check_shop_score  t1  join
 wlfinance.t_zlj_base_match  t2 on t1.user_id =t2.id1 and t2.ds='zhima'
 
 -- 店铺评分偏好
-
+ create table wlservice.t_zlj_record_recycle_check_shop_level_score as
 SELECT  user_id ,
 log(sum(service_score)) ,
 log(sum(wuliu_score)) ,
@@ -64,8 +64,7 @@ SELECT user_id ,
 log(shop_sum)*service_score   as  service_score,
 log(shop_sum)*wuliu_score  as wuliu_score ,
 log(shop_sum)*desc_score  as desc_score  ,
-log(shop_sum)*star  as star,
-
+log(shop_sum)*star  as star
 (
 select user_id ,shop_id ,sum(`_c8`) as shop_sum
 from   wlservice.t_zlj_record_recycle_check
@@ -75,6 +74,7 @@ group by user_id ,shop_id
 )t group by user_id ;
 
 
+-- 相关系数测评
  create table wlservice.t_zlj_record_recycle_check_cate_level1_id_score as
 select
 user_id ,sum(log(shop_sum)) as recycle_score
