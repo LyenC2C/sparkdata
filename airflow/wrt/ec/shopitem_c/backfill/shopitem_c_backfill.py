@@ -34,7 +34,7 @@ second param subtract 1 day like 1~3 for tolerancing
 def backfill_allkindsof(last_day, last_update_day, latest_day, days):
     backfill_individually(last_day, last_update_day)
     backfill_continuously(latest_day, days-1)
-backfill_continuously(1,10)
+backfill_continuously(0,2)
 
 
 
