@@ -11,7 +11,8 @@ table=t_base_ec_xianyu_iteminfo
 database=wl_base
 db_path=$database.db
 total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$lastday | awk '{print $1/1024/1024}'`
-dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+2}'`
+offset=5
+dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+5}'`
 
 
 hive<<EOF

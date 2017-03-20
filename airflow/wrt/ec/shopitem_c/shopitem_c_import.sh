@@ -4,7 +4,6 @@ source ~/.bashrc
 lastday=$1
 last_update_day=$2
 
-#set hive.execution.engine=spark;
 
 hive<<EOF
 use wl_base;
