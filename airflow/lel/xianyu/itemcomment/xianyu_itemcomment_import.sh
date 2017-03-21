@@ -6,14 +6,26 @@ date  +%Y%m%d
 
 lastday=$1
 last_update_date=$2
-table=wl_base.t_base_ec_xianyu_itemcomment
-
+table=t_base_ec_xianyu_itemcomment
+database=wl_base
+db_path=$database.db
+total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$lastday | awk '{print $1/1024/1024}'`
+offset=5
+dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+5}'`
 
 hive<<EOF
-set hive.merge.mapfiles= true;
-set hive.merge.mapredfiles= true;
-set hive.merge.size.per.task=256000000;
-set hive.merge.smallfiles.avgsize=160000000;
+use $database;
+set mapred.max.split.size=268435456;
+set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+set mapred.min.split.size.per.node=201326592;
+set mapred.min.split.size.per.rack=201326592;
+set hive.merge.mapfiles=true;
+set hive.merge.mapredfiles=true;
+set hive.merge.size.per.task=268435456;
+set hive.merge.smallfiles.avgsize=201326592;
+set hive.exec.reducers.bytes.per.reducer=268435456;
+set hive.exec.reducers.max=1099;
+set mapreduce.job.reduces=$dynamic_reducers;
 LOAD DATA  INPATH '/user/lel/temp/xianyu_itemcomment' OVERWRITE INTO TABLE $table PARTITION (ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select

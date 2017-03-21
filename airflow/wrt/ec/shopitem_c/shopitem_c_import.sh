@@ -4,14 +4,20 @@ source ~/.bashrc
 lastday=$1
 last_update_day=$2
 
-#set hive.execution.engine=spark;
 
 hive<<EOF
 use wl_base;
+set mapred.max.split.size=268435456;
+set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+set mapred.min.split.size.per.node=201326592;
+set mapred.min.split.size.per.rack=201326592;
 set hive.merge.mapfiles=true;
 set hive.merge.mapredfiles=true;
-set hive.merge.size.per.task=256000000;
-set hive.merge.smallfiles.avgsize=192000000;
+set hive.merge.size.per.task=268435456;
+set hive.merge.smallfiles.avgsize=201326592;
+set hive.exec.reducers.bytes.per.reducer=268435456;
+set hive.exec.reducers.max=1099;
+set mapreduce.job.reduces=-1;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='00tmp');
 insert OVERWRITE table t_base_ec_shopitem_c PARTITION(ds = $lastday)
 select
