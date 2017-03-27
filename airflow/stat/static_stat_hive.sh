@@ -2,8 +2,8 @@
 source ~/.bashrc
 
 
-table=$
-database=$
+table=$2
+database=$1
 db_path=$database.db
 
 refresh=`impala-shell -k -i cs104 -q "refresh $database.$table"`
