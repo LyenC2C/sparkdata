@@ -13,7 +13,14 @@ total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$lastday | awk 
 offset=5
 dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+5}'`
 
-hive<<EOF
+hadoop fs -test -e  /hive/warehouse/$db_path/$table/ds=$lastday
+if [ $? -eq 0 ] ;then
+    hadoop fs  -rmr /hive/warehouse/$db_path/$table/ds=$lastday
+else
+    echo 'Partition not exist,you can run hive spark as you want!!!'
+fi
+
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 use $database;
 set mapred.max.split.size=268435456;
 set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
