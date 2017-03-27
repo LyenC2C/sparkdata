@@ -12,7 +12,7 @@ hadoop fs -test -e  /hive/warehouse/$db_path/$table/ds=$lastday
 if [ $? -eq 0 ] ;then
     hadoop fs  -rmr /hive/warehouse/$db_path/$table/ds=$lastday
 else
-    echo 'Partition not exist,you can run youe hive work as you want!!!'
+    echo 'Partition not exist,you can run your hive work as you want!!!'
 fi
 
 beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF

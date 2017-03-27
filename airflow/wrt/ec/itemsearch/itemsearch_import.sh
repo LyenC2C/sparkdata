@@ -5,8 +5,19 @@ lastday=$1
 last_update_date=$2
 
 table=wl_base.t_base_item_search
+database=wl_base
+db_path=$database.db
+total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$last_update_date | awk '{print $1/1024/1024}'`
+dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+5}'`
 
-hive<<EOF
+hadoop fs -test -e  /hive/warehouse/$db_path/$table/ds=$lastday
+if [ $? -eq 0 ] ;then
+    hadoop fs  -rmr /hive/warehouse/$db_path/$table/ds=$lastday
+else
+    echo 'Partition not exist,you can run hive work as you want!!!'
+fi
+
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
 set hive.merge.size.per.task=256000000;
