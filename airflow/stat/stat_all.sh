@@ -8,7 +8,7 @@ echo $today >> ~/stat/stat2.log
 
 bash $path/static_stat_impala.sh wl_base t_base_ec_xianyu_iteminfo >> ~/stat/stat2.log
 
-bash $path/static_stat_impala.shwl_base t_base_ec_shopitem_b >> ~/stat/stat2.log
+bash $path/static_stat_impala.sh wl_base t_base_ec_shopitem_b >> ~/stat/stat2.log
 
 bash $path/static_stat_impala.sh wl_base t_base_ec_shopitem_c >> ~/stat/stat2.log
 
