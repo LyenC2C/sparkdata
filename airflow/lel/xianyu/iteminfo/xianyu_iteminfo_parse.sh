@@ -13,4 +13,6 @@ else
     echo 'Directory is not exist,you can run your spark as you want!!!'
 fi
 
-spark-submit  --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 /home/lel/sparkdata/lel/spark/xianyu/xianyu_iteminfo.py $lastday
+spark2-submit  --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 /home/lel/sparkdata/lel/spark/xianyu/xianyu_iteminfo.py $lastday
+
+hadoop fs -chmod -R 777 /user/lel/temp/xianyu_iteminfo
