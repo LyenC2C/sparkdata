@@ -10,7 +10,8 @@ last_2_days=$(date -d '2 days ago' +%Y%m%d)
 table=t_base_ec_xianyu_iteminfo
 database=wl_base
 db_path=$database.db
-total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$last_2_days | awk '{print $1/1024/1024}'`
+estimate_date=`hadoop fs -ls /hive/warehouse/$db_path/$table | awk -F '=' '{if($2 ~ /^[0-9]+$/)print $2}' | sort -r |awk 'NR==1{print $0}'`
+total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$estimate_date | awk '{print $1/1024/1024}'`
 offset=5
 dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+5}'`
 
