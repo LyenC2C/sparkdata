@@ -10,12 +10,19 @@ last_2_days=$(date -d '2 days ago' +%Y%m%d)
 table=t_base_ec_xianyu_iteminfo
 database=wl_base
 db_path=$database.db
-total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$lastday | awk '{print $1/1024/1024}'`
+estimate_date=`hadoop fs -ls /hive/warehouse/$db_path/$table | awk -F '=' '{if($2 ~ /^[0-9]+$/)print $2}' | sort -r |awk 'NR==1{print $0}'`
+total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$estimate_date | awk '{print $1/1024/1024}'`
 offset=5
 dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+5}'`
 
+hadoop fs -test -e  /hive/warehouse/$db_path/$table/ds=$lastday
+if [ $? -eq 0 ] ;then
+    hadoop fs  -rmr /hive/warehouse/$db_path/$table/ds=$lastday
+else
+    echo 'Partition not exist,you can run hive spark as you want!!!'
+fi
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 use $database;
 set mapred.max.split.size=268435456;
 set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;

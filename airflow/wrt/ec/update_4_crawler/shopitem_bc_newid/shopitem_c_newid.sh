@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
 insert overwrite table wl_analysis.t_wrt_caiji_shopitem_c_newid

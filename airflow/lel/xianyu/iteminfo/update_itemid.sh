@@ -9,7 +9,7 @@ today=$(date -d '0 days ago' +%Y%m%d)
 lastday=$(date -d '1 days ago' +%Y%m%d)
 last_7_days=$(date -d '7 days ago' +%Y%m%d)
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 use wl_base;
 set hive.merge.mapredfiles = true;
 insert OVERWRITE table wl_base.t_base_ec_xianyu_itemid_update PARTITION(ds = $today)

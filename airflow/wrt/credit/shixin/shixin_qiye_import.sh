@@ -1,18 +1,11 @@
 #!/usr/bin/env bash
 source ~/.bashrc
 dev_path='/home/wrt/sparkdata/wrt/credit/shixin/'
-now_day=$1
-#last_day=$2
-hfs -rmr /user/wrt/temp/shixin_qiyeinfo
-spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 80 $dev_path/shixin_qiye.py $now_day
+now_day=$(date -d '0 days ago' +%Y%m%d)
 
-hive<<EOF
-
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 use wl_base;
-
 LOAD DATA INPATH '/user/wrt/temp/shixin_qiyeinfo' OVERWRITE INTO TABLE t_wrt_shixin_qiye PARTITION (ds='0temp');
-
-
 insert overwrite table t_wrt_shixin_qiye partition (ds = $now_day)
 select
 t1.id,
@@ -40,5 +33,4 @@ on
 t1.id = t2.id
 where
 t2.id is null;
-
 EOF

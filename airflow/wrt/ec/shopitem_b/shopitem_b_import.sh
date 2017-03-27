@@ -3,7 +3,7 @@ source ~/.bashrc
 
 lastday=$1
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 LOAD DATA  INPATH '/user/wrt/shopitem_tmp' OVERWRITE INTO TABLE wl_base.t_base_ec_shopitem_b PARTITION (ds=$lastday);
 set hive.merge.mapfiles=true;
 set hive.merge.mapredfiles=true;
