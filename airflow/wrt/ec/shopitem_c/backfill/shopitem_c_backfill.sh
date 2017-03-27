@@ -6,10 +6,10 @@ last_2_days=$2
 table=wl_base.t_base_ec_shopitem_c
 
 hadoop fs  -rmr /user/wrt/shopitem_c_tmp
-spark-submit --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 \
+spark2-submit --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 \
 $pre_path/wrt/data_base_process/t_base_shopitem_c.py $lastday
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE $table PARTITION (ds='00tmp');

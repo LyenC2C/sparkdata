@@ -12,10 +12,10 @@ echo 'Directory is not exist,you can run you spark job as you want!!!'
 fi
 
 
-spark-submit  --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 \
+spark2-submit  --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 \
 $pre_path/wrt/data_base_process/t_base_shopitem_b.py $lastday $last_2_days
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 set hive.merge.mapredfiles = true;
 set hive.merge.mapfiles = true;
 set hive.merge.size.per.task = 240000000;

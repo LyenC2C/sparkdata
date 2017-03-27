@@ -6,7 +6,7 @@ last=$1
 
 table=wl_base.t_base_ec_item_dev_new
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 use wl_base;
 set hive.merge.mapfiles= true;
 set hive.merge.mapredfiles= true;
