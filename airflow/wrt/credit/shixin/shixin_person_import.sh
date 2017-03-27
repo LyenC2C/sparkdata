@@ -3,7 +3,7 @@ source ~/.bashrc
 dev_path='/home/wrt/sparkdata/wrt/credit/shixin/'
 now_day=$(date -d '0 days ago' +%Y%m%d)
 
-hive<<EOF
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 use wl_base;
 LOAD DATA INPATH '/user/wrt/temp/shixin_personinfo' OVERWRITE INTO TABLE t_wrt_shixin_person PARTITION (ds='0temp');
 insert overwrite table t_wrt_shixin_person partition (ds = $now_day)
