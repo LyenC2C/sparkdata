@@ -45,17 +45,19 @@ def process(jsonStr):
     update_day = "latest_update_time:"+last_day.get("update_day")
     total_files = "files:"+last_day.get("total_files")
     total_size = "size:"+last_day.get("total_size")
+    avg_size = "avg:"+last_day.get("lastday_avg_size")
     total_rows = last_day.get("total_rows")
-    rows = '' if total_rows in '' else "rows:"+re.findall("\\d+",total_rows)[0]
+    rows = '' if total_rows in '' else "rows:"+re.findall("\\d+",total_rows.replace("_c0","count(*)"))[0]
 
 
     last_2_days = ob.get("last_update_day")
     last_update_day = "last_update_time:  "+last_2_days.get("last_update_day")
     last_total_files = "files:"+last_2_days.get("total_files")
     last_total_size = "size:"+last_2_days.get("total_size")
+    last_avg_size = "avg:"+last_2_days.get("last_2_days_avg_size")
     last_total_rows = last_2_days.get("total_rows")
-    last_rows = '' if last_total_rows in '' else "rows:"+re.findall("\\d+",last_total_rows)[0]
-    res = "table:"+"&emsp;" +table+"<br/>"+"&emsp;".join([last_update_day,last_rows,last_total_files,last_total_size])+"<br/>"+"&emsp;".join([update_day,rows,total_files,total_size])
+    last_rows = '' if last_total_rows in '' else "rows:"+re.findall("\\d+",last_total_rows.replace("_c0","count(*)"))[0]
+    res = "table:"+"&emsp;" +table+"<br/>"+"&emsp;".join([last_update_day,last_rows,last_total_files,last_total_size,last_avg_size])+"<br/>"+"&emsp;".join([update_day,rows,total_files,total_size,avg_size])
     return res
 
 
