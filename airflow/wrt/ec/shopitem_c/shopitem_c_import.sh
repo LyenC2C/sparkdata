@@ -7,7 +7,10 @@ last_update_day=$2
 table=t_base_ec_shopitem_c
 database=wl_base
 db_path=$database.db
-
+estimate_date=`hadoop fs -ls /hive/warehouse/$db_path/$table | awk -F '=' '{if($2 ~ /^[0-9]+$/)print $2}' | sort -r |awk 'NR==1{print $0}'`
+total_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$estimate_date | awk '{print $1/1024/1024}'`
+offset=5
+dynamic_reducers=`awk 'BEGIN{print int(('$total_size'/256)+0.5)+5}'`
 hadoop fs -test -e  /hive/warehouse/$db_path/$table/ds=$lastday
 if [ $? -eq 0 ] ;then
     hadoop fs  -rmr /hive/warehouse/$db_path/$table/ds=$lastday
@@ -27,7 +30,7 @@ set hive.merge.size.per.task=268435456;
 set hive.merge.smallfiles.avgsize=201326592;
 set hive.exec.reducers.bytes.per.reducer=268435456;
 set hive.exec.reducers.max=1099;
-set mapreduce.job.reduces=-1;
+set mapreduce.job.reduces=$dynamic_reducers;
 LOAD DATA  INPATH '/user/wrt/shopitem_c_tmp' OVERWRITE INTO TABLE t_base_ec_shopitem_c PARTITION (ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $lastday)
 select
