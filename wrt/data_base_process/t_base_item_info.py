@@ -164,7 +164,7 @@ if __name__ == "__main__":
         sc = SparkContext(appName="t_base_item_info")
         # s = "/hive/warehouse/wlbase_dev.db/t_base_ec_item_house/part*"
         s = "/commit/iteminfo/20*/*"
-        s_dim = "/hive/warehouse/wlbase_dev.db/t_base_ec_dim/ds=20161122/000000_0"
+        s_dim = "/hive/warehouse/wl_base.db/t_base_ec_dim/ds=20161122/000000_0"
         cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
         rdd_c = sc.textFile(s).map(lambda x: f(x,cate_dict)).filter(lambda x:x!=None)
         rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
