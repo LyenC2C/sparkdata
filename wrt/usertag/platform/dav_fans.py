@@ -6,7 +6,6 @@ from pyspark import SparkContext
 table = sys.argv[1] #t_wrt_weibo_invest_dav
 sc = SparkContext(appName="dav_fans_" + table)
 
-sc = SparkContext(appName="add_new_feat")
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
