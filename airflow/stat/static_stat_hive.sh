@@ -6,7 +6,6 @@ table=$2
 database=$1
 db_path=$database.db
 
-refresh=`impala-shell -k -i cs104 -q "refresh $database.$table"`
 #lastday
 lastday=`hadoop fs -ls /hive/warehouse/$db_path/$table | awk -F '=' '{if($2 ~ /^[0-9]+$/)print $2}' | sort -r |awk 'NR==1{print $0}'`
 lastday_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$lastday | awk '{print $1/1024/1024}'`
