@@ -6,6 +6,10 @@ from pyspark import SparkContext
 table = sys.argv[1] #t_wrt_weibo_invest_dav
 sc = SparkContext(appName="dav_fans_" + table)
 
+sqlContext = SQLContext(sc)
+hiveContext = HiveContext(sc)
+
+
 def valid_jsontxt(content):
     # res = content
     if type(content) == type(u""):
@@ -43,8 +47,15 @@ fir = sc.textFile("/hive/warehouse/wl_base.db/t_base_weibo_user_fri/ds=20161106/
 fir.map(lambda a:split(a))\
     .flatMapValues(lambda a:a.split(","))\
     .map(lambda (a,b):filter(a,b,bc_id_v_map)).filter(lambda a:a is not None).distinct()\
-    .saveAsTextFile("/user/wrt/temp/dav_fans")
+    # .saveAsTextFile("/user/wrt/temp/dav_fans")
+
+schema = StructType([StructField("uin", StringType(), True)])
+df = hiveContext.createDataFrame(fir, schema)
+hiveContext.registerDataFrameAsTable(df1, 'dav_fans')
+hiveContext.sql("drop table " + table)
+hiveContext.sql("create table " + table + "as select * from dav_fans")
 
 # hfs -rmr /user/wrt/temp/dav_fans
-# spark-submit2 --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 dav_fans.py t_wrt_weibo_invest_dav
+# spark2-submit --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 dav_fans.py t_wrt_weibo_invest_dav
+#
 
