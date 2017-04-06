@@ -11,7 +11,7 @@ from airflow.utils.helpers import chain
 import sys,json, re
 
 default_args = {
-    "owner": "airflow",
+    "owner": "airflow.sql",
     "depends_on_past": False,
     "start_date": datetime(2017, 3, 11, 7, 50),
     "email": ["airflow_airflow@163.com"],
@@ -27,7 +27,7 @@ file = "/home/lel/stat/stat.log"
 
 stat = BashOperator(
     task_id="agg_stat",
-    bash_command="(bash /home/lel/sparkdata/airflow/stat/stat.sh)",
+    bash_command="(bash /home/lel/sparkdata/airflow.sql/stat/stat.sh)",
     dag=dag)
 
 def valid_jsontxt(content):
