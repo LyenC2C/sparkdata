@@ -21,6 +21,7 @@ def f(line):
     if platform is None or platform == 'None': return None
     return (valid_jsontxt(phone), valid_jsontxt(platform)) if flag else None
 
+
 def createCombiner(kw):
     return set([kw])
 
@@ -32,13 +33,19 @@ def mergeCombiners(set0, set1):
     set0.update(set1)
     return set0
 
+'''
+def reduce(a,b):
+    a_set = set([a])
+    a_set.update(set([b]))
+    return a_set
+data.reduceByKey(lambda a,b:reduce(a,b))
+'''
 
 sc = SparkContext(appName="platform")
-data = sc.textFile("/commit/credit/bank/20170213.bocom.feisichuan.171.20170213")\
-         .map(lambda a: f(a))\
-         .filter(lambda a: a is not None).cache()
+data = sc.textFile("/commit/credit/bank/20170213.bocom.feisichuan.171.20170213") \
+    .map(lambda a: f(a)) \
+    .filter(lambda a: a is not None).cache()
 
 data.combineByKey(lambda a: createCombiner(a), lambda a, b: mergeValue(a, b), lambda a, b: mergeCombiners(a, b)) \
     .map(lambda a: a[0] + "\t" + ','.join(list(a[1]))) \
     .coalesce(1).saveAsTextFile("/user/lel/results/yixin/bank20170213")
-

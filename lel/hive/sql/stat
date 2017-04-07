@@ -1,0 +1,33 @@
+import org.apache.spark.mllib.util.MLUtils
+import org.apache.spark.mllib.linalg.distributed._
+import org.apache.spark.mllib.stat.{MultivariateStatisticalSummary, Statistics}
+
+
+
+
+
+val data_svm_sql = sqlContext.read.format("libsvm").load("/user/zlj/data/f.age.0113._anf.lt.10000.0")
+
+val data_svm = MLUtils.loadLibSVMFile(sc, "/user/zlj/data/f.age.0113._anf.lt.10000.0")
+val features = data_svm.map(x => x.features)
+var sum = Statistics.colStats(features)
+val coverage = sum.numNonzeros.toArray.map(x => x/sum.count)
+val std = sum.variance.toArray.map(x => math.sqrt(x))
+val feature_num = (1 to 276206).toArray
+val re = coverage.zip(std).zip(feature_num)
+sc.makeRDD(re,1).map(x => x._1._1+"\t"+x._1._2+"\t"+x._2).saveAsTextFile("/user/lel/results/svm")
+
+
+
+import math
+from pyspark.mllib.stat import MultivariateStatisticalSummary
+from pyspark.mllib.stat import Statistics
+from pyspark.mllib.util import MLUtils
+
+data_svm = MLUtils.loadLibSVMFile(sc, "/user/zlj/data/f.age.0113._anf.lt.10000.0")
+features = data_svm.map(lambda x: x.features)
+sum = Statistics.colStats(features)
+coverage = sum.numNonzeros.toArray.map(lambda x:x/sum.count)
+std = sum.variance.toArray.map(lambda x:math.sqrt(x))
+
+

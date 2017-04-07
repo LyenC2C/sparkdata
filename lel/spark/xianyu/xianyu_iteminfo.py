@@ -79,7 +79,6 @@ def parseJson(ob):
                 validate.setdefault("芝麻信用", "0")
             else:
                 validate.setdefault("芝麻信用", "1")
-
         url = officialTag.get("link", "\\N")
         if '?' in url:
             params = urlparse(url).query
@@ -124,6 +123,10 @@ def parseJson(ob):
 
 def distinct(list):
     return '\001'.join(max(list, key=itemgetter(-1)))
+def distinct_2(list):
+    return '\001'.join(list)
+def distinct_3(list):
+    return '\001'.join(list[0])
 
 sc = SparkContext(appName="xianyu_iteminfo" + lastday)
 
@@ -132,4 +135,66 @@ data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*")\
                 .filter(lambda x: x is not None)\
                     .groupByKey().mapValues(list)\
                         .map(lambda a: distinct(a[1]))\
-                            .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
+                           .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
+'''
+
+data = sc.textFile("/commit/2taobao/test_shuffle/*") \
+    .map(lambda a: parseJson(getJson(a))) \
+    .filter(lambda x: x is not None) \
+    .repartition(5) \
+    .groupByKey().mapValues(list) \
+    .map(lambda a: distinct(a[1])) \
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_groupby1")
+
+data = sc.textFile("/commit/2taobao/test_shuffle/*") \
+    .map(lambda a: parseJson(getJson(a))) \
+    .filter(lambda x: x is not None) \
+    .repartition(5) \
+    .reduceByKey(lambda a,b:max([a,b], key=itemgetter(-1))) \
+    .map(lambda (a,b): distinct_2(b)) \
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_reduce1")
+'''
+'''
+
+def distinct_2(list):
+    return '\001'.join(list)
+def distinct_3(list):
+    return '\001'.join(list[0])
+
+data = sc.textFile("/commit/2taobao/test_shuffle/*") \
+    .map(lambda a: parseJson(getJson(a))) \
+    .filter(lambda x: x is not None) \
+    .groupByKey().mapValues(list) \
+    .map(lambda a: distinct(a[1])) \
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_groupby")
+data = sc.textFile("/commit/2taobao/test_shuffle/*") \
+    .map(lambda a: parseJson(getJson(a))) \
+    .filter(lambda x: x is not None) \
+    .reduceByKey(lambda a,b:max([a,b], key=itemgetter(-1)))\
+    .map(lambda (a,b): distinct_2(b))\
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_reduce")
+
+data = sc.textFile("/commit/2taobao/test_shuffle/*") \
+    .map(lambda a: parseJson(getJson(a))) \
+    .filter(lambda x: x is not None) \
+    .reduceByKey(lambda a,b:max([a,b], key=itemgetter(-1)))\
+    .map(lambda (a,b): distinct_2(b))\
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_reduce")
+
+def createCombiner(x):
+    return [x]
+def mergeValue(xs, x):
+    xs.append(x)
+    return [max(xs, key=itemgetter(-1))]
+def mergeCombiners(a, b):
+    a.extend(b)
+    return [max(a, key=itemgetter(-1))]
+data = sc.textFile("/commit/2taobao/test_shuffle/*") \
+    .map(lambda a: parseJson(getJson(a))) \
+    .filter(lambda x: x is not None) \
+    .combineByKey(lambda a: createCombiner(a),lambda a,b:mergeValue(a,b),lambda a,b:mergeCombiners(a,b))\
+    .map(lambda (a,b): distinct_3(b)) \
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_combine_4")
+
+'''
+

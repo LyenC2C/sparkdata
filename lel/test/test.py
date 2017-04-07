@@ -148,14 +148,14 @@ def read_file(fpath):
             if block:
                 yield block
 
-#for i in read_file("/home/lyen/airflow useage.md"):
+#for i in read_file("/home/lyen/airflow.sql useage.md"):
 #   print i
 str = "手机:4254,电话:081"
 str_1 ="3、“郑某”开设赌场判处缓刑等等。 执业以来，刑事案件判处缓刑率达到15%左右。手机：13616776886电话：0577-86861956QQ：379619056传真：86862557 邮箱：379619056@qq.com联系地址：温州市龙湾区海滨街道富海路191号 "
 
-import re
-phones = filter(lambda a: len(a) >= 11,re.findall(r"\d+[-]?\d*",str_1))
-print len(phones)
+# import re
+# phones = filter(lambda a: len(a) >= 11,re.findall(r"\d+[-]?\d*",str_1))
+# print len(phones)
 
 
 '''
@@ -183,4 +183,14 @@ print len(phones)
 # s = '{"phone": "13543493145", "flag": false}'
 # import json
 # print json.loads(s).get("flag")
+
+# ss = "test1,test2,test3"
+#
+# data = [(s.lower(),len(s)) for s in ss.split(",")]
+
+
+
+
+
+
 

@@ -1,0 +1,50 @@
+1.提取微博关注信用卡大V粉丝用户
+
+t_base_weibo_user_fri
+t_base_weibo_user_new
+
+1769152985 招商银行信用卡	http://weibo.com/cmbcard
+2052879865 交通银行信用卡中心 	http://weibo.com/cardbankcomm
+1892789787 兴业银行信用卡中心 	http://weibo.com/cibxyk
+2900230837 达人招行信用卡 	http://weibo.com/u/2900230837
+2297209690 广发信用卡 	http://weibo.com/guangfacard
+1937021493 中信银行信用卡 	http://weibo.com/zxxyk
+1819782233 中国银行信用卡 	http://weibo.com/boccard
+2806337734 51信用卡管家 	http://weibo.com/51zhangdan
+2609956060 中国光大银行信用卡中心 	http://weibo.com/cebcardcenter
+1907753765 民生信用卡	http://weibo.com/cmbccreditcard
+2420767405 浦发银行信用卡中心	http://weibo.com/u/2420767405
+2647910907 中国农业银行信用卡中心	http://weibo.com/2012hxwx
+1704310521 招商银行信用卡-北京	http://weibo.com/cmbcchina
+1886461330 平安信用卡 	http://weibo.com/paxyk95511
+2230726611 JCB国际信用卡	http://weibo.com/jcbcardchina
+2791697975 卡牛-信用卡管家	http://weibo.com/cardniu
+2254034540 建行龙卡信用卡	http://weibo.com/u/2254034540
+2015961721 招商银行信用卡-广州	http://weibo.com/u/2015961721
+1885188752 招商银行信用卡-西安	http://weibo.com/cmbcardxa
+2355263075 华夏信用卡中心微博 	http://weibo.com/hxbcreditcard
+1849511413 招商银行信用卡-深圳	http://weibo.com/cmbcardshenzhen
+2650116405 光大银行天津信用卡中心 	http://weibo.com/u/2650116405
+2049258864 交通银行最红星期五	http://weibo.com/redfriday
+3500258540 融360信用卡 	http://weibo.com/rong360credit
+2832518802 中国银行信用卡-江苏 	http://weibo.com/bocjscc
+1697486122 拉卡拉	http://weibo.com/lakala
+5623849129 省呗-官微 	http://weibo.com/smyfinancial
+2800828421 支付通掌芯宝 	http://weibo.com/zhifuxinlingdi
+5943402458 申请信用卡办理 	http://weibo.com/u/5943402458
+2985771430 中行四川分行信用卡 	http://weibo.com/u/2985771430
+
+create table if not exists wl_service.t_lel_weibo_yixin_20170122
+as
+select id
+from
+wl_base.t_base_weibo_user_fri
+where
+ds=20161106 and ids regexp  '1769152985|2052879865|1892789787|2900230837|2297209690|1937021493|1819782233|2806337734|2609956060|
+                             1907753765|2420767405|2647910907|1704310521|1886461330|2230726611|2791697975|2254034540|2015961721|
+                             1885188752|2355263075|1849511413|2650116405|2049258864|3500258540|2832518802|1697486122|5623849129|
+                             2800828421|5943402458|2985771430'
+
+
+
+
