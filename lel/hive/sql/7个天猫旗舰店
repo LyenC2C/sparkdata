@@ -1,0 +1,147 @@
+7个天猫旗舰店:
+
+
+Forever21  https://forever21.tmall.com/				69644818
+gap   https://gap.tmall.com/						64751899
+uniqlo   https://uniqlo.tmall.com/				    57303596	
+zara   https://zara.tmall.com/						113462750
+ochirly  https://ochirly.tmall.com/					58674200
+only    https://only.tmall.com/						60129786
+vero moda   https://veromoda.tmall.com/				61773004
+
+total:
+
+set hive.merge.mapredfiles=true;
+set mapreduce.job.reduces=1009;
+create table  wlservice.t_lel_month_sold_and_income_20170222_v2
+as		
+select 
+case when t1.shop_id = '69644818' then 'Forever21'
+when t1.shop_id = '64751899' then 'gap'
+when t1.shop_id = '57303596' then 'uniqlo'
+when t1.shop_id = '113462750' then 'zara'
+when t1.shop_id = '58674200' then 'ochirly'
+when t1.shop_id = '60129786' then 'only'
+when t1.shop_id = '61773004' then 'vero moda'
+end as shop,
+sum(t2.day_sold) as totalsold,
+sum(t2.day_sold_price) as totalincome,t2.month as month
+from
+(select  item_id,shop_id from wlbase_dev.t_base_ec_shopitem_b  where ds =20170221 and shop_id regexp '69644818|64751899|57303596|113462750|58674200|60129786|61773004') t1 
+join
+(select item_id,substr("20170210",0,6) as month from wlbase_dev.t_base_ec_item_daysale_dev_new) t2
+on t1.item_id=t2.item_id
+group by  case when t1.shop_id = '69644818' then 'Forever21'
+when t1.shop_id = '64751899' then 'gap'
+when t1.shop_id = '57303596' then 'uniqlo'
+when t1.shop_id = '113462750' then 'zara'
+when t1.shop_id = '58674200' then 'ochirly'
+when t1.shop_id = '60129786' then 'only'
+when t1.shop_id = '61773004' then 'vero moda'
+end,t2.month 
+
+
+
+
+
+set hive.merge.mapredfiles=true;
+set mapreduce.job.reduces=1009;
+create table  wlservice.t_lel_month_sold_and_income_20170222_v3
+as		
+select 
+case when t1.shop_id = '69644818' then 'Forever21'
+when t1.shop_id = '64751899' then 'gap'
+when t1.shop_id = '57303596' then 'uniqlo'
+when t1.shop_id = '113462750' then 'zara'
+when t1.shop_id = '58674200' then 'ochirly'
+when t1.shop_id = '60129786' then 'only'
+when t1.shop_id = '61773004' then 'vero moda'
+end as shop,
+sum(t2.day_sold) as totalsold,
+sum(t2.day_sold_price) as totalincome,t2.month as month
+from
+(select  item_id,shop_id from wlbase_dev.t_base_ec_shopitem_b  where ds =20170221 and shop_id regexp '69644818|64751899|57303596|113462750|58674200|60129786|61773004') t1 
+join
+(select item_id,day_sold,day_sold_price,substr(ds,0,6) as month from wlbase_dev.t_base_ec_item_daysale_dev_new) t2
+on t1.item_id=t2.item_id
+group by  case when t1.shop_id = '69644818' then 'Forever21'
+when t1.shop_id = '64751899' then 'gap'
+when t1.shop_id = '57303596' then 'uniqlo'
+when t1.shop_id = '113462750' then 'zara'
+when t1.shop_id = '58674200' then 'ochirly'
+when t1.shop_id = '60129786' then 'only'
+when t1.shop_id = '61773004' then 'vero moda'
+end,t2.month 
+
+
+backfill:
+create table wlservice.t_lel_month_sold_and_income_201609
+as
+select
+case when t1.shop_id = '69644818' then 'Forever21'
+when t1.shop_id = '64751899' then 'gap'
+when t1.shop_id = '57303596' then 'uniqlo'
+when t1.shop_id = '113462750' then 'zara'
+when t1.shop_id = '58674200' then 'ochirly'
+when t1.shop_id = '60129786' then 'only'
+when t1.shop_id = '61773004' then 'vero moda'
+end as shop,
+sum(t1.sold - t2.sold) as totalsold,
+sum((t1.sold - t2.sold) * t1.saleprice) as totalincome
+from
+(select item_id,shop_id,sold,saleprice  from wlbase_dev.t_base_ec_shopitem_b   where ds = 20160930 and shop_id regexp '69644818|64751899|57303596|113462750|58674200|60129786|61773004' and sold is not null and saleprice is not null ) t1
+join
+(select item_id,shop_id,sold,saleprice from wlbase_dev.t_base_ec_shopitem_b  where ds = 20160905 and shop_id regexp '69644818|64751899|57303596|113462750|58674200|60129786|61773004' and sold is not null and saleprice is not null ) t2
+on
+t1.item_id = t2.item_id
+group by
+case when t1.shop_id = '69644818' then 'Forever21'
+when t1.shop_id = '64751899' then 'gap'
+when t1.shop_id = '57303596' then 'uniqlo'
+when t1.shop_id = '113462750' then 'zara'
+when t1.shop_id = '58674200' then 'ochirly'
+when t1.shop_id = '60129786' then 'only'
+when t1.shop_id = '61773004' then 'vero moda'
+end 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create table t_lel_sold_income_test
+as 
+select
+case when t1.shop_id = '69644818' then 'Forever21'
+when t1.shop_id = '64751899' then 'gap'
+when t1.shop_id = '57303596' then 'uniqlo'
+when t1.shop_id = '113462750' then 'zara'
+when t1.shop_id = '58674200' then 'ochirly'
+when t1.shop_id = '60129786' then 'only'
+when t1.shop_id = '61773004' then 'vero moda'
+end as shop,
+t1.sold as s1,
+t2.sold as s2,
+t1.sales as ss1,
+t2.sales as ss2
+from
+(select shop_id,sum(sold) as sold,sum(sold * saleprice) as sales from wlbase_dev.t_base_ec_shopitem_b   where ds = 20160930  and shop_id regexp '69644818|64751899|57303596|113462750|58674200|60129786|61773004' and sold is not null and saleprice is not null group by shop_id) t1
+join
+(select shop_id,sum(sold) as sold,sum(sold * saleprice) as  sales from wlbase_dev.t_base_ec_shopitem_b  where ds = 20160905 and shop_id regexp '69644818|64751899|57303596|113462750|58674200|60129786|61773004' and sold is not null and saleprice is not null group by shop_id) t2
+on t1.shop_id = t2.shop_id;

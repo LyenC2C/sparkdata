@@ -1,0 +1,51 @@
+python:
+
+import math
+import numpy
+from pyspark.mllib.stat import MultivariateStatisticalSummary
+from pyspark.mllib.stat import Statistics
+from pyspark.mllib.util import MLUtils
+from pyspark.ml.feature import VectorSlicer
+from pyspark.mllib.regression import LabeledPoint
+from pyspark.mllib.linalg import Vectors
+from pyspark.mllib.linalg import Vector
+data_svm_sql = sqlContext.read.format("libsvm").load("/user/lel/data/svm")
+data_svm = data_svm_sql.map(lambda row:LabeledPoint(row.label,row.features))
+features = data_svm.map(lambda x: x.features)
+stat = Statistics.colStats(features)
+coverage = (stat.numNonzeros()/stat.count()).tolist()
+std = numpy.sqrt(stat.variance()).tolist()
+features_nums = data_svm.map(lambda x: x.features.size).take(1)[0]
+features_arr = range(0,features_nums)	
+re = zip(zip(coverage,std),features_arr)
+filteredIndexes = map(lambda m: m[1],filter(lambda a:a[0][0] >=0.005,re))
+slicer = VectorSlicer(inputCol="features", outputCol="featuresFiltered", indices=filteredIndexes)
+output_df = slicer.transform(data_svm_sql)
+data_svm_filtered = output_df.select("label","featuresFiltered")
+data_svm_labelpoint = data_svm_filtered.map(lambda row:LabeledPoint(int(row.label),row.featuresFiltered))
+MLUtils.saveAsLibSVMFile(data_svm_labelpoint,"/user/lel/results/svm_123")
+
+
+scala:
+
+import org.apache.spark.mllib.util.MLUtils
+import org.apache.spark.mllib.stat.{MultivariateStatisticalSummary, Statistics}
+import org.apache.spark.ml.feature.VectorSlicer
+import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.mllib.linalg.{Vectors,Vector}
+val data_svm_sql = sqlContext.read.format("libsvm").load("/user/lel/data/svm")
+val data_svm = data_svm_sql.map(row => LabeledPoint(row.getAs[Double](0), row.getAs[org.apache.spark.mllib.linalg.Vector](1).toDense))
+val features = data_svm.map(x => x.features)
+var stat = Statistics.colStats(features)
+val coverage = stat.numNonzeros.toArray.map(x => x/stat.count)
+val std = stat.variance.toArray.map(x => math.sqrt(x))
+val features_nums = data_svm.map(x =>x.features.size).take(1)(0)
+val features_arr = (0 to features_nums -1).toArray
+val re = coverage.zip(std).zip(features_arr)
+val filteredIndexes = re.filter(x => x._1._1 >= 0.8).map(x => x._2)
+val slicer = new VectorSlicer().setInputCol("features").setOutputCol("featuresFiltered")
+val remain = slicer.setIndices(filteredIndexes)
+val output = slicer.transform(data_svm_sql)
+val data_svm_filtered = output.select("label","featuresFiltered")
+val data_svm_labelpoint = data_svm_filtered.map(row => LabeledPoint(row.getAs[Double](0), row.getAs[org.apache.spark.mllib.linalg.Vector](1)))
+MLUtils.saveAsLibSVMFile(data_svm_labelpoint.coalesce(1),"/user/lel/results/svm_test1234")
