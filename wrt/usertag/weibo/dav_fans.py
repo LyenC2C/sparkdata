@@ -3,7 +3,11 @@ __author__ = 'wrt'
 import sys
 import rapidjson as json
 from pyspark import SparkContext
+from pyspark.sql import *
+from pyspark.sql.types import *
+
 table = sys.argv[1] #t_wrt_weibo_invest_dav
+table_put = sys.argv[2] #t_wrt_weibo_wbid_isinvest
 sc = SparkContext(appName="dav_fans_" + table)
 
 sqlContext = SQLContext(sc)
@@ -47,15 +51,16 @@ fir = sc.textFile("/hive/warehouse/wl_base.db/t_base_weibo_user_fri/ds=20161106/
 fir.map(lambda a:split(a))\
     .flatMapValues(lambda a:a.split(","))\
     .map(lambda (a,b):filter(a,b,bc_id_v_map)).filter(lambda a:a is not None).distinct()\
-    # .saveAsTextFile("/user/wrt/temp/dav_fans")
+    .saveAsTextFile("/user/wrt/temp/dav_fans")
 
-schema = StructType([StructField("uin", StringType(), True)])
-df = hiveContext.createDataFrame(fir, schema)
-hiveContext.registerDataFrameAsTable(df1, 'dav_fans')
-hiveContext.sql("drop table " + table)
-hiveContext.sql("create table " + table + "as select * from dav_fans")
+# schema = StructType([StructField("wbid", StringType(), True)])
+# df = hiveContext.createDataFrame(fir, schema)
+# hiveContext.registerDataFrameAsTable(df, 'dav_fans')
+# hiveContext.sql("use wl_usertag")
+# hiveContext.sql("drop table " + table_put)
+# hiveContext.sql("create table  " + table_put + "as select * from dav_fans")
 
 # hfs -rmr /user/wrt/temp/dav_fans
 # spark2-submit --driver-memory 4G --num-executors 20 --executor-memory 20G --executor-cores 5 dav_fans.py t_wrt_weibo_invest_dav
-#
+# load inpath data '/user/wrt/temp/dav_fans' overwrite into table wl_usertag.t_wrt_weibo_wbid_isinvest;
 
