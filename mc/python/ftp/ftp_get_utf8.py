@@ -17,7 +17,7 @@ for name in list:
     def write_ftp(str):
         f.write(str)
         #f.write(str.decode("gbk").encode("utf-8"))#从windows上传的文件乱码解决
-#    ftp.retrbinary(filename,write_ftp,1024) # 保存FTP上的文件
+    ftp.retrbinary(filename,write_ftp,1024) # 保存FTP上的文件
 #   ftp.delete(name)            # 删除FTP文件
 #ftp.storbinary('STOR '+filename, open(path, 'rb')) # 上传FTP文件
 #ftp.quit()                  # 退出FTP服务器
