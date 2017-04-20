@@ -3,8 +3,8 @@
 
 
 -- 价格的加减乘除
-drop table wlcredit.t_credit_record_feature_6month_online ;
-create table wlcredit.t_credit_record_feature_6month_online as
+drop table wl_feature.t_credit_record_feature_6month_online ;
+create table wl_feature.t_credit_record_feature_6month_online as
     SELECT
     tel_index,
     max(user_id) user_id ,

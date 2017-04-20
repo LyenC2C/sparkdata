@@ -1,8 +1,5 @@
-
-
---
-drop table wlcredit.t_credit_record_cate1_feature_months ;
-create table wlcredit.t_credit_record_cate1_feature_months as
+drop table wl_feature.t_credit_record_cate1_feature_months ;
+create table wl_feature.t_credit_record_cate1_feature_months as
 SELECT
 tel_index , concat_ws(' ', collect_set(concat_ws(' ',
 price_sum,
