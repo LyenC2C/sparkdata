@@ -35,6 +35,6 @@ def backfill_allkindsof(last_day, last_update_day, latest_day, days,iteminfo_dat
     backfill_individually(20170417, 20170407,20170418)
     backfill_continuously(1,3,20170421)
 
+backfill_individually(20170417, 20170407,20170418)
+backfill_continuously(1,3,20170421)
 
-# backfill_continuously(1,3,20170421)
-# backfill_individually(20170417, 20170407,20170418)
