@@ -24,17 +24,6 @@ def backfill_individually(last_day, last_update_day,iteminfo_date):
     # print last_day,last_update_day,iteminfo_date
     os.system(command)
 
-
-
-'''
-:param 0~4
-first param plus 1 day like 1~4 for airflow.sql to execute
-second param subtract 1 day like 1~3 for tolerancing
-'''
-def backfill_allkindsof(last_day, last_update_day, latest_day, days,iteminfo_date):
-    backfill_individually(20170417, 20170407,20170418)
-    backfill_continuously(1,3,20170421)
-
 backfill_individually(20170417, 20170407,20170415)
-backfill_continuously(1,3,20170421)
+backfill_continuously(0,3,20170415)
 
