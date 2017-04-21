@@ -1,10 +1,6 @@
-
-
-
-
 -- 价格的加减乘除
-drop table wlcredit.t_credit_record_feature_3month_online ;
-create table wlcredit.t_credit_record_feature_3month_online as
+drop table wl_feature.t_credit_record_feature_3month_online ;
+create table wl_feature.t_credit_record_feature_3month_online as
     SELECT
     tel_index,
     round(sum(price),2)   month3_price_sum,

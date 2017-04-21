@@ -1,6 +1,6 @@
 --密集表合并
-drop table wlcredit.t_credit_dense_features_online;
-create table wlcredit.t_credit_dense_features_online as
+drop table wl_feature.t_credit_dense_features_online;
+create table wl_feature.t_credit_dense_features_online as
 SELECT
 tt1.*,
 tt2.alipay_flag,
@@ -270,25 +270,25 @@ t5.month12_b50_1_ratio,
 t5.month12_b50_0_ratio,
 t5.month12_active_score
 from
-wlcredit.t_credit_record_feature_online t1
+wl_feature.t_credit_record_feature_online t1
 left JOIN
-wlcredit.t_credit_record_feature_6month_online t2
+wl_feature.t_credit_record_feature_6month_online t2
 ON
 t1.tel_index = t2.tel_index
 left JOIN
-wlcredit.t_credit_record_feature_1month_online t3
+wl_feature.t_credit_record_feature_1month_online t3
 ON
 t1.tel_index = t3.tel_index
 LEFT JOIN
-wlcredit.t_credit_record_feature_3month_online t4
+wl_feature.t_credit_record_feature_3month_online t4
 ON
 t1.tel_index = t4.tel_index
 left JOIN
-wlcredit.t_credit_record_feature_12month_online t5
+wl_feature.t_credit_record_feature_12month_online t5
 ON
 t1.tel_index = t5.tel_index
 )tt1
 left JOIN
-wlcredit.t_credit_user_profile_feature tt2
+wl_feature.t_credit_user_profile_feature tt2
 ON
 tt1.tel_index = tt2.tel_index;

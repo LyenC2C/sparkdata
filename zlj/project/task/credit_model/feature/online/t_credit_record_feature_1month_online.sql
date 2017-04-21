@@ -1,10 +1,6 @@
-
-
-
-
 -- 价格的加减乘除
-drop table wlcredit.t_credit_record_feature_1month_online ;
-create table wlcredit.t_credit_record_feature_1month_online as
+drop table wl_feature.t_credit_record_feature_1month_online ;
+create table wl_feature.t_credit_record_feature_1month_online as
     SELECT
     tel_index,
     round(sum(price),2)   month1_price_sum,
@@ -36,39 +32,37 @@ round(sum(case when price <=10 then 1 else 0 end)/count(*),2)         as month1_
 round(sum(case when price <=10 then price else 0 end)/sum(price ),2)  as month1_b10_ratio,
 round(sum(case when price <=5 then 1 else 0 end)/count(*),2)         as   month1_b5_num_ratio,
 round(sum(case when price <=5 then price else 0 end)/sum(price ),2)  as   month1_b5_ratio,
-
-round(sum(case when price <=50 and CAST(price/5 as int )==10 then 1 else 0 end)/count(*),2) as  month1_b50_10_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==9  then 1 else 0 end)/count(*),2) as  month1_b50_9_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==8  then 1 else 0 end)/count(*),2) as  month1_b50_8_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==7  then 1 else 0 end)/count(*),2) as  month1_b50_7_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==6  then 1 else 0 end)/count(*),2) as  month1_b50_6_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==5  then 1 else 0 end)/count(*),2) as  month1_b50_5_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==4  then 1 else 0 end)/count(*),2) as  month1_b50_4_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==3  then 1 else 0 end)/count(*),2) as  month1_b50_3_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==2  then 1 else 0 end)/count(*),2) as  month1_b50_2_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==1  then 1 else 0 end)/count(*),2) as  month1_b50_1_num_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==0  then 1 else 0 end)/count(*),2) as  month1_b50_0_num_ratio,
-
-round(sum(case when price <=50 and CAST(price/5 as int )==10 then price else 0 end)/sum(price) ,2) as month1_b50_10_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==9  then price else 0 end)/sum(price),2) as month1_b50_9_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==8  then price else 0 end)/sum(price),2) as month1_b50_8_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==7  then price else 0 end)/sum(price),2) as month1_b50_7_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==6  then price else 0 end)/sum(price),2) as month1_b50_6_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==5  then price else 0 end)/sum(price),2) as month1_b50_5_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==4  then price else 0 end)/sum(price),2) as month1_b50_4_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==3  then price else 0 end)/sum(price),2) as month1_b50_3_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==2  then price else 0 end)/sum(price),2) as month1_b50_2_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==1  then price else 0 end)/sum(price),2) as month1_b50_1_ratio,
-round(sum(case when price <=50 and CAST(price/5 as int )==0  then price else 0 end)/sum(price),2) as month1_b50_0_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=10 then 1 else 0 end)/count(*),2) as  month1_b50_10_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=9  then 1 else 0 end)/count(*),2) as  month1_b50_9_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=8  then 1 else 0 end)/count(*),2) as  month1_b50_8_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=7  then 1 else 0 end)/count(*),2) as  month1_b50_7_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=6  then 1 else 0 end)/count(*),2) as  month1_b50_6_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=5  then 1 else 0 end)/count(*),2) as  month1_b50_5_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=4  then 1 else 0 end)/count(*),2) as  month1_b50_4_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=3  then 1 else 0 end)/count(*),2) as  month1_b50_3_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=2  then 1 else 0 end)/count(*),2) as  month1_b50_2_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=1  then 1 else 0 end)/count(*),2) as  month1_b50_1_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=0  then 1 else 0 end)/count(*),2) as  month1_b50_0_num_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=10 then price else 0 end)/sum(price) ,2) as month1_b50_10_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=9  then price else 0 end)/sum(price),2) as month1_b50_9_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=8  then price else 0 end)/sum(price),2) as month1_b50_8_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=7  then price else 0 end)/sum(price),2) as month1_b50_7_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=6  then price else 0 end)/sum(price),2) as month1_b50_6_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=5  then price else 0 end)/sum(price),2) as month1_b50_5_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=4  then price else 0 end)/sum(price),2) as month1_b50_4_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=3  then price else 0 end)/sum(price),2) as month1_b50_3_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=2  then price else 0 end)/sum(price),2) as month1_b50_2_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=1  then price else 0 end)/sum(price),2) as month1_b50_1_ratio,
+round(sum(case when price <=50 and CAST(price/5 as int )=0  then price else 0 end)/sum(price),2) as month1_b50_0_ratio,
 round((sum(pow(2.8, datediff* (-0.005)))+20)/75,2)  as month1_active_score
-    from
-    wl_analysis.t_base_record_cate_simple_ds
-    where
-    substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' ),1,6) <= ds
-    and
-    regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn
-    group by tel_index
-    ;
+from
+wl_analysis.t_base_record_cate_simple_ds
+where
+substr(regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' ),1,6) <= ds
+and
+regexp_replace(date_sub(from_unixtime( unix_timestamp() ,'yyyy-MM-dd'),30*1),'-','' )<dsn
+group by tel_index
+;
 
 -- SELECT
 -- tel_index,root_cat_id as cate_level1,
