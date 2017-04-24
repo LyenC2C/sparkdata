@@ -58,8 +58,7 @@ def f(line,cate_dict):
     item_id = ss[1]
     # is_online = ss[1] #0没有1上架2下架
     is_online = "-"
-    # ts = ss[0]
-    ts = "1493014091"
+    ts = ss[0]
     # data_flag = ss[3] #历史状态，0没有1上架2下架（当天新商品没有的时候，他保持不变）
     data_flag = "-"
     # data_ts = ss[4] #历史状态时间
