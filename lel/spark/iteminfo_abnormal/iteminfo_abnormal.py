@@ -84,8 +84,8 @@ def f(line, cate_dict):
     sku_info = "\\N"
     return (item_id,[item_id,title,categoryId,cat_name,root_cat_id,root_cat_name,brandId,brand_name,BC_type,str(price),str(price),price_zone,off_time,str(favor),seller_id,shopId,location,sku_info,ts])
 
-def concat(list):
-    return '\001'.join(list)
+def concat(x,y):
+    return '\001'.join(y)
 
 
 if __name__ == "__main__":
