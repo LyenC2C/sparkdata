@@ -1,6 +1,6 @@
 
 drop table wl_feature.t_credit_record_cate2_feature_months_online ;
-create table wl_feature.t_credit_record_cate2_feature_months_online as
+create table wl_feature.t_credit_record_cate2_feature_months_online stored as parquet as
 SELECT
 tel_index , concat_ws(' ', collect_set(concat_ws(' ',
 price_sum,
