@@ -5,11 +5,10 @@
 -- 价格的加减乘除
 drop table wl_feature.t_credit_record_feature_online ;
 create table wl_feature.t_credit_record_feature_online as
+    SELECT
+    tel_index,
 
-SELECT
-tel_index,
-
- round(sum(price),2)   monthall_price_sum,
+    round(sum(price),2)   monthall_price_sum,
     round(count(1) ,2)    monthall_buy_count,
     round(avg(price),2)   monthall_price_avg,
     round(max(price),2)   monthall_price_max,
