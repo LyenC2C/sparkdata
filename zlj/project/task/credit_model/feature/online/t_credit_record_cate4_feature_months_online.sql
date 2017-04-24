@@ -1,6 +1,6 @@
 -- 价格的加减乘除
-drop table wl_feature.t_credit_record_cate4_feature_months ;
-create table wl_feature.t_credit_record_cate4_feature_months as
+drop table wl_feature.t_credit_record_cate4_feature_months_online ;
+create table wl_feature.t_credit_record_cate4_feature_months_online as
 SELECT
 tel_index , concat_ws(' ', collect_set(concat_ws(' ',
 price_sum,
