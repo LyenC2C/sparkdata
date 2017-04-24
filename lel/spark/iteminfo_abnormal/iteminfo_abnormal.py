@@ -57,7 +57,7 @@ def f(line, cate_dict):
     ob = json.loads(valid_jsontxt(ss[2]))
     if type(ob) != type({}): return None
     itemInfoModel = ob.get('itemInfoModel', "\\N")
-    if itemInfoModel == "-": return None
+    if itemInfoModel == "\\N": return None
     location = valid_jsontxt(itemInfoModel.get('location', '\\N'))
     title = itemInfoModel.get('title', '\\N').replace("\n", "")
     favor = itemInfoModel.get('favcount', '0')
@@ -70,7 +70,7 @@ def f(line, cate_dict):
     BC_type = trackParams.get('BC_type', '\\N')
     if BC_type != 'B' and BC_type != 'C': BC_type = "\\N"
     brandId = trackParams.get('brandId', '\\N')
-    brand_name = "-"
+    brand_name = "\\N"
 
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
