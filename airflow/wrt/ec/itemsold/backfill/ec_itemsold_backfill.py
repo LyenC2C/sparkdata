@@ -15,7 +15,7 @@ def backfill_continuously(latest_day, days,iteminfo_date):
         exec_day = (today + datetime.timedelta(days=-i)).strftime('%Y%m%d')
         last_day = (today + datetime.timedelta(days=-i - 1)).strftime('%Y%m%d')
         last_2_days = (today + datetime.timedelta(days=-i - 2)).strftime('%Y%m%d')
-        print exec_day, last_day, last_2_days
+        # print exec_day, last_day, last_2_days
         command =" bash /home/wrt/sparkdata/airflow/wrt/ec/itemsold/backfill/ec_itemsold_backfill.sh  {last_day} {last_2_days} {iteminfo_date}".format(last_day=last_day,last_2_days=last_2_days,iteminfo_date=iteminfo_date)
         os.system(command)
 
@@ -25,5 +25,5 @@ def backfill_individually(last_day, last_update_day,iteminfo_date):
     os.system(command)
 
 # backfill_individually(20170417, 20170407,20170424)
-backfill_continuously(6,7,20170424)
+backfill_continuously(1,7,20170422)
 
