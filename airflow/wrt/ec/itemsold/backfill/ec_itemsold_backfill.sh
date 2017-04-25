@@ -7,8 +7,10 @@ iteminfoday=$3
 
 hadoop fs -rmr /user/wrt/sale_tmp
 
-spark2-submit  --driver-memory 8G --num-executors 20 --executor-memory 20G --executor-cores 5 \
+spark-submit  --driver-memory 8G --num-executors 30 --executor-memory 20G --executor-cores 5 \
 $pre_path/wrt/data_base_process/t_base_item_sale.py $last_2_days $lastday $iteminfoday
+
+hadoop fs -chmod -R 777 /user/wrt/daysale_tmp
 
 echo $1
 echo $2
@@ -19,8 +21,10 @@ EOF
 
 hadoop fs -rm -r /user/wrt/daysale_tmp
 
-spark2-submit  --driver-memory 8G --num-executors 20 --executor-memory 20G --executor-cores 5 \
+spark-submit  --driver-memory 8G --num-executors 30 --executor-memory 20G --executor-cores 5 \
 $pre_path/wrt/data_base_process/cal_daysale.py $2 $1
+
+hadoop fs -chmod -R 777 /user/wrt/daysale_tmp
 
 beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 LOAD DATA  INPATH "/user/wrt/daysale_tmp" OVERWRITE INTO TABLE wl_base.t_base_ec_item_daysale_dev_new PARTITION (ds=$last_2_days);
