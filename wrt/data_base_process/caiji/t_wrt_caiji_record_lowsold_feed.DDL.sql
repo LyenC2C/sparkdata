@@ -10,7 +10,7 @@ location '/commit/ids_4_crawler/shopitem_lowsold_feed' ;
 
 
 
-insert overwrite table wl_analysis.t_wrt_caiji_record_lowsold_feed partition(ds = '20170420')
+insert overwrite table wl_analysis.t_wrt_caiji_record_lowsold_feed partition(ds = '20170425')
 select item_id,new_ds,sold from
 (
 select
@@ -19,9 +19,9 @@ t2.new_ds,
 t1.sold
 from
 (
-select item_id,sold from wl_base.t_base_ec_shopitem_b where ds = '20170423' and sold <= 5000
+select item_id,sold from wl_base.t_base_ec_shopitem_b where ds = '20170424' and sold <= 5000
 union ALL
-select item_id,sold from wl_base.t_base_ec_shopitem_c where ds = '20170423' and sold <= 1000
+select item_id,sold from wl_base.t_base_ec_shopitem_c where ds = '20170422' and sold <= 1000
 )t1
 join
 (select item_id,max(dsn) as new_ds from wl_base.t_base_ec_record_dev_new where ds = 'true' and bc_type = 'C'
