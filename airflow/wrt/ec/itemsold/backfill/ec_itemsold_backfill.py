@@ -25,5 +25,5 @@ def backfill_individually(last_day, last_update_day,iteminfo_date):
     os.system(command)
 
 # backfill_individually(20170417, 20170407,20170424)
-backfill_continuously(1,7,20170422)
+backfill_continuously(6,7,20170422)
 
