@@ -17,3 +17,4 @@ bash $path/static_stat_impala.sh wl_base t_base_ec_shop_dev_new >> ~/stat/stat.l
 bash $path/static_stat_impala.sh wl_base t_wrt_shixin_qiye >> ~/stat/stat.log
 bash $path/static_stat_impala.sh wl_base t_wrt_shixin_person >> ~/stat/stat.log
 bash $path/static_stat_impala.sh wl_base t_base_credit_ppd_listinfo >> ~/stat/stat.log
+
