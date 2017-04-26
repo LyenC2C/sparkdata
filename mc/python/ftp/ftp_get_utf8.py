@@ -21,3 +21,6 @@ for name in list:
 #   ftp.delete(name)            # 删除FTP文件
 #ftp.storbinary('STOR '+filename, open(path, 'rb')) # 上传FTP文件
 #ftp.quit()                  # 退出FTP服务器
+
+# spark.executor.cores=5
+# spark.executor.memory=15g

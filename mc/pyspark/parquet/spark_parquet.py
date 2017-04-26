@@ -1,7 +1,6 @@
 #coding:utf-8
 #入库数据到parquet存储格式表的处理
 import sys
-
 reload(sys)
 sys.setdefaultencoding('utf-8')
 import json
@@ -19,7 +18,7 @@ hiveContext = HiveContext(sc)
 
 # Datatype: "DataType", "NullType", "StringType", "BinaryType", "BooleanType", "DateType",
 #     "TimestampType", "DecimalType", "DoubleType", "FloatType", "ByteType", "IntegerType",
-#     "LongType", "ShortType", "ArrayType", "MapType", "StructField", "StructType"]
+#     "LongType", "ShortType", "ArrayType", "MapType", "StructField", "StructType"]  hue-oozie-1483550818.14
 #
 # BINARY -> STRING
 # BOOLEAN -> BOOLEAN
@@ -50,9 +49,32 @@ myschema=StructType([StructField('item_id', StringType(), True),\
                      StructField('sku', MapType(StringType(),StringType(),True), True),\
                      StructField('ts', StringType(), True)
                      ])
+def to_json_str(tou):
+    temp={}
+    for i in tou.split(","):
+        j=i.split(":")
+        temp[j[0]]=j[1]
+    return temp
 
-rdd = sc.textFile('/hive/warehouse/wl_base.db/t_base_ec_item_dev_new/ds=20170405/000000_0').map(lambda x:tuple(x.split("\001")))
+def oper(line):
+    ob=line.split('\001')
+    for i in range(len(ob)):
+        if ob[i] =="\\N" or ob[i] =='':
+            ob[i] =None
+    if len(ob)!=20:
+        return None
+    else:
+        if ob[11]!= None:
+            ob[11]=int(ob[11])
+        if ob[13]!= None:
+            ob[13] = int(ob[13])
+        if ob[17] != None:
+            ob[17]= to_json_str(ob[17])
+        if ob[18] != None:
+            ob[18]=to_json_str(ob[18])
+    return tuple(ob)
+rdd = sc.textFile('/hive/warehouse/wl_base.db/t_base_ec_item_dev_new/ds=20170405/000000_0').map(lambda x:oper(x)).filter(lambda x:x!=None)
 df=sqlContext.createDataFrame(rdd, myschema)
 df.write.parquet("/hive/warehouse/wl_base.db/t_base_ec_item_dev_new2/ds=20170405")
 
-#这种方式导入的bigint和map字段有问题，其他正常
+#此导入方式正常
