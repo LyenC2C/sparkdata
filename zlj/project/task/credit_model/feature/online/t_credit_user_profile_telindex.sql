@@ -15,8 +15,8 @@ t_base_user_profile_telindex
 
 购买/年限月份  频次特征
 
-  drop table wlcredit.t_credit_user_profile_feature;
-  create table wlcredit.t_credit_user_profile_feature as
+  drop table wl_feature.t_credit_user_profile_feature;
+  create table wl_feature.t_credit_user_profile_feature as
   SELECT
   tel_index ,
   case when alipay like '已通过支付宝实名认证' then 1 else 0 end  as alipay_flag  ,

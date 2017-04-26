@@ -19,3 +19,4 @@ on
 t1.shop_id = t2.shop_id
 where t2.shop_id is null
 )t
+

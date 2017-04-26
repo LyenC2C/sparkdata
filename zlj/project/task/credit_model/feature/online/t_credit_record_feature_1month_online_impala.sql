@@ -1,14 +1,14 @@
 drop table wl_feature.t_credit_record_feature_1month_online_impala;
 create table wl_feature.t_credit_record_feature_1month_online_impala as
-    SELECT
-    tel_index,
-    round(sum(price),2)   month1_price_sum,
-    round(count(1) ,2)    month1_buy_count,
-    round(avg(price),2)   month1_price_avg,
-    round(max(price),2)   month1_price_max,
-    round(min(price),2)   month1_price_min,
-    round(stddev(price),2)   month1_price_std,
-    round(max(price)-min(price),2)      month1_price_cross ,
+SELECT
+tel_index,
+round(sum(price),2)   month1_price_sum,
+round(count(1) ,2)    month1_buy_count,
+round(avg(price),2)   month1_price_avg,
+round(max(price),2)   month1_price_max,
+round(min(price),2)   month1_price_min,
+round(stddev(price),2)   month1_price_std,
+round(max(price)-min(price),2)      month1_price_cross ,
 round(sum(CASE WHEN annoy = '1'       THEN 1        ELSE 0 END),2)     as        month1_annoy_num,
 round(sum(CASE WHEN annoy = '1'       THEN 1        ELSE 0 END)/COUNT(1),2)  as  month1_annoy_ratio,
 round(sum(CASE WHEN bc_type = 'B'       THEN 1         ELSE 0 END),2)        as          month1_b_bc_type_num,
