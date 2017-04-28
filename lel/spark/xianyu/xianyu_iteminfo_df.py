@@ -151,6 +151,7 @@ data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*") \
     .map(lambda (a, b): b) \
     .map(lambda a: [transform_df_fileds(i) for i in a])
 
+
 schema = StructType([StructField('itemid', StringType(), True), \
                      StructField('userid', StringType(), True), \
                      StructField('phone', StringType(), True), \
