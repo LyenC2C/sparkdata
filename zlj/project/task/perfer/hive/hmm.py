@@ -87,74 +87,29 @@ if __name__ == "__main__":
     if len(sys.argv)<4:
         print ' py  min_freq limit feed_ds'
         sys.exit(0)
-    min_freq=int(sys.argv[1])
-    limit=int(sys.argv[2])
+    min_freq=int(sys.argv[1])  #限制最低词频
+    limit=int(sys.argv[2])     #限制产出用户词云个数 30-50个
     feed_ds=sys.argv[3]
     # hmm_ds=sys.argv[4]
     rdd_pre = hiveContext.sql(sql_hmm%feed_ds).map(lambda x: (x.user_id, [i for i in x[1].split('_') if len(i) > 3]))
     # top_freq=5   and x[1]<top_freq
+    # 统计所有的词
     words = set(rdd_pre.map(lambda x: x[1]).flatMap(lambda x: x).map(lambda x: (x, 1)).groupByKey().map(
         lambda (x, y): (x, len(y))).filter(lambda x: x[1] > min_freq).map(lambda x: x[0]).collect())
     broadcastVar = sc.broadcast(words)
     dict = broadcastVar.value
-    rdd = rdd_pre.map(lambda (x, y): (x, [i for i in y if i in dict]))
+
+    # 过滤掉不需要的词
+    rdd = rdd_pre.map(lambda (item_id, words): (item_id, [word for word in words if word in dict]))
     doc_num = rdd.count()
+    # tf 值
     # (word,(doc_id,tf))
-    tfrdd = rdd.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)
+    tfrdd = rdd.map(lambda (item_id, words): tf(item_id, words)).flatMap(lambda x: x)
     # word ,len
-    dfrdd = rdd.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
+    dfrdd = rdd.map(lambda (item_id, words): df(item_id, words)).flatMap(lambda x: x).groupByKey().map(lambda (x, y): (x, len(y)))
     # word idf
-    idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
-    # idfrdd.collectAsMap()
-    # idfrdd.join()
-    broadcastVar = sc.broadcast(idfrdd.collectAsMap())
-    idfdict = broadcastVar.value
-    rddjoin=idfrdd.join(tfrdd)
-    joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
-    # rddjoin = tfrdd.join(idfrdd)
-    # sorted(a,key=a[1],reverse=True)
-    # rst=rddjoin.map(lambda (x, y): join(x, y))
-    rst=joinrs.groupByKey().map(lambda (x, y): [x, "\t".join(
-        [i[0] for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True)) if index < limit])])
-    df=hiveContext.createDataFrame(rst,schema)
-    hiveContext.registerDataFrameAsTable(df, 'tmptable')
-    hiveContext.sql('drop table if EXISTS  t_zlj_userbuy_item_hmm_tfidf_tags')
-    hiveContext.sql('create table t_zlj_userbuy_item_hmm_tfidf_tags as select * from tmptable')
+    idfrdd = dfrdd.map(lambda (word ,word_len): (word, math.log((doc_num + 1) * 1.0 / (word_len + 1))))
+
+    #广播 idf
 
 
-
-
-
-    # rddjoin.map(lambda (x,y):join(x,y)).groupByKey().map(lambda  (x,y):(x,len(y)))
-    # rdd.saveAsTextFile
-    # rdd=hiveContext.sql(sql).map(lambda  x:[i for i in x._c1.split('_') if len(i)>0])
-    #
-    #
-    #
-    # from pyspark import SparkContext
-    # from pyspark.mllib.feature import HashingTF
-    # from pyspark.mllib.feature import IDF
-    #
-    # # sc = SparkContext()
-    #
-    # # Load documents (one per line).
-    # documents = sc.textFile("...").map(lambda line: line.split(" "))
-    #
-    # hashingTF = HashingTF()
-    # # tf = hashingTF.transform(documents)
-    # tfrdd=rdd.map(lambda  x: (x[0],hashingTF.transform(x[1])))
-    #
-    # # tfrdd = hashingTF.transform(rdd)
-    # tfrdd.cache()
-    # idf=IDF().fit(tfrdd.values())
-    # fff=idf.transform
-    # tfidf=tfrdd.map(lambda  x: (x[0],fff(x[1])))
-    #
-    # tmp=[]
-    # for x,y in tfrdd.collect():
-    #     tmp.append((x,idf.transform(y)))
-    #
-    # rs=sc.parallelize(tmp)
-    #
-    # # tfidf = idf.transform(tfrdd)
-    # # val num_idf_pairs = tf_num_pairs.mapValues(v => idf.transform(v))
