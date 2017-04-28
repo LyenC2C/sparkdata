@@ -16,7 +16,7 @@ def process(line):
     jsonStr = valid_jsontxt(line.strip())
     ob = json.loads(jsonStr)
     flag = valid_jsontxt(ob.get("flag", "False"))
-    if flag in 'None': return None
+    if 'None' in flag: return None
     platform = valid_jsontxt(ob.get("platform"))
     phone = valid_jsontxt(ob.get("phone"))
     if not phone.isdigit(): return None
@@ -27,14 +27,24 @@ def process(line):
 
 sc = SparkContext(appName="daichang")
 
-data = sc.textFile("/commit/regist/daichang/yixing.data.2017-02-17") \
+
+
+data = sc.textFile("/commit/regist/daichang/yixin*") \
+    .map(lambda a: process(a)) \
+    .filter(lambda a: a is not None) \
+    .reduceByKey(lambda a,b:"True" if "True" in [a,b] else "False")\
+    .map(lambda ((a,b),c): a + "\001" +b + "\001" + c) \
+    .saveAsTextFile("/user/lel/temp/yixin_daichang")
+
+
+'''
+data = sc.textFile("/commit/regist/daichang/yixin*") \
     .map(lambda a: process(a)) \
     .filter(lambda a: a is not None) \
     .groupByKey().mapValues(lambda a:"True" if "True" in list(a) else "False") \
     .map(lambda ((a,b),c): a + "\001" +b + "\001" + c) \
     .saveAsTextFile("/user/lel/temp/yixin_daichang")
 
-'''
 data = sc.textFile("/commit/regist/daichang/yixin*")\
          .map(lambda a: process(a))\
          .filter(lambda a: a is not None)\

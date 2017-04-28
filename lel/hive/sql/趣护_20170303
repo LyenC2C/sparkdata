@@ -1,0 +1,30 @@
+
+set hive.auto.convert.join = true;
+set hive.mapjoin.smalltable.filesize=50000000;
+create table wlservice.t_lel_hushi_20170303_2 as 
+select t1.tb_id as tbid 
+from
+(select /*+ mapjoin(t_base_user_profile_telindex)*/ tb_id from t_base_user_profile_telindex where tb_location regexp '湖南|江苏|吉林' and xianyu_gender='1')t1
+join
+(SELECT user_id
+FROM wl_base.t_base_ec_record_dev_new 
+where
+ds='true' and title regexp '护士服|护理学|护士' 
+and title not regexp '情趣' 
+and location regexp '湖南|江苏|吉林' 
+and cast(dsn as int) > 20160303)t2
+on t1.tb_id=t2.user_id
+
+create table wlservice.t_lel_yunfu_20170303 as 
+select t1.tb_id as tbid 
+from
+(select /*+ mapjoin(t_base_user_profile_telindex)*/ tb_id from t_base_user_profile_telindex where tb_location regexp '北京' and xianyu_gender='1')t1
+join
+(SELECT user_id
+FROM wl_base.t_base_ec_record_dev_new 
+where
+ds='true' and title regexp '孕妇装|叶酸'  
+and location regexp '北京' 
+and cast(dsn as int) > 20160303)t2
+on t1.tb_id=t2.user_id
+

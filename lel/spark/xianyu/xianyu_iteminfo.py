@@ -79,7 +79,6 @@ def parseJson(ob):
                 validate.setdefault("芝麻信用", "0")
             else:
                 validate.setdefault("芝麻信用", "1")
-
         url = officialTag.get("link", "\\N")
         if '?' in url:
             params = urlparse(url).query
@@ -122,14 +121,22 @@ def parseJson(ob):
     result.append(ts)  # timestamp
     return (itemid, [valid_jsontxt(i) for i in result])
 
-def distinct(list):
-    return '\001'.join(max(list, key=itemgetter(-1)))
+
+def concat_ws(list,split='\001'):
+    return split.join(list)
+
 
 sc = SparkContext(appName="xianyu_iteminfo" + lastday)
 
-data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*")\
-            .map(lambda a: parseJson(getJson(a)))\
-                .filter(lambda x: x is not None)\
-                    .groupByKey().mapValues(list)\
-                        .map(lambda a: distinct(a[1]))\
-                            .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
+
+data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*") \
+    .map(lambda a: parseJson(getJson(a))) \
+    .filter(lambda x: x is not None) \
+    .reduceByKey(lambda a,b:max([a,b], key=itemgetter(-1)))\
+    .map(lambda (a,b): concat_ws(b))\
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
+
+
+
+
+

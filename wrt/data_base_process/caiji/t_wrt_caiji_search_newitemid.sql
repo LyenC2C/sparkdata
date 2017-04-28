@@ -9,11 +9,12 @@ where t2.item_id is null;
 
 
 -- 20170104 库里采集到的一部分数据去重之后,与商品表join,商品表里没有的商品id给采集组采集
-create table wlservice.t_wrt_caiji_serach_2030_newid as
+drop table wl_analysis.t_wrt_caiji_serach_newid;
+create table wl_analysis.t_wrt_caiji_serach_newid as
 select t1.nid,t1.ct from
-(select nid,cast(comment_count as int) as ct from wlservice.t_wrt_item_search where ds = '20170104_20_30_uniq')t1
+(select nid,cast(comment_count as int) as ct from wl_base.t_base_item_search where ds = '20170124')t1
 left join
-(select item_id from wl_base.t_base_ec_item_dev_new where ds = 20170103)t2
+(select item_id from wl_base.t_base_ec_item_dev_new where ds = 20170121)t2
 on
 t1.nid = t2.item_id
 where

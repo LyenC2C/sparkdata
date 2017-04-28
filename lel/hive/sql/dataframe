@@ -1,0 +1,52 @@
+dataframe
+
+1793 1:2.0 2:4.0 3:5.0
+1644 1:5.0 3:6.0
+1203 1:2.0 2:5.0 3:7.0
+val svm = sqlContext.read.format("libsvm").load("/user/lel/data/svm")
+
+
+
+val data_svm = sqlContext.read.format("libsvm").load("/user/zlj/data/f.age.0113._anf.lt.10000.0")
+import org.apache.spark.ml.feature.StandardScaler
+val scaler = new StandardScaler().setInputCol("features").setOutputCol("scaledFeatures").setWithStd(true).setWithMean(false)
+val scalerModel = scaler.fit(data_svm)
+val scaledData = scalerModel.transform(data_svm)
+scaledData.show()
+
+val rowMatrix = new RowMatrix(features)
+val m = mat.numRows()
+val m = mat.numCols()
+val sum = rowMatrix.computeColumnSummaryStatistics
+val coverage = sum.numNonzeros.toArray.map(x => x/sum.count)
+val std = sum.numNonzeros.toArray.map(x => math.sqrt(x))
+
+
+import org.apache.spark.mllib.util.MLUtils
+import org.apache.spark.mllib.linalg.distributed._
+import org.apache.spark.mllib.stat.{MultivariateStatisticalSummary, Statistics}
+import org.apache.spark.ml.feature.VectorSlicer
+import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.mllib.linalg.{Vectors,Vector}
+val data_svm = MLUtils.loadLibSVMFile(sc, "/user/zlj/data/f.age.0113._anf.lt.10000.0")
+val features = data_svm.map(x => x.features)
+var sum = Statistics.colStats(features)
+val coverage = sum.numNonzeros.toArray.map(x => x/sum.count)
+val std = sum.variance.toArray.map(x => math.sqrt(x))
+val feature_num = (1 to 276206).toArray
+val re = coverage.zip(std).zip(feature_num)
+val filteredIndexes = re.filter(x => x._1._1 >= 0.005).map(x => x._2)
+val data_svm_sql = sqlContext.read.format("libsvm").load("/user/zlj/data/f.age.0113._anf.lt.10000.0")
+val slicer = new VectorSlicer().setInputCol("features").setOutputCol("featuresFiltered")
+val remain = slicer.setIndices(filteredIndexes)
+val output = slicer.transform(data_svm_sql)
+val data_svm_filtered = output.select("label","featuresFiltered")
+val data_svm_transformed = data_svm_filtered.map(row => LabeledPoint(row.getAs[Double](0), row.getAs[org.apache.spark.mllib.linalg.Vector](1)))
+MLUtils.saveAsLibSVMFile(data_svm_transformed.coalesce(1),"/user/lel/results/svm_transformed")
+
+val features_num = data_svm_transformed.map(x => x.features.size).take(1)(0)
+val indexes_rebuild = (0 to features_num-1).toArray
+val label_f_v = data_svm_transformed.map(x => (x._1,x._2.toArray))
+val label_f_v_rebuild = label_f_v.map(x => (x._1,org.apache.spark.mllib.linalg.Vectors.dense(x._2)))
+val label_refresh = label_f_v_rebuild.map(x => LabeledPoint(x._1, x._2))
+MLUtils.saveAsLibSVMFile(label_refresh.coalesce(1),"/user/lel/results/svm_refresh")

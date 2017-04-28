@@ -9,3 +9,6 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'  LINES TERMINATED BY '\n' store
 
 load data inpath "/user/lel/temp/multiplatform_jiedai" overwrite into table wl_base.t_base_multiplatform partition(ds=20170227)
 
+
+
+

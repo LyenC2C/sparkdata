@@ -1,0 +1,58 @@
+awk
+ARGC               命令行参数个数
+ARGV               命令行参数排列
+ENVIRON            支持队列中系统环境变量的使用
+FILENAME           awk浏览的文件名
+FNR                浏览文件的记录数
+FS                 设置输入域分隔符，等价于命令行 -F选项
+NF                 浏览记录的域的个数
+NR                 已读的记录数
+OFS                输出域分隔符
+ORS                输出记录分隔符
+RS                 控制记录分隔符
+
+``统计某个文件夹下的文件占用的字节数
+
+  ls -l |awk 'BEGIN {size=0;} {size=size+$5;} END{print [end]size is , size/1024/1024,M}'  
+``
+  awk -F ':' 'BEGIN {count=0;} {name[count] = $1;count++;}; END{for (i = 0; i < NR; i++) print i, name[i]}' /etc/passwd  
+
+``airflow kill pid
+  ps -ef | grep 'airflow scheduler'| grep -v grep | awk '{print $2}' | xargs kill -9
+  ps -ef | grep 'airflow-webserver'| grep -v grep | awk '{print $2}' | xargs kill -9
+
+1
+	aa 12 0 java     
+	bb 34 1 scala        
+	cc 56 0 python
+2
+	aa cool d  
+	bb wonder s
+	dd good m
+
+1 inner join 2:
+
+	awk 'NR==FNR{a[$1]=$0;}NR!=FNR && $1 in a {print $0,a[$1]}' 1 2
+		equals to
+	awk 'NR==FNR{a[$1]=$0}NR!=FNR{if(($1 in a)) print a[$1],$2,$3}' 1 2
+		also equals to 
+	awk 'NR==FNR{a[$1]=$0}NR!=FNR &&a[$1]{print a[$1],$2,$3}' 1 2
+
+1 left join 2
+
+	awk  'NR==FNR{a[$1]=$2 $3 $4}NR!=FNR{print $0,a[$1]}' 2 1
+
+1 right join 2
+
+	awk  'NR==FNR{a[$1]=$2 $3 $4}NR!=FNR{print $0,a[$1]}' 1 2
+
+1 full join 2 
+
+
+awk 'NR==FNR{a[$1]=$2;}NR!=FNR {if(!($1 in a))print $1}' 1 2
+awk 'NR==FNR{a[$1]=$2;}NR!=FNR {if(!($1 in a))print $1}' 2 1
+awk -F ',' 'NR==FNR{print $1    $2}' t2 >itemid
+
+
+awk -vFS='\n' -vORS=',' '$1=$1'
+awk -F '=' '{print \047$1:\047$2\047}'

@@ -1,0 +1,73 @@
+欣颜本期需求如下：
+
+1、牙美主推智能美白牙
+请提取近一个月购买儿童牙膏，成都地区用户；
+
+输出字段：姓名、手机号、姓别、关键词；
+
+
+create table if not exists wlservice.t_lel_ec_xinyan_ertongyagao_cd_igk as 
+select t2.id as id,t1.gender as gender,'儿童牙膏' as keyword from 
+(select tb_id,xianyu_gender as gender from wlbase_dev.t_base_user_profile_telindex where  tb_location regexp '成都') t1
+join
+(select user_id as id 
+ from wl_base.t_base_ec_record_dev_new 
+ where
+ (cast(dsn as int) 
+ between  cast(from_unixtime(unix_timestamp(),'yyyyMMdd') as int) - 100
+ and cast(from_unixtime(unix_timestamp(),'yyyyMMdd') as int) )
+ and title regexp '儿童牙膏'  
+ ) t2 
+on t1.tb_id = t2.id;
+
+equals ->
+
+create table if not exists wlservice.t_lel_ec_xinyan_ertongyagao_cd_igk as 
+select t2.id as id,t1.gender as gender,'儿童牙膏' as keyword from 
+(select tb_id,xianyu_gender as gender from wlbase_dev.t_base_user_profile_telindex where  tb_location regexp '成都') t1
+join
+(select user_id as id 
+ from wl_base.t_base_ec_record_dev_new 
+ where
+ (cast(dsn as int) 
+ between  cast(unix_timestamp() as int) - 7862400
+ and cast(unix_timestamp() as int) )
+ and title regexp '儿童牙膏'  
+ ) t2
+on t1.tb_id = t2.id;
+
+2、纹绣
+成都地区用户
+
+a)近1年购买了3次及以上”眉笔“”眼线笔““眼线液””眉粉“”的用户；
+b)用户的微博中含简介、教育、标签中包含了附件关键字的用户；
+
+输出字段：姓名、手机号、性别、关键词；
+
+a:ok
+create table if not exists wlservice.t_lel_ec_xinyan_wenxiu_cd_ikg as 
+select id,keyword,gender from wlservice.t_lel_ec_xinyan_wenxiu_cd_ikbg;  
+
+b:ok
+create table if not exists wl_service.t_lel_weibo_xinyan_descs as 
+select id,gender
+ from wl_base.t_base_weibo_user_new
+  where ds=20161123 
+   and location regexp '成都'
+   and description regexp '戏剧学院|舞蹈学院|电影学院|传媒大学|演员|歌手|模特|话剧|舞蹈|主持|
+                           播音|广播学院|广院|艺人|传媒|表演|电视|广告|营销|艺校|主播|网红|外事'
+
+欣颜 
+1.牙美主推智能美白牙
+
+location: cs220  table:wlservice.t_lel_ec_xinyan_ertongyagao_cd_igk
+
+2.
+a)近1年购买了3次及以上”眉笔“”眼线笔““眼线液””眉粉“”的用户；
+location: cs220  table:wlservice.t_lel_ec_xinyan_wenxiu_cd_ikg
+b)用户的微博中含简介、教育、标签中包含了附件关键字的用户；
+location: cs100  table:wl_service.t_lel_weibo_xinyan_descs
+
+韩饭粉丝营销需求 
+
+location: cs100  table:wl_service.t_lel_weibo_id_hanfan

@@ -22,6 +22,7 @@ def parseJson(data):
 
 
 sc = SparkContext(appName="weibo_user_employment")
+sc. setLogLevel("")
 
 data = sc.textFile("/commit/weibo/industry_category/*") \
          .map(lambda a: parseJson(getJson(a))) \

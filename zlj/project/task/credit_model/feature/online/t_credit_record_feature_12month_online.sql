@@ -1,13 +1,9 @@
-
-
-
-
 -- 价格的加减乘除
-drop table wlcredit.t_credit_record_feature_12month_online ;
-create table wlcredit.t_credit_record_feature_12month_online as
+drop table wl_feature.t_credit_record_feature_12month_online ;
+create table wl_feature.t_credit_record_feature_12month_online as
     SELECT
     tel_index,
-    max(user_id) user_id ,
+    max(user_id) user_id,
     round(sum(price),2)   month12_price_sum,
     round(count(1) ,2)    month12_buy_count,
     round(avg(price),2)   month12_price_avg,
