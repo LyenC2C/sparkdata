@@ -121,80 +121,22 @@ def parseJson(ob):
     result.append(ts)  # timestamp
     return (itemid, [valid_jsontxt(i) for i in result])
 
-def distinct(list):
-    return '\001'.join(max(list, key=itemgetter(-1)))
-def distinct_2(list):
-    return '\001'.join(list)
-def distinct_3(list):
-    return '\001'.join(list[0])
+
+def concat_ws(list,split='\001'):
+    return split.join(list)
+
 
 sc = SparkContext(appName="xianyu_iteminfo" + lastday)
 
-data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*")\
-            .map(lambda a: parseJson(getJson(a)))\
-                .filter(lambda x: x is not None)\
-                    .groupByKey().mapValues(list)\
-                        .map(lambda a: distinct(a[1]))\
-                           .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
-'''
 
-data = sc.textFile("/commit/2taobao/test_shuffle/*") \
-    .map(lambda a: parseJson(getJson(a))) \
-    .filter(lambda x: x is not None) \
-    .repartition(5) \
-    .groupByKey().mapValues(list) \
-    .map(lambda a: distinct(a[1])) \
-    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_groupby1")
-
-data = sc.textFile("/commit/2taobao/test_shuffle/*") \
-    .map(lambda a: parseJson(getJson(a))) \
-    .filter(lambda x: x is not None) \
-    .repartition(5) \
-    .reduceByKey(lambda a,b:max([a,b], key=itemgetter(-1))) \
-    .map(lambda (a,b): distinct_2(b)) \
-    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_reduce1")
-'''
-'''
-
-def distinct_2(list):
-    return '\001'.join(list)
-def distinct_3(list):
-    return '\001'.join(list[0])
-
-data = sc.textFile("/commit/2taobao/test_shuffle/*") \
-    .map(lambda a: parseJson(getJson(a))) \
-    .filter(lambda x: x is not None) \
-    .groupByKey().mapValues(list) \
-    .map(lambda a: distinct(a[1])) \
-    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_groupby")
-data = sc.textFile("/commit/2taobao/test_shuffle/*") \
+data = sc.textFile("/commit/2taobao/iteminfo/*" + lastday + "/*") \
     .map(lambda a: parseJson(getJson(a))) \
     .filter(lambda x: x is not None) \
     .reduceByKey(lambda a,b:max([a,b], key=itemgetter(-1)))\
-    .map(lambda (a,b): distinct_2(b))\
-    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_reduce")
+    .map(lambda (a,b): concat_ws(b))\
+    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo")
 
-data = sc.textFile("/commit/2taobao/test_shuffle/*") \
-    .map(lambda a: parseJson(getJson(a))) \
-    .filter(lambda x: x is not None) \
-    .reduceByKey(lambda a,b:max([a,b], key=itemgetter(-1)))\
-    .map(lambda (a,b): distinct_2(b))\
-    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_reduce")
 
-def createCombiner(x):
-    return [x]
-def mergeValue(xs, x):
-    xs.append(x)
-    return [max(xs, key=itemgetter(-1))]
-def mergeCombiners(a, b):
-    a.extend(b)
-    return [max(a, key=itemgetter(-1))]
-data = sc.textFile("/commit/2taobao/test_shuffle/*") \
-    .map(lambda a: parseJson(getJson(a))) \
-    .filter(lambda x: x is not None) \
-    .combineByKey(lambda a: createCombiner(a),lambda a,b:mergeValue(a,b),lambda a,b:mergeCombiners(a,b))\
-    .map(lambda (a,b): distinct_3(b)) \
-    .saveAsTextFile("/user/lel/temp/xianyu_iteminfo_test_combine_4")
 
-'''
+
 
