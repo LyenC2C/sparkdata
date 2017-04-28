@@ -186,10 +186,10 @@ schema = StructType([StructField('itemid', StringType(), True), \
                      StructField('zhima', StringType(), True), \
                      StructField('ts', StringType(), True)
                      ])
-sqlContext = SQLContext(sc)
-df = sqlContext.createDataFrame(data, schema)
-df.registerTempTable("xianyu_iteminfo")
-sqlContext.sql("insert OVERWRITE table  wl_base.`t_base_ec_xianyu_iteminfo_parquet` PARTITION(ds = '"+lastday+"') "
+hc = HiveContext(sc)
+df = hc.createDataFrame(data, schema)
+hc.registerDataFrameAsTable("xianyu_iteminfo")
+hc.sql("insert OVERWRITE table  wl_base.`t_base_ec_xianyu_iteminfo_parquet` PARTITION(ds = '"+lastday+"') "
                "select "
                "case when t1.itemid is null then t2.itemid else t1.itemid end, "
                "case when t1.itemid is null then t2.userid else t1.userid end, "
@@ -224,7 +224,7 @@ sqlContext.sql("insert OVERWRITE table  wl_base.`t_base_ec_xianyu_iteminfo_parqu
                "case when t1.itemid is null then t2.shiren else t1.shiren end, "
                "case when t1.itemid is null then t2.ts else t1.ts end "
                "from "
-               "(select * from  wl_base.`t_base_ec_xianyu_iteminfo_parquet` where ds = '"+last_2day+"')t1 "
+               "(select * from  wl_base.`t_base_ec_xianyu_iteminfo_parquet` where ds = '"+last_2day+"') t1 "
                "full outer JOIN "
                "(select * from xianyu_iteminfo)t2 "
                "ON t1.itemid = t2.itemid")
