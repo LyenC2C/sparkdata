@@ -4,6 +4,7 @@ from urlparse import urlparse
 from operator import itemgetter
 from pyspark import SparkContext
 from pyspark import SQLContext
+from pyspark import HiveContext
 from pyspark.sql.types import *
 import sys
 
@@ -185,12 +186,12 @@ schema = StructType([StructField('itemid', StringType(), True), \
                      StructField('zhima', StringType(), True), \
                      StructField('ts', StringType(), True)
                      ])
-
 sqlContext = SQLContext(sc)
 df = sqlContext.createDataFrame(data, schema)
 df.registerTempTable("xianyu_iteminfo")
-sqlContext.sql("use wl_base")
-sqlContext.sql("insert OVERWRITE table  t_base_ec_xianyu_iteminfo_parquet PARTITION(ds = '"+lastday+"') "
+hiveContext = HiveContext(sqlContext)
+hiveContext.sql("use wl_base")
+hiveContext.sql("insert OVERWRITE table  t_base_ec_xianyu_iteminfo_parquet PARTITION(ds = '"+lastday+"') "
                "select "
                "case when t1.itemid is null then t2.itemid else t1.itemid end, "
                "case when t1.itemid is null then t2.userid else t1.userid end, "
