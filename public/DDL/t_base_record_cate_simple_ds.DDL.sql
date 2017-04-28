@@ -137,7 +137,7 @@ tel_index          ,
 rn as tel_user_rn         ,
   SUBSTRING (dsn,0,6) ds
 FROM
- wlrefer.t_zlj_phone_rank_index t3
+ wl_link.t_zlj_phone_rank_index t3
  join (
 SELECT
 item_id        ,
@@ -166,7 +166,7 @@ location       ,
   from
        wl_base.t_base_ec_dim t1
    join
-     wl_base.t_base_ec_record_dev_new_inc t2 on t2.ds=20170313  and t1.ds = 20161122 and t1.cate_id =t2.cat_id
+     wl_base.t_base_ec_record_dev_new_inc t2 on t2.ds>20170313  and t1.ds = 20161122 and t1.cate_id =t2.cat_id
      where  price<160000  and  root_cat_id is not null
   ) t2
 --   left
@@ -189,3 +189,7 @@ location       ,
 -- ds=20170303
 -- ds=20170308
 -- ds=20170313
+-- ds=20170321
+-- ds=20170327
+-- ds=20170404
+-- ds=20170409
