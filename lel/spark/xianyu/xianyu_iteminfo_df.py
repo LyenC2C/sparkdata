@@ -27,7 +27,6 @@ def transform_df_fileds(content):
         res = content
     return res
 
-
 def getJson(s):
     content = s.strip().split('\t')
     if len(content) == 3:
