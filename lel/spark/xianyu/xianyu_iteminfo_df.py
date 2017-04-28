@@ -4,8 +4,11 @@ from urlparse import urlparse
 from operator import itemgetter
 from pyspark import SparkContext
 from pyspark import SQLContext
+from pyspark.sql.functions import *
+from pyspark.sql import DataFrameStatFunctions
 from pyspark import HiveContext
 from pyspark.sql.types import *
+
 import sys
 
 lastday = sys.argv[1]
@@ -36,8 +39,6 @@ def getJson(s):
         return (content[0], content[1], json.loads(valid_jsontxt(js)))
     else:
         return None
-
-
 def parseJson(ob):
     if ob is None: return None
     ts = ob[0]
@@ -187,7 +188,7 @@ schema = StructType([StructField('itemid', StringType(), True), \
                      StructField('ts', StringType(), True)
                      ])
 hc = HiveContext(sc)
-df = hc.createDataFrame(data, schema)
+df = hc.createDataFrame(data, schema).dropDuplicates
 hc.registerDataFrameAsTable(df,"xianyu_iteminfo")
 hc.sql("insert OVERWRITE table  wl_base.`t_base_ec_xianyu_iteminfo_parquet` PARTITION(ds = '"+lastday+"') "
                "select "
