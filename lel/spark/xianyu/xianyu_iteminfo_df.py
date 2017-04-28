@@ -228,5 +228,5 @@ hiveContext.sql("insert OVERWRITE table  t_base_ec_xianyu_iteminfo_parquet PARTI
                "from "
                "(select * from  t_base_ec_xianyu_iteminfo_parquet where ds = '"+last_2day+"')t1 "
                "full outer JOIN "
-               "(select * from xianyui_teminfo)t2 "
+               "(select * from xianyu_iteminfo)t2 "
                "ON t1.itemid = t2.itemid")
