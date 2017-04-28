@@ -188,7 +188,7 @@ schema = StructType([StructField('itemid', StringType(), True), \
                      ])
 hc = HiveContext(sc)
 df = hc.createDataFrame(data, schema)
-hc.registerDataFrameAsTable("xianyu_iteminfo")
+hc.registerDataFrameAsTable(df,"xianyu_iteminfo")
 hc.sql("insert OVERWRITE table  wl_base.`t_base_ec_xianyu_iteminfo_parquet` PARTITION(ds = '"+lastday+"') "
                "select "
                "case when t1.itemid is null then t2.itemid else t1.itemid end, "
