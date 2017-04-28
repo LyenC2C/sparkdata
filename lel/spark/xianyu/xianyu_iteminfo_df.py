@@ -7,7 +7,6 @@ from pyspark import SQLContext
 from pyspark.sql.types import *
 import sys
 
-
 lastday = sys.argv[1]
 last_2day = sys.argv[2]
 
