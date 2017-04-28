@@ -1,0 +1,42 @@
+item_id string,
+title string,
+cat_id string,
+cat_name string,
+root_cat_id string,
+root_cat_name string,
+brand_id string,
+brand_name string,
+bc_type string,
+price string,
+price_zone string,
+is_online bigint,
+off_time string,
+favor bigint,
+seller_id string,
+shop_id string,
+location string,
+paramap map<string,string>,
+sku map<string,string>,
+ts string
+
+
+drop table wl_feature.t_credit_sparse_features_online;
+create table wl_feature.t_credit_sparse_features_online as
+select t1.tel_index,
+concat_ws(' ',t1.feature,coalesce(t2.feature,''),coalesce(t3.feature,''),coalesce(t4.feature,''))
+as feature
+from
+wl_feature.t_credit_record_cate1_feature_months_online t1
+left JOIN
+wl_feature.t_credit_record_cate2_feature_months_online t2
+ON
+t1.tel_index = t2.tel_index
+left JOIN
+wl_feature.t_credit_record_cate3_feature_months_online t3
+ON
+t1.tel_index = t3.tel_index
+left JOIN
+wl_feature.t_credit_record_cate4_feature_months_online t4
+ON
+t1.tel_index = t4.tel_index
+;
