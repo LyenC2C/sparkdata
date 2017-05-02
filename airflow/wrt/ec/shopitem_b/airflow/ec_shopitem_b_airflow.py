@@ -15,7 +15,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 default_args = {
-    'owner': 'airflow',
+    'owner': 'airflow.sql',
     'depends_on_past': False,
     'start_date': datetime(2017, 2, 7, 4, 55),
     'email': ['lienlian@wolongdata.com'],

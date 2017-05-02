@@ -4,7 +4,7 @@ source ~/.bashrc
 today=$(date -d '0 days ago' +%Y%m%d)
 last=$1
 
-table=wl_base.t_base_ec_item_dev_new
+table=wl_base.t_base_ec_item_abnormal
 
 beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 use wl_base;
@@ -19,7 +19,7 @@ set hive.merge.smallfiles.avgsize=201326592;
 set hive.exec.reducers.bytes.per.reducer=268435456;
 set hive.exec.reducers.max=1099;
 set mapreduce.job.reduces=-1;
-LOAD DATA  INPATH "/user/wrt/temp/iteminfo_tmp" OVERWRITE INTO TABLE $table PARTITION(ds='00tmp');
+LOAD DATA  INPATH "/user/lel/temp/iteminfo_abnormal" OVERWRITE INTO TABLE $table PARTITION(ds='00tmp');
 insert OVERWRITE table $table PARTITION(ds = $today)
 select
 case when t1.item_id is null then t2.item_id else t1.item_id end,
