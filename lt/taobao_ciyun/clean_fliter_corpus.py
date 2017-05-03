@@ -68,6 +68,7 @@ def groupvalue(y):
         s1[k]=s1.get(k,0)+v
     lv=[(k,v) for k,v in s1.iteritems()]
     return lv
+
 def clean(x,word_set):
             lv=x.split()
             return " ".join([i for i in lv if i in  word_set ])
@@ -118,6 +119,7 @@ def tfidf(corpus,limit):
         dfrdd = corpus.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
         # word idf
         idfrdd = dfrdd.map(lambda (x, y): (x, math.log((doc_num + 1) * 1.0 / (y + 1))))
+
         broadcastVar = sc.broadcast(idfrdd.collectAsMap())
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
@@ -159,7 +161,7 @@ if __name__ == "__main__":
         limit=int(sys.argv[i+2])
         feed_ds=sys.argv[i+3]
         output_talbe=sys.argv[i+4]
-        index_rdd=hiveContext.sql('select word,num from t_zlj_item_feed_title_cut_20151226_word_count  ')
+        index_rdd=hiveContext.sql('select word,num from t_zlj_item_feed_title_cut_20151226_word_count ')
         count=index_rdd.count()
         # top_freq=count-top_freq
 
