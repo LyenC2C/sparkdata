@@ -4,8 +4,11 @@ from urlparse import urlparse
 from operator import itemgetter
 from pyspark import SparkContext
 from pyspark import SQLContext
+from pyspark.sql.functions import *
+from pyspark.sql import DataFrameStatFunctions
 from pyspark import HiveContext
 from pyspark.sql.types import *
+
 import sys
 
 lastday = sys.argv[1]
@@ -36,8 +39,6 @@ def getJson(s):
         return (content[0], content[1], json.loads(valid_jsontxt(js)))
     else:
         return None
-
-
 def parseJson(ob):
     if ob is None: return None
     ts = ob[0]

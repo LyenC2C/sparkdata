@@ -11,7 +11,7 @@ else
 echo 'Directory is not exist,you can run you spark job as you want!!!'
 fi
 
-spark2-submit  --driver-memory 8G --num-executors 20 --executor-memory 20G --executor-cores 5 \
+spark2-submit  --driver-memory 8G --num-executors 30 --executor-memory 30G --executor-cores 5 \
 $pre_path/wrt/data_base_process/itemsearch/t_base_item_search.py $lastday
 
 hadoop fs -chmod -R 777 /user/wrt/temp/itemsearch
