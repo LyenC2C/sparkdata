@@ -1,4 +1,5 @@
 #coding:utf-8
+#coding:utf-8
 __author__ = 'zlj'
 import sys
 
@@ -17,6 +18,12 @@ from itertools import groupby
 
 
 def update_w(word,tfidf):
+    '''
+    对特殊位置的词进行权重更新
+    :param word:
+    :param tfidf:
+    :return:
+    '''
     if(word.endswith('-b')):
         tfidf=tfidf*1.3
         # word=word.replace('-b','')
@@ -37,8 +44,13 @@ def update_w(word,tfidf):
         word=word.replace('_E2','')
     tfidf=tfidf*math.log(len(word)/2.0+2,2)
     return tfidf
+
 def tf(x, lv):
-    # y=[i.split() for i in lv]
+    '''
+    :param x: userid
+    :param lv: 词列表
+    :return: [(word ,(id,tf))]
+    '''
     y=lv
     num = len(y)
     lv = [(k, len(list(g)) * 1.0 / num) for k, g in groupby(sorted(y))]
@@ -59,10 +71,17 @@ schema = StructType([
 
 
 def join1(x,dict):
+    '''
+    tf* idf
+    :param x:
+    :param dict:
+    :return:
+    '''
     word=x[0]
     doc_id=x[1][0]
     tf=x[1][1]
-    tfidf=tf*dict.get(word,0.5)
+    idf=dict.get(word,0.5)
+    tfidf=tf*idf
 
     # tfidf=tfidf*math.log(len(word),2)
     return (doc_id,(word,tfidf))
@@ -74,6 +93,7 @@ def groupvalue(y):
         s1[k]=s1.get(k,0)+v
     lv=[(k,v) for k,v in s1.iteritems()]
     return lv
+
 def clean(x,word_set):
             lv=x.split()
             return " ".join([i for i in lv if i in  word_set ])
@@ -98,6 +118,14 @@ def join(y):
                 rs.append(word)
     return rs
 def index_weight(y):
+    '''
+
+    :param y: 用户的所有购买记录词云，每个商品标题用\003分割，词之间用_ 分割
+    :return:返回带词位置的词云
+    B1 表示第一本词
+    E1 表示最后一个词
+    E2 表示倒数第二个词
+    '''
     rs=[]
     lv=y.split('\003')
     for i in lv:
@@ -122,13 +150,16 @@ def tfidf(corpus,limit):
         dfrdd = corpus.map(lambda (x, y): df(x, y)).flatMap(lambda x: x).reduceByKey(lambda a,b:a+b)
         # word idf
         idfrdd = dfrdd.map(lambda (x, y): (x.split('_')[0], math.log((doc_num + 1) * 1.0 / (y + 1)))).reduceByKey(lambda a,b:a+b)
+        # 广播idf
         broadcastVar = sc.broadcast(idfrdd.collectAsMap())
         idfdict = broadcastVar.value
         joinrs=tfrdd.map(lambda  x: join1(x,idfdict))
-        # joinrs.map(lambda x: " ".join([x[0],x[1][0],str(x[1][1])])).saveAsTextFile('/user/zlj/temp/1228data')
+        # 避免内存爆炸，过滤tfidf小于0.1
         jrdd=joinrs.filter(lambda x:x[1][1]>0.1).groupByKey()
         # jrdd.map(lambda (x,y):[i for i in y][0])
         rd=jrdd.map(lambda (x, y):(x,groupvalue(y)))
+
+        # 排序取 topn limit 的词云
         rst=rd.map(lambda (x,y):[x, "|".join(
             [i[0].replace('_',"").replace('|',"")+"_"+str(round(i[1],4)) for index, i in enumerate(sorted(y, key=lambda t: t[-1], reverse=True))
              if index < limit])])
@@ -155,37 +186,14 @@ if __name__ == "__main__":
         print ' py -usertfidf  min_freq limit feed_ds outputtable'
         print ' py -item min_freq limit feed_ds input_table input_docid, input_talbe_title  output_table'
         sys.exit(0)
-    elif sys.argv[1]=='-cleandata':
-        i=1
-        top_freq=2000
-        min_freq=sys.argv[1]
-        limit=int(sys.argv[i+2])
-        feed_ds=sys.argv[i+3]
-        output_talbe=sys.argv[i+4]
-        index_rdd=hiveContext.sql('select word,num from t_zlj_item_feed_title_cut_20151226_word_count  ')
-        count=index_rdd.count()
-        # top_freq=count-top_freq
-
-        word_set_rdd=index_rdd.map(lambda x:(x[0],x[1]))\
-            .filter(lambda x:x[1]>1).sortBy(lambda x: x[1],ascending=False).zipWithIndex().filter(lambda x:x[1]>top_freq).map(lambda x:x[0][0])
-        broadcastVal=sc.broadcast(word_set_rdd.collect())
-        word_set=set(broadcastVal.value)
-        corpus=hiveContext.sql('select user_id,title_cut from t_zlj_item_feed_title_cut_20151226')\
-            .map(lambda x:x[0]+"\001"+clean(x[1],word_set)).filter(lambda x:x[0] is not None ).saveAsTextFile('/user/zlj/tmp/data/ds')
-        hiveContext.sql('drop table if EXISTS  %s'%output_talbe)
-        hiveContext.sql('create table %s like t_zlj_item_feed_title_cut_20151226'%output_talbe)
-        hiveContext.sql("LOAD DATA  INPATH '/user/zlj/tmp/data/ds' OVERWRITE INTO TABLE %s "%output_talbe)
     elif sys.argv[1]=='-new':
         i=1
-
+        '''
+        '''
         top_freq=2000
         min_freq=sys.argv[i+1]
         limit=int(sys.argv[i+2])
-        feed_ds=sys.argv[i+3]
-        output_talbe=sys.argv[i+4]
-        '''
-        数据输入路劲
-        '''
+        output_path=sys.argv[i+4]
         path="/hive/warehouse/wlbase_dev.db/t_base_ec_item_title_wordseg_user_1212_group/000000_0"
         # path="/user/zlj/temp/data1"
         # corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1]))).coalesce(50)
