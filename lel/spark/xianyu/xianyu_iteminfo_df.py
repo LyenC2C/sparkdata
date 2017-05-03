@@ -188,7 +188,7 @@ schema = StructType([StructField('itemid', StringType(), True), \
                      StructField('ts', StringType(), True)
                      ])
 hc = HiveContext(sc)
-df = hc.createDataFrame(data, schema).dropDuplicates
+df = hc.createDataFrame(data, schema)
 hc.registerDataFrameAsTable(df,"xianyu_iteminfo")
 hc.sql("insert OVERWRITE table  wl_base.`t_base_ec_xianyu_iteminfo_parquet` PARTITION(ds = '"+lastday+"') "
                "select "
