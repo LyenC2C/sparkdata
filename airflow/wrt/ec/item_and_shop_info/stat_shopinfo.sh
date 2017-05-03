@@ -25,7 +25,7 @@ lastday_rows=`impala-shell -k -i cs107 -q "SELECT count(*) FROM $database.$table
 use_db_sql="use ${DBNAME}"
 mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} -e "${use_db_sql}"
 
-insert_sql="insert into ${TABLENAME} values(null,'$1','$2','$lastday_size','$lastday_files','$lastday_avg_size','$lastday_rows','$lastday')"
+insert_sql="insert into ${TABLENAME} values(null,'$database','$table','$lastday_size','$lastday_files','$lastday_avg_size','$lastday_rows','$lastday')"
 mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} ${DBNAME} -e "${insert_sql}"
 
 
