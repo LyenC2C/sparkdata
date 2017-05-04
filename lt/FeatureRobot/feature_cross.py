@@ -87,7 +87,7 @@ def FeatureRobot(X, y, header=[], funs=['+', '-', '*', '/'], col_type=[], domain
     if (((float(feature2labelcorr)) and (float(nullnum)) and (float(block)) and (float(process_num)))):
         print "===============================开始进行特征变换，请稍后......===================================="
         X_change = 0
-        if (len(domain) > 1):  # 有领域分类,
+        if (len(domain) > 1):  # 有领域分类,领域内特征交叉
             for i in range(len(domain)):
                 for j in range(i + 1, len(domain)):
                     for op in funs:  # 每一个运算符进行一个全局变换
