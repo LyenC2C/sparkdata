@@ -1,11 +1,44 @@
+CREATE table wl_service.t_lt_train_items_v1 as
+SELECT t1.*,case when t1.item_id=t2.item_id then 1 else 0 end as label from
+(SELECT item_id,fraud_score_1,fraud_score_11,fraud_score_2,fraud_score_22,fraud_score_3,fraud_score_4,keywords from
+wl_service.t_lt_base_sp_item_filter_words_sub)t1
+left JOIN
+(SELECT item_id from wl_service.t_lt_base_sp_item_fraud_all)t2
+on t1.item_id=t2.item_id;
+
+--2)title words fro model
+CREATE TABLE wl_service.t_lt_train_item_words_v2 AS
+SELECT t1.*,t2.words from
+(SELECT item_id,label from wl_service.t_lt_train_items_v1)t1
+JOIN
+(select item_id,words from wl_analysis.t_lt_base_ciyun_item_segment_words where ds='20170428')t2
+on t1.item_id=t2.item_id
+
+--3)
+SELECT count(1) FROM
+(SELECT item_id from wl_service.t_lt_train_item_words_v2
+where label=1)t;
 
 
+--4)item info for mdoel
+CREATE TABLE t_lt_trian_item_info_v3 as
+SELECT t1.item_id,t1.fraud_score_1,t1.fraud_score_11,t1.fraud_score_2,t1.fraud_score_22,t1.fraud_score_3,t1.fraud_score_4,
+t2.cat_id,t2.root_cat_id,price,favor,shop_id,t1.label from
+(SELECT * from wl_service.t_lt_train_items_v1)t1
+JOIN
+(SELECT item_id,cat_id,root_cat_id,price,favor,shop_id from wl_base.t_base_ec_item_dev_new where ds='20170429')t2
+on t1.item_id=t2.item_id
 
-
-
-
-
-
+--5)item info and shop info for model
+CREATE table t_lt_trian_item_shop_info_v4 AS
+select t1.item_id,t1.fraud_score_1,t1.fraud_score_11,t1.fraud_score_2,t1.fraud_score_22,t1.fraud_score_3,t1.fraud_score_4,
+t1.cat_id,t1.root_cat_id,t1.price,t1.favor,star,credit,starts,item_count,fans_count,good_rate_p,desc_score,service_score,wuliu_score,
+desc_highgap,service_highgap,wuliu_highgap,t1.label from
+(SELECT * from t_lt_trian_item_info_v3)t1
+left JOIN
+(SELECT shop_id,star,credit,starts,item_count,fans_count,good_rate_p,desc_score,service_score,wuliu_score,
+desc_highgap,service_highgap,wuliu_highgap from wl_base.t_base_ec_shop_dev_new where ds='20170429')t2
+on t1.shop_id=t2.shop_id
 
 
 

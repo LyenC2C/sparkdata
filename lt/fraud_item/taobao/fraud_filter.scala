@@ -1,3 +1,7 @@
+
+对淘宝所有商品数据,采集到的异常商品和推荐商品进行关键词过滤
+
+宝妈|赚钱|
 import scala.util.matching.Regex
 import org.apache.spark.SparkContext
 

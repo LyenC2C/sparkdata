@@ -46,7 +46,7 @@ def groupvalue(y):
 
 
 sql_hmm='''
-select * from t_lt_base_record_item_segment_words_group
+select * from t_lt_base_record_record_segment_words_group
 
 '''
 
