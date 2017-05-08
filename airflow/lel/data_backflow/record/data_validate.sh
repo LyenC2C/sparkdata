@@ -2,7 +2,7 @@
 source ~/.bashrc
 
 beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
-insert overtwrite table wl_analysis.t_lel_record_data_backflow_validated
+insert overwrite table wl_analysis.t_lel_record_data_backflow_validated
 as
 select * from wl_analysis.t_lel_record_data_backflow
 where
