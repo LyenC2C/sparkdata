@@ -1,10 +1,11 @@
 #coding:utf-8
 
 import csv
-import glob
 import sys
 
-csv_file = glob(sys.argv[1])
+csv_file = sys.argv[1]
 reader = csv.reader(file(csv_file, 'rb'))
+n = 0
 for line in reader:
-    print "\001".join(line)
+    if n != 0: print "\001".join(ln.decode('gbk').encode('utf-8') for ln in line)
+    n += 1
