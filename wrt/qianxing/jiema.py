@@ -2,6 +2,7 @@
 
 import csv
 import glob
+import sys
 
 csv_file = glob(sys.argv[1])
 reader = csv.reader(file(csv_file, 'rb'))
