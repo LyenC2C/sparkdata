@@ -8,10 +8,9 @@ python jiema.py $today > $jintian'_qianxing'
 
 hadoop fs -put ./$jintian'_qianxing' /user/wrt/qianxing/
 
+hadoop fs -chmod -R 777 /user/wrt/qianxing/*
 
 
-#hive<<EOF
-#load data inpath '/user/wrt/qianxing/*' insert overwrite table wl_link.t_qianxing_huafei partition(ds =$zuotian)
-#EOF
-
-
+beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
+load data inpath '/user/wrt/qianxing/$jintian*' overwrite into table wl_link.t_base_qianxing_order partition(ds =$jintian)
+EOF

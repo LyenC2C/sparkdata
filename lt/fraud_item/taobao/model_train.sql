@@ -40,6 +40,18 @@ left JOIN
 desc_highgap,service_highgap,wuliu_highgap from wl_base.t_base_ec_shop_dev_new where ds='20170429')t2
 on t1.shop_id=t2.shop_id
 
+--transform starts
+create table t_lt_trian_item_shop_info_v4_tmp as
+select t1.item_id,t1.fraud_score_1,t1.fraud_score_11,t1.fraud_score_2,t1.fraud_score_22,t1.fraud_score_3,t1.fraud_score_4,
+t1.cat_id,t1.root_cat_id,t1.price,t1.favor,star,credit,item_count,fans_count,good_rate_p,desc_score,service_score,wuliu_score,
+desc_highgap,service_highgap,wuliu_highgap,t2.start_ts,t1.label from
+(select * from t_lt_trian_item_shop_info_v4)t1
+left join
+(select item_id,unix_timestamp()-unix_timestamp(starts) as start_ts from t_lt_trian_item_shop_info_v4)t2
+on t1.item_id=t2.item_id;
+
+drop table t_lt_trian_item_shop_info_v4;
+alter table t_lt_trian_item_shop_info_v4_tmp rename to t_lt_trian_item_shop_info_v4;
 
 
 
