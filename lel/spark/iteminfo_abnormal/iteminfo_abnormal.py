@@ -53,7 +53,7 @@ def f(line, cate_dict):
     ss = line.strip().split("\t", 2)
     if len(ss) != 3: return None
     item_id = ss[1]
-    ts = "1493023724"
+    ts = ss[0]
     ob = json.loads(valid_jsontxt(ss[2]))
     if type(ob) != type({}): return None
     itemInfoModel = ob.get('itemInfoModel', "\\N")
