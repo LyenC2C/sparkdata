@@ -6,7 +6,7 @@ jintian=$(date -d '0 days ago' +%Y%m%d)
 today=`ls $jintian*`
 python jiema.py $today > $jintian'_qianxing'
 
-hadoop fs -put ./$jintian_qianxing /user/wrt/qianxing/
+hadoop fs -put ./$jintian'_qianxing' /user/wrt/qianxing/
 
 
 
