@@ -19,3 +19,4 @@ join
 on a.app_key=b.app_key;
 EOF
 
+
