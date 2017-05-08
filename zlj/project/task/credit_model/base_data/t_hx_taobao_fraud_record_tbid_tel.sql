@@ -51,7 +51,7 @@ and length(regexp_replace(title ,'IC卡|读卡器|考勤|留学|网站建站|网
 -- drop table wl_analysis.t_hx_taobao_fraud_record_tbid_tel;
 -- create table wl_analysis.t_hx_taobao_fraud_record_tbid_tel as
 
-INSERT INTO TABLE wl_analysis.t_hx_taobao_fraud_record_tbid_tel PARTITION ( ds='20170425' )
+INSERT INTO TABLE wl_analysis.t_hx_taobao_fraud_record_tbid_tel PARTITION ( ds='20170504' )
 SELECT
 t2.tel ,
  user_id,
@@ -60,7 +60,7 @@ t2.tel ,
  feed_id,title,keywords
 from  wl_analysis.t_lt_taobao_fraud_record_week t1
 join 
-wl_link.t_zlj_uid_name t2 on t1.user_id =t2.tb  and t1.ds='20170425' where tel is not null
+wl_link.t_zlj_uid_name t2 on t1.user_id =t2.tb  and t1.ds='20170504' where tel is not null
 ;
 
 

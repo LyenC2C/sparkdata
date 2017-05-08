@@ -97,11 +97,12 @@ def join(y):
             else:
                 rs.append(word)
     return rs
-def index_weight(y):
+def index_weight(y,word_set):
     rs=[]
     lv=y.split('\003')
     for i in lv:
         kv=i.split('_')
+        kv=[word for word in kv if word in word_set]
         s=len(kv)
         for index,word in enumerate(kv,1):
             # word=v.split('_')[0]
@@ -189,7 +190,14 @@ if __name__ == "__main__":
         path="/hive/warehouse/wlbase_dev.db/t_base_ec_item_title_wordseg_user_1212_group/000000_0"
         # path="/user/zlj/temp/data1"
         # corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1]))).coalesce(50)
-        corpus=sc.textFile(path).map(lambda x:x.split('\001')).filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1])))
+        rdd=sc.textFile(path).map(lambda x:x.split('\001'))
+        word_set_rdd=rdd.map(lambda x:x[1].split('\003')).flatMap(lambda x:x).map(lambda x:x.split('_')).flatMap(lambda x:x)\
+            .map(lambda word:(word,1)).reduceByKey(lambda a,b:a+b)
+        word_set_rdd_filter=word_set_rdd.filter(lambda (x,y):y>top_freq).map(lambda (x,y):x)
+        broadcastVal=sc.broadcast(set(word_set_rdd_filter.collect()))
+        word_set=set(broadcastVal.value)
+
+        corpus=rdd.filter(lambda x:len(x[0])>0).map(lambda x:(x[0],index_weight(x[1],word_set)))
         rst=tfidf(corpus,limit)
         rst.map(lambda x:'\001'.join(x)).saveAsTextFile('/user/zlj/temp/termweight1228')
 
