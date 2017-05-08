@@ -1,13 +1,15 @@
 from pyspark.sql import SQLContext
 from pyspark.sql import DataFrameWriter
 from pyspark.sql.types import *
-from pyspark import SparkContext
+from pyspark import SparkContext, HiveContext
 import sys
 
 latest = sys.argv[1]
 sc = SparkContext(appName="data_backflow_standard" + latest)
 sqlContext = SQLContext(sc)
-data = sqlContext.sql("select app_key_param,from_unixtime(cast(ts_request as bigint),'yyyy-MM-dd') as date,params,interface,api_type from wl_base.t_base_record_data_backflow where ds = '" + latest + "' and api_type <>'tel_basics' and not (app_key = '1186159692' and api_type not in ('tel','address_getbymobile','channel_NameIDCardAccountVerify','channel_cellphone','operator_capricorn','address_match','channel_idcard','channel_bankby3','channel_idNameFase','channel_criminal','channel_blacklistverify','credit_implement'))")
+hc = HiveContext(sc)
+data = hc.sql(
+    "select app_key_param,from_unixtime(cast(ts_request as bigint),'yyyy-MM-dd') as date,params,interface,api_type from wl_base.t_base_record_data_backflow where ds = '" + latest + "' and api_type <>'tel_basics' and not (app_key = '1186159692' and api_type not in ('tel','address_getbymobile','channel_NameIDCardAccountVerify','channel_cellphone','operator_capricorn','address_match','channel_idcard','channel_bankby3','channel_idNameFase','channel_criminal','channel_blacklistverify','credit_implement'))")
 
 
 def standard_params(ob):
@@ -63,6 +65,7 @@ c[3]->name
 schemaStr = "app_key date phone idcard idbank name interface api_type"
 fields = [StructField(field_name, StringType(), True) for field_name in schemaStr.split()]
 schema = StructType(fields)
-data_df = sqlContext.createDataFrame(data_rdd, schema).distinct()
+
+data_df = hc.createDataFrame(data_rdd, schema).distinct()
 dfw = DataFrameWriter(data_df)
 dfw.saveAsTable("wl_analysis.t_lel_record_data_backflow", mode="overwrite")
