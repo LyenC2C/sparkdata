@@ -2,7 +2,7 @@
  model train using taobao item features
  author:lt
  created on:20170418
- pyspark2 --driver-memory 6g --executor-memory 15g --executor-cores 5 --num-executors 15
+ pyspark --driver-memory 6g --executor-memory 15g --executor-cores 5 --num-executors 15
  spark2-submit --num-executors 15 ./classify_model.py
 """
 

@@ -166,7 +166,7 @@ location       ,
   from
        wl_base.t_base_ec_dim t1
    join
-     wl_base.t_base_ec_record_dev_new_inc t2 on t2.ds>20170313  and t1.ds = 20161122 and t1.cate_id =t2.cat_id
+     wl_base.t_base_ec_record_dev_new_inc t2 on t2.ds>20170409  and t1.ds = 20161122 and t1.cate_id =t2.cat_id
      where  price<160000  and  root_cat_id is not null
   ) t2
 --   left
@@ -193,3 +193,5 @@ location       ,
 -- ds=20170327
 -- ds=20170404
 -- ds=20170409
+-- ds=20170424
+-- ds=20170427

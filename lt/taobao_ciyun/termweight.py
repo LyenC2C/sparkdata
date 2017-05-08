@@ -1,19 +1,15 @@
 #coding:utf-8
-#coding:utf-8
 __author__ = 'zlj'
-import sys
 
+
+import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 from pyspark import *
 from pyspark.sql import *
 from pyspark.sql.types import *
-
-
 import  math
-
-
 from itertools import groupby
 
 
@@ -98,6 +94,7 @@ def clean(x,word_set):
             lv=x.split()
             return " ".join([i for i in lv if i in  word_set ])
             # return " ".join(lv)
+
 def join(y):
     rs=[]
     for i in y:
@@ -117,6 +114,7 @@ def join(y):
             else:
                 rs.append(word)
     return rs
+
 def index_weight(y):
     '''
 
@@ -144,6 +142,7 @@ def index_weight(y):
             else:
                 rs.append(word)
     return rs
+
 def tfidf(corpus,limit):
         doc_num=180000000
         tfrdd = corpus.map(lambda (x, y): tf(x, y)).flatMap(lambda x: x)

@@ -23,7 +23,8 @@
 4.法律咨询服务类
 "借条|催款函|答辩状|罚单|反诉|房产纠纷|行政复议|行政诉讼|合同纠纷|取保|候审|缓刑|强制执行|查封|冻结扣款|失信|老赖|上诉书|上诉状|诉讼状|诉状|律师函|法律咨询|债权债务|借款|贷款|纠纷|抵押担保|质押|打官司|起诉|起诉书|起诉状|遗赠|遗嘱|高利贷"
  '''
-1.
+
+--1.taobao
 CREATE TABLE  if not exists t_lt_base_sp_item_fraud_score (
 item_id STRING  COMMENT  '商品id',
 title  STRING   COMMENT '商品title',
@@ -81,11 +82,11 @@ PARTITIONED by (ds STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'  LINES TERMINATED BY '\n' stored as textfile;
 
 
-2.
+--2.
 load data INPATH '/user/lt/mulitClass/part*' into TABLE wl_service.t_lt_base_sp_item_filter_words_all PARTITION (ds='20170425');
 load data INPATH '/user/lt/mulitClass/abnormal/part*' into TABLE wl_service.t_lt_base_sp_item_filter_words_all PARTITION (ds='20170425_ab');
 
-3.
+--3.
 drop table t_lt_base_sp_item_filter_words_sub;
 create table t_lt_base_sp_item_filter_words_sub as
 select item_id,title,cat_id,cat_name,root_cat_name,seller_id,
@@ -99,14 +100,14 @@ or (fraud_score_3>0) or (fraud_score_4>0)
 group by item_id,title,cat_id,cat_name,root_cat_name,seller_id;
 
 
-4.class 1
+--4.class 1
 analysis:
 select root_cat_name,count(1) as num, concat_ws("\t",collect_set(title)) as titles from t_lt_base_sp_item_fraud_score_sub
 where (fraud_score_1>1 or fraud_score_11>2)
-group by root_cat_name
+group by root_cat_name;
 
 SELECT item_id,title,keywords,keywords_d,cat_name from t_lt_base_sp_item_fraud_score_sub
-where (fraud_score_1>1 or fraud_score_11>2) and root_cat_name='本地化生活服务'
+where (fraud_score_1>1 or fraud_score_11>2) and root_cat_name='本地化生活服务';
 
 
 CREATE table t_lt_base_sp_item_fraud_txdk_1 as
@@ -125,45 +126,46 @@ where (fraud_score_1=1 and fraud_score_11=2)
 and cat_name not in ('数码收纳整理包','收银纸','电源/适配器')
 and root_cat_name not in ('书籍/杂志/报纸' ,'电子词典/电纸书/文化用品','古董/邮币/字画/收藏')
 and length(regexp_replace(title,'书籍|LOGO|logo|海报|热敏纸|打印纸|小票纸|PPT|收银纸|卡包|卡套|T恤|工作服|卡夹|考勤',''))=length(title)
-and keywords<>'玖富|口子'
+and keywords<>'玖富|口子';
 
 
-5.class 2
+--5.class 2
 analysis:
 select root_cat_name,count(1) as num, concat_ws("\t",collect_set(title)) as titles from t_lt_base_sp_item_fraud_score_sub
 where fraud_score_2>1 or fraud_score_22>2
-group by root_cat_name
+group by root_cat_name;
 
 CREATE table t_lt_base_sp_item_fraud_zjzj_2 as
 SELECT * from t_lt_base_sp_item_filter_words_sub
 where (fraud_score_2>1 or fraud_score_22>2)
-and length(regexp_replace(title,'书籍|LOGO|logo|海报|热敏纸|打印纸|小票纸|PPT|收银纸|卡包|卡套|T恤|工作服|卡夹|考勤',''))=length(title)
+and length(regexp_replace(title,'书籍|LOGO|logo|海报|热敏纸|打印纸|小票纸|PPT|收银纸|卡包|卡套|T恤|工作服|卡夹|考勤',''))=length(title);
 
 
-6.class 3
+--6.class 3
 analysis:
 select root_cat_name,count(1) as num, concat_ws("\t",collect_set(title)) as titles from t_lt_base_sp_item_fraud_score_sub
 where fraud_score_3>2
-group by root_cat_name
+group by root_cat_name;
 
 CREATE table t_lt_base_sp_item_fraud_cpjz_3 as
 SELECT * from t_lt_base_sp_item_filter_words_sub
 where fraud_score_3>2 and root_cat_name not in ('运动/瑜伽/健身/球迷用品','书籍/杂志/报纸','玩具/童车/益智/积木/模型','自用闲置转让','五金/工具','电子词典/电纸书/文化用品','商业/办公家具')
-and length(regexp_replace(title,'LOGO|logo|海报|走势图|工作服|T恤|收藏册|书|摇奖机|箱|纸牌|摇号机|购彩金|元|充值',''))=length(title)
+and length(regexp_replace(title,'LOGO|logo|海报|走势图|工作服|T恤|收藏册|书|摇奖机|箱|纸牌|摇号机|购彩金|元|充值',''))=length(title);
 
 
-7.class 4
+--7.class 4
 analysis:
 select root_cat_name,count(1) as num, concat_ws("\t",collect_set(title)) as titles from t_lt_base_sp_item_fraud_score_sub
 where fraud_score_4>2
-group by root_cat_name
+group by root_cat_name;
 
 CREATE table t_lt_base_sp_item_fraud_flzx_4 as
 SELECT * from t_lt_base_sp_item_filter_words_sub
 where fraud_score_4>2 AND root_cat_name not in ('书籍/杂志/报纸','教育培训')
-and length(regexp_replace(title,'单据|设计|LOGO|logo|名片|网站建设|视频',''))=length(title)
+and length(regexp_replace(title,'单据|设计|LOGO|logo|名片|网站建设|视频',''))=length(title);
 
-8.merge
+--8.merge sp fraud item
+drop table t_lt_base_sp_item_fraud_all;
 create table wl_service.t_lt_base_sp_item_fraud_all as
 select item_id,title,cat_id,cat_name,root_cat_name,seller_id,
 max(fraud_score_1+fraud_score_11+fraud_score_2+fraud_score_22+fraud_score_3+fraud_score_4) as fraud_score,
@@ -179,22 +181,11 @@ select * from t_lt_base_sp_item_fraud_flzx_4)t
 group by item_id,title,cat_id,cat_name,root_cat_name,seller_id;
 
 
-
---filter normal words
-热敏|打印纸|小票纸|PPT|收银纸|卡包|卡套|网站建设|T恤|工作服|卡夹|留学|翻译|考勤|单据|设计|LOGO|名片
-
-select keywords_d,count(1) as num,collect_set(title)[0] as title from t_lt_base_sp_item_fraud_txdk_1
-group by keywords_d
-
-select root_cat_name,collect_set(title)[0] as title,collect_set(keywords)[0] as keywords from t_lt_base_sp_item_fraud_all_v2
-where title like '%下卡%'
-group by root_cat_name
-
-
+--=======================================================
 
 --rencommend fraud item
-1.
-CREATE TABLE  if not exists wl_service.t_lt_base_recommend_item_fraud_score (
+--1.
+CREATE TABLE  if not exists wl_service.t_lt_base_recom_item_fraud_all (
 item_id STRING  COMMENT  '商品id',
 title  STRING   COMMENT '商品title',
 cat_name STRING  COMMENT '商品所属类目名称',
@@ -212,62 +203,66 @@ keywords_d STRING COMMENT 'normal_words'
 COMMENT '电商推荐异常商品表'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'  COLLECTION ITEMS TERMINATED BY ',';
 
-2.
-load data INPATH '/user/lt/recoment/part*' into TABLE wl_service.t_lt_base_recommend_item_fraud_score;
+--2.
+load data INPATH '/user/lt/recoment/part*' into TABLE wl_service.t_lt_base_recom_item_filter_words_sub;
 
-3.filter and merge
-CREATE table t_lt_base_recommend_item_fraud_all as
-select * from t_lt_base_recommend_item_fraud_score
+--3.filter and merge
+drop table if exists t_lt_base_recom_item_fraud_all;
+CREATE table t_lt_base_recom_item_fraud_all as
+select * from t_lt_base_recom_item_filter_words_sub
 where (fraud_score_1>1 or fraud_score_11>2) and cat_name not in ('数码收纳整理包','收银纸','电源/适配器')
 and root_cat_name<>'书籍/杂志/报纸' and length(regexp_replace(title,'LOGO|logo|海报|热敏纸|打印纸|小票纸|PPT|收银纸|卡包|卡套|T恤|工作服|卡夹|考勤',''))=length(title)
 and keywords<>'玖富|口子'
 union all
-select * from t_lt_base_recommend_item_fraud_score
+select * from t_lt_base_recom_item_filter_words_sub
 where (fraud_score_1>1 or fraud_score_11>2) and title like '%玩转信用卡%'
+UNION ALL
+select * from t_lt_base_recom_item_filter_words_sub
+where (fraud_score_1>1 or fraud_score_11>2) and cat_name not in ('数码收纳整理包','收银纸','电源/适配器')
+and root_cat_name<>'书籍/杂志/报纸' and length(regexp_replace(title,'LOGO|logo|海报|热敏纸|打印纸|小票纸|PPT|收银纸|卡包|卡套|T恤|工作服|卡夹|考勤',''))=length(title)
+and keywords<>'玖富|口子'
 UNION all
-SELECT * from t_lt_base_recommend_item_fraud_score
+SELECT * from t_lt_base_recom_item_filter_words_sub
 where (fraud_score_2>1 or fraud_score_22>2)
 and length(regexp_replace(title,'LOGO|logo|海报|热敏纸|打印纸|小票纸|PPT|收银纸|卡包|卡套|T恤|工作服|卡夹|考勤',''))=length(title)
 union ALL
-SELECT * from t_lt_base_recommend_item_fraud_score
+SELECT * from t_lt_base_recom_item_filter_words_sub
 where fraud_score_3>2 and root_cat_name not in ('运动/瑜伽/健身/球迷用品','书籍/杂志/报纸','玩具/童车/益智/积木/模型','自用闲置转让','五金/工具','电子词典/电纸书/文化用品','商业/办公家具')
 and length(regexp_replace(title,'LOGO|logo|海报|走势图|工作服|T恤|收藏册|书|摇奖机|箱|纸牌|摇号机|购彩金|元|充值',''))=length(title)
 union ALL
-SELECT * from t_lt_base_recommend_item_fraud_score
+SELECT * from t_lt_base_recom_item_filter_words_sub
 where fraud_score_4>2 AND root_cat_name not in ('书籍/杂志/报纸','教育培训')
 and length(regexp_replace(title,'单据|设计|LOGO|logo|名片|网站建设|视频',''))=length(title);
 
-4.crawler all fraud item
-CREATE table t_lt_crawler_fraud_item_id as
-SELECT a.item_id from
-(
-SELECT item_id from t_lt_base_sp_item_fraud_all
-union all
-SELECT item_id from t_lt_base_recommend_item_fraud_all
-)a
-group by a.item_id
+
+--analysis
+SELECT item_id,title from t_lt_base_recom_item_fraud_all
+GROUP BY item_id;
 
 
-5.--merge recommend and sp
-CREATE table t_lt_taobao_fraud_item_re_sp as
-SELECT a.item_id,max(a.fraud_score) as fraud_score,collect_set(keywords)[0] as keywords
-from (
-SELECT item_id,fraud_score,keywords from t_lt_base_sp_item_fraud_all
-union all
-SELECT item_id,
+--4.--merge recommend and sp
+CREATE table t_lt_base_sp_recom_item_fraud_all as
+SELECT item_id,title,cat_name,root_cat_name,max(fraud_score) as fraud_score,
+collect_set(keywords)[0] as keywords FROM
+(SELECT item_id,title,cat_name,root_cat_name,fraud_score,keywords
+from t_lt_base_sp_item_fraud_all
+union ALL
+select item_id,title,cat_name,root_cat_name,
 (fraud_score_1+fraud_score_11+fraud_score_2+fraud_score_22+fraud_score_3+fraud_score_4) as fraud_score,
-keywords from t_lt_base_recommend_item_fraud_all
-)a
-group by a.item_id
+keywords from t_lt_base_recom_item_fraud_all)t
+GROUP BY item_id,title,cat_name,root_cat_name;
 
 
-insert into table wl_analysis.t_lt_taobao_fraud_record_week partition(ds='20170425')
+
+--filter fraud record [union新采集的异常商品评论]
+
+insert into table wl_analysis.t_lt_taobao_fraud_record_week partition(ds='20170504')
 SELECT feed_id,cat_id,root_cat_id,shop_id,user_id,bc_type,dsn,item_id,
 collect_set(title)[0] as title,max(fraud_score) as fraud_score,collect_set(keywords)[0] as keywords
 from
 (select t1.feed_id,t1.cat_id,t1.root_cat_id,t1.shop_id,t1.user_id,t1.bc_type,t1.dsn,
 t1.item_id,t1.title,t2.fraud_score,t2.keywords from
-(SELECT * from wl_service.t_lt_taobao_fraud_item_re_sp)t2
+(SELECT * from wl_service.t_lt_base_sp_recom_item_fraud_all)t2
 join
 (SELECT item_id,feed_id,title,user_id,bc_type,cat_id,root_cat_id, shop_id, dsn
 	from wl_base.t_base_ec_record_dev_new where ds='true')t1
@@ -275,105 +270,70 @@ on t1.item_id=t2.item_id
 union ALL
 select t4.feed_id,t4.cat_id,t4.root_cat_id,t4.shop_id,t4.user_id,t4.bc_type,t4.dsn,
 t4.item_id,t4.title,t3.fraud_score,t3.keywords from
-(SELECT * from wl_service.t_lt_taobao_fraud_item_re_sp)t3
+(SELECT * from wl_service.t_lt_base_sp_recom_item_fraud_all)t3
 join
 (SELECT item_id,feed_id,title,user_id,bc_type,cat_id,root_cat_id, shop_id, dsn
 	from wl_base.t_base_ec_record_dev_new_inc where ds='20170424')t4
 on t3.item_id=t4.item_id)t
-group by item_id,feed_id,title,user_id,bc_type,cat_id,root_cat_id, shop_id, dsn,item_id
+group by item_id,feed_id,title,user_id,bc_type,cat_id,root_cat_id, shop_id, dsn,item_id;
 
 
-6.--statistic fraud item_num,user_num,record_num
+--5.check the filter record
+SELECT item_id,count(1) as num,collect_set(title)[0] as title,
+max(fraud_score) as fraud_score,collect_set(keywords)[0] as keywords
+FROM wl_analysis.t_lt_taobao_fraud_record_week
+where ds='20170504'
+GROUP BY item_id;
 
-select count(1) as num from
+
+--6.statistic fraud item_num,user_num,record_num
+select count(1) as item_num from
 (select item_id from wl_analysis.t_lt_taobao_fraud_record_week
-where ds='20170418' group by item_id)t;
+where ds='20170504' group by item_id)t;
 
-select count(1) as num from
+select count(1) as user_num from
 (select user_id from wl_analysis.t_lt_taobao_fraud_record_week
-where ds='20170418' group by user_id)t;
+where ds='20170504' group by user_id)t;
 
-
-select count(1) as num from
-(select * from wl_analysis.t_lt_taobao_fraud_record_week
-where ds='20170418' )t;
-
---model train :fraud_score info
-create table t_lt_base_item_fraud_score_re_sp as
-select * from t_lt_base_recommend_item_fraud_score
-where (fraud_score_1>0) or (fraud_score_11>0) or (fraud_score_2>0) or (fraud_score_22>0)
-or (fraud_score_3>0) or (fraud_score_4>0)
-union all
-select * from t_lt_base_sp_item_fraud_score_sub
-
---model trian with item info
-create table t_lt_base_sp_item_fraud_train_v1 as
-SELECT t1.*,t2.bc_type,t2.price,t2.favor,t2.shop_id,t2.root_cat_id from
-(select * from t_lt_base_sp_item_fraud_score_sub)t1
-left join
-(SELECT item_id,bc_type,price,favor,shop_id,root_cat_id from wl_base.t_base_ec_item_dev_new where ds='20170415')t2
-on t1.item_id=t2.item_id
-
-create table wl_service.t_lt_base_sp_item_fraud_v2 as
-select t1.*,t2.star,t2.credit,t2.starts,t2.item_count,t2.fans_count,
-t2.good_rate_p, t2.desc_highgap,t2.service_highgap,t2.wuliu_highgap from
-(select * from wl_service.t_lt_base_sp_item_fraud_v1)t1
-left join
-(select shop_id,star,credit,starts,item_count,fans_count,
-good_rate_p, desc_highgap,service_highgap,wuliu_highgap
-from wl_base.t_base_ec_shop_dev_new where ds='20170415')t2
-on t1.shop_id=t2.shop_id
-
-create table t_lt_base_sp_item_fraud_train as
-select item_id,fraud_score_1,fraud_score_11,fraud_score_2,fraud_score_22,fraud_score_3,fraud_score_4,
-keywords,bc_type,price,favor,root_cat_id,star,credit,starts,item_count,fans_count,good_rate_p,desc_highgap,
-service_highgap,wuliu_highgap,
-case when t1.item_id=t2.item_id then 1 else 0 end as label
-from
-(select * from t_lt_base_sp_item_fraud_v2)t1
-left join
-(select item_id from t_lt_base_sp_item_fraud_all)t2
-on t1.item_id=t2.item_id
+select count(1) as record_num from
+(select feed_id from wl_analysis.t_lt_taobao_fraud_record_week
+where ds='20170504' )t;
 
 
 
---analysis seller_id
-create table wl_service.t_lt_base_fraud_seller_info as
-select t1.*,t2.item_count,(t2.item_count/t1.fraud_item_num) as fraud_ratio from
-(select seller_id,count(1) as fraud_item_num from
-wl_service.t_lt_base_sp_item_fraud_all group by seller_id)t1
-left join
-(select seller_id,item_count from wl_base.t_base_ec_shop_dev_new
-where ds='20170424')t2
-on t1.seller_id=t2.seller_id;
+--==============爬虫周更任务数据提取==================================
 
-CREATE table wl_service.t_lt_base_fraud_seller_item as
+create table if not exists wl_analysis.t_lt_crawler_fraud_taobao_item_week(
+item_id string comment '商品id',
+cat_id string comment '子类目id',
+seller_id string comment '卖家id'
+)
+comment '爬虫采集推荐商品数据表'
+partitioned by (ds string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001' LINES TERMINATED BY '\n' stored as textfile;
+
+--1.异常商品评论与推荐商品采集
+insert into table wl_analysis.t_lt_crawler_fraud_taobao_item_week partition(ds='20170504')
 SELECT t2.* from
-(SELECT seller_id from wl_service.t_lt_base_fraud_seller_info
-	where fraud_ratio<11)t1
+(SELECT item_id from wl_service.t_lt_base_sp_recom_item_fraud_all)t1
 join
-(select * from wl_base.t_base_ec_item_dev_new
-where ds='20170424')t2
-on t1.seller_id=t2.seller_id
+(select item_id,cat_id,seller_id from wl_base.t_base_ec_item_dev_new where ds='20170429')t2
+on t1.item_id=t2.item_id;
+
+compute stats t_lt_crawler_fraud_taobao_item_week;
+show table stats t_lt_crawler_fraud_taobao_item_week;
 
 
 
---analysis weibo and taobao fraud user
-create table t_lt_fraud_weibo_2_seller_info as
-SELECT t1.snwb,t2.name,t2.description,t1.seller_id,t3.shop_id,t3.shop_name,t3.seller_name from
-(SELECT snwb,seller_id FROM wl_service.t_lt_fraud_weibo_2_seller_id
-where snwb is not null and seller_id is not null group by snwb,seller_id)t1
-left join
-(SELECT id,name,description from wl_analysis.t_lt_weibo_fraud_usr)t2
-on t1.snwb=t2.id
-left join
-(SELECT seller_id,shop_id,shop_name,seller_name from wl_base.t_base_ec_shop_dev_new where ds='20170424')t3
-on t1.seller_id=t3.seller_id
 
 
---num_shop
-create table wl_service.t_lt_base_ec_seller_shop_count as
-select seller_id,count(1) as num_shop from wl_base.t_base_ec_shop_dev_new
-where ds='20170415'
-group by seller_id having num_shop>1
+
+
+
+
+
+
+
+
+
 
