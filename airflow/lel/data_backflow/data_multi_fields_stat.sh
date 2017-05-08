@@ -14,3 +14,4 @@ select *,"征信类" as cate from
 )c;
 EOF
 
+
