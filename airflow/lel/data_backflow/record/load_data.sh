@@ -7,7 +7,7 @@ beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 set hive.support.quoted.identifiers=none;
 load data inpath '/user/lel/temp/record_data_backflow' overwrite into table wl_base.t_base_record_data_backflow partition(ds='00tmp');
 insert overwrite table wl_base.t_base_record_data_backflow partition(ds=$today)
-select `(ds)?+.+` from wl_base.t_base_record_data_backflow where ds='00tmp'
+select \`(ds)?+.+\` from wl_base.t_base_record_data_backflow where ds='00tmp'
 union all
-select `(ds)?+.+` from wl_base.t_base_record_data_backflow where ds=$last_update;
+select \`(ds)?+.+\` from wl_base.t_base_record_data_backflow where ds=$last_update;
 EOF
