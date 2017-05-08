@@ -62,7 +62,7 @@ def process(line):
 today = sys.argv[1]
 sc = SparkContext(appName="data_backflow"+today)
 
-data = sc.textFile("/commit/data_backflow/datamart/"+today+"api_record.js") \
+data = sc.textFile("/commit/data_backflow/datamart/record/"+today) \
     .map(lambda a: process(a)) \
     .filter(lambda a: a is not None) \
     .distinct() \
