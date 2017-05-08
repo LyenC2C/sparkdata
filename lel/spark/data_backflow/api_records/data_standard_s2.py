@@ -7,11 +7,7 @@ import sys
 latest = sys.argv[1]
 sc = SparkContext(appName="data_backflow_standard" + latest)
 sqlContext = SQLContext(sc)
-data = sqlContext.sql(
-    "select app_key_param,from_unixtime(cast(ts_request as bigint),'yyyy-MM-dd') as date,params,interface,api_type "
-    "from wl_base.t_base_record_data_backflow where ds = '" + latest + "' and "
-    "api_type <>'tel_basics' and "
-    "not (app_key = '1186159692' and api_type not in ('tel','address_getbymobile','channel_NameIDCardAccountVerify','channel_cellphone','operator_capricorn','address_match','channel_idcard','channel_bankby3','channel_idNameFase','channel_criminal','channel_blacklistverify','credit_implement'))")
+data = sqlContext.sql("select app_key_param,from_unixtime(cast(ts_request as bigint),'yyyy-MM-dd') as date,params,interface,api_type from wl_base.t_base_record_data_backflow where ds = '" + latest + "' and api_type <>'tel_basics' and not (app_key = '1186159692' and api_type not in ('tel','address_getbymobile','channel_NameIDCardAccountVerify','channel_cellphone','operator_capricorn','address_match','channel_idcard','channel_bankby3','channel_idNameFase','channel_criminal','channel_blacklistverify','credit_implement'))")
 
 
 def standard_params(ob):
