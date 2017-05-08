@@ -3,7 +3,6 @@ source ~/.bashrc
 
 beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
 insert overwrite table wl_analysis.t_lel_record_data_backflow_validated
-as
 select * from wl_analysis.t_lel_record_data_backflow
 where
 (name not regexp '[A-Za-z\\d]' or name is null or name = '')
