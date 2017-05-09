@@ -8,8 +8,8 @@ lastday_format=$(date -d '1 days ago' +%Y-%m-%d)
 #table=$2
 #database=$1
 
-impala-shell -k -s hive -i cs107 -q "refresh wl_service.t_lel_record_backflow_phone_idcard_res"
-impala-shell -k -s hive -i cs107 -q "insert overwrite table wl_service.t_lel_record_backflow_phone_idcard_res select *,'贷款类' as cate from(
+impala-shell -k -s hive -i cs107 -q "refresh wl_service.t_lel_record_data_backflow_phone_idcard_res"
+impala-shell -k -s hive -i cs107 -q "insert overwrite table wl_service.t_lel_record_data_backflow_phone_idcard_res select *,'贷款类' as cate from(
  select
  case when b.idcard is null or c.idcard is null or d.idcard is null then a.idcard else a.idcard end as idcard,
  case when d.times is null then 0 else d.times end as lastest_1m,
