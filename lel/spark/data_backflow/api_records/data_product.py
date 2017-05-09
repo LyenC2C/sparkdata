@@ -37,10 +37,10 @@ def to_json_str_2(data):
     return json.dumps(ob,ensure_ascii=False)
 
 sc = SparkContext(appName="data_backflow_product" + today)
-phone_idcard_stat =sc.textFile("/hive/warehouse/wl_service.db/t_lel_record_backflow_phone_idcard_res")\
+phone_idcard_stat =sc.textFile("/hive/warehouse/wl_service.db/t_lel_record_data_backflow_phone_idcard_res")\
         .map(lambda a:to_json_str_1(a))\
         .saveAsTextFile("/commit/data_backflow/datamart/stat_back/phone_idcard_stat_"+today)
-stat_all = sc.textFile("/hive/warehouse/wl_service.db/t_lel_record_backflow_multi_fields_standard_res") \
+stat_all = sc.textFile("/hive/warehouse/wl_service.db/t_lel_record_data_backflow_multifields_standard_res") \
     .map(lambda a:to_json_str_2(a)) \
     .saveAsTextFile("/commit/data_backflow/datamart/stat_back/stat_all_"+today)
 
