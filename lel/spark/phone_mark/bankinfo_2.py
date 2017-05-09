@@ -63,10 +63,14 @@ def process(line):
                     p = phone.split("-")[1]
                     result.append((code+p,code,p,wd_name))
             elif phone.startswith("400") or phone.startswith("800"):
-                 p = phone.replace('-','')
-                 result.append((p,'',p,wd_name))
-            else:
+                p = phone.replace('-','')
                 result.append((p,'',p,wd_name))
+            elif ')' in phone:
+                code = phone.split(')')[0]
+                p = phone.split(')')[1]
+                result.append((code+p,code,p,wd_name))
+            else:
+                result.append((phone,'',phone,wd_name))
     blank_name = ob.get("blank_name", "\\N")
     blank_phone = replace(ob.get("blank_phone", "\\N"))
     if blank_phone not in "\\N":
@@ -107,15 +111,15 @@ def process(line):
                 p = phone.replace('-','')
                 result.append((p,'',p,blank_name))
             else:
-                result.append((p,'',p,blank_name))
+                result.append((phone,'',phone,blank_name))
     return result
 
 
-sc = SparkContext(appName="bankinfo" + lastday)
+sc = SparkContext(appName="bankinfo")
 
 data = sc.textFile("/commit/data_product/bank_info/20170217.bank.infos.all") \
     .flatMap(lambda a: process(a)) \
     .filter(lambda a: a is not None) \
     .distinct() \
-    .map(lambda (a, b): a + "\001" + b).coalesce(1) \
-    .saveAsTextFile("/user/lel/temp/bankinfo")
+    .map(lambda (a, b,c,d): a + "\001" + b + '\001' +c + '\001' + d).coalesce(1) \
+    .saveAsTextFile("/user/lel/temp/bankinfo3")

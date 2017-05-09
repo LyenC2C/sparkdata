@@ -110,7 +110,9 @@ fri_ids_sq =  fri_id_nonsq.flatMap(lambda (a,b):split_ids(a,b)).filter(lambda a:
 #上汽id,ids
 fri_id_ids_sq =  fri.map(lambda (a,b):filter_sq_id(a,b)).filter(lambda a:a is not None).flatMap(lambda (a,b):split_id_ids(a,b)).filter(lambda a:a is not None)
 
-re = fri_ids_sq.union(fri_id_ids_sq).reduceByKey(lambda a,b:[a,b]).filter(lambda (a,b):len(b)>=2).saveAsTextFile("/user/lel/results/fri_mining_5")
+re = fri_ids_sq.union(fri_id_ids_sq).groupByKey().mapValues(list).filter(lambda (a,b):len(b)>=2).saveAsTextFile("/user/lel/results/fri_mining_5")
+
+
 
 
 
