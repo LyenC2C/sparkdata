@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 jintian=$(date -d '0 days ago' +%Y%m%d)
 
-wget ftp://ftp.blhdk.wolongdata.com/$zuotian*.csv --ftp-user=qx --ftp-password=NzS7d2oWe47LPVXx --no-passive-ftp
+wget ftp://ftp.blhdk.wolongdata.com/$jintian*.csv --ftp-user=qx --ftp-password=NzS7d2oWe47LPVXx --no-passive-ftp
 
 today=`ls $jintian*`
 python jiema.py $today > $jintian'_qianxing'
