@@ -19,7 +19,7 @@ lastday=`hadoop fs -ls /hive/warehouse/$db_path/$table | awk -F '=' '{if($2 ~ /^
 lastday_size=`hadoop fs -du -s  /hive/warehouse/$db_path/$table/ds=$lastday | awk '{print $1/1024/1024}'`
 lastday_files=`hadoop fs -ls /hive/warehouse/$db_path/$table/ds=$lastday | wc -l`
 lastday_avg_size=`awk 'BEGIN{print ('$lastday_size'/'$lastday_files')}'`
-lastday_rows=`impala-shell -k -s -hive -i cs107 -q "SELECT count(*) FROM $database.$table where ds='$lastday'" | grep -oP '(\d+)'`
+lastday_rows=`impala-shell -k -s hive -i cs107 -q "SELECT count(*) FROM $database.$table where ds='$lastday'" | grep -oP '(\d+)'`
 
 
 use_db_sql="use ${DBNAME}"
