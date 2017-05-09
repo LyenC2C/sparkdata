@@ -53,7 +53,7 @@ def f(line, cate_dict):
     ss = line.strip().split("\t", 2)
     if len(ss) != 3: return None
     item_id = ss[1]
-    ts = ss[0]
+    ts = "1493023724"
     ob = json.loads(valid_jsontxt(ss[2]))
     if type(ob) != type({}): return None
     itemInfoModel = ob.get('itemInfoModel', "\\N")
@@ -65,11 +65,13 @@ def f(line, cate_dict):
     root_cat_id = cate_dict.get(categoryId, ["\\N", "\\N", "\\N"])[1]
     cat_name = cate_dict.get(categoryId, ["\\N", "\\N", "\\N"])[0]
     root_cat_name = cate_dict.get(categoryId, ["\\N", "\\N", "\\N"])[2]
+
     trackParams = ob.get('trackParams', {})
     BC_type = trackParams.get('BC_type', '\\N')
     if BC_type != 'B' and BC_type != 'C': BC_type = "\\N"
     brandId = trackParams.get('brandId', '\\N')
     brand_name = "\\N"
+
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     if int(price) > 160000:
@@ -81,6 +83,11 @@ def f(line, cate_dict):
     off_time = "\\N"
     sku_info = "\\N"
     return (item_id,[item_id,title,categoryId,cat_name,root_cat_id,root_cat_name,brandId,BC_type,str(price),price_zone,off_time,str(favor),seller_id,shopId,location,sku_info,ts])
+
+
+def process(data):
+    data.sql("select * from ")
+
 
 def concat(x,y):
     return '\001'.join([valid_jsontxt(i) for i in y])
@@ -96,6 +103,7 @@ if __name__ == "__main__":
             print f(line, cate_dict)
     if sys.argv[1] == "-spark":
         from pyspark import SparkContext
+
         sc = SparkContext(appName="iteminfo_abnormal")
         s = "/commit/iteminfo/tb_iteminfo/*"
         s_dim = "/hive/warehouse/wl_base.db/t_base_ec_dim/ds=20161122/000000_0"

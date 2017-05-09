@@ -7,7 +7,7 @@ COMMENT '多平台注册信息'
 PARTITIONED BY  (ds STRING )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'  LINES TERMINATED BY '\n' stored as textfile;
 
-load data inpath "/user/lel/temp/multiplatform_jiedai" overwrite into table wl_base.t_base_multiplatform partition(ds=20170227)
+load data inpath "/user/lel/temp/multiplatform_jiedai_20170417" overwrite into table wl_base.t_base_multiplatform partition(ds='00tmp')
 
 
 

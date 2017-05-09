@@ -1,6 +1,5 @@
 import rapidjson as json
 import datetime, time
-import sys
 from pyspark import SparkContext
 
 
@@ -9,7 +8,7 @@ def valid_jsontxt(content):
         res = content.encode("utf-8")
     else:
         res = str(content)
-    return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "").replace('\'', '\"')
+    return res.replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
 
 
 def date_to_ts(date_str):
@@ -29,10 +28,10 @@ def date_to_ts(date_str):
 def take_out_dot(s):
     return s[:s.index(".")] if '.' in s else s
 
+
 def process(line):
     jsonStr = valid_jsontxt(line.strip())
     ob = json.loads(jsonStr)
-    if not isinstance(ob,dict):return None
     repeat = ob.get("repeat", "\\N")
     success = ob.get("success", "\\N")
     app_key = ob.get("app_key", "\\N")
@@ -41,28 +40,22 @@ def process(line):
         create_time = create_time[:create_time.index('.')]
     ts_create = date_to_ts(create_time)
     params = ob.get("params", {})
-    if params:
-        sign = params.get("sign", "\\N")
-        ts_request = params.get("t", "\\N")
-        if '.' in ts_request:
-            ts_request = ts_request[:ts_request.index('.')]
-        app_key_param = params.get("app_key", "\\N")
-        params_all = ','.join([key + ":" + take_out_dot(valid_jsontxt(params[key])) for key in params])
-    else:
-        return None
-    result = json.dumps(ob.get("result", {}))
+    result = ob.get("result",{})
+    if not isinstance(params,dict) or not isinstance(result,dict):return None
+    params_str = ','.join([key + ":" + take_out_dot(valid_jsontxt(params[key])) for key in params])
+    result_str = ','.join([key + ":" + take_out_dot(valid_jsontxt(result[key])) for key in result])
     interface = ob.get("interface", "\\N")
     match = ob.get("match", "\\N")
     api_type = ob.get("api_type", "\\N")
     return "\001".join([valid_jsontxt(i) for i in
-                        [repeat, success, app_key, app_key_param, ts_create, ts_request, params_all, result, sign,
+                        [repeat, success, app_key, ts_create, params_str, result_str,str(params),str(result),
                          interface, match, api_type]])
 
-today = sys.argv[1]
-sc = SparkContext(appName="data_backflow"+today)
 
-data = sc.textFile("/commit/data_backflow/datamart/record/"+today) \
+sc = SparkContext(appName="data_backflow")
+
+data = sc.textFile("/commit/data_backflow/jinrongyonghuhuaxiang.json") \
     .map(lambda a: process(a)) \
-    .filter(lambda a: a is not None) \
     .distinct() \
-    .saveAsTextFile("/user/lel/temp/record_data_backflow")
+    .filter(lambda a: a is not None) \
+    .saveAsTextFile("/user/lel/temp/backflow_portrait")

@@ -3,7 +3,7 @@
 source ~/.bashrc
 
 beeline -u "jdbc:hive2://cs105:10000/;principal=hive/cs105@HADOOP.COM"<<EOF
-insert overwrite table wl_service.t_lel_record_backflow_multi_fields_standard_res
+insert overwrite table wl_service.t_lel_record_data_backflow_multifields_standard_res
 select * from
 (
 select *,"贷款类" as cate from
