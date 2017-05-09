@@ -61,12 +61,12 @@ def process(line):
         return None
     for k,v in params.iteritems():
         params[k] = transform_df_fileds(v)
-    result = ob.get("result", {})
+    result = json.dumps(ob.get("result", {}))
     interface = ob.get("interface", None)
     match = ob.get("match", None)
     api_type = ob.get("api_type", None)
     if api_type not in 'tel_basics':
-        return (repeat, success, app_key, app_key_param, ts_create, ts_request, params, str(result).replace('\'','\"'), sign, interface, match,
+        return (repeat, success, app_key, app_key_param, ts_create, ts_request, params, result, sign, interface, match,
                 api_type)
     else:
         return None
