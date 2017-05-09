@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 jintian=$(date -d '0 days ago' +%Y%m%d)
+pre_path='/home/wrt/data/qianxing'
 
-wget ftp://ftp.blhdk.wolongdata.com/$jintian*.csv --ftp-user=qx --ftp-password=NzS7d2oWe47LPVXx --no-passive-ftp
+wget ftp://ftp.blhdk.wolongdata.com/$jintian*.csv --ftp-user=qx --ftp-password=NzS7d2oWe47LPVXx \
+--no-passive-ftp -P $pre_path/
 
 today=`ls $jintian*`
-python jiema.py $today > $jintian'_qianxing'
+python jiema.py $pre_path/$today > $pre_path/$jintian'_qianxing'
 
-hadoop fs -put ./$jintian'_qianxing' /user/wrt/qianxing/
+hadoop fs -put $pre_path/$jintian'_qianxing' /user/wrt/qianxing/
 
 hadoop fs -chmod -R 777 /user/wrt/qianxing/*
 
