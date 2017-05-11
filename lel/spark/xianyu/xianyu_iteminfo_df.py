@@ -15,21 +15,14 @@ lastday = sys.argv[1]
 last_2day = sys.argv[2]
 
 def valid_jsontxt(content):
-    if type(content) == type(u""):
+    if isinstance(content,unicode):
         res = content.encode("utf-8").replace('\n', "").replace("\r", "").replace('\001', "").replace("\u0001", "")
     else:
         res = content
     return res
 
-
 def transform_df_fileds(content):
-    if isinstance(content, unicode):
-        res = content.encode("utf-8").decode("latin-1").encode("iso-8859-1").decode("utf-8")
-    elif isinstance(content, str):
-        res = content.decode("latin-1").encode("iso-8859-1").decode("utf-8")
-    else:
-        res = content
-    return res
+    return content.decode("utf-8") if isinstance(content,str) else content
 
 def getJson(s):
     content = s.strip().split('\t')
