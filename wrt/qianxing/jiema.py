@@ -9,11 +9,7 @@ n = 0
 for line in reader:
     if n != 0:
         try:
-            a = "\001".join(ln.decode('gbk').encode('utf-8') for ln in line)
-            continue
-            #print "\001".join(ln.decode('gbk').encode('utf-8') for ln in line)
+            print "\001".join(ln.decode('gbk').encode('utf-8') for ln in line)
         except:
-            # print "fuhuodezero "+ str(n)
-            for ln in line:
-                print ln.encode('utf-8')
+            continue
     n += 1
