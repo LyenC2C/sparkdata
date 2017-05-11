@@ -11,5 +11,5 @@ for line in reader:
         try:
             print "\001".join(ln.decode('gbk').encode('utf-8') for ln in line)
         except:
-            print "haha "+n
+            print "haha "+ str(n)
     n += 1
