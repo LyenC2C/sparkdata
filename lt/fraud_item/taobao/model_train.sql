@@ -53,11 +53,6 @@ on t1.item_id=t2.item_id;
 drop table t_lt_trian_item_shop_info_v4;
 alter table t_lt_trian_item_shop_info_v4_tmp rename to t_lt_trian_item_shop_info_v4;
 
-
-
-
-
-
 --model train :fraud_score info
 create table t_lt_base_item_fraud_score_re_sp as
 select * from t_lt_base_recommend_item_fraud_score
@@ -94,6 +89,62 @@ from
 left join
 (select item_id from t_lt_base_sp_item_fraud_all)t2
 on t1.item_id=t2.item_id
+
+
+
+--model result 0508
+CREATE TABLE  if not exists wl_service.t_lt_train_model_result (
+id STRING  COMMENT  '淘宝id',
+label  STRING   COMMENT '原标签',
+pre_label STRING  COMMENT '模型预测标签'
+)
+COMMENT '淘宝商品模型预测'
+PARTITIONED by (ds STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\001'  LINES TERMINATED BY '\n' stored as textfile;
+
+--load
+load data INPATH '/user/lt/model_0508/model_NB_keywords/part*' into TABLE wl_service.t_lt_train_model_result PARTITION (ds='model_NB_keywords');
+load data INPATH '/user/lt/model_0508/model_NB_tfidf/part*' into TABLE wl_service.t_lt_train_model_result PARTITION (ds='model_NB_tfidf');
+load data INPATH '/user/lt/model_0508/model_NB_tf/part*' into TABLE wl_service.t_lt_train_model_result PARTITION (ds='model_NB_tf');
+load data INPATH '/user/lt/model_0508/model_LR_item/part*' into TABLE wl_service.t_lt_train_model_result PARTITION (ds='model_LR_item');
+load data INPATH '/user/lt/model_0508/model_LR_shop/part*' into TABLE wl_service.t_lt_train_model_result PARTITION (ds='model_LR_shop');
+load data INPATH '/user/lt/model_0508/model_LR_tf/part*' into TABLE wl_service.t_lt_train_model_result PARTITION (ds='model_LR_tf');
+
+--analysis
+create table wl_service.t_lt_train_model_result_check as
+select t1.label,t1.pre_label,t2.* ,ds from
+(select * from t_lt_train_model_result)t1
+left join
+(select title,(fraud_score_1+fraud_score_11+fraud_score_2+fraud_score_22+fraud_score_3+fraud_score_4) as fraud_score,keywords,item_id from t_lt_base_sp_item_filter_words_sub)t2
+on t1.id=t2.item_id
+
+select count(1) as num  from
+(select * from t_lt_train_model_result_check where
+ds='model_LR_tf')t
+
+select count(1) as num  from
+(select * from t_lt_train_model_result_check where
+ds='model_NB_keywords' and pre_label='1.0')t
+
+
+
+create table t_lt_model_result_filter_tmp as
+select item_id from t_lt_train_model_result_check
+where ds='model_NB_keywords' and pre_label='1.0'
+and length(regexp_replace(title,'收藏|卡拉卡拉|打印纸|充值|热敏纸|收银|书',''))=length(title)
+and keywords !='还款'
+and keywords !='闪电'
+
+
+CREATE table t_lt_model_result_filter_tmp_2 as
+select t2.* from
+(select * from t_lt_model_result_filter_tmp)t1
+join
+(select item_id,title,cat_name,root_cat_name,
+(fraud_score_1+fraud_score_11+fraud_score_2+fraud_score_22+fraud_score_3+fraud_score_4) as fraud_score,
+keywords from t_lt_base_sp_item_filter_words_sub)t2
+on t1.item_id=t2.item_id
+--========================
 
 --analysis seller_id
 create table wl_service.t_lt_base_fraud_seller_info as

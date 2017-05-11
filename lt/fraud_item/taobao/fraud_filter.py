@@ -66,7 +66,6 @@ group BY item_id,cat_id,cat_name,root_cat_name,seller_id,title
 '''
 
 rdd_table = hiveContext.sql(sql_item)
-rdd_table.na.fill('')
 rdd_new=rdd_table.map(lambda x:parse(x))
 return_rdd = rdd_new.filter(lambda x:x!="null")
 return_rdd.saveAsTextFile("/user/lt/FilterKeywords/0505")

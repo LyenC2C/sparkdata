@@ -13,71 +13,58 @@ sc=SparkContext(appName='filterItem')
 sqlContext = SQLContext(sc)
 hiveContext = HiveContext(sc)
 
-keywords_1 =sc.broadcast("联银鑫宝|宜信普惠|天天付|瑞银信|陆金所|红岭创投|微贷网|聚宝匯|聚宝汇|宜贷网|爱钱进|宜人贷|团贷网|翼龙贷|你我贷|嘉卡贷|搜易贷|好贷宝|有利网|拿去花|人人贷|温商贷|开鑫贷|博金贷|365易贷|珠宝贷|新新贷|和信贷|连资贷|诚信贷|微粒贷|拍拍贷|拍拍满|借趣花|51人品|平安易贷|任性付|51信用卡|易贷网|平安普惠|快易花|亲亲小贷|马上贷|51人品贷|瞬时贷|随心贷|广发零用钱|现金巴士|极速贷|手机贷|租房贷|用钱宝|小秒钱包|58消费贷|闪电借款|宜人极速贷|卡卡贷|卡拉卡|有用分期|玖富|小微贷|飞贷|今借到|大学分期|民工分期|蓝领分期|好贷|钱宝网|汇付天下|叮当贷|借贷宝|诺诺镑客|卡利宝|甜橙白条|分期乐|来分期|京东白条|京东白条抢券工具|无视风控|白条代下单|贷款|黑户贷款|小额贷款操作|下款技术|小额贷款|信用贷款|小额借钱|贷款秒下|无视黑白|无征信|无视征信|黑户下卡|白户贷款|无视网黑|满标|等额本息|网贷口子|贷款技术|贷款口子|网贷|一清机|撸羊毛|包下款|薅羊毛|手机POSS机|手机POS机|手机刷卡机|手机刷卡器|信用卡刷卡器|移动POS机|强开贷款|信用卡贷款|借款培训|京东套现|抵押套现|还款技术|技术口子|网赚教程|下款利器|玩转信用卡|口子教程|网络速贷|小贷资料|银行口子|极速放款|低息借款|低息代款|金融口子|网贷技术|小贷口子|口子贷|贷口子|手机套现|口子|低息贷款|低息|下款|借款|放米|强开提额").value
-keywords_11 = sc.broadcast("金融一体机|质押|典当|乐富|低息|速贷|信用卡|网赚|包装小贷|包装公司|抵押|提现|借呗|黑户|操作|技术|跳码|燃眉之急|信用贷|借钱|借贷|额度|借款|芝麻信用|急用钱|急借钱|典当行|放贷|还款|拆借|快借|资金困难|资金短缺|放米|快钱|套现|变现|t现|急缺钱|口子|急需资金|抢标|秒标|不需担保|无担保|秒批|秒到|提额|降额|放款|下款|缺钱转|点刷|卡乐付|pos机|POS机|刷卡机|手刷|一清|多商户|实时到账|费率|乐刷|易付宝|poss机|POSS机|ps机|PS机|蓝牙POS|蓝牙pos|蓝牙刷卡机|蓝牙刷卡器|刷卡器费率|手机POSS|手机poss|收款宝|拉卡拉|刷卡机|变现|P2P|p2p|蓝牙|pos刷卡器|POS刷卡器|速刷|汇付|秒到账|手机pos|手机POS|实时到帐|贷款|车贷").value
-keywords_2 = sc.broadcast("提额认证|闪银认证|闪银提额|不良记录|身份证抠图|代做企业对公流水账|代做普通流水账|银行贷款报表|处理逾期|经营异常|借款逾期|账单技术|代过人脸识别|代过各种人脸识别|闪银|贷款|借款|贷款包装|包过电核|固话代接|代接回访|代接固话|信用卡|银行回访|单位包装|贷款回访|电话回访|回访专用|单位回访|公积金转移|电话代接|回访|呼叫转移|银行小贷|下卡|代接").value
-keywords_22 = sc.broadcast("贷款|征信代打|电核流水|销户|代做|银行流水|工资流水|收入证明|社保|公积金|挂靠|代缴|代交|邮箱批发|企业邮箱|邮箱|单位邮箱|公司邮箱|邮箱账号|闪银|Wecash闪银|闪电|51人品|资金周转|代办|学历证书|学位证书|流水回单").value
-keywords_3 = sc.broadcast("宝妈|赚钱|挣钱|暴利|博彩|彩票|时时彩|七乐彩|双色球|彩票中奖|大乐透|彩票软件|彩票分析软件|500万|中奖符|赌博符|还钱符|网赚|兼职|网赚项目|快速赚钱|偏门|工资日结|营销软件|贷款|网赚教程|京东号|JD号|京东|账号|三绑|全绑|JD|帐号|京东小号|小号批发|三邦|平安|闪银").value
-keywords_4 = sc.broadcast("借条|催款函|答辩状|罚单|反诉|房产纠纷|行政复议|行政诉讼|合同纠纷|取保|候审|缓刑|强制执行|查封|冻结扣款|失信|老赖|上诉书|上诉状|诉讼状|诉状|律师函|法律|咨询|债权债务|借款|贷款|纠纷|抵押担保|质押|打官司|起诉|起诉书|起诉状|遗赠|遗嘱|高利贷").value
-delete_w = sc.broadcast("热敏|打印纸|小票纸|PPT|ppt|收银纸|卡包|卡套|网站建设|T恤|t恤|工作服|卡夹|留学|翻译|考勤|单据|设计|名片|logo|LOGO|海报|走势图|收藏册|书|摇奖机|箱|纸牌|摇号机|购彩金|元|充值").value
+keywords_1 =sc.broadcast("放款|下款|贷款|套现|急用钱|提额|薅羊毛|撸羊毛|51人品|平安易贷|你我贷|微贷网|分期贷|利息低|宜人贷|翼龙贷|钱宝网|网赚教程|玩转信用卡|有用分期|51信用卡|微粒贷|团贷网|网贷技术|等额本息|缺钱找我|pos机|刷卡机|费率|刷卡器|金融一体机|蓝牙POS|一清机|poss机|银行小贷|社保挂靠|盗取QQ号密码|手机监听|信用卡不良记录|代做银行流水|营销软件|淘宝刷信誉|彩票游戏|开房记录查").value
+keywords_11 = sc.broadcast("借贷宝|消费贷|友信|花呗|借呗|白条|任性付|大学生贷款|京东白条|唯品会额度|分期乐|趣分期|学历贷|翼龙|p2p|信用贷|宜信|普惠|借款宝|贷呗宝|极速贷|温州贷|玖富|精英贷|社保贷|平安普惠|好贷|陆金所|红岭创投|拍拍贷|人人贷|易贷网|小微贷|百度钱包|极速贷|飞贷|手机贷|现金贷|丽人贷|拿去花|有利网|和信贷|诺诺镑客|随心贷|今借到|公积金贷|下卡|网贷|借贷|借款|低息|利率|避税|刷现|放贷|刷现|代办|代刷|互刷|代还|典当|口子|额度|车贷|提额|养卡|T现|提现|借钱|黑户|白户|二手房|房贷|办理|信贷|放款|放米|下款|信用卡|理财|担保|投资|融资|提现|质押|抵押|贷款|贷款咨询|贷款资讯|二手房买卖|理财咨询师|银行贷款|债权追讨|买车买房|专业贷款|贷款公司|企业贷款|企业融资|银行抵押|资金需要|低息贷款|金融机构|投资理财|金融贷款|房产抵押|土地抵押|贷款指南|信用借款|小额贷款|小额借款|快速贷款|信用贷款|急用钱|应急贷款|包装贷款|贷款包装|大额空放|过桥解压|民间贷款|贷款找我|按揭贷款|公积金贷款|利息低|刷卡贷款|消费贷款|个人贷款|小额信贷|投资贷款|网络贷款|资金需求|要贷款的来找我|各类贷款|贷款软件|保险|平安贷款|二手房过户|pos|贷款数据库|民间借贷|专业车贷|平安车贷|汽车贷款|急需钱|金融服务|债务催收|个人借款|身份证借款|资金周转|借款咨询|秒借|加微信|借款服务|私人借款|利信借款|学生借款|闪电借款|撸白菜|挖白菜|撸钱口子|急需资金|银行放款|养卡服务|专业养卡|养卡神器|精养卡|贷款技术|积分机|银行信贷|专业放贷|不看征信|无视黑白|银行放贷|小额放贷|小额信贷|极速放贷|小额借贷|诚信贷|投标助手|无需担保|新新贷|小贷口子|金融口子|找我|联系我").value
+keywords_2 = sc.broadcast("电话回访|水军团|注册补量|电话回访|网站注册|注册回访|宝妈|赚钱|兼职|兼职推广|解套赚钱|投资项目|网络兼职|淘宝刷单|淘宝兼职|网赚|日赚|暴利项目|偏门|网上兼职|工资日结|薪水日结|学历提升|加群|博彩公司|娱乐游戏|网上博彩|技巧|真人百家乐|专业网上博彩|刷单套利|双色球|重庆时时彩|时时彩|时时彩改单软件").value
 
 
 def parse(line):
-    title = line[-1].replace(" ", "")
-    if type(title) == type(u""):
-        title = title.encode("utf-8")
-    return_1 = list(set(re.findall(keywords_1, title)))
-    fraud_score_1 = "%d" % len(return_1)
-    return_11 = list(set(re.findall(keywords_11, title)))
-    fraud_score_11 = "%d" % len(return_11)
-    return_2 = list(set(re.findall(keywords_2, title)))
-    fraud_score_2 = "%d" % len(return_2)
-    return_22 = list(set(re.findall(keywords_22, title)))
-    fraud_score_22 = "%d" % len(return_22)
-    return_3 = list(set(re.findall(keywords_3, title)))
-    fraud_score_3 = "%d" % len(return_3)
-    return_4 = list(set(re.findall(keywords_4, title)))
-    fraud_score_4 = "%d" % len(return_4)
-    keywords_d = '|'.join(list(set(re.findall(delete_w, title))))
-    keywords = '|'.join(set(return_1 + return_11 + return_2 + return_22 + return_3 + return_4))
-
+    name = line[-2]
+    desc = line[-1]
+    if type(name) == type(u""):
+        name = name.encode("utf-8")
+    if type(desc) == type(u""):
+        desc = desc.encode("utf-8").replace(" ", "")
+    return_1 = list(set(re.findall(str.upper(keywords_1), str.upper(name))))
+    fscore_1 = "%d" % len(return_1)
+    return_11 = list(set(re.findall(str.upper(keywords_11), str.upper(name))))
+    fscore_11 = "%d" % len(return_11)
+    return_2 = list(set(re.findall(str.upper(keywords_2), str.upper(name))))
+    fscore_2 = "%d" % len(return_2)
+    d_return_1 = list(set(re.findall(str.upper(keywords_1), str.upper(desc))))
+    d_fscore_1 = "%d" % len(d_return_1)
+    d_return_11 = list(set(re.findall(str.upper(keywords_11), str.upper(desc))))
+    d_fscore_11 = "%d" % len(d_return_11)
+    d_return_2 = list(set(re.findall(str.upper(keywords_2), str.upper(desc))))
+    d_fscore_2 = "%d" % len(d_return_2)
+    keywords = '|'.join(set(return_1+return_11+return_2))
+    d_keywords = '|'.join(set(d_return_1+d_return_11+d_return_2))
     #filter
-    if fraud_score_1!='0' or fraud_score_11!='0' or fraud_score_2!='0' or fraud_score_22!='0' or fraud_score_3!='0' or fraud_score_4!='0':
-        items ="\001".join(["%s" %i for i in line[:-1]]).encode("utf-8")
-        return_list = "\001".join([fraud_score_1, fraud_score_11, fraud_score_2, fraud_score_22, fraud_score_3, fraud_score_4, keywords,keywords_d])
+    if fscore_1!='0' or fscore_11!='0' or fscore_2!='0' or d_fscore_1!='0' or d_fscore_11!='0' or d_fscore_2!='0':
+        items ="\001".join(["%s" %i for i in line]).encode("utf-8")
+        return_list = "\001".join([fscore_1, fscore_11, fscore_2, d_fscore_1, d_fscore_11, d_fscore_2, keywords,d_keywords])
         items = items+"\001"+return_list
     else:items="null"
-
     return items
 
-#筛选淘宝商品,推荐商品,关键词采集到的异常商品
+
+#筛选微博异常用户
 sql_item='''
-select item_id,cat_id,cat_name,root_cat_name,seller_id,title from
-(select item_id,cat_id,cat_name,root_cat_name,seller_id,title from
-wl_base.t_base_ec_item_dev_new where ds='20170429'
-union ALL
-select item_id,cat_id,cat_name,root_cat_name,seller_id,title from
-wl_base.t_base_ec_item_abnormal where ds='20170503'
-union ALL
-select item_id,categoryid as cat_id,cat_name,root_cat_name,seller_id,title from
-wl_base.t_base_unusual_iteminfo)t
-where title is not NULL and item_id is not NULL
-group BY item_id,cat_id,cat_name,root_cat_name,seller_id,title
+select id,name,description
+from wl_base.t_base_weibo_user_new where ds='20170502'
 '''
 
 rdd_table = hiveContext.sql(sql_item)
-rdd_table.na.fill('')
+rdd_table =rdd_table.na.fill("")
 rdd_new=rdd_table.map(lambda x:parse(x))
 return_rdd = rdd_new.filter(lambda x:x!="null")
-return_rdd.saveAsTextFile("/user/lt/FilterKeywords/0505")
+return_rdd.saveAsTextFile("/user/lt/weibo/0510")
 
 
 #test
-sql_test='''
-select item_id,cat_id,cat_name,root_cat_name,seller_id,title from
-wl_base.t_base_ec_item_dev_new where ds='20170429' limit 10
+sql_item='''
+select id,name,description
+from wl_base.t_base_weibo_user_new where ds='20170502' limit 10000
 '''
-# rdd = sc.textFile("/hive/warehouse/wl_base.db/t_base_ec_item_dev_new/ds=20161013/000000_1")
-# filter=rdd.map(lambda x:parse(x))
-# filter.saveAsTextFile("/user/lt/FilterKeywords/test7")
+
 

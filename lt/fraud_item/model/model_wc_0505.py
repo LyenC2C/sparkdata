@@ -3,12 +3,13 @@ __author__='lt'
 
 
 #====================taobao item classification===========
+from pyspark import SparkContext
 from pyspark.mllib.feature import HashingTF,IDF
 from pyspark.mllib.regression import LabeledPoint
-from pyspark import *
+from pyspark.sql import HiveContext
 from pyspark.sql.functions import *
 
-sc=SparkContext(appName="model_words")
+sc=SparkContext(appName="model_taobao")
 hiveContext = HiveContext(sc)
 hiveContext.sql('use wl_service')
 
@@ -42,13 +43,13 @@ data_tfidf = data_tf.map(lambda x:(x[0],x[1])).zip(idf_FT).map(lambda x:(x[0][0]
 
 #4)item info(price 和 favor特征需要标准化)
 data_item=hiveContext.sql('select * from wl_service.t_lt_trian_item_info_v3')
-data_item.na.fill(0)
+data_item=data_item.na.fill(0)
 data_item_ft=data_item.map(lambda x:(x.item_id,x.label,x[1:11]))
 
 
 #5)shop info(price/favor/credit,特征需要标准化)
 data_shop=hiveContext.sql('select * from wl_service.t_lt_trian_item_shop_info_v4')
-data_shop.na.fill(0)
+data_shop=data_shop.na.fill(0)
 data_shop_ft = data_shop.map(lambda x:(x.item_id,x.label,x[1:23]))
 
 
@@ -58,6 +59,11 @@ def split_data(data,split_r=[0.8,0.2]):
     data_train=spam.randomSplit([0.8,0.2])[0].union(normal.randomSplit(split_r)[0])
     return data_train
 
+def pre_all(data_all,model,filename):#item_id,label,feature
+    all_FT = data_all.map(lambda x: (x[0], x[1], model.predict(x[-1])))
+    return_data = all_FT.filter(lambda x: x[-1] != x[1])
+    return_data.map(lambda x: "\001".join(["%s" % i for i in x])).saveAsTextFile("/user/lt/model_0508/%s"%(filename))
+    return return_data
 
 #======================models===============================================
 #Naive bayes
@@ -75,7 +81,7 @@ def NB_train(data):
 
 
 #Decision tree
-from pysaprk.mllib.tree import DecisionTree
+from pyspark.mllib.tree import DecisionTree
 def DT_train(data):
     data_train = split_data(data)
     key_FT = data_train.map(lambda x:LabeledPoint(x[1],x[-1]))
@@ -113,7 +119,7 @@ def SVM_train(data):
 
 from pyspark.mllib.tree import RandomForest
 #trainClassifier(data, numClasses, categoricalFeaturesInfo, numTrees, featureSubsetStrategy='auto', impurity='gini', maxDepth=4, maxBins=32, seed=None)
-def RF_train(data):
+def RF_train(data,filename):
     data_train = split_data(data)
     key_FT = data_train.map(lambda x: LabeledPoint(x[1], x[-1]))
     training, test = key_FT.randomSplit([0.8, 0.2], 0)
@@ -121,42 +127,55 @@ def RF_train(data):
     predictionAndlabel = test.map(lambda x: (float(model_RF.predict(x.features)), x.label))
     accuracy = 1.0 * predictionAndlabel.filter(lambda (x, v): x == v).count() / test.count()
     print ("accuracy of model_RF:%f" % accuracy)
+    pre_all(data, model_RF, filename)
     return model_RF, accuracy
 
 
 from pyspark.mllib.tree import GradientBoostedTrees
 #trainClassifier(data, categoricalFeaturesInfo, loss='logLoss', numIterations=100, learningRate=0.1, maxDepth=3, maxBins=32)
-def GBDT_train(data):
+def GBDT_train(data,filename):
     data_train = split_data(data,[0.5,0.5])
     key_FT = data_train.map(lambda x: LabeledPoint(x[1], x[-1]))
     training, test = key_FT.randomSplit([0.8, 0.2], 0)
-    model_GBDT = GradientBoostedTrees.trainClassifier(training, {})
+    model_GBDT = GradientBoostedTrees.trainClassifier(training, {},numIterations=20)
     predictionAndlabel = test.map(lambda x: (float(model_GBDT.predict(x.features)), x.label))
     accuracy = 1.0 * predictionAndlabel.filter(lambda (x, v): x == v).count() / test.count()
     print ("accuracy of model_GBDT:%f" % accuracy)
+    pre_all(data, model_GBDT, filename)
     return model_GBDT, accuracy
 
 
-def pre_all(data_all,model,filename):#item_id,label,feature
-    all_FT = data_all.map(lambda x: (x[0], x[1], model.predict(x[-1])))
-    return_data = all_FT.filter(lambda x: x[-1] != x[1])
-    return_data.map(lambda x: "\001".join(["%s" % i for i in x])).saveAsTextFile("/user/lt/model_0508/%s"%(filename))
-    return return_data
-
-
+#=============================train======================
 #trian using NB model
 model_NB_keywords,accuracy_key =NB_train(data_key)
 model_NB_tf,accuracy_tf=NB_train(data_tf)
 model_NB_tfidf,accuracy_tfidf =NB_train(data_tfidf)
+model_NB_item,accuracy_item =NB_train(data_item_ft)
+model_NB_shop,accuracy_shop =NB_train(data_shop_ft)
 #predict
 pre_all(data_key,model_NB_keywords,"model_NB_keywords")
 pre_all(data_tf,model_NB_tf,"model_NB_tf")
 pre_all(data_tfidf,model_NB_tfidf,"model_NB_tfidf")
+pre_all(data_item_ft,model_NB_item,"model_NB_item")
+pre_all(data_shop_ft,model_NB_shop,"model_NB_shop")
 
 #train GBDT
-model_GBDT_item,accuracy_item =GBDT_train(data_item_ft)
-model_GBDT_item_shop,accuracy_shop =GBDT_train(data_shop_ft)
-pre_all(data_item_ft,model_GBDT_item,"model_GBDT_item")
-pre_all(data_shop_ft,model_GBDT_item_shop,"model_GBDT_item_shop")
+GBDT_train(data_key,'model_GBDT_keywords')
+GBDT_train(data_tf,'model_GBDT_tf')
+GBDT_train(data_tfidf,'model_GBDT_tfidf')
+GBDT_train(data_item_ft,'model_GBDT_item')
+GBDT_train(data_shop_ft,'model_GBDT_shop')
 
+#train rf
+model_RF_item,accuracy_item =RF_train(data_item_ft,'model_GBDT_item')
+model_RF_item_shop,accuracy_shop =RF_train(data_shop_ft,'model_GBDT_shop')
 
+#train lr
+model_LR_item,accuracy_item =LR_train(data_item_ft)
+model_LR_shop,accuracy_shop =LR_train(data_shop_ft)
+model_LR_tf,accuracy_item =LR_train(data_tf)
+model_LR_tfidf,accuracy_item =LR_train(data_tfidf)
+pre_all(data_item_ft,model_LR_item,"model_LR_item")
+pre_all(data_shop_ft,model_LR_shop,"model_LR_shop")
+pre_all(data_tf,model_LR_tf,"model_LR_tf")
+pre_all(data_tfidf,model_LR_tfidf,"model_LR_tfidf")
