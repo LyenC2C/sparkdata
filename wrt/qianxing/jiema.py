@@ -15,5 +15,5 @@ for line in reader:
         except:
             # print "fuhuodezero "+ str(n)
             for ln in line:
-                print ln
+                print ln.encode('utf-8')
     n += 1
