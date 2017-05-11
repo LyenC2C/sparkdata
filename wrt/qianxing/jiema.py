@@ -13,5 +13,7 @@ for line in reader:
             continue
             #print "\001".join(ln.decode('gbk').encode('utf-8') for ln in line)
         except:
-            print "fuhuodezero "+ str(n)
+            # print "fuhuodezero "+ str(n)
+            for ln in line:
+                print ln
     n += 1
