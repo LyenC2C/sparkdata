@@ -55,7 +55,7 @@ def quchong(x, y):
 
 
 
-s1 = "/commit/iteminfo/shopid_128287536/item.info." + today +".again"
+s1 = "/commit/iteminfo/shopid_128287536/item.info." + today
 rdd_c = sc.textFile(s1).map(lambda x: f(x)).filter(lambda x:x!=None)
 rdd = rdd_c.groupByKey().mapValues(list).map(lambda (x, y): quchong(x, y))
 schema = StructType([
