@@ -65,25 +65,25 @@ schema = StructType([
 
 df=hiveContext.createDataFrame(rdd,schema)
 hiveContext.registerDataFrameAsTable(df,'qianxing_iteminfo')
-hiveContext.sql("insert overwrite table wl_base.t_base_qianxing_iteminfo partition (ds =" + today + ")\
-select * from qianxing_iteminfo")
-# sql_merge = '''
-# insert overwrite table wl_base.t_base_qianxing_iteminfo partition (ds =''' + today + ''')
-# select
-# COALESCE(t1.item_id,t2.item_id),
-# COALESCE(t1.title,t2.title),
-# COALESCE(t1.ts,t2.ts)
-# from
-# qianxing_iteminfo t1
-# full join
-# (select * from  wl_base.t_base_qianxing_iteminfo where ds =''' + yesterday +''')t2
-# on
-# t1.item_id = t2.item_id
-# '''
-# hiveContext.sql(sql_merge)
-# rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
+# hiveContext.sql("insert overwrite table wl_base.t_base_qianxing_iteminfo partition (ds =" + today + ")\
+# select * from qianxing_iteminfo")
+sql_merge = '''
+insert overwrite table wl_base.t_base_qianxing_iteminfo partition (ds =''' + today + ''')
+select
+COALESCE(t1.item_id,t2.item_id),
+COALESCE(t1.title,t2.title),
+COALESCE(t1.ts,t2.ts)
+from
+qianxing_iteminfo t1
+full join
+(select * from  wl_base.t_base_qianxing_iteminfo where ds =''' + yesterday +''')t2
+on
+t1.item_id = t2.item_id
+'''
+hiveContext.sql(sql_merge)
+rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
 
 # hfs -rmr /user/wrt/temp/iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 100 t_base_item_info.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 100 qianxing_iteminfo.py 20170511
 #LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
