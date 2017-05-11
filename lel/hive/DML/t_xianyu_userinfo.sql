@@ -49,6 +49,16 @@ from
 full  join
 (select * from t_base_ec_xianyu_userinfo  where ds = 20160721) t2
 on t1.usernick = t2.usernick
+
+
+                        nick            usernick
+2023452078	0	0	0	王胖爺	0	0	d]司徒大少爷	双鱼	1996-03-16	120100	NULL	NULL	1469030400	20170110
+                        nick            usernick
+0	0	NULL	0	司徒大少爷	0	0	司徒大少爷	NULL	NULL	NULL	0	NULL	1483050426	20170110
+
+数据有问题,nick为闲鱼名(可更改),usernick为淘宝会员名(恒定不变),通过t_base_user_profile 淘宝会员名交叉验证,此处的usernick不一样属于脏数据,暂且不管.
+
+
 --(select userid,totalcount,gender,
 --        idleuserid, nick, tradecount,
 --        tradeincome, usernick, constellation,
@@ -62,18 +72,20 @@ on t1.usernick = t2.usernick
 
 #关联t_base_user_profile的tb_nick和t_base_ec_xianyu_userinfo的usernick填补缺失的userid
 
-insert into table t_base_ec_xianyu_userinfo partition(ds = '20170110_userid_makeup')
+insert overwrite table t_base_ec_xianyu_userinfo partition(ds = '20170110_userid_makeup')
 select
-case when t2.tb_nick is null then t1.userid else t2.tb_id end,
+distinct
+case when t1.userid = '0' and t2.tb_nick is not null then t2.tb_id else t1.userid end as userid,
 t1.totalcount,t1.gender,
 t1.idleuserid, t1.nick, t1.tradecount,
 t1.tradeincome, t1.usernick, t1.constellation,
 t1.birthday,t1.city,t1.infopercent,t1.signature,t1.ts
 from
-(select * from t_base_ec_xianyu_userinfo where ds = 20170110) t1
+(select * from t_base_ec_xianyu_userinfo where ds = '20170110') t1
 left join
 (select tb_id,tb_nick from t_base_user_profile) t2
 on t1.usernick = t2.tb_nick
+
 
 
 #关联t_base_ec_xianyu_userinfo和t_zlj_zhima1223_userinfo获取生日日期

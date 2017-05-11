@@ -65,13 +65,11 @@ def f(line, cate_dict):
     root_cat_id = cate_dict.get(categoryId, ["\\N", "\\N", "\\N"])[1]
     cat_name = cate_dict.get(categoryId, ["\\N", "\\N", "\\N"])[0]
     root_cat_name = cate_dict.get(categoryId, ["\\N", "\\N", "\\N"])[2]
-
     trackParams = ob.get('trackParams', {})
     BC_type = trackParams.get('BC_type', '\\N')
     if BC_type != 'B' and BC_type != 'C': BC_type = "\\N"
     brandId = trackParams.get('brandId', '\\N')
     brand_name = "\\N"
-
     value = parse_price(ob['apiStack']['itemInfoModel']['priceUnits'])
     price = value[0]
     if int(price) > 160000:
@@ -98,7 +96,6 @@ if __name__ == "__main__":
             print f(line, cate_dict)
     if sys.argv[1] == "-spark":
         from pyspark import SparkContext
-
         sc = SparkContext(appName="iteminfo_abnormal")
         s = "/commit/iteminfo/tb_iteminfo/*"
         s_dim = "/hive/warehouse/wl_base.db/t_base_ec_dim/ds=20161122/000000_0"

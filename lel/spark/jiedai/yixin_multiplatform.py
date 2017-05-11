@@ -33,6 +33,12 @@ data = sc.textFile("/commit/regist/multplatform/*") \
     .groupByKey().mapValues(lambda a:"True" if "True" in list(a) else "False") \
     .map(lambda ((a,b),c): a + "\001" +b + "\001" + c) \
     .saveAsTextFile("/user/lel/temp/multiplatform_jiedai")
+data = sc.textFile("/commit/regist/multplatform/kakadai") \
+    .map(lambda a: process(a)) \
+    .filter(lambda a: a is not None ) \
+    .groupByKey().mapValues(lambda a:"True" if "True" in list(a) else "False") \
+    .map(lambda ((a,b),c): a + "\001" +b + "\001" + c) \
+    .saveAsTextFile("/user/lel/temp/multiplatform_kakadai")
 
 '''
 #2017401

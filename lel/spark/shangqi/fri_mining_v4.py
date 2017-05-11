@@ -48,6 +48,7 @@ fri_id_ids_sq =  fri.map(lambda (a,b):filter_sq_id(a,b)).filter(lambda a:a is no
 fri_sq_both =  fri.map(lambda (a,b):filter_sq_both(a,b)).filter(lambda a:a is not None).map(lambda (a,b):(b,a))
 fri_sq_both_reverse =  fri_sq_both.map(lambda (a,b):(b,a))
 #与用户1相互关注的非上汽用户
+#way_1:明确知道valuelist的length最大为2
 re = fri_ids_sq.union(fri_id_ids_sq) \
     .map(lambda a:(a,None)) \
     .reduceByKey(lambda a, b: None if len([a, b]) != 2 else [a, b]) \
@@ -56,8 +57,18 @@ re = fri_ids_sq.union(fri_id_ids_sq) \
     .filter(lambda a: a is not None)\
     .map(lambda (a,b): a + "\001" +b)\
     .saveAsTextFile("/user/lel/results/fri_mining_ids_sq")
+#way_2:
+re = fri_ids_sq.union(fri_id_ids_sq) \
+    .map(lambda a:(a,None)) \
+    .groupByKey().mapValues(list)\
+    .filter(lambda (a,b): len(b) == 2) \
+    .map(lambda (a,b):(a[0],a[1])) \
+    .map(lambda (a,b): a + "\001" +b) \
+    .saveAsTextFile("/user/lel/results/fri_mining_ids_sq")
+#way_3:combineByKey代替groupByKey
 
 #上汽用户中与其相互关注的好友（用户2）
+#ps:仍然要注意以上方法中特定的reduceByKey的实现方式
 re = fri_sq_both.union(fri_sq_both_reverse) \
     .map(lambda a:(a,None)) \
     .reduceByKey(lambda a, b: None if len([a, b]) != 2 else [a, b]) \
