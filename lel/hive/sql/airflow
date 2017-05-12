@@ -1,9 +1,7 @@
 airflow
 
 sql_alchemy_conn = mysql://airflow:123@localhost:3306/airflow
-
 executor = LocalExecutor
-
 smtp_host = smtp.ym.163.com
 smtp_starttls = True
 smtp_ssl = False
@@ -12,36 +10,8 @@ smtp_port = 25
 smtp_password = Lel199407.
 smtp_mail_from = lienlian@wolongdata.com
 
-
-'start_date':datetime(2016,12,26)
-'email_on_false': False
-'email_on_retry': False
-'depends_on_past': False
-'reties': 1
-'retry_delay': timedelta(minutes=5)
-
-sudo apt-get install mysqldb-python
-#sudo pip install setuptools --upgrade
-sudo pip install airflow[hive]
-sudo pip install airflow[mysqlclient]
-
 set @dag_id = 'BAD_DAG'
 delete from airflow.dag where dag_id=@dag_id
-
-
-sudo apt-get install libssl-dev
-sudo pip install airflow[crypto]
-ssh -p 22 lel@10.0.0.86 'date'
-
-env={"shell":"/bin/bash"},
-bash_command="/home/lyen/conf/hive1.1.2/bin/hive -f /home/lyen/remote.sql"
-bash_command="/home/lyen/'remote.sh'" 
-
-"/home/lyen/'remote.sh'" or '(bash ~/hdfs.sh)'   "ls -la;date;top"
-
-
-
-
 
 ps -ef | grep -Ei 'airflow-webserver' | grep master
 airflow list_dags
@@ -49,15 +19,13 @@ airflow list_tasks first_bash_dag
 airflow test first_bash_dag print_date 2017-1-03
 airflow test first_bash_dag print_ls 2017-1-03
 
-
 airflow scheduler -d first_bash_dag -sd=/home/lyen/airflow/dags/lel  -n 1
 airflow trigger_dag [-h] [-r RUN_ID] dag_id
+
 6. 开启一个dag调度器
 airflow scheduler [-d DAG_ID] -sd=/home/docs/airflow/dags  [-n NUM_RUNS]
 启动dag调度器, 注意启动调度器, 并不意味着dag会被马上触发, dag触发需要符合它自己的schedule规则.
-
 参数NUM_RUNS, 如果指定的话, dag将在运行NUM_RUNS次后退出. 没有指定时, scheduler将一直运行.
-
 参数DAG_ID可以设定, 也可以缺省, 含义分别是:
 如果设定了DAG_ID, 则为该DAG_ID专门启动一个scheduler;
 如果缺省DAG_ID, airflow会为每个dag(subdag除外)都启动一个scheduler.
@@ -70,12 +38,15 @@ airflow trigger_dag [-h] [-r RUN_ID] dag_id
 airflow backfill [-s START_DATE] [-e END_DATE]  [-sd SUBDIR]  --mark_success=False --dry_run=False dag_id
 有时候我们需要**立即**批量补跑一批dag, 比如为demo准备点执行历史, 比如补跑错过的运行机会. DB中dag execute_date记录不是当下时间, 而是按照 START_DATE 和 scheduler_interval 推算出的时间.  
 如果缺省了END_DATE参数, END_DATE等同于START_DATE.
+
 9. 手工调用一个Task
 airflow run [-sd SUBDIR] [-s TASK_START_DATE] --mark_success=False  dag_id task_id execution_date
 该命令参数很多, 如果仅仅是测试运行, 建议使用test命令代替.
+
 10. 测试一个Task
 airflow test -sd=/home/docs/airflow/dags --dry_run=False dag_id task_id execution_date
 airflow test -sd=/home/docs/airflow/dags --dry_run=False dag_id task_id 2015-12-31以 test 或 dry_run 模式 运行作业.
+
 11. 清空dag下的Task运行实例
 airflow clear [-s START_DATE] [-e END_DATE]  [-sd SUBDIR]  dag_id
 
@@ -86,47 +57,37 @@ delete from airflow.xcom where dag_id = @dag_id;
 
 
 nohup airflow scheduler >>~/airflow_logs/scheduler.log 2>&1 &
-	ps -ef | grep 'airflow scheduler'| grep -v grep | awk '{print $2}' | xargs sudo kill -9
-ps -ef | grep 'airflow-webserver'| grep -v grep | awk '{print $2}' | xargs sudo kill -9
-cat 20170106_scheduler.log  | grep -i '(.*)'
-
-
+ps -ef | grep 'airflow scheduler'| grep -v grep | awk '{print $2}' | xargs kill
+ps -ef | grep 'airflow-webserver'| grep -v grep | awk '{print $2}' | xargs kill
+ps -ef | grep 'celeryd'| grep -v grep | awk '{print $2}' | xargs kill
 
 Supervisord管理airflow进程
-
 1.sudo apt-get install supervisor
 2.supervisord默认的配置文件路径为sudo vim /etc/supervisord.conf，通过文本编辑器修改文件
 3.sudo vim /etc/supervisor/conf.d/airflow.conf(添加进程)如下:
+
 [program:airflow_webserver]
 command=/usr/bin/python2.7 /usr/local/bin/airflow webserver
 user=lyen
 environment=AIRFLOW_HOME="/home/lyen/airflow", PATH="/usr/local/bin:%(ENV_PATH)s"
 stderr_logfile=/var/log/airflow-webserver.err.log
 stdout_logfile=/var/log/airflow-webserver.out.log
-
 [program:airflow_scheduler]
 command=/usr/bin/python2.7 /usr/local/bin/airflow scheduler
 user=lyen
 environment=AIRFLOW_HOME="/home/lyen/airflow", PATH="/usr/local/bin:%(ENV_PATH)s"
 stderr_logfile=/var/log/airflow-scheduler.err.log
 stdout_logfile=/var/log/airflow-scheduler.out.log
+
 4.sudo supervisord (启动)
 5.webUI -> http://localhost:8090
 
 CeleryExecutor&rabbitmq-server:
-
 pip install airflow[celery]
 pip install airflow[rabbitmq]
-
 executor = CeleryExecutor
 broker_url = 
-celery_result_backend = 
-
-
-netstat -lntp | grep 6379
+celery_result_backend =
 
 airflow test -sd=/home/airflow/dags --dry_run=False dag_id task_id execution_date
-
-Q&A
-INFO - Executing <Task(SSHExecuteOperator): shopitem_b_parse> on 2017-01-30 05:00:00
-[2017-01-31 05:00:12,762] {models.py:1286} ERROR - Failed to create remote temp file
+for i in `hadoop job -list | grep -w  lel| awk '{print $1}' | grep job_`; do hadoop job -kill $i; done

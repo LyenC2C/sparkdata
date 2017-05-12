@@ -35,6 +35,7 @@ import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.linalg.{Vectors,Vector}
 val data_svm_sql = sqlContext.read.format("libsvm").load("/user/lel/data/svm")
 val data_svm = data_svm_sql.map(row => LabeledPoint(row.getAs[Double](0), row.getAs[org.apache.spark.mllib.linalg.Vector](1).toDense))
+
 val features = data_svm.map(x => x.features)
 var stat = Statistics.colStats(features)
 val coverage = stat.numNonzeros.toArray.map(x => x/stat.count)

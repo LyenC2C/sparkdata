@@ -1,0 +1,20 @@
+stat tables:
+
+cs220:
+hadoop fs -ls /hive/warehouse/wlbase_dev.db | awk '{print $3"\t"$6"  "$7"\t"$8}' > fir
+hadoop fs -du /hive/warehouse/wlbase_dev.db | awk '{print $1"\t"$3}' > sec
+awk -F "\t" 'NR==FNR{a[$2]=$1}NR!=FNR{if($3 in a) print $1"\t"$2"\t"a[$3]"\t"$3}' sec fir > third
+awk -F '/' '{if($5 ~ /^t/)print $1$5}' third > wlbase_dev
+
+
+hadoop fs -ls /hive/warehouse/wl_base.db | awk '{print $3"\t"$6"  "$7"\t"$8}' > fir_1
+hadoop fs -du /hive/warehouse/wl_base.db | awk '{print $1"\t"$3}' > sec_1
+awk -F "\t" 'NR==FNR{a[$2]=$1}NR!=FNR{if($3 in a) print $1"\t"$2"\t"a[$3]"\t"$3}' sec_1 fir_1 > third_1
+awk -F '/' '{if($5 ~ /^t/)print $1$5}' third_1 > wl_base
+
+cs105:
+
+hadoop fs -ls /hive/warehouse/wl_base.db | awk '{print $3"\t"$6"  "$7"\t"$8}' > fir_2
+hadoop fs -du /hive/warehouse/wl_base.db | awk '{print $1"\t"$3}' > sec_2
+awk -F "\t" 'NR==FNR{a[$2]=$1}NR!=FNR{if($3 in a) print $1"\t"$2"\t"a[$3]"\t"$3}' sec_2 fir_2 > third_2
+awk -F '/' '{if($5 ~ /^t/)print $1$5}' third_2 > wl_base_cs105
