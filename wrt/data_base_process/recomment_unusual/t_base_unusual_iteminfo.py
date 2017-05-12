@@ -5,7 +5,7 @@ import sys
 import rapidjson as json
 from pyspark import SparkContext
 
-# today = sys.argv[1]
+today = sys.argv[1]
 # yesterday = sys.argv[2]
 
 sc = SparkContext(appName="t_base_unusual_iteminfo_"+today)
@@ -92,8 +92,7 @@ def merge_rec_str(a,b):
 
 
 s_dim = "/hive/warehouse/wl_base.db/t_base_ec_dim/ds=20161122/000000_0"
-s1 = "/commit/taobao/recomment/recommend.info*"
-# s2 = "/hive/warehouse/wl_base.db/t_base_ec_shopitem_b/ds=" + yesterday
+s1 = "/commit/taobao/recomment/recommend.info." +today
 
 cate_dict = sc.broadcast(sc.textFile(s_dim).map(lambda x: get_cate_dict(x)).filter(lambda x:x!=None).collectAsMap()).value
 rdd1_c = sc.textFile(s1).flatMap(lambda x:f1(x,cate_dict)).filter(lambda x:x != None) #解析
@@ -102,8 +101,9 @@ rdd1 = rdd1_c.map(lambda x:((x[0],x[1]),x)).reduceByKey(lambda a,b:max([a,b],key
 # rdd = rdd1.map(lambda x:(x[0],x))\
 rdd = rdd1.reduceByKey(lambda a,b:merge_rec_str(a,b))\
     .map(lambda (k,v):"\001".join([valid_jsontxt(ln) for ln in v]))
-#.reduce
 rdd.saveAsTextFile('/user/wrt/temp/t_base_unusual_iteminfo')
+
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 100 t_base_unusual_iteminfo.py 20170504
 # rdd.filter(lambda x:len(x.split("\001")) != 7).saveAsTextFile('/user/wrt/shopitem_b_error')
-#hfs -rmr /user/wrt/temp/t_base_unusual_iteminfo
-#LOAD DATA  INPATH '/user/wrt/temp/t_base_unusual_iteminfo' OVERWRITE INTO TABLE wl_base.t_base_unusual_iteminfo PARTITION (ds='20170329');
+# hfs -rmr /user/wrt/temp/t_base_unusual_iteminfo
+# LOAD DATA  INPATH '/user/wrt/temp/t_base_unusual_iteminfo' OVERWRITE INTO TABLE wl_base.t_base_unusual_iteminfo PARTITION (ds='');

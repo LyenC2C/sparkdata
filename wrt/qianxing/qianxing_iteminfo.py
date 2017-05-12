@@ -30,6 +30,9 @@ def f(line):
     ts = ss[0]
     ob = json.loads(valid_jsontxt(ss[2]))
     if type(ob) != type({}):return None
+    seller = ob.get('seller',{})
+    shopId = seller.get('shopId','-')
+    if shopId != '68907524': return None
     itemInfoModel = ob.get('itemInfoModel',"-")
     if itemInfoModel == "-": return None
     title = itemInfoModel.get('title','-').replace("\n","").decode("utf-8")
@@ -63,7 +66,7 @@ schema = StructType([
 df=hiveContext.createDataFrame(rdd,schema)
 hiveContext.registerDataFrameAsTable(df,'qianxing_iteminfo')
 # hiveContext.sql("insert overwrite table wl_base.t_base_qianxing_iteminfo partition (ds =" + today + ")\
-#  select * from qianxing_iteminfo")
+# select * from qianxing_iteminfo")
 sql_merge = '''
 insert overwrite table wl_base.t_base_qianxing_iteminfo partition (ds =''' + today + ''')
 select
@@ -82,5 +85,5 @@ hiveContext.sql(sql_merge)
 
 
 # hfs -rmr /user/wrt/temp/iteminfo_tmp
-# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 100 t_base_item_info.py
+# spark-submit  --executor-memory 6G  --driver-memory 8G  --total-executor-cores 100 qianxing_iteminfo.py 20170511
 #LOAD DATA  INPATH '/user/wrt/temp/iteminfo_tmp' OVERWRITE INTO TABLE t_base_ec_item_dev_new PARTITION (ds='20160606');
