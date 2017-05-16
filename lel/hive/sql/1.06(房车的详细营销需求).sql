@@ -48,7 +48,7 @@ cs105:/hive/warehouse/wl_service.db/t_lel_weibo_fangche_20170106
 微博id换电话
 放在cs105:/user/lel/weibo
 #awk -F '\001' 'NR==FNR{a[$1]=$2}a[$2]{print $1"\t"a[$2]}' fangche20170106_hive t_lel_weibo_fangche_20170106.telsnwbname , sort , uniq > 20170106_result_fangche
-awk -F '\001' 'NR==FNR{a[$1]=$2}{if(($2 in a))print $1"\t"a[$2]}' fangche20170106_hive t_lel_weibo_fangche_20170106.telsnwbname , sort , uniq > 20170106_result_fangche
+awk -F '\001' 'NR==FNR{a[$1]=$2}{if(($2 in a))print $1"\t"a[$2]}' fangche20170106_hive t_lel_weibo_fangche_20170106.telsnwbname |sort | uniq > 20170106_result_fangche
 
 
 

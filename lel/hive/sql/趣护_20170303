@@ -4,7 +4,7 @@ set hive.mapjoin.smalltable.filesize=50000000;
 create table wlservice.t_lel_hushi_20170303_2 as 
 select t1.tb_id as tbid 
 from
-(select /*+ mapjoin(t_base_user_profile_telindex)*/ tb_id from t_base_user_profile_telindex where tb_location regexp '湖南|江苏|吉林' and xianyu_gender='1')t1
+(select  tb_id from t_base_user_profile_telindex where tb_location regexp '湖南|江苏|吉林' and xianyu_gender='1')t1
 join
 (SELECT user_id
 FROM wl_base.t_base_ec_record_dev_new 

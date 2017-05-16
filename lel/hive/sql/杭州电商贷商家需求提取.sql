@@ -30,8 +30,8 @@ group by t1.item_id,t1.shop_id) t3
 C.shop_id = t3.shop_id
 
 
-
-buser&seller:201603 ->201703
+201603->201703
+buser&seller:
 create table wl_service.t_lel_rongxintong_20170307_c
 as 
 select t6.tb_id,t6.`location`,t7.shop_name,t6.cate,t6.income
@@ -64,8 +64,8 @@ group by shop_id having sum(t3.income) >600000) t5
 on t5.shop_id=C.shop_id) t6
 on t6.shop_id = t7.shop_id
 
-
-seller:201603 ->201703
+201603->201703
+seller:
 set hive.merge.mapfiles=true;
 set hive.merge.mapredfiles=true;
 create table wl_service.t_lel_rongxintong_20170307_cv2
@@ -91,11 +91,12 @@ join
 	on t1.item_id=t2.item_id
 ) t3
 on t3.item_id = t4.item_id
-group by shop_id having sum(t3.income) >600000) B
+group by t4.shop_id having sum(t3.income) >600000) B
 on A.shop_id = B.shop_id
 )C
 on C.shop_id=D.shop_id
 
+select a.* from wl_service.t_lel_rongxintong_20170307_res a where substr(a.phone,0,7) in (select prefix from wl_base.t_base_mobile_loc where city regexp '杭州')
 
 /^((\d3)|(\d{3}\-))?13[456789]\d{8}|15[89]\d{8}/
 
@@ -105,8 +106,6 @@ awk -F '\001' 'NR==FNR{a[$2]=$1}NR!=FNR{if($1 in a)print a[$1]"\t"$2"\t"$3"\t"$4
 
 awk -F '\001' '$1 ~ /^1[1-9]+$/{if (length($1)==11)print $1"\001"$2}' rongxintong_b.teltbname > rongxintong_b.teltbname_filtered
 awk -F '\001' 'NR==FNR{a[$2]=$1}NR!=FNR{if($1 in a)print a[$1]"\t"$2"\t"$3"\t"$4"\t"$5}' rongxintong_b.teltbname_filtered rongxintong_b > b
-
-
 
 
 

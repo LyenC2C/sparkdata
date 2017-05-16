@@ -81,7 +81,7 @@ on
 t1.item_id = t2.item_id
 '''
 hiveContext.sql(sql_merge)
-rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
+# rdd.saveAsTextFile('/user/wrt/temp/iteminfo_tmp')
 
 
 # hfs -rmr /user/wrt/temp/iteminfo_tmp
