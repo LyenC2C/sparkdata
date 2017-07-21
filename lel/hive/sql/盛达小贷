@@ -1,0 +1,57 @@
+drop table wl_service.t_lel_shenda_xiaodai_tmp;
+create table wl_service.t_lel_shenda_xiaodai_tmp
+as
+select a.tb_id,c.flag,b.isgame_monthall from
+(select tel_index,tb_id from wl_base.t_base_user_profile_telindex where (xianyu_birthday between 18 and 35) and xianyu_gender = '0' and (2017 - cast(substr(regtime,1,4) as int)) > 2)a
+join
+(select user_id,case when isgame_monthall from wl_usertag.t_wrt_consume_tbid_pianhao_monthall where iscar_monthall = '0')b
+on a.tb_id = b.user_id
+join
+(select
+tel_index,
+case when monthall_b50_ratio > 0.8  and monthall_b50_num_ratio <0.8 then '50以下商品消费金额占比高'
+when monthall_b50_ratio < 0.8  and monthall_b50_num_ratio >0.8 then '50以下商品消费次数占比高'
+when monthall_b50_ratio > 0.8  and monthall_b50_num_ratio >0.8 then '50以下商品消费金额占比高|50以下商品消费次数占比高'end as flag
+from wl_feature.t_credit_record_feature_online where monthall_b50_ratio > 0.8 or monthall_b50_num_ratio > 0.8)c
+on a.tel_index =c.tel_index
+
+
+create table  wl_service.t_lel_shenda_xiaodai_tmp1
+as
+select tb_id,case when isgame_monthall = '0' then flag when isgame_monthall = '1'  then concat_ws("|",flag,"游戏偏好") end as tag from wl_service.t_lel_shenda_xiaodai_tmp
+
+
+create table  wl_service.t_lel_shenda_xiaodai_tmp2
+as
+select * from wl_service.t_lel_shenda_xiaodai_tmp1 where tag regexp '50以下商品消费金额占比高' limit 100000
+union all
+select * from wl_service.t_lel_shenda_xiaodai_tmp1 where tag regexp '50以下商品消费次数占比高' limit 100000
+union all
+select * from wl_service.t_lel_shenda_xiaodai_tmp1 where tag regexp '游戏偏好' limit 100000
+
+create external table wl_service.t_lel_shenda_xiaodai_tmp3(phone string,tb_id string) location '/trans/lel/shenda_xiaodai'
+
+create table wl_service.t_lel_shenda_xiaodai_tmp4
+as
+select a.phone,c.tag from
+(select * from wl_service.t_lel_shenda_xiaodai_tmp3)a
+left semi join
+(select phone from t_base_credit_bank where flag <> 'True')b
+on a.phone = b.phone
+join
+(select tb_id,tag from wl_service.t_lel_shenda_xiaodai_tmp2 group by tb_id,tag)c
+on a.tb_id=c.tb_id  limit 1000
+
+
+drop  table wl_service.t_lel_shenda_xiaodai_tmp5;
+create table wl_service.t_lel_shenda_xiaodai_tmp5
+as
+select a.phone,c.tag from
+(select * from wl_service.t_lel_shenda_xiaodai_tmp3)a
+left semi join
+(select phone from t_base_credit_bank where flag = 'True')b
+on a.phone = b.phone
+join
+(select tb_id,tag from wl_service.t_lel_shenda_xiaodai_tmp2 group by tb_id,tag)c
+on a.tb_id=c.tb_id  where a.phone not in (select phone from  wl_service.t_lel_shenda_xiaodai_tmp4) limit 1000
+

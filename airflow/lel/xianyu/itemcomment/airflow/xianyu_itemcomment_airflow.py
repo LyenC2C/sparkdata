@@ -1,4 +1,4 @@
-from airflow.lel.xianyu.itemcomment.airflow import DAG
+from airflow import DAG
 from airflow.utils.helpers import chain
 from airflow.contrib.operators.ssh_execute_operator import SSHExecuteOperator
 from airflow.contrib.hooks.ssh_hook import SSHHook

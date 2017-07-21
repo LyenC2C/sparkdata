@@ -2,10 +2,12 @@ import rapidjson as json
 from pyspark.sql import SQLContext
 from pyspark.sql.functions import *
 import datetime
+from pyspark.rdd import ignore_unicode_prefix
 
 sc = SparkContext(appName="income_analysis")
 sqlContext = SQLContext(sc)
 
+@ignore_unicode_prefix
 def timestamp2string(timeStamp):
     try:
         d = datetime.datetime.fromtimestamp(timeStamp)
@@ -104,15 +106,14 @@ def fillna(data):
 
 user = sqlContext.read.json("/commit/data_backflow/user.json").map(lambda a:(a.app_key,a.companyname))
 
-jr_res= jr_stat_self.leftOuterJoin(jr_stat).map(lambda ((a,b),(c,d)): (a,(b,c-fillna(d),fillna(d)))).join(user)\
+jr_res= jr_stat_self.leftOuterJoin(jr_stat).map(lambda ((a,b),(c,d)): (a,(b,c-fillna(d),fillna(d))))\
+        .join(user)\
         .map(lambda (a,((b,c,d),e)): "\001".join([valid_jsontxt(i) for i in [e,b,c,d]]))
 jr_res.coalesce(1).saveAsTextFile("/user/lel/temp/test_analysis_jryhhx")
+
 ec_res = ec_stat_self.leftOuterJoin(ec_stat).map(lambda ((a,b),(c,d)): (a,(b,c-fillna(d),fillna(d)))).join(user) \
     .map(lambda (a,((b,c,d),e)): "\001".join([valid_jsontxt(i) for i in [e,b,c,d]]))
-
 ec_res.coalesce(1).saveAsTextFile("/user/lel/temp/test_analysis_ec")
-
-
 
 
 

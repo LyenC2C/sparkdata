@@ -1,0 +1,29 @@
+show partitions t_base_credit_bank -> 20170306
+
+show partitions t_base_yixin_daichang -> 20170321
+
+show partitions t_base_multiplatform ->  20170426
+
+create table wl_service.t_lel_xinerfu_20170517
+as
+select distinct phone from
+(select * from t_base_credit_bank where ds = '20170306'  and flag = 'True')a
+left semi join
+(select * from t_base_yixin_daichang where ds = '20170321' and flag = 'True')b
+on a.phone=b.phone limit 80000
+
+
+create external table wl_service.t_lel_xinerfu_phone_tbid_20170517(phone string,tbid string) location '/trans/lel/xinerfu/'
+
+drop table wl_service.t_lel_xinerfu_product_type1;
+create table wl_service.t_lel_xinerfu_product_type1_1k
+as
+select a.phone from
+(select  phone,tbid from wl_service.t_lel_xinerfu_phone_tbid_20170517 where tbid <> 'None')a
+left semi join
+(select tb_id from t_base_user_profile_telindex where xianyu_birthday between 18 and 45)b
+on a.tbid = b.tb_id
+left semi join
+(select phone from wl_base.t_base_multiplatform where ds = '20170426' and flag = 'True')c
+on a.phone = c.phone
+limit 1000
